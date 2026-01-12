@@ -16,7 +16,7 @@ def main():
         logger.info(f"Configuration: {len(pairs)} paires, {len(timeframes)} timeframes")
 
         # Exécution immédiate (comportement par défaut)
-        run_once_now(pairs, timeframes)
+        run_once_now(pairs, timeframes, "binance")
 
         logger.info("✅ Collecte de données terminée avec succès")
 
@@ -39,7 +39,7 @@ def main_with_scheduling():
         logger.info(f"Planification: Collecte quotidienne à {schedule_time}")
 
         # Exécution immédiate au démarrage
-        run_once_now(pairs, timeframes)
+        run_once_now(pairs, timeframes, "binance")
         
         # Puis planification quotidienne
         run_scheduler(pairs, timeframes, schedule_time)
@@ -58,6 +58,12 @@ def parse_arguments():
         "--schedule",
         action="store_true",
         help="Activer la planification quotidienne (par défaut: exécution unique)"
+    )
+    parser.add_argument(
+        "--exchange",
+        choices=["binance", "kraken"],
+        default="binance",
+        help="Exchange à utiliser (par défaut: binance)"
     )
     return parser.parse_args()
 

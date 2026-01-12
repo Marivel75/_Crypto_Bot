@@ -1,14 +1,15 @@
 import pandas as pd
 from logger_settings import logger
 from src.services.binance_client import BinanceClient
+from src.services.kraken_client import KrakenClient
 from src.services.db import get_engine
 from sqlalchemy.exc import IntegrityError
-from typing import List, Optional
+from typing import List, Optional, Union
 
 
 class MarketCollector:
     """
-    Collecteur de données marché pour Binance.
+    Collecteur de données marché pour plusieurs exchanges.
     
     Ce collecteur récupère les données OHLCV (Open, High, Low, Close, Volume) 
     pour des paires de trading spécifiques et des timeframes donnés,
@@ -17,19 +18,21 @@ class MarketCollector:
     Attributes:
         pairs (List[str]): Liste des paires de trading à surveiller
         timeframes (List[str]): Liste des timeframes pour l'analyse
-        client (BinanceClient): Client pour interagir avec l'API Binance
+        exchange (str): Nom de l'exchange à utiliser
+        client: Client pour interagir avec l'API de l'exchange
         engine: Moteur SQLAlchemy pour la connexion à la base de données
     """
-    def __init__(self, pairs: List[str], timeframes: List[str]):
+    def __init__(self, pairs: List[str], timeframes: List[str], exchange: str = "binance"):
         """
         Initialise le collecteur de données marché.
         
         Args:
             pairs: Liste des paires de trading (ex: ['BTC/USDT', 'ETH/USDT'])
             timeframes: Liste des timeframes (ex: ['1h', '4h', '1d'])
+            exchange: Nom de l'exchange ('binance' ou 'kraken')
             
         Raises:
-            ValueError: Si les paires ou timeframes ne sont pas valides
+            ValueError: Si les paires, timeframes ou exchange ne sont pas valides
         """
         # Validation des entrées
         if not pairs or not timeframes:
@@ -47,15 +50,28 @@ class MarketCollector:
             logger.error(error_msg)
             raise ValueError(error_msg)
         
+        # Validation de l'exchange
+        supported_exchanges = ['binance', 'kraken']
+        if exchange.lower() not in supported_exchanges:
+            error_msg = f"Exchange non supporté: {exchange}. Choix possibles: {supported_exchanges}"
+            logger.error(error_msg)
+            raise ValueError(error_msg)
+        
         self.pairs = pairs
         self.timeframes = timeframes
-        self.client = BinanceClient()
+        self.exchange = exchange.lower()
+        
+        # Initialisation du client approprié
+        if self.exchange == 'binance':
+            self.client = BinanceClient()
+        else:  # kraken
+            self.client = KrakenClient(use_auth=False)
+        
         self.engine = get_engine()
 
     def fetch_and_store(self) -> None:
         """
-        Récupère les données OHLCV pour toutes les paires et timeframes configurés
-        et les stocke dans la base de données.
+        Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données.
         
         Raises:
             Exception: En cas d'erreur lors de la récupération ou du stockage des données
