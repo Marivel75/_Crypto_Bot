@@ -7,13 +7,14 @@ différents clients d'exchange (Binance, Kraken, etc.).
 
 from src.services.binance_client import BinanceClient
 from src.services.kraken_client import KrakenClient
+from src.services.coinbase_client import CoinbaseClient
 from logger_settings import logger
 from typing import Union
 
 
 class ExchangeFactory:
     """
-    Fabrique pour créer et gérer des clients d'exchange.
+    Factory pour créer et gérer des clients d'exchange.
     Classe unifiée pour accéder à différents exchanges via leurs clients respectifs.
     """
     
@@ -23,7 +24,7 @@ class ExchangeFactory:
         Crée une instance de client pour l'exchange spécifié.
         
         Args:
-            exchange_name: Nom de l'exchange ('binance' ou 'kraken')
+            exchange_name: Nom de l'exchange ('binance', 'kraken' ou 'coinbase')
             **kwargs: Arguments supplémentaires pour le client
             
         Returns:
@@ -43,6 +44,11 @@ class ExchangeFactory:
             # Pour les données publiques, pas d'authentification
             return KrakenClient(use_auth=False)
         
+        elif exchange_name == 'coinbase':
+            logger.info("Création du client Coinbase")
+            # Pour les données publiques, pas d'authentification
+            return CoinbaseClient(use_auth=False)
+        
         else:
             error_msg = f"Exchange non supporté: {exchange_name}"
             logger.error(error_msg)
@@ -56,10 +62,10 @@ class ExchangeFactory:
         Returns:
             list: Liste des noms d'exchanges supportés
         """
-        return ['binance', 'kraken']
+        return ['binance', 'kraken', 'coinbase']
 
 
-def get_exchange_client(exchange_name: str) -> Union[BinanceClient, KrakenClient]:
+def get_exchange_client(exchange_name: str) -> Union[BinanceClient, KrakenClient, CoinbaseClient]:
     """
     Fonction utilitaire pour obtenir un client d'exchange.
     

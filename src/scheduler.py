@@ -17,16 +17,33 @@ def daily_data_collection(pairs: List[str], timeframes: List[str], exchange: str
     Args:
         pairs: Liste des paires de trading à collecter
         timeframes: Liste des timeframes à collecter
-        exchange: Nom de l'exchange à utiliser ('binance' ou 'kraken')
+        exchange: Nom de l'exchange à utiliser ('binance', 'kraken' ou 'coinbase')
         
     Raises:
         Exception: En cas d'erreur lors de la collecte
     """
     try:
-        logger.info(f"🕒 Début de la collecte quotidienne de données ({exchange})")
+        logger.info(f"Début de la collecte quotidienne de données ({exchange})")
+        
+        # Normalisation des timeframes pour l'exchange
+        normalized_timeframes = []
+        for tf in timeframes:
+            # Coinbase a des timeframes spécifiques
+            if exchange == 'coinbase':
+                # Coinbase supporte: 1m, 5m, 15m, 1h, 6h, 1d
+                if tf not in ['1m', '5m', '15m', '1h', '6h', '1d']:
+                    logger.warning(f"Timeframe {tf} non supporté par Coinbase, utilisation de 1h")
+                    normalized_timeframes.append('1h')
+                else:
+                    normalized_timeframes.append(tf)
+            else:
+                # Binance et Kraken supportent plus de timeframes
+                normalized_timeframes.append(tf)
+        
+        logger.info(f"Timeframes normalisés: {normalized_timeframes}")
         
         # Initialisation du collecteur avec l'exchange spécifié
-        collector = MarketCollector(pairs, timeframes, exchange)
+        collector = MarketCollector(pairs, normalized_timeframes, exchange)
         
         # Exécution de la collecte
         collector.fetch_and_store()
@@ -54,7 +71,7 @@ def run_scheduler(
     """
     try:
         logger.info(
-            f"⏰ Planificateur démarré - Collecte prévue à {schedule_time} quotidiennement"
+            f"Planificateur démarré - Collecte prévue à {schedule_time} quotidiennement"
         )
         
         # Planification de la tâche quotidienne
@@ -81,7 +98,7 @@ def run_once_now(pairs: List[str], timeframes: List[str], exchange: str = "binan
     Args:
         pairs: Liste des paires de trading à collecter
         timeframes: Liste des timeframes à collecter
-        exchange: Nom de l'exchange à utiliser ('binance' ou 'kraken')
+        exchange: Nom de l'exchange à utiliser ('binance', 'kraken' ou 'coinbase')
     """
     try:
         logger.info(f"🚀 Exécution immédiate de la collecte de données ({exchange})")

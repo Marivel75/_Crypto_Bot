@@ -61,7 +61,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "--exchange",
-        choices=["binance", "kraken"],
+        choices=["binance", "kraken", "coinbase"],
         default="binance",
         help="Exchange à utiliser (par défaut: binance)"
     )
