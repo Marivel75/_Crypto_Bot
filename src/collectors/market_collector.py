@@ -1,8 +1,8 @@
 import pandas as pd
 from logger_settings import logger
-from src.services.binance_client import BinanceClient
-from src.services.kraken_client import KrakenClient
-from src.services.coinbase_client import CoinbaseClient
+from src.services.exchanges_api.binance_client import BinanceClient
+from src.services.exchanges_api.kraken_client import KrakenClient
+from src.services.exchanges_api.coinbase_client import CoinbaseClient
 from src.services.db import get_engine
 from sqlalchemy.exc import IntegrityError
 from typing import List, Optional, Union
