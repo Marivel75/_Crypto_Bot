@@ -1,8 +1,7 @@
 """
 Factory d'exchanges pour gérer plusieurs plateformes.
 
-Ce module fournit une interface unifiée pour créer et utiliser
-différents clients d'exchange (Binance, Kraken, etc.).
+Ce module fournit une interface unifiée pour créer et utiliser différents clients d'exchange (Binance, Kraken, etc.).
 """
 
 from src.services.exchanges_api.binance_client import BinanceClient
@@ -71,7 +70,7 @@ def get_exchange_client(
     exchange_name: str,
 ) -> Union[BinanceClient, KrakenClient, CoinbaseClient]:
     """
-    Fonction utilitaire pour obtenir un client d'exchange.
+    Fonction utilitaire pour obtenir un client d'exchange sans instancier la classe.
 
     Args:
         exchange_name: Nom de l'exchange
