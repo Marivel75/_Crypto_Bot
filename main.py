@@ -1,6 +1,5 @@
 import argparse
 from logger_settings import logger
-from src.collectors.market_collector import MarketCollector
 from src.scheduler import run_scheduler, run_once_now
 
 
