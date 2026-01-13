@@ -10,6 +10,13 @@ __pycache__/
 logs/
 *.log
 
+# Sauvegardes de base de données
+data/backups/
+*.sql
+*.dump
+*.csv
+*.json
+
 # IDE
 .vscode/
 .idea/
