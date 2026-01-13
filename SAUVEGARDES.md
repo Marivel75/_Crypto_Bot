@@ -276,4 +276,4 @@ gdrive upload --recursive data/backups/
 
 ---
 
-_Documentation mise à jour le 13/01/2026_ 🚀
+\_Documentation mise à jour le 13/01/2026

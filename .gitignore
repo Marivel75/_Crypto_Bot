@@ -17,6 +17,19 @@ data/backups/
 *.csv
 *.json
 
+# Fichiers de test et couverture
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Rapport de couverture
+htmlcov/
+.coverage
+*.cover
+
 # IDE
 .vscode/
 .idea/
