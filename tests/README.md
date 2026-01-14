@@ -34,14 +34,20 @@ python -m pytest tests/test_market_collector.py::TestMarketCollectorInitializati
 # Aide
 python scripts/run_tests.py --help
 
-# Exécuter les tests unitaires
+# Exécuter les tests unitaires (MarketCollector)
 python scripts/run_tests.py --type unit --verbose
+
+# Exécuter les tests de validation (DataValidator)
+python scripts/run_tests.py --type validation --verbose
 
 # Exécuter tous les tests avec couverture
 python scripts/run_tests.py --coverage
 
 # Générer un rapport HTML
 python scripts/run_tests.py --coverage --report
+
+# Exécuter un test spécifique avec pytest directement
+python -m pytest tests/test_data_validator.py::TestCompleteOHLCVValidation::test_validate_complete_valid_data -v
 ```
 
 ## 📊 Tests Actuels
