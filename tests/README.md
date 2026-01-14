@@ -1,6 +1,7 @@
 # 🧪 Tests Crypto Bot
 
 Ce répertoire contient tous les tests pour le projet Crypto Bot.
+Les tests sont aussi lancés par un workflow tests.yml sur github.
 
 ## 📁 Structure
 
@@ -49,11 +50,13 @@ python scripts/run_tests.py --coverage --report
 **14 tests** couvrant :
 
 - **Initialisation** (8 tests) :
+
   - Validation des paramètres d'entrée
   - Gestion des exchanges (Binance, Kraken, Coinbase)
   - Gestion des erreurs de configuration
 
 - **Validation** (3 tests) :
+
   - Validation des paires et timeframes
   - Gestion des valeurs vides et invalides
 
@@ -80,4 +83,4 @@ python -m pytest --cov=src tests/ --cov-report=html
 open htmlcov/index.html
 ```
 
-*Mise à jour : 13/01/2026
+\*Mise à jour : 13/01/2026
