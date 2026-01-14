@@ -14,7 +14,7 @@ def run_tests(test_type="all", verbose=False, coverage=False, report=False):
     Exécute les tests avec les options spécifiées.
     
     Args:
-        test_type: Type de tests à exécuter (all, unit, integration)
+        test_type: Type de tests à exécuter (all, unit, validation, etl, integration)
         verbose: Mode verbeux
         coverage: Générer un rapport de couverture
         report: Générer un rapport HTML
@@ -38,6 +38,11 @@ def run_tests(test_type="all", verbose=False, coverage=False, report=False):
         cmd.append("tests/test_market_collector.py")
     elif test_type == "validation":
         cmd.append("tests/test_data_validator.py")
+    elif test_type == "etl":
+        cmd.append("tests/test_etl_extractor.py")
+        cmd.append("tests/test_etl_transformer.py")
+        cmd.append("tests/test_etl_loader.py")
+        cmd.append("tests/test_etl_pipeline.py")
     elif test_type == "integration":
         # Ajouter les tests d'intégration quand ils seront créés
         cmd.append("tests/integration/")
@@ -60,7 +65,7 @@ def main():
     
     parser.add_argument(
         "--type",
-        choices=["all", "unit", "validation", "integration"],
+        choices=["all", "unit", "validation", "etl", "integration"],
         default="all",
         help="Type de tests à exécuter (défaut: all)"
     )
