@@ -24,9 +24,11 @@ class TestMarketCollectorInitialization:
         pairs = ["BTC/USDT", "ETH/USDT"]
         timeframes = ["1h", "4h"]
 
-        # Mock du client Binance pour éviter les appels API réels
-        with patch("src.collectors.market_collector.BinanceClient") as mock_client:
+        # Mock du client Binance et du DataValidator pour éviter les appels API réels
+        with patch("src.collectors.market_collector.BinanceClient") as mock_client, \
+             patch("src.collectors.market_collector.DataValidator0HCLV") as mock_validator:
             mock_client.return_value = MagicMock()
+            mock_validator.return_value = MagicMock()
 
             collector = MarketCollector(pairs, timeframes, "binance")
 
@@ -34,6 +36,7 @@ class TestMarketCollectorInitialization:
             assert collector.timeframes == timeframes
             assert collector.exchange == "binance"
             assert isinstance(collector.client, MagicMock)
+            assert isinstance(collector.data_validator, MagicMock)
             assert collector.engine is not None
 
     def test_initialization_with_empty_pairs(self):
@@ -126,8 +129,9 @@ class TestMarketCollectorFetchAndStore:
     """Tests pour la méthode fetch_and_store."""
 
     @patch("src.collectors.market_collector.BinanceClient")
+    @patch("src.collectors.market_collector.DataValidator0HCLV")
     @patch("pandas.DataFrame.to_sql")
-    def test_fetch_and_store_success(self, mock_to_sql, mock_client):
+    def test_fetch_and_store_success(self, mock_to_sql, mock_validator, mock_client):
         """Test le succès de fetch_and_store."""
         # Configuration du mock
         mock_client_instance = MagicMock()
@@ -136,6 +140,16 @@ class TestMarketCollectorFetchAndStore:
             [1768298400000, 90050.0, 90150.0, 89950.0, 90100.0, 124.56],
         ]
         mock_client.return_value = mock_client_instance
+        
+        # Configuration du mock du valideur
+        mock_validator_instance = MagicMock()
+        mock_validator_instance.validate_ohlcv_values.return_value = (True, {
+            'valid_rows': 2,
+            'total_rows': 2,
+            'errors': [],
+            'warnings': []
+        })
+        mock_validator.return_value = mock_validator_instance
 
         collector = MarketCollector(["BTC/USDT"], ["1h"], "binance")
 
@@ -144,6 +158,9 @@ class TestMarketCollectorFetchAndStore:
 
         # Vérifier que fetch_ohlcv a été appelé
         mock_client_instance.fetch_ohlcv.assert_called_once_with("BTC/USDT", "1h")
+        
+        # Vérifier que la validation a été appelée
+        mock_validator_instance.validate_ohlcv_values.assert_called_once()
 
         # Vérifier que to_sql a été appelé
         assert mock_to_sql.called
@@ -189,6 +206,39 @@ class TestMarketCollectorFetchAndStore:
         # Vérifier que to_sql a été appelé
         assert mock_to_sql.called
         # Vérifier que l'erreur a été gérée (pas de propagation)
+    
+    @patch("src.collectors.market_collector.BinanceClient")
+    @patch("src.collectors.market_collector.DataValidator0HCLV")
+    @patch("pandas.DataFrame.to_sql")
+    def test_fetch_and_store_with_invalid_data(self, mock_to_sql, mock_validator, mock_client):
+        """Test que les données invalides ne sont pas sauvegardées."""
+        # Configuration du mock client
+        mock_client_instance = MagicMock()
+        mock_client_instance.fetch_ohlcv.return_value = [
+            [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
+        ]
+        mock_client.return_value = mock_client_instance
+        
+        # Configuration du mock valideur pour retourner des données invalides
+        mock_validator_instance = MagicMock()
+        mock_validator_instance.validate_ohlcv_values.return_value = (False, {
+            'valid_rows': 0,
+            'total_rows': 1,
+            'errors': ['Prix négatif détecté', 'Volume invalide'],
+            'warnings': []
+        })
+        mock_validator.return_value = mock_validator_instance
+
+        collector = MarketCollector(["BTC/USDT"], ["1h"], "binance")
+
+        # Exécuter la méthode
+        collector.fetch_and_store()
+
+        # Vérifier que la validation a été appelée
+        mock_validator_instance.validate_ohlcv_values.assert_called_once()
+        
+        # Vérifier que to_sql n'a pas été appelé (données invalides)
+        assert not mock_to_sql.called
 
 
 if __name__ == "__main__":
