@@ -102,7 +102,17 @@ class TestOHLCVLoaderLoad:
         
         with patch.object(loader, '_batch_insert') as mock_batch:
             mock_batch.return_value = 1500
-            result = loader.load(df)
+            
+            # Mock to_sql to call the original method with our batch insert
+            original_to_sql = pd.DataFrame.to_sql
+            def mock_to_sql(*args, **kwargs):
+                # Call original method but with our mocked batch insert
+                if 'method' in kwargs and kwargs['method'] is not None:
+                    return kwargs['method'](*args[:-1], **{k: v for k, v in kwargs.items() if k != 'method'})
+                return original_to_sql(*args, **kwargs)
+            
+            with patch('pandas.DataFrame.to_sql', side_effect=mock_to_sql):
+                result = loader.load(df)
             
             assert result == 1500
             mock_batch.assert_called_once()
