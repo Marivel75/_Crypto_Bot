@@ -36,6 +36,8 @@ def run_tests(test_type="all", verbose=False, coverage=False, report=False):
     # Sélectionner les tests
     if test_type == "unit":
         cmd.append("tests/test_market_collector.py")
+    elif test_type == "validation":
+        cmd.append("tests/test_data_validator.py")
     elif test_type == "integration":
         # Ajouter les tests d'intégration quand ils seront créés
         cmd.append("tests/integration/")
@@ -58,7 +60,7 @@ def main():
     
     parser.add_argument(
         "--type",
-        choices=["all", "unit", "integration"],
+        choices=["all", "unit", "validation", "integration"],
         default="all",
         help="Type de tests à exécuter (défaut: all)"
     )

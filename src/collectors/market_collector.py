@@ -4,6 +4,7 @@ from src.services.exchanges_api.binance_client import BinanceClient
 from src.services.exchanges_api.kraken_client import KrakenClient
 from src.services.exchanges_api.coinbase_client import CoinbaseClient
 from src.services.db import get_engine
+from src.quality.validator import DataValidator0HCLV
 from sqlalchemy.exc import IntegrityError
 from typing import List, Optional, Union
 
@@ -84,6 +85,9 @@ class MarketCollector:
             self.client = BinanceClient()
 
         self.engine = get_engine()
+        
+        # Initialisation du valideur de données OHLCV
+        self.data_validator = DataValidator0HCLV()
 
     def fetch_and_store(self) -> None:
         """
@@ -112,9 +116,29 @@ class MarketCollector:
                     # Convert timestamp en datetime
                     df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
 
-                    # Sauvegarde dans la base de données
-                    df.to_sql("ohlcv", self.engine, if_exists="append", index=False)
-                    logger.info(f"✅ {pair} {tf} sauvegardé")
+                    # Validation des données avant sauvegarde
+                    is_valid, validation_report = self.data_validator.validate_ohlcv_values(df)
+                    
+                    # Log des résultats de validation
+                    if is_valid:
+                        logger.info(f"✅ Validation réussie pour {pair} {tf}: {validation_report['valid_rows']}/{validation_report['total_rows']} lignes valides")
+                    else:
+                        logger.warning(f"⚠️ Problèmes de validation pour {pair} {tf}: {len(validation_report['errors'])} erreurs, {len(validation_report['warnings'])} warnings")
+                        
+                        # Log des erreurs détaillées
+                        if validation_report['errors']:
+                            for error in validation_report['errors'][:3]:  # Limiter à 3 erreurs pour la lisibilité
+                                logger.warning(f"  - {error}")
+                            if len(validation_report['errors']) > 3:
+                                logger.warning(f"  - ... et {len(validation_report['errors']) - 3} autres erreurs")
+                    
+                    # Sauvegarde dans la base de données seulement si les données sont valides
+                    if is_valid:
+                        df.to_sql("ohlcv", self.engine, if_exists="append", index=False)
+                        logger.info(f"✅ {pair} {tf} sauvegardé")
+                    else:
+                        logger.error(f"❌ {pair} {tf} non sauvegardé en raison d'erreurs de validation")
+                        continue  # Passer à la paire/timeframe suivant
 
                 except IntegrityError:
                     logger.warning(f"⚠️ Doublons détectés pour {pair} {tf}, ignorés")

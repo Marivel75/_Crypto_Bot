@@ -8,6 +8,7 @@ Les tests sont aussi lancés par un workflow tests.yml sur github.
 ```
 tests/
 ├── test_market_collector.py  # Tests unitaires pour MarketCollector
+├── test_data_validator.py    # Tests unitaires pour DataValidator
 ├── README.md                # Documentation des tests
 └── integration/             # (À venir) Tests d'intégration
 ```
@@ -33,14 +34,20 @@ python -m pytest tests/test_market_collector.py::TestMarketCollectorInitializati
 # Aide
 python scripts/run_tests.py --help
 
-# Exécuter les tests unitaires
+# Exécuter les tests unitaires (MarketCollector)
 python scripts/run_tests.py --type unit --verbose
+
+# Exécuter les tests de validation (DataValidator)
+python scripts/run_tests.py --type validation --verbose
 
 # Exécuter tous les tests avec couverture
 python scripts/run_tests.py --coverage
 
 # Générer un rapport HTML
 python scripts/run_tests.py --coverage --report
+
+# Exécuter un test spécifique avec pytest directement
+python -m pytest tests/test_data_validator.py::TestCompleteOHLCVValidation::test_validate_complete_valid_data -v
 ```
 
 ## 📊 Tests Actuels
@@ -65,6 +72,41 @@ python scripts/run_tests.py --coverage --report
   - Gestion des exceptions
   - Gestion des doublons
 
+### test_data_validator.py
+
+**22 tests** couvrant le module de validation des données :
+
+- **Initialisation** (1 test) :
+  - Test des valeurs par défaut du valideur
+
+- **Validation de structure** (3 tests) :
+  - DataFrame vide
+  - Colonnes manquantes
+  - Structure valide
+
+- **Validation des prix** (5 tests) :
+  - Prix NaN, non numériques, négatifs
+  - Prix très bas (warnings)
+  - Prix valides
+
+- **Validation du volume** (4 tests) :
+  - Volume NaN, négatif
+  - Volume très élevé (warnings)
+  - Volume valide
+
+- **Validation de cohérence** (2 tests) :
+  - Cohérence high/low
+  - Prix d'ouverture/fermeture négatifs
+
+- **Validation des métadonnées** (3 tests) :
+  - Symbol et timeframe invalides
+  - Métadonnées valides
+
+- **Validation complète** (3 tests) :
+  - Données complètement valides
+  - Données avec erreurs
+  - Données avec warnings
+
 ## 📈 Rapport de Couverture
 
 Pour générer un rapport de couverture :
@@ -84,3 +126,4 @@ open htmlcov/index.html
 ```
 
 \*Mise à jour : 13/01/2026
+*Ajout des tests pour DataValidator : 13/01/2026
