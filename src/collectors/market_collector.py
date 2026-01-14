@@ -5,19 +5,19 @@ from src.services.exchanges_api.kraken_client import KrakenClient
 from src.services.exchanges_api.coinbase_client import CoinbaseClient
 from src.services.db import get_engine
 from src.quality.validator import DataValidator0HCLV
-from sqlalchemy.exc import IntegrityError
-from typing import List, Optional, Union
-
+from src.etl.extractor import OHLCVExtractor
+from src.etl.transformer import OHLCVTransformer
+from src.etl.loader import OHLCVLoader
+from src.etl.pipeline import ETLPipeline
+from typing import List
 
 class MarketCollector:
     """
     Collecteur de données marché pour plusieurs exchanges.
 
-    Ce collecteur récupère les données OHLCV (Open, High, Low, Close, Volume)
-    pour des paires de trading spécifiques et des timeframes donnés,
-    puis les stocke dans une base de données.
+    Récupère les données OHLCV (Open, High, Low, Close, Volume) pour des paires de trading spécifiques et des timeframes donnés, puis les stocke dans une base de données.
 
-    Attributes:
+    Attributs:
         pairs (List[str]): Liste des paires de trading à surveiller
         timeframes (List[str]): Liste des timeframes pour l'analyse
         exchange (str): Nom de l'exchange à utiliser
@@ -88,60 +88,49 @@ class MarketCollector:
         
         # Initialisation du valideur de données OHLCV
         self.data_validator = DataValidator0HCLV()
+        
+        # Initialisation du pipeline ETL
+        self.etl_pipeline = self._create_etl_pipeline()
+
+    def _create_etl_pipeline(self) -> ETLPipeline:
+        """
+        Crée le pipeline ETL avec les composants appropriés.
+        """
+        extractor = OHLCVExtractor(self.client)
+        transformer = OHLCVTransformer(self.data_validator, self.exchange)
+        loader = OHLCVLoader(self.engine)
+
+        return ETLPipeline(extractor, transformer, loader)
 
     def fetch_and_store(self) -> None:
         """
-        Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données.
-
+        Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données. Utilise le pipeline ETL.
+        
         Raises:
             Exception: En cas d'erreur lors de la récupération ou du stockage des données
         """
-        for pair in self.pairs:
-            for tf in self.timeframes:
-                try:
-                    # Conversion du timeframe en chaîne de caractères pour éviter les erreurs
-                    timeframe_str = str(tf)
-
-                    # Récupère les bougies
-                    ohlcv = self.client.fetch_ohlcv(pair, timeframe_str)
-
-                    # Convertit en DataFrame
-                    df = pd.DataFrame(
-                        ohlcv,
-                        columns=["timestamp", "open", "high", "low", "close", "volume"],
-                    )
-                    df["symbol"] = pair
-                    df["timeframe"] = tf
-
-                    # Convert timestamp en datetime
-                    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
-
-                    # Validation des données avant sauvegarde
-                    is_valid, validation_report = self.data_validator.validate_ohlcv_values(df)
-                    
-                    # Log des résultats de validation
-                    if is_valid:
-                        logger.info(f"✅ Validation réussie pour {pair} {tf}: {validation_report['valid_rows']}/{validation_report['total_rows']} lignes valides")
-                    else:
-                        logger.warning(f"⚠️ Problèmes de validation pour {pair} {tf}: {len(validation_report['errors'])} erreurs, {len(validation_report['warnings'])} warnings")
-                        
-                        # Log des erreurs détaillées
-                        if validation_report['errors']:
-                            for error in validation_report['errors'][:3]:  # Limiter à 3 erreurs pour la lisibilité
-                                logger.warning(f"  - {error}")
-                            if len(validation_report['errors']) > 3:
-                                logger.warning(f"  - ... et {len(validation_report['errors']) - 3} autres erreurs")
-                    
-                    # Sauvegarde dans la base de données seulement si les données sont valides
-                    if is_valid:
-                        df.to_sql("ohlcv", self.engine, if_exists="append", index=False)
-                        logger.info(f"✅ {pair} {tf} sauvegardé")
-                    else:
-                        logger.error(f"❌ {pair} {tf} non sauvegardé en raison d'erreurs de validation")
-                        continue  # Passer à la paire/timeframe suivant
-
-                except IntegrityError:
-                    logger.warning(f"⚠️ Doublons détectés pour {pair} {tf}, ignorés")
-                except Exception as e:
-                    logger.error(f"❌ Erreur lors du traitement de {pair} {tf}: {e}")
-                    raise
+        # Exécuter le pipeline ETL pour toutes les paires et timeframes
+        batch_results = self.etl_pipeline.run_batch(self.pairs, self.timeframes)
+        
+        # Générer un résumé des résultats
+        summary = self.etl_pipeline.get_summary(batch_results)
+        
+        # Log du résumé global
+        logger.info(f"📊 Résumé du pipeline ETL:")
+        logger.info(f"  Symboles traités: {summary['total_symbols']}")
+        logger.info(f"  Succès: {summary['successful']}")
+        logger.info(f"  Échecs: {summary['failed']}")
+        logger.info(f"  Taux de succès: {summary['success_rate'] * 100:.1f}%")
+        logger.info(f"  Bougies extraites: {summary['total_raw_rows']}")
+        logger.info(f"  Lignes transformées: {summary['total_transformed_rows']}")
+        logger.info(f"  Lignes chargées: {summary['total_loaded_rows']}")
+        logger.info(f"  Temps total: {summary['total_time']:.2f}s")
+        logger.info(f"  Temps moyen par symbole: {summary['average_time']:.2f}s")
+        
+        # Log des échecs individuels si nécessaire
+        failed_symbols = [s for s, r in batch_results.items() if not r.success]
+        if failed_symbols:
+            logger.warning(f"⚠️  Échecs individuels:")
+            for symbol in failed_symbols:
+                result = batch_results[symbol]
+                logger.warning(f"  - {symbol}: {result.error_step} - {result.error}")
