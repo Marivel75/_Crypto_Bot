@@ -154,8 +154,8 @@ class TestMarketCollectorFetchAndStore:
         # Exécuter la méthode
         collector.fetch_and_store()
 
-        # Vérifier que fetch_ohlcv a été appelé (avec les nouveaux paramètres du pipeline)
-        mock_client_instance.fetch_ohlcv.assert_called_once_with("BTC/USDT", ["1h"], 100)
+        # Vérifier que fetch_ohlcv a été appelé correctement
+        mock_client_instance.fetch_ohlcv.assert_called_once_with("BTC/USDT", "1h", 100)
 
     @patch("src.collectors.market_collector.BinanceClient")
     def test_fetch_and_store_with_exception(self, mock_client):
