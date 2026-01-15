@@ -37,7 +37,7 @@ def get_db_engine():
 
         Base.metadata.create_all(engine)
 
-        logger.info(f"🔌 Connexion à la base de données: {DATABASE_URL}")
+        logger.info(f"Connexion à la base de données: {DATABASE_URL}")
         return engine
     except Exception as e:
         logger.error(f"❌ Erreur de connexion à la base de données: {e}")
@@ -56,5 +56,7 @@ def get_db_session():
     return Session()
 
 
-# Engine par défaut pour la compatibilité
-engine = get_db_engine()
+# Engine par défaut pour la compatibilité (lazy loading)
+def get_engine():
+    """Retourne l'engine de base de données (pour la compatibilité)"""
+    return get_db_engine()

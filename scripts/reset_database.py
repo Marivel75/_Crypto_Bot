@@ -4,8 +4,15 @@ Script pour réinitialiser complètement la base de données SQLite.
 """
 
 import os
+import sys
 import shutil
-from logger_settings import logger
+
+# Ajouter le dossier racine au chemin Python
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Ne pas importer get_db_engine ici pour éviter l'exécution au niveau du module
+import logger_settings
+logger = logger_settings.logger
 
 def reset_database():
     """Réinitialise complètement la base de données"""
@@ -30,6 +37,7 @@ def reset_database():
         logger.info("Dossiers recréés")
 
         # Recréer la base de données avec les tables
+        # Importer ici pour éviter l'exécution au niveau du module
         from src.services.db import get_db_engine
         engine = get_db_engine()
         logger.info("Nouvelle base de données SQLite créée")
@@ -44,7 +52,7 @@ def reset_database():
 
 if __name__ == "__main__":
     if reset_database():
-        logger.info("🎉 Réinitialisation terminée avec succès!")
+        logger.info("Réinitialisation terminée avec succès!")
     else:
         logger.error("❌ Échec de la réinitialisation")
         exit(1)

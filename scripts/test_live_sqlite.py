@@ -4,10 +4,16 @@ Script pour tester le pipeline ETL avec des données réelles et SQLite.
 """
 
 import sys
+import os
 from datetime import datetime
+
+# Ajouter le dossier racine au chemin Python
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from src.collectors.market_collector import MarketCollector
-from src.services.db import get_db_engine
-from logger_settings import logger
+# Ne pas importer get_db_engine ici pour éviter l'exécution au niveau du module
+import logger_settings
+logger = logger_settings.logger
 
 
 def test_live_collection():
@@ -43,6 +49,8 @@ def test_live_collection():
         logger.info(f"✅ Collecte terminée en {duration:.2f} secondes")
 
         # Vérifier les résultats
+        # Importer ici pour éviter l'exécution au niveau du module
+        from src.services.db import get_db_engine
         engine = get_db_engine()
         with engine.connect() as conn:
             from sqlalchemy import text
@@ -54,7 +62,7 @@ def test_live_collection():
             if count > 0:
                 # Afficher un échantillon
                 sample = conn.execute(text("SELECT * FROM ohlcv LIMIT 3")).fetchall()
-                logger.info("📋 Échantillon de données:")
+                logger.info("Échantillon de données:")
                 for row in sample:
                     logger.info(f"  {row}")
 
@@ -71,6 +79,8 @@ def test_live_collection():
 def analyze_database():
     """Analyse la base de données SQLite"""
     try:
+        # Importer ici pour éviter l'exécution au niveau du module
+        from src.services.db import get_db_engine
         engine = get_db_engine()
         from sqlalchemy import text
 
@@ -99,13 +109,20 @@ def analyze_database():
                 logger.info(f"  Dernière donnée: {stats[4]}")
 
                 # Vérification de la qualité des données
+                # SQLite ne supporte pas COUNT(DISTINCT col1, col2, col3), donc nous utilisons une sous-requête
                 quality = connection.execute(
                     text(
                         """
                     SELECT
                         SUM(CASE WHEN open <= 0 THEN 1 ELSE 0 END) as invalid_prices,
                         SUM(CASE WHEN volume < 0 THEN 1 ELSE 0 END) as negative_volumes,
-                        COUNT(*) - COUNT(DISTINCT symbol, timeframe, timestamp) as duplicate_timestamps
+                        COUNT(*) - (
+                            SELECT COUNT(*)
+                            FROM (
+                                SELECT DISTINCT symbol, timeframe, timestamp
+                                FROM ohlcv
+                            )
+                        ) as duplicate_timestamps
                     FROM ohlcv
                 """
                     )
@@ -143,7 +160,7 @@ if __name__ == "__main__":
     if success:
         # Analyser les résultats
         analyze_database()
-        logger.info("\n🎉 Test live terminé avec succès!")
+        logger.info("\nTest live terminé avec succès!")
     else:
         logger.error("\n❌ Test live échoué")
         sys.exit(1)
