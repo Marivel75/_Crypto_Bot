@@ -103,86 +103,105 @@ class TestTickerCache:
 class TestTickerCollector:
     """Tests pour la classe TickerCollector"""
 
-    def test_initialization(self):
+    @patch("src.services.exchange_factory.ExchangeFactory.create_exchange")
+    def test_initialization(self, mock_create_exchange):
         """Test l'initialisation du collecteur"""
-        with patch("src.services.exchanges_api.binance_client.BinanceClient"):
-            collector = TickerCollector(
-                pairs=["BTC/USDT", "ETH/USDT"],
-                exchange="binance",
-                snapshot_interval=5,
-                cache_size=10,
-                cache_cleanup_interval=30,
-            )
+        # Configurer le mock
+        mock_client_instance = MagicMock()
+        mock_create_exchange.return_value = mock_client_instance
+        
+        collector = TickerCollector(
+            pairs=["BTC/USDT", "ETH/USDT"],
+            exchange="binance",
+            snapshot_interval=5,
+            cache_size=10,
+            cache_cleanup_interval=30,
+        )
 
-            assert collector.pairs == ["BTC/USDT", "ETH/USDT"]
-            assert collector.exchange == "binance"
-            assert collector.snapshot_interval == 5
-            assert collector.cache_cleanup_interval == 30
-            assert collector.cache.max_items == 10
-            assert not collector.running
+        assert collector.pairs == ["BTC/USDT", "ETH/USDT"]
+        assert collector.exchange == "binance"
+        assert collector.snapshot_interval == 5
+        assert collector.cache_cleanup_interval == 30
+        assert collector.cache.max_items == 10
+        assert not collector.running
+        assert collector.client == mock_client_instance
+        # Vérifier que la factory a été appelée avec les bons paramètres
+        mock_create_exchange.assert_called_once_with("binance")
 
-    def test_start_stop_collection(self):
+    @patch("src.services.exchange_factory.ExchangeFactory.create_exchange")
+    def test_start_stop_collection(self, mock_create_exchange):
         """Test le démarrage et l'arrêt de la collecte"""
-        with patch("src.services.exchanges_api.binance_client.BinanceClient"):
-            collector = TickerCollector(["BTC/USDT"], "binance")
+        # Configurer le mock
+        mock_client_instance = MagicMock()
+        mock_create_exchange.return_value = mock_client_instance
+        
+        collector = TickerCollector(["BTC/USDT"], "binance")
 
-            # Démarrer la collecte
-            collector.start_collection()
-            assert collector.running
-            assert collector.collector_thread is not None
+        # Démarrer la collecte
+        collector.start_collection()
+        assert collector.running
+        assert collector.collector_thread is not None
 
-            # Arrêter la collecte
-            collector.stop_collection()
-            assert not collector.running
-            assert collector.collector_thread is None
+        # Arrêter la collecte
+        collector.stop_collection()
+        assert not collector.running
+        assert collector.collector_thread is None
 
     @patch("src.services.ticker_service.TickerCollector._fetch_and_cache_tickers")
     @patch("src.services.ticker_service.TickerCollector._save_snapshot")
-    def test_collection_loop(self, mock_fetch, mock_save):
+    @patch("src.services.exchange_factory.ExchangeFactory.create_exchange")
+    def test_collection_loop(self, mock_create_exchange, mock_fetch, mock_save):
         """Test la boucle de collecte principale"""
-        with patch("src.services.exchanges_api.binance_client.BinanceClient"):
-            collector = TickerCollector(["BTC/USDT"], "binance", snapshot_interval=1)
+        # Configurer le mock
+        mock_client_instance = MagicMock()
+        mock_create_exchange.return_value = mock_client_instance
+        
+        collector = TickerCollector(["BTC/USDT"], "binance", snapshot_interval=1)
 
-            # Démarrer la collecte
-            collector.start_collection()
+        # Démarrer la collecte
+        collector.start_collection()
 
-            # Attendre un peu pour que la boucle s'exécute
-            time.sleep(2)
+        # Attendre un peu pour que la boucle s'exécute
+        time.sleep(2)
 
-            # Arrêter la collecte
-            collector.stop_collection()
+        # Arrêter la collecte
+        collector.stop_collection()
 
-            assert True
+        assert True
 
 
 class TestTickerDatabase:
     """Tests pour l'intégration avec la base de données"""
 
     @patch("src.services.db.get_db_engine")
-    def test_save_snapshot(self, mock_engine):
+    @patch("src.services.exchange_factory.ExchangeFactory.create_exchange")
+    def test_save_snapshot(self, mock_create_exchange, mock_engine):
         """Test la sauvegarde des snapshots"""
+        # Configurer le mock du client Binance
+        mock_client_instance = MagicMock()
+        mock_create_exchange.return_value = mock_client_instance
+        
         mock_conn = MagicMock()
         mock_engine.return_value.connect.return_value.__enter__.return_value = mock_conn
 
-        with patch("src.services.exchanges_api.binance_client.BinanceClient"):
-            collector = TickerCollector(["BTC/USDT"], "binance")
+        collector = TickerCollector(["BTC/USDT"], "binance")
 
-            # Ajouter des données au cache
-            collector.cache.add_ticker(
-                "BTC/USDT",
-                {
-                    "price": 50000,
-                    "volume_24h": 1000,
-                    "price_change_24h": 500,
-                    "price_change_pct_24h": 1.0,
-                    "high_24h": 50500,
-                    "low_24h": 49500,
-                },
-            )
+        # Ajouter des données au cache
+        collector.cache.add_ticker(
+            "BTC/USDT",
+            {
+                "price": 50000,
+                "volume_24h": 1000,
+                "price_change_24h": 500,
+                "price_change_pct_24h": 1.0,
+                "high_24h": 50500,
+                "low_24h": 49500,
+            },
+        )
 
-            # Sauvegarder un snapshot
-            collector._save_snapshot()
-            assert True  # Test simplifié
+        # Sauvegarder un snapshot
+        collector._save_snapshot()
+        assert True  # Test simplifié
 
 
 if __name__ == "__main__":
