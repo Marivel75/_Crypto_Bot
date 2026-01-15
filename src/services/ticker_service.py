@@ -13,6 +13,7 @@ from logger_settings import logger
 from src.services.db import get_db_engine
 from src.models.ticker import TickerSnapshot
 from src.services.exchange_factory import ExchangeFactory
+from sqlalchemy import text
 
 
 class TickerCache:
@@ -148,6 +149,7 @@ class TickerCollector:
         self.running = False
         if self.collector_thread and self.collector_thread.is_alive():
             self.collector_thread.join(timeout=5)
+        self.collector_thread = None
         logger.info("Collecte des tickers arrêtée")
 
     def _collection_loop(self):
@@ -223,7 +225,28 @@ class TickerCollector:
             engine = get_db_engine()
             with engine.connect() as connection:
                 for snapshot in snapshots:
-                    connection.add(snapshot)
+                    connection.execute(
+                        text(
+                            """
+                            INSERT INTO ticker_snapshots (id, snapshot_time, symbol, exchange, price, volume_24h, 
+                            price_change_24h, price_change_pct_24h, high_24h, low_24h)
+                            VALUES (:id, :snapshot_time, :symbol, :exchange, :price, :volume_24h, 
+                            :price_change_24h, :price_change_pct_24h, :high_24h, :low_24h)
+                            """
+                        ),
+                        {
+                            "id": snapshot.id,
+                            "snapshot_time": snapshot.snapshot_time,
+                            "symbol": snapshot.symbol,
+                            "exchange": snapshot.exchange,
+                            "price": snapshot.price,
+                            "volume_24h": snapshot.volume_24h,
+                            "price_change_24h": snapshot.price_change_24h,
+                            "price_change_pct_24h": snapshot.price_change_pct_24h,
+                            "high_24h": snapshot.high_24h,
+                            "low_24h": snapshot.low_24h,
+                        }
+                    )
                 connection.commit()
 
             logger.info(f"Snapshot sauvegardé: {len(snapshots)} tickers")
