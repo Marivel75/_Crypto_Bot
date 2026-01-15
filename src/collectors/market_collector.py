@@ -3,7 +3,7 @@ from logger_settings import logger
 from src.services.exchanges_api.binance_client import BinanceClient
 from src.services.exchanges_api.kraken_client import KrakenClient
 from src.services.exchanges_api.coinbase_client import CoinbaseClient
-from src.services.db import get_engine
+from src.services.db import get_db_engine
 from src.quality.validator import DataValidator0HCLV
 from src.etl.extractor import OHLCVExtractor
 from src.etl.transformer import OHLCVTransformer
@@ -84,7 +84,7 @@ class MarketCollector:
             self.exchange = "binance"
             self.client = BinanceClient()
 
-        self.engine = get_engine()
+        self.engine = get_db_engine()
         
         # Initialisation du valideur de données OHLCV
         self.data_validator = DataValidator0HCLV()
@@ -109,11 +109,20 @@ class MarketCollector:
         Raises:
             Exception: En cas d'erreur lors de la récupération ou du stockage des données
         """
-        # Exécuter le pipeline ETL pour toutes les paires et timeframes
-        batch_results = self.etl_pipeline.run_batch(self.pairs, self.timeframes)
+        # Exécuter le pipeline ETL pour chaque timeframe
+        all_batch_results = {}
+        
+        for timeframe in self.timeframes:
+            logger.info(f"📊 Traitement du timeframe: {timeframe}")
+            batch_results = self.etl_pipeline.run_batch(self.pairs, timeframe)
+            
+            # Ajouter les résultats avec le timeframe comme préfixe
+            for symbol, result in batch_results.items():
+                key = f"{symbol}_{timeframe}"
+                all_batch_results[key] = result
         
         # Générer un résumé des résultats
-        summary = self.etl_pipeline.get_summary(batch_results)
+        summary = self.etl_pipeline.get_summary(all_batch_results)
         
         # Log du résumé global
         logger.info(f"📊 Résumé du pipeline ETL:")
@@ -128,9 +137,9 @@ class MarketCollector:
         logger.info(f"  Temps moyen par symbole: {summary['average_time']:.2f}s")
         
         # Log des échecs individuels si nécessaire
-        failed_symbols = [s for s, r in batch_results.items() if not r.success]
+        failed_symbols = [s for s, r in all_batch_results.items() if not r.success]
         if failed_symbols:
             logger.warning(f"⚠️  Échecs individuels:")
             for symbol in failed_symbols:
-                result = batch_results[symbol]
+                result = all_batch_results[symbol]
                 logger.warning(f"  - {symbol}: {result.error_step} - {result.error}")

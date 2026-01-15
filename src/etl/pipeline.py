@@ -194,17 +194,17 @@ class ETLPipeline:
     
     def _extract_data(self, symbol: str, timeframe: str, limit: int) -> List[List]:
         """Extrait les données brutes."""
-        logger.info(f"📥 Extraction: {symbol} {timeframe}")
+        logger.info(f"Extraction: {symbol} {timeframe}")
         return self.extractor.extract(symbol, timeframe, limit)
     
     def _transform_data(self, raw_data: List[List], symbol: str, timeframe: str) -> pd.DataFrame:
         """Transforme les données brutes."""
-        logger.info(f"🛠️  Transformation: {symbol} {timeframe}")
+        logger.info(f"Transformation: {symbol} {timeframe}")
         return self.transformer.transform(raw_data, symbol, timeframe)
     
     def _load_data(self, df: pd.DataFrame) -> int:
         """Charge les données transformées."""
-        logger.info(f"📤 Chargement: {len(df)} lignes")
+        logger.info(f"Chargement: {len(df)} lignes")
         return self.loader.load(df)
     
     def run_batch(self, symbols: List[str], timeframe: str, limit: int = 100) -> Dict[str, PipelineResult]:
