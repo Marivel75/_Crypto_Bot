@@ -41,6 +41,12 @@ class OHLCV(Base):
     close = Column(Float, nullable=False, comment="Prix de clôture")
     volume = Column(Float, nullable=False, comment="Volume échangé")
 
+    # Enrichissement
+    price_range = Column(Float, comment="Amplitude de prix (high - low)")
+    price_change = Column(Float, comment="Variation de prix (close - open)")
+    price_change_pct = Column(Float, comment="Variation en pourcentage")
+    date = Column(String(10), comment="Date au format YYYY-MM-DD")
+
     # Métadonnées
     exchange = Column(
         String(20),

@@ -94,6 +94,11 @@ class OHLCVTransformer:
         Ajoute les métadonnées au DataFrame.
         """
         df = df.copy()
+        
+        # Générer des UUIDs uniques pour chaque ligne
+        import uuid
+        df["id"] = [str(uuid.uuid4()) for _ in range(len(df))]
+        
         df["symbol"] = symbol
         df["timeframe"] = timeframe
         df["exchange"] = self.exchange
