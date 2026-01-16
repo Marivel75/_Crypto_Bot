@@ -7,12 +7,13 @@ Les tests sont aussi lancés par un workflow tests.yml sur github.
 
 ```
 tests/
-├── test_market_collector.py  # Tests unitaires pour MarketCollector
+├── test_ohlcv_collector.py  # Tests unitaires pour OHLCVCollector
+├── test_ticker_service.py    # Tests unitaires pour TickerCollector et TickerCache
 ├── test_data_validator.py    # Tests unitaires pour DataValidator
 ├── test_etl_extractor.py    # Tests unitaires pour OHLCVExtractor
 ├── test_etl_transformer.py   # Tests unitaires pour OHLCVTransformer
 ├── test_etl_loader.py       # Tests unitaires pour OHLCVLoader
-├── test_etl_pipeline.py     # Tests unitaires pour ETLPipeline
+├── test_etl_pipeline.py     # Tests unitaires pour ETLPipelineOHLCV
 ├── README.md                # Documentation des tests
 └── integration/             # (À venir) Tests d'intégration
 ```
@@ -26,10 +27,10 @@ tests/
 python -m pytest tests/ -v
 
 # Exécuter un fichier de test spécifique
-python -m pytest tests/test_market_collector.py -v
+python -m pytest tests/test_ohlcv_collector.py -v
 
 # Exécuter un test spécifique
-python -m pytest tests/test_market_collector.py::TestMarketCollectorInitialization::test_initialization_with_valid_parameters -v
+python -m pytest tests/test_ohlcv_collector.py::TestOHLCVCollectorInitialization::test_initialization_with_valid_parameters -v
 ```
 
 ### 2. Exécution des tests ETL
@@ -37,6 +38,31 @@ python -m pytest tests/test_market_collector.py::TestMarketCollectorInitializati
 ```bash
 # Exécuter tous les tests ETL
 python -m pytest tests/test_etl_*.py -v
+
+### 3. Exécution des tests de ticker
+
+```bash
+# Exécuter les tests de ticker
+python -m pytest tests/test_ticker_service.py -v
+
+# Exécuter un test spécifique de ticker
+python -m pytest tests/test_ticker_service.py::TestTickerCollector::test_collection_loop -v
+```
+
+### 4. Utilisation du script de test complet
+
+Pour tester toutes les fonctionnalités avant déploiement :
+
+```bash
+# Test complet (recommandé avant production)
+python scripts/test_main.py
+
+# Ce script teste:
+# - Collecte OHLCV depuis plusieurs exchanges
+# - Collecte de ticker en temps réel
+# - Fonctionnement multi-exchanges
+# - Qualité et intégrité des données
+```
 
 # Exécuter les tests de l'extracteur
 python -m pytest tests/test_etl_extractor.py -v

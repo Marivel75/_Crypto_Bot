@@ -32,6 +32,21 @@ Collecte immédiate des données OHLCV sans planification.
 python main.py
 ```
 
+### 2. Tests complets
+
+Avant d'exécuter en production, vous pouvez tester toutes les fonctionnalités :
+
+```bash
+# Test complet (OHLCV + Ticker + Multi-exchanges)
+python scripts/test_main.py
+```
+
+**Le script `test_main.py` teste :**
+- Collecte OHLCV depuis plusieurs exchanges
+- Collecte de ticker en temps réel
+- Fonctionnement multi-exchanges
+- Qualité des données et intégrité de la base
+
 **Options disponibles :**
 
 | Argument              | Description                                      | Valeur par défaut               |
