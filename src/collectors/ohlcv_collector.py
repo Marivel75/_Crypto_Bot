@@ -1,44 +1,23 @@
 import pandas as pd
 from logger_settings import logger
-from src.services.exchanges_api.binance_client import BinanceClient
-from src.services.exchanges_api.kraken_client import KrakenClient
-from src.services.exchanges_api.coinbase_client import CoinbaseClient
+from src.services.exchange_factory import ExchangeFactory
 from src.services.db import get_db_engine
 from src.quality.validator import DataValidator0HCLV
 from src.etl.extractor import OHLCVExtractor
 from src.etl.transformer import OHLCVTransformer
 from src.etl.loader import OHLCVLoader
-from src.etl.pipeline import ETLPipeline
+from src.etl.pipeline_ohlcv import ETLPipelineOHLCV
 from typing import List
 
-class MarketCollector:
+
+class OHLCVCollector:
     """
-    Collecteur de données marché pour plusieurs exchanges.
-
     Récupère les données OHLCV (Open, High, Low, Close, Volume) pour des paires de trading spécifiques et des timeframes donnés, puis les stocke dans une base de données.
-
-    Attributs:
-        pairs (List[str]): Liste des paires de trading à surveiller
-        timeframes (List[str]): Liste des timeframes pour l'analyse
-        exchange (str): Nom de l'exchange à utiliser
-        client: Client pour interagir avec l'API de l'exchange
-        engine: Moteur SQLAlchemy pour la connexion à la base de données
     """
 
     def __init__(
         self, pairs: List[str], timeframes: List[str], exchange: str = "binance"
     ):
-        """
-        Initialise le collecteur de données marché.
-
-        Args:
-            pairs: Liste des paires de trading (ex: ['BTC/USDT', 'ETH/USDT'])
-            timeframes: Liste des timeframes (ex: ['1h', '4h', '1d'])
-            exchange: Nom de l'exchange ('binance', 'kraken', 'coinbase')
-
-        Raises:
-            ValueError: Si les paires, timeframes ou exchange ne sont pas valides
-        """
         # Validation des entrées
         if not pairs or not timeframes:
             error_msg = "Les listes de paires et timeframes ne peuvent pas être vides"
@@ -70,60 +49,46 @@ class MarketCollector:
         self.timeframes = timeframes
         self.exchange = exchange.lower()
 
-        # Initialisation du client approprié
-        if self.exchange == "binance":
-            self.client = BinanceClient()
-        elif self.exchange == "kraken":
-            self.client = KrakenClient(use_auth=False)
-        elif self.exchange == "coinbase":
-            self.client = CoinbaseClient(use_auth=False)
-        else:
-            logger.warning(
-                f"Exchange '{self.exchange}' non reconnu. Utilisation de Binance par défaut."
-            )
-            self.exchange = "binance"
-            self.client = BinanceClient()
+        # Initialisation du client d'API en fonction de l'exchange
+        self.client = ExchangeFactory.create_exchange(exchange)
 
         self.engine = get_db_engine()
-        
+
         # Initialisation du valideur de données OHLCV
         self.data_validator = DataValidator0HCLV()
-        
-        # Initialisation du pipeline ETL
-        self.etl_pipeline = self._create_etl_pipeline()
 
-    def _create_etl_pipeline(self) -> ETLPipeline:
+        # Initialisation du pipeline ETL
+        self.pipeline = self._create_ohlcv_etl_pipeline()
+
+    def _create_ohlcv_etl_pipeline(self) -> ETLPipelineOHLCV:
         """
-        Crée le pipeline ETL avec les composants appropriés.
+        Crée le pipeline ETL avec les composants appropriés pour les data OHLCV
         """
         extractor = OHLCVExtractor(self.client)
         transformer = OHLCVTransformer(self.data_validator, self.exchange)
         loader = OHLCVLoader(self.engine)
 
-        return ETLPipeline(extractor, transformer, loader)
+        return ETLPipelineOHLCV(extractor, transformer, loader)
 
     def fetch_and_store(self) -> None:
         """
         Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données. Utilise le pipeline ETL.
-        
-        Raises:
-            Exception: En cas d'erreur lors de la récupération ou du stockage des données
         """
         # Exécuter le pipeline ETL pour chaque timeframe
         all_batch_results = {}
-        
+
         for timeframe in self.timeframes:
             logger.info(f"📊 Traitement du timeframe: {timeframe}")
-            batch_results = self.etl_pipeline.run_batch(self.pairs, timeframe)
-            
+            batch_results = self.pipeline.run_batch(self.pairs, timeframe)
+
             # Ajouter les résultats avec le timeframe comme préfixe
             for symbol, result in batch_results.items():
                 key = f"{symbol}_{timeframe}"
                 all_batch_results[key] = result
-        
+
         # Générer un résumé des résultats
-        summary = self.etl_pipeline.get_summary(all_batch_results)
-        
+        summary = self.pipeline.get_summary(all_batch_results)
+
         # Log du résumé global
         logger.info(f"📊 Résumé du pipeline ETL:")
         logger.info(f"  Symboles traités: {summary['total_symbols']}")
@@ -135,7 +100,7 @@ class MarketCollector:
         logger.info(f"  Lignes chargées: {summary['total_loaded_rows']}")
         logger.info(f"  Temps total: {summary['total_time']:.2f}s")
         logger.info(f"  Temps moyen par symbole: {summary['average_time']:.2f}s")
-        
+
         # Log des échecs individuels si nécessaire
         failed_symbols = [s for s, r in all_batch_results.items() if not r.success]
         if failed_symbols:

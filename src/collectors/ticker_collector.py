@@ -97,22 +97,13 @@ class TickerCollector:
         cache_size: int = 100,
         cache_cleanup_interval: int = 30,
     ):
-        """
-        Initialise le collecteur de tickers.
-        
-        Args:
-            pairs: Liste des paires à surveiller
-            exchange: Nom de l'exchange
-            snapshot_interval: Intervalle de sauvegarde en minutes
-            cache_size: Taille maximale du cache par symbole
-            cache_cleanup_interval: Intervalle de nettoyage du cache en minutes
-        """
+
         self.pairs = pairs
-        self.exchange = exchange
+        self.exchange = exchange.lower()
         self.snapshot_interval = snapshot_interval
         self.cache_cleanup_interval = cache_cleanup_interval
 
-        # Initialiser le client d'exchange
+        # Initialisation du client d'API en fonction de l'exchange
         self.client = ExchangeFactory.create_exchange(exchange)
 
         # Initialiser le cache
@@ -122,10 +113,10 @@ class TickerCollector:
         self.collector_thread = None
         self.running = False
 
+        logger.info(f"TickerCollector initialisé pour {exchange} - {len(pairs)} paires")
         logger.info(
-            f"TickerCollector initialisé pour {exchange} - {len(pairs)} paires"
+            f"   Nettoyage du cache toutes les {cache_cleanup_interval} minutes"
         )
-        logger.info(f"   Nettoyage du cache toutes les {cache_cleanup_interval} minutes")
 
     def start_collection(self):
         """
@@ -245,7 +236,7 @@ class TickerCollector:
                             "price_change_pct_24h": snapshot.price_change_pct_24h,
                             "high_24h": snapshot.high_24h,
                             "low_24h": snapshot.low_24h,
-                        }
+                        },
                     )
                 connection.commit()
 
