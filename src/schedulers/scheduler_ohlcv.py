@@ -7,6 +7,7 @@ import schedule
 import time
 from typing import List
 from logger_settings import logger
+from config.settings import config
 from src.collectors.ohlcv_collector import OHLCVCollector
 
 
@@ -51,18 +52,20 @@ def daily_ohlcv_collection(
         raise
 
 
-def run_ohlcv_scheduler(
-    pairs: List[str],
-    timeframes: List[str],
-    exchanges: List[str] = ["binance"],
-    schedule_time: str = "09:00",
-) -> None:
+def run_ohlcv_scheduler() -> None:
     """
     Exécute le planificateur pour la collecte quotidienne de données OHLCV sur plusieurs exchanges.
+    Utilise la configuration centralisée.
     Note:
         Cette fonction bloque le thread courant et doit être exécutée dans un thread séparé pour les applications web.
     """
     try:
+        # Récupérer la configuration centralisée
+        pairs = config.get("pairs")
+        timeframes = config.get("timeframes")
+        exchanges = config.get("exchanges")
+        schedule_time = config.get("scheduler.schedule_time", "09:00")
+
         logger.info(
             f"Planificateur OHLCV démarré - Collecte prévue à {schedule_time} quotidiennement"
         )

@@ -3,24 +3,27 @@ import time
 import threading
 import subprocess
 from logger_settings import logger
+from config.settings import config
 from src.schedulers.scheduler_ohlcv import run_ohlcv_scheduler, run_ohlcv_once
 from src.schedulers.scheduler_ticker import run_ticker_scheduler, run_ticker_once
 
 
-def run_collection_once(
-    pairs: list = ["BTC/USDT", "ETH/USDT"],
-    timeframes: list = ["1h", "4h"],
-    exchanges: list = ["binance"],
-    include_ticker: bool = False,
-    ticker_pairs: list = None,
-    snapshot_interval: int = 5,
-    runtime_minutes: int = 60,
-):
+def run_collection_once():
     """
     Exécute une collecte unique de données OHLCV et optionnellement de ticker.
+    Utilise la configuration centralisée.
     """
     try:
         logger.info("Démarrage de la collecte unique de données")
+
+        # Récupérer la configuration centralisée
+        pairs = config.get("pairs")
+        timeframes = config.get("timeframes")
+        exchanges = config.get("exchanges")
+        include_ticker = config.get("ticker.enabled", False)
+        ticker_pairs = config.get("ticker.pairs")
+        snapshot_interval = config.get("ticker.snapshot_interval", 5)
+        runtime_minutes = config.get("ticker.runtime", 60)
 
         # Utiliser les mêmes paires pour le ticker si non spécifié
         if ticker_pairs is None:
@@ -63,31 +66,23 @@ def run_collection_once(
             )
 
 
-def run_scheduled_collection(
-    pairs: list = ["BTC/USDT", "ETH/USDT"],
-    timeframes: list = ["1h", "4h"],
-    exchanges: list = ["binance"],
-    schedule_time: str = "09:00",
-    include_ticker: bool = False,
-    ticker_pairs: list = None,
-    snapshot_interval: int = 5,
-    runtime_minutes: int = 60,
-):
+def run_scheduled_collection():
     """
     Exécute une collecte planifiée quotidienne de données OHLCV et optionnellement de ticker.
-
-    Arguments:
-        pairs: Liste des paires pour la collecte OHLCV
-        timeframes: Liste des timeframes pour la collecte OHLCV
-        exchanges: Liste des exchanges pour la collecte OHLCV
-        schedule_time: Heure quotidienne pour la collecte
-        include_ticker: Si True, active également la collecte de ticker
-        ticker_pairs: Liste des paires pour le ticker
-        snapshot_interval: Intervalle de sauvegarde des snapshots de ticker
-        runtime_minutes: Durée d'exécution pour le ticker
+    Utilise la configuration centralisée.
     """
     try:
         logger.info("Démarrage du collecteur de données avec planification")
+
+        # Récupérer la configuration centralisée
+        pairs = config.get("pairs")
+        timeframes = config.get("timeframes")
+        exchanges = config.get("exchanges")
+        schedule_time = config.get("scheduler.schedule_time", "09:00")
+        include_ticker = config.get("ticker.enabled", False)
+        ticker_pairs = config.get("ticker.pairs")
+        snapshot_interval = config.get("ticker.snapshot_interval", 5)
+        runtime_minutes = config.get("ticker.runtime", 60)
 
         # Utiliser les mêmes paires pour le ticker si non spécifié
         if ticker_pairs is None:
@@ -190,32 +185,12 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
 
-    # Définir les paires et timeframes par défaut
-    pairs = ["BTC/USDT", "ETH/USDT"]
-    timeframes = ["1h", "4h"]
+    # Mettre à jour la configuration avec les arguments de ligne de commande
+    config.update_from_args(args)
 
     if args.schedule:
         # Mode planifié avec OHLCV et optionnellement ticker
-        ticker_pairs = args.ticker_pairs if args.ticker_pairs else pairs
-        run_scheduled_collection(
-            pairs=pairs,
-            timeframes=timeframes,
-            exchanges=args.exchanges,
-            schedule_time=args.schedule_time,
-            include_ticker=args.ticker,
-            ticker_pairs=ticker_pairs,
-            snapshot_interval=args.snapshot_interval,
-            runtime_minutes=args.runtime,
-        )
+        run_scheduled_collection()
     else:
         # Mode exécution unique avec OHLCV et optionnellement ticker
-        ticker_pairs = args.ticker_pairs if args.ticker_pairs else pairs
-        run_collection_once(
-            pairs=pairs,
-            timeframes=timeframes,
-            exchanges=args.exchanges,
-            include_ticker=args.ticker,
-            ticker_pairs=ticker_pairs,
-            snapshot_interval=args.snapshot_interval,
-            runtime_minutes=args.runtime,
-        )
+        run_collection_once()

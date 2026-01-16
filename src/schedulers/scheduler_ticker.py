@@ -7,25 +7,23 @@ import time
 import threading
 from typing import List
 from logger_settings import logger
+from config.settings import config
 from src.collectors.ticker_collector import TickerCollector
 
 
-def run_ticker_scheduler(
-    pairs: List[str],
-    exchanges: List[str] = ["binance"],
-    snapshot_interval: int = 5,
-    runtime_minutes: int = 60,
-):
+def run_ticker_scheduler():
     """
     Exécute un planificateur dédié à la collecte de ticker en temps réel pour plusieurs exchanges.
-
-    Arguments:
-        pairs: Liste des paires de trading à surveiller
-        exchanges: Liste des exchanges à utiliser
-        snapshot_interval: Intervalle de sauvegarde des snapshots en minutes
-        runtime_minutes: Durée d'exécution en minutes (0 pour illimité)
+    Utilise la configuration centralisée.
     """
     try:
+        # Récupérer la configuration centralisée
+        pairs = config.get("pairs")
+        exchanges = config.get("exchanges")
+        snapshot_interval = config.get("ticker.snapshot_interval", 5)
+        runtime_minutes = config.get("ticker.runtime", 60)
+        cache_size = config.get("ticker.cache_size", 1000)
+
         logger.info(
             f"Démarrage du planificateur de ticker pour {len(exchanges)} exchanges"
         )
@@ -39,7 +37,7 @@ def run_ticker_scheduler(
                 pairs=pairs,
                 exchange=exchange,
                 snapshot_interval=snapshot_interval,
-                cache_size=1000,
+                cache_size=cache_size,
             )
             collectors[exchange].start_collection()
             logger.info(f"✅ Collecteur de ticker démarré pour {exchange}")
