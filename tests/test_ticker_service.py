@@ -9,7 +9,7 @@ import pytest
 import time
 from unittest.mock import MagicMock, patch
 from datetime import datetime, timedelta
-from src.services.ticker_service import TickerCollector, TickerCache
+from src.collectors.ticker_collector import TickerCollector, TickerCache
 from src.models.ticker import TickerSnapshot
 
 
@@ -109,7 +109,7 @@ class TestTickerCollector:
         # Configurer le mock
         mock_client_instance = MagicMock()
         mock_create_exchange.return_value = mock_client_instance
-        
+
         collector = TickerCollector(
             pairs=["BTC/USDT", "ETH/USDT"],
             exchange="binance",
@@ -134,7 +134,7 @@ class TestTickerCollector:
         # Configurer le mock
         mock_client_instance = MagicMock()
         mock_create_exchange.return_value = mock_client_instance
-        
+
         collector = TickerCollector(["BTC/USDT"], "binance")
 
         # Démarrer la collecte
@@ -147,15 +147,15 @@ class TestTickerCollector:
         assert not collector.running
         assert collector.collector_thread is None
 
-    @patch("src.services.ticker_service.TickerCollector._fetch_and_cache_tickers")
-    @patch("src.services.ticker_service.TickerCollector._save_snapshot")
+    @patch("src.collectors.ticker_collector.TickerCollector._fetch_and_cache_tickers")
+    @patch("src.collectors.ticker_collector.TickerCollector._save_snapshot")
     @patch("src.services.exchange_factory.ExchangeFactory.create_exchange")
     def test_collection_loop(self, mock_create_exchange, mock_fetch, mock_save):
         """Test la boucle de collecte principale"""
         # Configurer le mock
         mock_client_instance = MagicMock()
         mock_create_exchange.return_value = mock_client_instance
-        
+
         collector = TickerCollector(["BTC/USDT"], "binance", snapshot_interval=1)
 
         # Démarrer la collecte
@@ -180,7 +180,7 @@ class TestTickerDatabase:
         # Configurer le mock du client Binance
         mock_client_instance = MagicMock()
         mock_create_exchange.return_value = mock_client_instance
-        
+
         mock_conn = MagicMock()
         mock_engine.return_value.connect.return_value.__enter__.return_value = mock_conn
 

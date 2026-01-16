@@ -23,16 +23,6 @@ class ExchangeFactory:
     ) -> Union[BinanceClient, KrakenClient]:
         """
         Crée une instance de client pour l'exchange spécifié.
-
-        Args:
-            exchange_name: Nom de l'exchange ('binance', 'kraken' ou 'coinbase')
-            **kwargs: Arguments supplémentaires pour le client
-
-        Returns:
-            Instance du client d'exchange
-
-        Raises:
-            ValueError: Si l'exchange n'est pas supporté
         """
         exchange_name = exchange_name.lower()
 

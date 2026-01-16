@@ -1,0 +1,110 @@
+"""
+Module de planification dédié aux tâches de ticker en temps réel.
+Sépare clairement les tâches OHLCV (historique) des tâches de ticker (temps réel).
+"""
+
+import time
+import threading
+from typing import List
+from logger_settings import logger
+from src.collectors.ticker_collector import TickerCollector
+
+
+def run_ticker_scheduler(
+    pairs: List[str],
+    exchanges: List[str] = ["binance"],
+    snapshot_interval: int = 5,
+    runtime_minutes: int = 60,
+):
+    """
+    Exécute un planificateur dédié à la collecte de ticker en temps réel pour plusieurs exchanges.
+
+    Arguments:
+        pairs: Liste des paires de trading à surveiller
+        exchanges: Liste des exchanges à utiliser
+        snapshot_interval: Intervalle de sauvegarde des snapshots en minutes
+        runtime_minutes: Durée d'exécution en minutes (0 pour illimité)
+    """
+    try:
+        logger.info(
+            f"Démarrage du planificateur de ticker pour {len(exchanges)} exchanges"
+        )
+        logger.info(f"Paires surveillées: {', '.join(pairs)}")
+        logger.info(f"Intervalle de snapshot: {snapshot_interval} minutes")
+
+        # Créer un collecteur de ticker pour chaque exchange
+        collectors = {}
+        for exchange in exchanges:
+            collectors[exchange] = TickerCollector(
+                pairs=pairs,
+                exchange=exchange,
+                snapshot_interval=snapshot_interval,
+                cache_size=1000,
+            )
+            collectors[exchange].start_collection()
+            logger.info(f"✅ Collecteur de ticker démarré pour {exchange}")
+
+        # Exécuter pendant la durée spécifiée
+        start_time = time.time()
+        runtime_seconds = runtime_minutes * 60 if runtime_minutes > 0 else float("inf")
+        last_display_time = start_time  # Variable séparée pour le minuteur d'affichage
+
+        try:
+            while time.time() - start_time < runtime_seconds:
+                # Calculer le temps restant
+                elapsed = time.time() - start_time
+                remaining_seconds = max(0, runtime_seconds - elapsed)
+                remaining_minutes = int(remaining_seconds // 60)
+                remaining_seconds_display = int(remaining_seconds % 60)
+                
+                # Afficher les prix actuels et le temps restant périodiquement
+                if time.time() - last_display_time > 30:  # Après 30 secondes depuis le dernier affichage
+                    for exchange, collector in collectors.items():
+                        current_prices = collector.get_current_prices()
+                        if current_prices:
+                            logger.info(f"Prix actuels {exchange}: {current_prices}")
+                    
+                    if runtime_minutes > 0:  # Seulement si le runtime est limité
+                        logger.info(f"⏳ Temps restant: {remaining_minutes} minutes {remaining_seconds_display} secondes")
+                    
+                    last_display_time = time.time()  # Met à jour seulement le minuteur d'affichage
+
+                time.sleep(10)
+
+        except KeyboardInterrupt:
+            logger.info("Arrêt du planificateur de ticker demandé par l'utilisateur")
+
+        finally:
+            # Arrêter proprement tous les collecteurs
+            for exchange, collector in collectors.items():
+                collector.stop_collection()
+                logger.info(f"✅ Collecteur de ticker arrêté pour {exchange}")
+
+            logger.info("✅ Planificateur de ticker terminé")
+
+    except Exception as e:
+        logger.error(f"❌ Erreur fatale dans le planificateur de ticker: {e}")
+        raise
+
+
+def run_ticker_once(
+    pairs: List[str],
+    exchanges: List[str] = ["binance"],
+    snapshot_interval: int = 5,
+    runtime_minutes: int = 60,
+):
+    """
+    Exécute une collecte de ticker unique (pour les tests ou le démarrage).
+
+    Arguments:
+        pairs: Liste des paires de trading à surveiller
+        exchanges: Liste des exchanges à utiliser
+        snapshot_interval: Intervalle de sauvegarde des snapshots en minutes
+        runtime_minutes: Durée d'exécution en minutes
+    """
+    try:
+        logger.info(f"Exécution unique de la collecte de ticker")
+        run_ticker_scheduler(pairs, exchanges, snapshot_interval, runtime_minutes)
+    except Exception as e:
+        logger.error(f"❌ Échec de l'exécution unique du ticker: {e}")
+        raise

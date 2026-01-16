@@ -13,7 +13,7 @@ from datetime import datetime
 # Ajouter le chemin racine au PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.etl.pipeline import ETLPipeline, PipelineResult, PipelineError
+from src.etl.pipeline_ohlcv import ETLPipelineOHLCV as ETLPipeline, PipelineResult, PipelineError
 from src.etl.extractor import OHLCVExtractor, ExtractionError
 from src.etl.transformer import OHLCVTransformer, TransformationError
 from src.etl.loader import OHLCVLoader, LoadingError
