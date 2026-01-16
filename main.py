@@ -1,6 +1,7 @@
 import argparse
 import time
 import threading
+import subprocess
 from logger_settings import logger
 from src.schedulers.scheduler_ohlcv import run_ohlcv_scheduler, run_ohlcv_once
 from src.schedulers.scheduler_ticker import run_ticker_scheduler, run_ticker_once
@@ -13,38 +14,53 @@ def run_collection_once(
     include_ticker: bool = False,
     ticker_pairs: list = None,
     snapshot_interval: int = 5,
-    runtime_minutes: int = 60
+    runtime_minutes: int = 60,
 ):
     """
     Exécute une collecte unique de données OHLCV et optionnellement de ticker.
     """
     try:
         logger.info("Démarrage de la collecte unique de données")
-        
+
         # Utiliser les mêmes paires pour le ticker si non spécifié
         if ticker_pairs is None:
             ticker_pairs = pairs
-            
-        logger.info(f"Configuration OHLCV: {len(pairs)} paires, {len(timeframes)} timeframes")
+
+        logger.info(
+            f"Configuration OHLCV: {len(pairs)} paires, {len(timeframes)} timeframes"
+        )
         logger.info(f"Exchanges: {', '.join(exchanges)}")
-        
+
         if include_ticker:
-            logger.info(f"Configuration Ticker: {len(ticker_pairs)} paires, snapshot toutes les {snapshot_interval} minutes")
-        
+            logger.info(
+                f"Configuration Ticker: {len(ticker_pairs)} paires, snapshot toutes les {snapshot_interval} minutes"
+            )
+
         # 1. Exécuter la collecte OHLCV pour tous les exchanges
         logger.info("📊 Exécution de la collecte OHLCV...")
         run_ohlcv_once(pairs, timeframes, exchanges)
-        
+
         # 2. Démarrer la collecte de ticker si activée
         if include_ticker:
             logger.info("Démarrage de la collecte de ticker en temps réel...")
             run_ticker_once(ticker_pairs, exchanges, snapshot_interval, runtime_minutes)
         else:
             logger.info("✅ Collecte OHLCV terminée avec succès")
-            
+
     except Exception as e:
         logger.error(f"❌ Erreur fatale dans la collecte unique: {e}")
         raise
+    finally:
+        # Exécuter le script de vérification de la base de données
+        try:
+            logger.info("Exécution du script de vérification de la base de données...")
+            subprocess.run(["python", "scripts/check_db.py"], check=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(f"❌ Échec de l'exécution du script de vérification: {e}")
+        except Exception as e:
+            logger.error(
+                f"❌ Erreur lors de l'exécution du script de vérification: {e}"
+            )
 
 
 def run_scheduled_collection(
@@ -55,11 +71,11 @@ def run_scheduled_collection(
     include_ticker: bool = False,
     ticker_pairs: list = None,
     snapshot_interval: int = 5,
-    runtime_minutes: int = 60
+    runtime_minutes: int = 60,
 ):
     """
     Exécute une collecte planifiée quotidienne de données OHLCV et optionnellement de ticker.
-    
+
     Arguments:
         pairs: Liste des paires pour la collecte OHLCV
         timeframes: Liste des timeframes pour la collecte OHLCV
@@ -72,22 +88,26 @@ def run_scheduled_collection(
     """
     try:
         logger.info("Démarrage du collecteur de données avec planification")
-        
+
         # Utiliser les mêmes paires pour le ticker si non spécifié
         if ticker_pairs is None:
             ticker_pairs = pairs
-            
-        logger.info(f"Configuration OHLCV: {len(pairs)} paires, {len(timeframes)} timeframes")
+
+        logger.info(
+            f"Configuration OHLCV: {len(pairs)} paires, {len(timeframes)} timeframes"
+        )
         logger.info(f"Planification: Collecte quotidienne à {schedule_time}")
         logger.info(f"Exchanges: {', '.join(exchanges)}")
-        
+
         if include_ticker:
-            logger.info(f"Configuration Ticker: {len(ticker_pairs)} paires, snapshot toutes les {snapshot_interval} minutes")
-        
+            logger.info(
+                f"Configuration Ticker: {len(ticker_pairs)} paires, snapshot toutes les {snapshot_interval} minutes"
+            )
+
         # 1. Exécution immédiate au démarrage pour chaque exchange
         logger.info("📊 Exécution de la collecte OHLCV initiale...")
         run_ohlcv_once(pairs, timeframes, exchanges)
-        
+
         # 2. Démarrer la collecte de ticker si activée
         if include_ticker:
             logger.info("📈 Démarrage de la collecte de ticker en temps réel...")
@@ -95,20 +115,28 @@ def run_scheduled_collection(
             ticker_thread = threading.Thread(
                 target=run_ticker_scheduler,
                 args=(ticker_pairs, exchanges, snapshot_interval, runtime_minutes),
-                daemon=True
+                daemon=True,
             )
             ticker_thread.start()
-        
+
         # 3. Puis planification quotidienne pour tous les exchanges
         logger.info("Démarrage du planificateur quotidien...")
         run_ohlcv_scheduler(pairs, timeframes, exchanges, schedule_time)
-        
+
     except Exception as e:
         logger.error(f"❌ Erreur fatale dans la collecte planifiée: {e}")
         raise
-
-
-
+    finally:
+        # Exécuter le script de vérification de la base de données
+        try:
+            logger.info("Exécution du script de vérification de la base de données...")
+            subprocess.run(["python", "scripts/check_db.py"], check=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(f"❌ Échec de l'exécution du script de vérification: {e}")
+        except Exception as e:
+            logger.error(
+                f"❌ Erreur lors de l'exécution du script de vérification: {e}"
+            )
 
 
 def parse_arguments():
@@ -119,53 +147,53 @@ def parse_arguments():
     parser.add_argument(
         "--schedule",
         action="store_true",
-        help="Activer la planification quotidienne (par défaut: exécution unique)"
+        help="Activer la planification quotidienne (par défaut: exécution unique)",
     )
     parser.add_argument(
         "--ticker",
         action="store_true",
-        help="Activer la collecte de ticker en temps réel"
+        help="Activer la collecte de ticker en temps réel",
     )
     parser.add_argument(
         "--ticker-pairs",
-        nargs='+',
+        nargs="+",
         default=None,
-        help="Liste des paires pour le ticker (par défaut: mêmes que les paires principales)"
+        help="Liste des paires pour le ticker (par défaut: mêmes que les paires principales)",
     )
     parser.add_argument(
         "--snapshot-interval",
         type=int,
         default=5,
-        help="Intervalle de sauvegarde des snapshots de ticker en minutes (par défaut: 5)"
+        help="Intervalle de sauvegarde des snapshots de ticker en minutes (par défaut: 5)",
     )
     parser.add_argument(
         "--runtime",
         type=int,
         default=60,
-        help="Durée d'exécution en minutes (0 pour illimité, par défaut: 60)"
+        help="Durée d'exécution en minutes (0 pour illimité, par défaut: 60)",
     )
     parser.add_argument(
         "--exchanges",
-        nargs='+',
+        nargs="+",
         default=["binance"],
-        help="Liste des exchanges à utiliser (par défaut: binance)"
+        help="Liste des exchanges à utiliser (par défaut: binance)",
     )
     parser.add_argument(
         "--schedule-time",
         type=str,
         default="09:00",
-        help="Heure de planification quotidienne (format HH:MM, par défaut: 09:00)"
+        help="Heure de planification quotidienne (format HH:MM, par défaut: 09:00)",
     )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_arguments()
-    
+
     # Définir les paires et timeframes par défaut
     pairs = ["BTC/USDT", "ETH/USDT"]
     timeframes = ["1h", "4h"]
-    
+
     if args.schedule:
         # Mode planifié avec OHLCV et optionnellement ticker
         ticker_pairs = args.ticker_pairs if args.ticker_pairs else pairs
@@ -177,7 +205,7 @@ if __name__ == "__main__":
             include_ticker=args.ticker,
             ticker_pairs=ticker_pairs,
             snapshot_interval=args.snapshot_interval,
-            runtime_minutes=args.runtime
+            runtime_minutes=args.runtime,
         )
     else:
         # Mode exécution unique avec OHLCV et optionnellement ticker
@@ -189,5 +217,5 @@ if __name__ == "__main__":
             include_ticker=args.ticker,
             ticker_pairs=ticker_pairs,
             snapshot_interval=args.snapshot_interval,
-            runtime_minutes=args.runtime
+            runtime_minutes=args.runtime,
         )
