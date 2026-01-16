@@ -46,7 +46,7 @@ class TickerCache:
         if len(self.cache[symbol]) > self.max_items:
             self.cache[symbol].pop(0)  # Supprime le plus ancien
 
-        logger.debug(f"✅ Ticker ajouté pour {symbol}: {ticker_data['price']} USD")
+        logger.debug(f"✅ Ticker ajouté pour {symbol}: {ticker_data.get('price', ticker_data.get('last', 'N/A'))} USD")
 
     def get_recent_tickers(self, symbol: str, minutes: int = 60) -> List[dict]:
         """
@@ -172,6 +172,36 @@ class TickerCollector:
                 logger.error(f"❌ Erreur dans la collecte des tickers: {e}")
                 time.sleep(10)  # Attendre avant de réessayer
 
+    def _normalize_ticker_data(self, ticker_data: dict) -> dict:
+        """
+        Normalise les données de ticker selon l'exchange.
+        """
+        normalized = ticker_data.copy()
+        
+        # Normalisation selon l'exchange
+        if self.exchange == "binance":
+            # Binance utilise 'last' au lieu de 'price'
+            if 'last' in normalized and 'price' not in normalized:
+                normalized['price'] = normalized['last']
+            
+            # Mapping des champs spécifiques à Binance
+            if 'quoteVolume' in normalized and 'volume_24h' not in normalized:
+                normalized['volume_24h'] = normalized['quoteVolume']
+            
+            if 'percentage' in normalized and 'price_change_pct_24h' not in normalized:
+                normalized['price_change_pct_24h'] = normalized['percentage']
+                
+        elif self.exchange == "kraken":
+            # Kraken a sa propre structure
+            if 'c' in normalized and 'price' not in normalized:
+                normalized['price'] = normalized['c'][0]  # Dernier prix
+                
+        elif self.exchange == "coinbase":
+            # Coinbase utilise 'price' directement
+            pass
+        
+        return normalized
+
     def _fetch_and_cache_tickers(self):
         """
         Récupère les tickers depuis l'exchange et les ajoute au cache.
@@ -180,7 +210,9 @@ class TickerCollector:
             try:
                 ticker = self.client.fetch_ticker(pair)
                 if ticker:
-                    self.cache.add_ticker(pair, ticker)
+                    # Normaliser les données avant de les ajouter au cache
+                    normalized_ticker = self._normalize_ticker_data(ticker)
+                    self.cache.add_ticker(pair, normalized_ticker)
             except Exception as e:
                 logger.error(f"❌ Échec récupération ticker {pair}: {e}")
 

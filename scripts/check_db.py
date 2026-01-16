@@ -225,7 +225,7 @@ def check_db_health(connection):
         health_indicators = {"integrity_ok": integrity_ok, "tables_present": {}}
 
         # Vérifier la présence des tables principales
-        required_tables = ["ohlcv_data", "ticker_snapshots"]
+        required_tables = ["ohlcv", "ticker_snapshots"]
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
         existing_tables = [row[0] for row in cursor.fetchall()]
 

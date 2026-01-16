@@ -47,16 +47,27 @@ def run_ticker_scheduler(
         # Exécuter pendant la durée spécifiée
         start_time = time.time()
         runtime_seconds = runtime_minutes * 60 if runtime_minutes > 0 else float("inf")
+        last_display_time = start_time  # Variable séparée pour le minuteur d'affichage
 
         try:
             while time.time() - start_time < runtime_seconds:
-                # Afficher les prix actuels périodiquement pour tous les exchanges
-                if time.time() - start_time > 30:  # Après 30 secondes
+                # Calculer le temps restant
+                elapsed = time.time() - start_time
+                remaining_seconds = max(0, runtime_seconds - elapsed)
+                remaining_minutes = int(remaining_seconds // 60)
+                remaining_seconds_display = int(remaining_seconds % 60)
+                
+                # Afficher les prix actuels et le temps restant périodiquement
+                if time.time() - last_display_time > 30:  # Après 30 secondes depuis le dernier affichage
                     for exchange, collector in collectors.items():
                         current_prices = collector.get_current_prices()
                         if current_prices:
                             logger.info(f"Prix actuels {exchange}: {current_prices}")
-                    start_time = time.time()
+                    
+                    if runtime_minutes > 0:  # Seulement si le runtime est limité
+                        logger.info(f"⏳ Temps restant: {remaining_minutes} minutes {remaining_seconds_display} secondes")
+                    
+                    last_display_time = time.time()  # Met à jour seulement le minuteur d'affichage
 
                 time.sleep(10)
 
