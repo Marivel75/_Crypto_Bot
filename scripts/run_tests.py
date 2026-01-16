@@ -35,7 +35,8 @@ def run_tests(test_type="all", verbose=False, coverage=False, report=False):
     
     # Sélectionner les tests
     if test_type == "unit":
-        cmd.append("tests/test_market_collector.py")
+        cmd.append("tests/test_ohlcv_collector.py")
+        cmd.append("tests/test_ticker_service.py")
     elif test_type == "validation":
         cmd.append("tests/test_data_validator.py")
     elif test_type == "etl":

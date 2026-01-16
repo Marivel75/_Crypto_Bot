@@ -3,6 +3,7 @@ Loader pour le pipeline ETL.
 """
 
 import pandas as pd
+from datetime import datetime
 from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from logger_settings import logger
@@ -28,6 +29,16 @@ class OHLCVLoader:
         self.batch_size = batch_size
         logger.info(f"Chargeur initialisé pour la table {table_name}")
     
+    def _add_timestamps(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Ajoute les timestamps created_at et updated_at au DataFrame.
+        """
+        if 'created_at' not in df.columns:
+            df['created_at'] = datetime.utcnow()
+        if 'updated_at' not in df.columns:
+            df['updated_at'] = datetime.utcnow()
+        return df
+    
     def load(self, df: pd.DataFrame, if_exists: str = "append") -> int:
         """
         Charge un DataFrame dans la base de données.
@@ -38,6 +49,9 @@ class OHLCVLoader:
         
         try:
             logger.info(f"Chargement de {len(df)} lignes dans {self.table_name}")
+            
+            # Ajouter les timestamps si nécessaire
+            df = self._add_timestamps(df)
             
             # Utiliser to_sql avec gestion des batches pour les grands DataFrames
             rows_inserted = df.to_sql(
@@ -65,6 +79,9 @@ class OHLCVLoader:
         Méthode d'insertion par batches pour les grands DataFrames.
         """
         total_inserted = 0
+        
+        # Ajouter les timestamps au DataFrame complet avant de le diviser en batches
+        df = self._add_timestamps(df)
         
         # Traite le df par lots de taille `self.batch_size`.
         for i in range(0, len(df), self.batch_size):
