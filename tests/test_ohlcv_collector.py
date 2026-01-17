@@ -187,15 +187,20 @@ class TestOHLCVCollectorFetchAndStore:
         # Vérifier que l'exception a été loguée (via l'extracteur avec réessais)
         assert mock_client_instance.fetch_ohlcv.call_count == 3  # 3 tentatives
 
-    @patch("src.collectors.ohlcv_collector.ExchangeFactory")
+    @patch("src.collectors.ohlcv_collector.ExchangeClient")
     @patch("pandas.DataFrame.to_sql")
-    def test_fetch_and_store_with_duplicate_data(self, mock_to_sql, mock_factory):
+    def test_fetch_and_store_with_duplicate_data(self, mock_to_sql, mock_exchange_client):
         """Test la gestion des doublons dans fetch_and_store."""
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45]
         ]
-        mock_factory.create_exchange.return_value = mock_client_instance
+        
+        # Configuration du mock du context manager
+        mock_context = MagicMock()
+        mock_context.__enter__.return_value = mock_client_instance
+        mock_context.__exit__.return_value = None
+        mock_exchange_client.return_value = mock_context
 
         # Configurer to_sql pour simuler un IntegrityError (doublon)
         from sqlalchemy.exc import IntegrityError
@@ -211,11 +216,11 @@ class TestOHLCVCollectorFetchAndStore:
         assert mock_to_sql.called
         # Vérifier que l'erreur a été gérée (pas de propagation)
 
-    @patch("src.collectors.ohlcv_collector.ExchangeFactory")
+    @patch("src.collectors.ohlcv_collector.ExchangeClient")
     @patch("src.collectors.ohlcv_collector.DataValidator0HCLV")
     @patch("pandas.DataFrame.to_sql")
     def test_fetch_and_store_with_invalid_data(
-        self, mock_to_sql, mock_validator, mock_factory
+        self, mock_to_sql, mock_validator, mock_exchange_client
     ):
         """Test que les données invalides ne sont pas sauvegardées."""
         # Configuration du mock client
@@ -223,7 +228,12 @@ class TestOHLCVCollectorFetchAndStore:
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
         ]
-        mock_factory.create_exchange.return_value = mock_client_instance
+        
+        # Configuration du mock du context manager
+        mock_context = MagicMock()
+        mock_context.__enter__.return_value = mock_client_instance
+        mock_context.__exit__.return_value = None
+        mock_exchange_client.return_value = mock_context
 
         # Configuration du mock valideur pour retourner des données invalides
         mock_validator_instance = MagicMock()
