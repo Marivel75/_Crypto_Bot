@@ -1,0 +1,53 @@
+# Configuration principale pour Crypto Bot
+
+# Paires de trading par défaut
+pairs:
+  - BTC/USDT
+  - ETH/USDT
+  - SOL/USDT
+
+# Timeframes pour la collecte OHLCV
+timeframes:
+  - "1h"
+  - "4h"
+  - "1d"
+
+# Exchanges à utiliser
+exchanges:
+  - binance
+  - kraken
+  - coinbase
+
+# Configuration du ticker (temps réel)
+ticker:
+  enabled: false # Désactivé par défaut
+  # pairs: null  # Utilise les mêmes que pairs si non spécifié
+  snapshot_interval: 10 # minutes
+  runtime: 120 # minutes
+  cache_size: 1000
+
+# Configuration du scheduler (planification)
+scheduler:
+  enabled: false
+  schedule_time: "08:30" # Heure de collecte quotidienne
+
+# Configuration de la base de données
+database:
+  url: "sqlite:///data/processed/crypto_data.db"
+  backup_interval: 12 # heures
+  max_connections: 5
+  timeout: 30 # secondes
+
+# Configuration de la journalisation
+logging:
+  level: "INFO"
+  file: "crypto_bot.log"
+  max_size: 10 # MB
+  backup_count: 5
+
+# Configuration de l'API
+api:
+  rate_limit: 100 # requêtes/minute
+  timeout: 30 # secondes
+  retry_attempts: 3
+  retry_delay: 5 # secondes

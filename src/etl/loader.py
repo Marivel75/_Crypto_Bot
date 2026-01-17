@@ -16,8 +16,7 @@ class LoadingError(Exception):
 
 class OHLCVLoader:
     """
-    Loader de données OHLCV pour le pipeline ETL, responsable de la sauvegarde des données transformées
-    dans la base de données.
+    Loader de données OHLCV pour le pipeline ETL, responsable de la sauvegarde des données transformées en base.
     """
     
     def __init__(self, engine, table_name: str = "ohlcv", batch_size: int = 1000):

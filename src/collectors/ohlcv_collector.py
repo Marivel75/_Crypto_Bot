@@ -13,6 +13,7 @@ from typing import List
 class OHLCVCollector:
     """
     Récupère les données OHLCV (Open, High, Low, Close, Volume) pour des paires de trading spécifiques et des timeframes donnés, puis les stocke dans une base de données.
+    Utilise le pipeline ETL ohlcv pour gérer le processus d'extraction, de transformation et de chargement des données.
     """
 
     def __init__(

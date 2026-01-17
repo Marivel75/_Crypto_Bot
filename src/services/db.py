@@ -3,9 +3,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from logger_settings import logger
+from config.settings import config
 
-# Configuration de la base de données - SQLite par défaut pour le développement local
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///data/processed/crypto_data.db")
+# Configuration de la base de données - Utiliser la configuration centralisée
+DATABASE_URL = config.get("database.url")
 
 Base = declarative_base()
 
