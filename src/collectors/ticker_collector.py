@@ -26,7 +26,7 @@ class TickerCache:
         """
         Initialise le cache des tickers.
         """
-        self.cache = {}  # {symbol: [list of ticker entries]}
+        self.cache = {}  # format du dict : {symbol: [list of ticker entries]}
         self.max_items = max_items_per_symbol
         logger.info(
             f"📊 Cache de tickers initialisé (max {max_items_per_symbol} par symbole)"

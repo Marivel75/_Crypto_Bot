@@ -111,10 +111,7 @@ class PipelineError(Exception):
 
 class ETLPipelineOHLCV:
     """
-    Pipeline ETL complet pour le traitement des données OHLCV.
-
-    Orchestrateur de l'ensemble du processus ETL en coordonnant
-    les extracteurs, transformeurs et chargeurs.
+    Pipeline ETL complet pour le traitement des données OHLCV. Orchestrateur de l'ensemble du processus ETL en coordonnant les extracteurs, transformeurs et chargeurs.
 
     Attributs:
         extractor: Extracteur de données
@@ -130,11 +127,6 @@ class ETLPipelineOHLCV:
     ):
         """
         Initialise le pipeline avec les composants ETL.
-
-        Args:
-            extractor: Instance de OHLCVExtractor
-            transformer: Instance de OHLCVTransformer
-            loader: Instance de OHLCVLoader
         """
         self.extractor = extractor
         self.transformer = transformer
@@ -149,9 +141,6 @@ class ETLPipelineOHLCV:
             symbol: Paire de trading (ex: 'BTC/USDT')
             timeframe: Timeframe (ex: '1h', '4h', '1d')
             limit: Nombre de bougies à extraire (défaut: 100)
-
-        Return:
-            PipelineResult: Résultat détaillé de l'exécution
         """
         result = PipelineResult(symbol, timeframe)
 
@@ -210,13 +199,10 @@ class ETLPipelineOHLCV:
         """
         Exécute le pipeline ETL pour plusieurs symboles.
 
-        Args:
+        Arguments:
             symbols: Liste de paires de trading
             timeframe: Timeframe commun
             limit: Nombre de bougies par symbole
-
-        Returns:
-            Dict[str, PipelineResult]: Résultats par symbole
         """
         results = {}
 
@@ -237,13 +223,10 @@ class ETLPipelineOHLCV:
         """
         Exécute uniquement les étapes Extract et Transform pour plusieurs symboles.
 
-        Args:
+        Arguments:
             symbols: Liste de paires de trading
             timeframe: Timeframe commun
             limit: Nombre de bougies par symbole
-
-        Returns:
-            Dict[str, pd.DataFrame]: DataFrames transformés par symbole
         """
         results = {}
 
