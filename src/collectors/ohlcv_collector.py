@@ -1,7 +1,8 @@
 import pandas as pd
 from logger_settings import logger
 from src.services.exchange_factory import ExchangeFactory
-from src.services.db import get_db_engine
+from src.services.db_context import database_transaction
+from src.services.exchange_context import ExchangeClient
 from src.quality.validator import DataValidator0HCLV
 from src.etl.extractor import OHLCVExtractor
 from src.etl.transformer import OHLCVTransformer
@@ -73,19 +74,26 @@ class OHLCVCollector:
 
     def fetch_and_store(self) -> None:
         """
-        Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données. Utilise le pipeline ETL.
+        Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données.
+        Utilise des context managers pour la gestion des ressources.
         """
-        # Exécuter le pipeline ETL pour chaque timeframe
         all_batch_results = {}
 
         for timeframe in self.timeframes:
             logger.info(f"📊 Traitement du timeframe: {timeframe}")
-            batch_results = self.pipeline.run_batch(self.pairs, timeframe)
 
-            # Ajouter les résultats avec le timeframe comme préfixe
-            for symbol, result in batch_results.items():
-                key = f"{symbol}_{timeframe}"
-                all_batch_results[key] = result
+            # Utiliser des context managers pour les ressources
+            with ExchangeClient(self.exchange) as client, database_transaction() as db_conn:
+                # Mettre à jour le client dans le pipeline
+                self.pipeline.extractor.client = client
+                
+                # Exécuter le pipeline ETL
+                batch_results = self.pipeline.run_batch(self.pairs, timeframe)
+
+                # Ajouter les résultats avec le timeframe comme préfixe
+                for symbol, result in batch_results.items():
+                    key = f"{symbol}_{timeframe}"
+                    all_batch_results[key] = result
 
         # Générer un résumé des résultats
         summary = self.pipeline.get_summary(all_batch_results)
