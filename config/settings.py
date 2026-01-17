@@ -164,26 +164,56 @@ class Config:
 
     def update_from_args(self, args):
         """Mettre à jour la configuration depuis les arguments de ligne de commande"""
-        if hasattr(args, "pairs") and args.pairs:
-            self._config["pairs"] = args.pairs
-        if hasattr(args, "timeframes") and args.timeframes:
-            self._config["timeframes"] = args.timeframes
-        if hasattr(args, "exchanges") and args.exchanges:
-            self._config["exchanges"] = args.exchanges
+        # Mettre à jour les paramètres de base
+        # Utiliser args.pairs même s'il est vide pour permettre de réinitialiser
+        if hasattr(args, "pairs"):
+            self._config["pairs"] = args.pairs if args.pairs else self._config.get("pairs")
+        if hasattr(args, "timeframes"):
+            self._config["timeframes"] = args.timeframes if args.timeframes else self._config.get("timeframes")
+        if hasattr(args, "exchanges"):
+            self._config["exchanges"] = args.exchanges if args.exchanges else self._config.get("exchanges")
 
+        # Mettre à jour les paramètres du scheduler
+        if hasattr(args, "schedule"):
+            self._config["scheduler"]["enabled"] = args.schedule
+            if args.schedule and hasattr(args, "schedule_time"):
+                self._config["scheduler"]["schedule_time"] = args.schedule_time
+
+        # Mettre à jour les paramètres du ticker si activé
         if hasattr(args, "ticker") and args.ticker:
             self._config["ticker"]["enabled"] = True
+            
+            # Mettre à jour les paires de ticker
             if hasattr(args, "ticker_pairs") and args.ticker_pairs:
+                # Si ticker_pairs est spécifié, l'utiliser pour le ticker ET les paires principales
                 self._config["ticker"]["pairs"] = args.ticker_pairs
-            if hasattr(args, "snapshot_interval") and args.snapshot_interval:
-                self._config["ticker"]["snapshot_interval"] = args.snapshot_interval
-            if hasattr(args, "runtime") and args.runtime:
-                self._config["ticker"]["runtime"] = args.runtime
+                self._config["pairs"] = args.ticker_pairs  # Mettre aussi à jour les paires principales
+            elif hasattr(args, "pairs") and args.pairs:
+                # Sinon, utiliser les paires principales si elles sont spécifiées
+                self._config["ticker"]["pairs"] = args.pairs
+            else:
+                # Sinon, utiliser les paires principales actuelles
+                self._config["ticker"]["pairs"] = self._config.get("pairs", ["BTC/USDT", "ETH/USDT"])
 
-        if hasattr(args, "schedule") and args.schedule:
-            self._config["scheduler"]["enabled"] = True
-            if hasattr(args, "schedule_time") and args.schedule_time:
-                self._config["scheduler"]["schedule_time"] = args.schedule_time
+            # Mettre à jour l'intervalle de snapshot (toujours mettre à jour si fourni)
+            if hasattr(args, "snapshot_interval"):
+                self._config["ticker"]["snapshot_interval"] = args.snapshot_interval
+
+            # Mettre à jour le runtime (toujours mettre à jour si fourni)
+            if hasattr(args, "runtime"):
+                self._config["ticker"]["runtime"] = args.runtime
+        else:
+            # Si le ticker n'est pas activé, s'assurer qu'il est bien désactivé
+            self._config["ticker"]["enabled"] = False
+
+        # Journaliser les paramètres mis à jour
+        logger.info(f"✅ Configuration mise à jour depuis les arguments de ligne de commande:")
+        logger.info(f"  Paires: {self._config.get('pairs')}")
+        logger.info(f"  Exchanges: {self._config.get('exchanges')}")
+        logger.info(f"  Ticker enabled: {self._config.get('ticker', {}).get('enabled')}")
+        logger.info(f"  Snapshot interval: {self._config.get('ticker', {}).get('snapshot_interval')}")
+        logger.info(f"  Runtime: {self._config.get('ticker', {}).get('runtime')} minutes")
+        logger.info(f"  Schedule enabled: {self._config.get('scheduler', {}).get('enabled')}")
 
     def get_all(self) -> Dict[str, Any]:
         """Récupérer toute la configuration"""
