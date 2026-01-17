@@ -31,11 +31,13 @@ class ExchangeClient:
             )
             raise
 
-    def __exit__(self, exc_type):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         """
         Fermeture propre du client, même en cas d'erreur.
         Arguments:
             exc_type: Type de l'exception si une erreur s'est produite
+            exc_val: Valeur de l'exception
+            exc_tb: Traceback de l'exception
         """
         try:
             if self.client:

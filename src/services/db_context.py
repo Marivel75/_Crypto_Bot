@@ -35,12 +35,14 @@ class DatabaseConnection:
             logger.error(f"❌ Échec de l'ouverture de la connexion: {e}")
             raise
 
-    def __exit__(self, exc_type):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         """
         Fermeture propre de la connexion, même en cas d'erreur.
 
         Args:
             exc_type: Type de l'exception si une erreur s'est produite
+            exc_val: Valeur de l'exception
+            exc_tb: Traceback de l'exception
         Returns:
             bool: False pour propager les exceptions, True pour les supprimer
         """
