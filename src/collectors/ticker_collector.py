@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List
 from logger_settings import logger
 from config.settings import config
-from src.services.db import get_db_engine
+from src.services.db_context import database_transaction
 from src.models.ticker import TickerSnapshot
 from src.services.exchange_factory import ExchangeFactory
 from sqlalchemy import text
@@ -237,6 +237,7 @@ class TickerCollector:
     def _save_snapshot(self):
         """
         Sauvegarde un snapshot des tickers actuels en base de données.
+        Utilise des context managers pour la gestion des ressources.
         """
         try:
             current_prices = self.cache.get_current_prices()
@@ -262,11 +263,10 @@ class TickerCollector:
                 )
                 snapshots.append(snapshot)
 
-            # Sauvegarder en base de données
-            engine = get_db_engine()
-            with engine.connect() as connection:
+            # Utiliser un context manager pour la base de données
+            with database_transaction() as db_conn:
                 for snapshot in snapshots:
-                    connection.execute(
+                    db_conn.execute(
                         text(
                             """
                             INSERT INTO ticker_snapshots (id, snapshot_time, symbol, exchange, price, volume_24h, 
@@ -288,7 +288,6 @@ class TickerCollector:
                             "low_24h": snapshot.low_24h,
                         },
                     )
-                connection.commit()
 
             logger.info(f"Snapshot sauvegardé: {len(snapshots)} tickers")
 
