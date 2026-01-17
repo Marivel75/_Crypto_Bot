@@ -132,10 +132,15 @@ class TestOHLCVCollectorFetchAndStore:
     """Tests pour la méthode fetch_and_store."""
 
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
+    @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("src.collectors.ohlcv_collector.DataValidator0HCLV")
     @patch("pandas.DataFrame.to_sql")
-    def test_fetch_and_store_success(self, mock_to_sql, mock_validator, mock_exchange_client):
+    def test_fetch_and_store_success(self, mock_to_sql, mock_validator, mock_factory, mock_exchange_client):
         """Test le succès de fetch_and_store avec le pipeline ETL."""
+        # Configuration du mock pour le constructeur
+        mock_client_constructor = MagicMock()
+        mock_factory.create_exchange.return_value = mock_client_constructor
+        
         # Configuration du mock
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
@@ -167,8 +172,13 @@ class TestOHLCVCollectorFetchAndStore:
         mock_client_instance.fetch_ohlcv.assert_called_once_with("BTC/USDT", "1h", 100)
 
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
-    def test_fetch_and_store_with_exception(self, mock_exchange_client):
+    @patch("src.collectors.ohlcv_collector.ExchangeFactory")
+    def test_fetch_and_store_with_exception(self, mock_factory, mock_exchange_client):
         """Test la gestion des exceptions dans fetch_and_store avec le pipeline ETL."""
+        # Configuration du mock pour le constructeur
+        mock_client_constructor = MagicMock()
+        mock_factory.create_exchange.return_value = mock_client_constructor
+        
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.side_effect = Exception("API Error")
         
@@ -188,9 +198,14 @@ class TestOHLCVCollectorFetchAndStore:
         assert mock_client_instance.fetch_ohlcv.call_count == 3  # 3 tentatives
 
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
+    @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("pandas.DataFrame.to_sql")
-    def test_fetch_and_store_with_duplicate_data(self, mock_to_sql, mock_exchange_client):
+    def test_fetch_and_store_with_duplicate_data(self, mock_to_sql, mock_factory, mock_exchange_client):
         """Test la gestion des doublons dans fetch_and_store."""
+        # Configuration du mock pour le constructeur
+        mock_client_constructor = MagicMock()
+        mock_factory.create_exchange.return_value = mock_client_constructor
+        
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45]
@@ -217,12 +232,17 @@ class TestOHLCVCollectorFetchAndStore:
         # Vérifier que l'erreur a été gérée (pas de propagation)
 
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
+    @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("src.collectors.ohlcv_collector.DataValidator0HCLV")
     @patch("pandas.DataFrame.to_sql")
     def test_fetch_and_store_with_invalid_data(
-        self, mock_to_sql, mock_validator, mock_exchange_client
+        self, mock_to_sql, mock_validator, mock_factory, mock_exchange_client
     ):
         """Test que les données invalides ne sont pas sauvegardées."""
+        # Configuration du mock pour le constructeur
+        mock_client_constructor = MagicMock()
+        mock_factory.create_exchange.return_value = mock_client_constructor
+        
         # Configuration du mock client
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
