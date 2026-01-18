@@ -19,17 +19,17 @@ from src.config.logger_settings import logger
 def get_db_connection(db_path=None):
     """
     Établit une connexion à la base de données SQLite.
-    
+
     Args:
         db_path: Chemin vers la base de données (optionnel)
-        
+
     Returns:
         Connection: Objet de connexion SQLite
     """
     if db_path is None:
         # Construire le chemin absolu vers la base de données
         db_path = os.path.join(project_root, "data", "processed", "crypto_data.db")
-    
+
     """
     Établit une connexion à la base de données SQLite.
     """
@@ -79,7 +79,7 @@ def get_table_info(connection, table_name):
         cursor.execute(f"SELECT COUNT(*) as row_count FROM {table_name}")
         row_count_result = cursor.fetchone()
         row_count_for_size = row_count_result[0] if row_count_result else 0
-        
+
         # Estimation de la taille (1KB par ligne en moyenne)
         table_size = row_count_for_size * 1024  # 1KB par ligne
 

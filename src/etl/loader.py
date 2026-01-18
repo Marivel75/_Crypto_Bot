@@ -2,10 +2,14 @@
 Loader pour le pipeline ETL.
 """
 
-import pandas as pd
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
+
+import pandas as pd
+from sqlalchemy import inspect
+from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError
+
 from src.config.logger_settings import logger
 
 
@@ -17,10 +21,13 @@ class LoadingError(Exception):
 
 class OHLCVLoader:
     """
-    Loader de données OHLCV pour le pipeline ETL, responsable de la sauvegarde des données transformées en base.
+    Loader de données OHLCV pour le pipeline ETL, responsable de la sauvegarde
+    des données transformées en base.
     """
 
-    def __init__(self, engine=None, table_name: str = "ohlcv", batch_size: int = 1000):
+    def __init__(
+        self, engine: Engine | None = None, table_name: str = "ohlcv", batch_size: int = 1000
+    ) -> None:
         """
         Initialise le chargeur avec un moteur SQLAlchemy (optionnel).
         """
@@ -73,13 +80,12 @@ class OHLCVLoader:
                         con=db_conn,
                         if_exists=if_exists,
                         index=False,
-                        method=(
-                            self._batch_insert if len(df) > self.batch_size else None
-                        ),
+                        method=(self._batch_insert if len(df) > self.batch_size else None),
                     )
 
-            logger.info(f"✅ Chargement réussi: {rows_inserted} lignes insérées")
-            return rows_inserted
+            inserted = int(rows_inserted) if rows_inserted is not None else 0
+            logger.info(f"✅ Chargement réussi: {inserted} lignes insérées")
+            return inserted
 
         except IntegrityError as e:
             logger.warning(f"⚠️  Conflit de données (doublons): {e}")
@@ -90,7 +96,7 @@ class OHLCVLoader:
             logger.error(f"❌ {error_msg}")
             raise LoadingError(error_msg) from e
 
-    def _batch_insert(self, df: pd.DataFrame, table_name: str, **kwargs) -> int:
+    def _batch_insert(self, df: pd.DataFrame, table_name: str, **kwargs: Any) -> int:
         """
         Méthode d'insertion par batches pour les grands DataFrames.
         """
@@ -125,21 +131,15 @@ class OHLCVLoader:
                         )
                 batch_size = len(batch)
                 total_inserted += batch_size
-                logger.debug(
-                    f"Batch {i//self.batch_size + 1}: {batch_size} lignes insérées"
-                )
+                logger.debug(f"Batch {i // self.batch_size + 1}: {batch_size} lignes insérées")
 
             except IntegrityError:
-                logger.warning(
-                    f"⚠️  Conflit dans le batch {i//self.batch_size + 1}, ignoré"
-                )
+                logger.warning(f"⚠️  Conflit dans le batch {i // self.batch_size + 1}, ignoré")
                 continue
 
             except Exception as e:
-                logger.error(f"❌ Échec du batch {i//self.batch_size + 1}: {e}")
-                raise LoadingError(
-                    f"Échec du batch {i//self.batch_size + 1}: {e}"
-                ) from e
+                logger.error(f"❌ Échec du batch {i // self.batch_size + 1}: {e}")
+                raise LoadingError(f"Échec du batch {i // self.batch_size + 1}: {e}") from e
 
         return total_inserted
 
@@ -166,7 +166,10 @@ class OHLCVLoader:
         Vérifie si la table existe dans la base de données.
         """
         try:
-            return self.engine.has_table(self.table_name)
+            if not self.engine:
+                return False
+            inspector = inspect(self.engine)
+            return bool(inspector.has_table(self.table_name))
         except Exception as e:
             logger.error(f"❌ Impossible de vérifier l'existence de la table: {e}")
             return False
@@ -179,18 +182,15 @@ class OHLCVLoader:
             if not self.table_exists():
                 return None
 
-            # Utiliser l'inspection SQLAlchemy
-            inspector = (
-                self.engine.connect().execution_options(autocommit=True).connection
-            )
-            columns = inspector.execute(
-                f"SELECT * FROM {self.table_name} LIMIT 0"
-            ).keys()
+            if not self.engine:
+                return None
 
-            return {"table": self.table_name, "columns": list(columns), "exists": True}
+            inspector = inspect(self.engine)
+            columns = inspector.get_columns(self.table_name)
+            column_names = [column["name"] for column in columns]
+
+            return {"table": self.table_name, "columns": column_names, "exists": True}
 
         except Exception as e:
-            logger.error(
-                f"❌ Impossible de récupérer les informations de la table: {e}"
-            )
+            logger.error(f"❌ Impossible de récupérer les informations de la table: {e}")
             return None

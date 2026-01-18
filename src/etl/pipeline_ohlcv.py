@@ -1,15 +1,18 @@
 """
-Module Pipeline pour le pipeline ETL : orchestrer le processus ETL complet en coordonnant les composants Extract, Transform et Load.
+Module Pipeline pour le pipeline ETL : orchestrer le processus ETL complet
+en coordonnant les composants Extract, Transform et Load.
 """
 
-import pandas as pd
-from typing import List, Dict, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Dict, List, Optional
+
+import pandas as pd
+
 from src.config.logger_settings import logger
-from src.etl.extractor import OHLCVExtractor, ExtractionError
+from src.etl.extractor import ExtractionError, OHLCVExtractor
+from src.etl.loader import LoadingError, OHLCVLoader
 from src.etl.transformer import OHLCVTransformer, TransformationError
-from src.etl.loader import OHLCVLoader, LoadingError
 
 
 @dataclass
@@ -51,52 +54,52 @@ class PipelineResult:
             "error_step": self.error_step,
         }
 
-    def start_extraction(self):
+    def start_extraction(self) -> None:
         """Démarre le chronomètre pour l'extraction."""
         self.extraction_time = -datetime.utcnow().timestamp()
 
-    def end_extraction(self, raw_rows: int):
+    def end_extraction(self, raw_rows: int) -> None:
         """Arrête le chronomètre pour l'extraction."""
         self.extraction_time += datetime.utcnow().timestamp()
         self.raw_rows = raw_rows
 
-    def start_transformation(self):
+    def start_transformation(self) -> None:
         """Démarre le chronomètre pour la transformation."""
         self.transformation_time = -datetime.utcnow().timestamp()
 
-    def end_transformation(self, transformed_rows: int):
+    def end_transformation(self, transformed_rows: int) -> None:
         """Arrête le chronomètre pour la transformation."""
         self.transformation_time += datetime.utcnow().timestamp()
         self.transformed_rows = transformed_rows
 
-    def start_loading(self):
+    def start_loading(self) -> None:
         """Démarre le chronomètre pour le chargement."""
         self.loading_time = -datetime.utcnow().timestamp()
 
-    def end_loading(self, loaded_rows: int):
+    def end_loading(self, loaded_rows: int) -> None:
         """Arrête le chronomètre pour le chargement."""
         self.loading_time += datetime.utcnow().timestamp()
         self.loaded_rows = loaded_rows
 
-    def fail_extraction(self, error: str):
+    def fail_extraction(self, error: str) -> None:
         """Marque l'échec à l'étape d'extraction."""
         self.error = error
         self.error_step = "extraction"
         self.success = False
 
-    def fail_transformation(self, error: str):
+    def fail_transformation(self, error: str) -> None:
         """Marque l'échec à l'étape de transformation."""
         self.error = error
         self.error_step = "transformation"
         self.success = False
 
-    def fail_loading(self, error: str):
+    def fail_loading(self, error: str) -> None:
         """Marque l'échec à l'étape de chargement."""
         self.error = error
         self.error_step = "loading"
         self.success = False
 
-    def fail(self, error: str):
+    def fail(self, error: str) -> None:
         """Marque l'échec général du pipeline."""
         self.error = error
         self.error_step = "unknown"
@@ -111,7 +114,9 @@ class PipelineError(Exception):
 
 class ETLPipelineOHLCV:
     """
-    Pipeline ETL complet pour le traitement des données OHLCV. Orchestrateur de l'ensemble du processus ETL en coordonnant les extracteurs, transformeurs et chargeurs.
+    Pipeline ETL complet pour le traitement des données OHLCV. Orchestrateur
+    de l'ensemble du processus ETL en coordonnant les extracteurs,
+    transformeurs et chargeurs.
 
     Attributs:
         extractor: Extracteur de données
@@ -161,9 +166,7 @@ class ETLPipelineOHLCV:
             result.end_loading(rows_inserted)
 
             result.success = True
-            logger.info(
-                f"✅ Pipeline ETL terminé avec succès pour {symbol} {timeframe}"
-            )
+            logger.info(f"✅ Pipeline ETL terminé avec succès pour {symbol} {timeframe}")
 
         except ExtractionError as e:
             result.fail_extraction(str(e))
@@ -181,9 +184,7 @@ class ETLPipelineOHLCV:
         logger.info(f"Extraction: {symbol} {timeframe}")
         return self.extractor.extract(symbol, timeframe, limit)
 
-    def _transform_data(
-        self, raw_data: List[List], symbol: str, timeframe: str
-    ) -> pd.DataFrame:
+    def _transform_data(self, raw_data: List[List], symbol: str, timeframe: str) -> pd.DataFrame:
         """Transforme les données brutes."""
         logger.info(f"Transformation: {symbol} {timeframe}")
         return self.transformer.transform(raw_data, symbol, timeframe)

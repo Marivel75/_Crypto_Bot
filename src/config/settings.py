@@ -2,6 +2,7 @@ import json
 import os
 from copy import deepcopy
 from pathlib import Path
+from typing import Any, Dict, List
 
 from dotenv import load_dotenv
 
@@ -39,7 +40,7 @@ def _build_database_url() -> str:
     return "sqlite:///data/processed/crypto_data.db"
 
 
-DEFAULT_CONFIG = {
+DEFAULT_CONFIG: Dict[str, Any] = {
     "default_exchange": "binance",
     "pairs": ["BTC/USDT", "ETH/USDT"],
     "timeframes": ["1h", "4h"],
@@ -55,7 +56,7 @@ DEFAULT_CONFIG = {
 }
 
 
-def _ensure_list(value):
+def _ensure_list(value: Any) -> List[Any]:
     if value is None:
         return []
     if isinstance(value, (list, tuple, set)):
@@ -63,7 +64,7 @@ def _ensure_list(value):
     return [value]
 
 
-def _extract_exchange_names(raw_exchanges):
+def _extract_exchange_names(raw_exchanges: Any) -> List[str]:
     if raw_exchanges is None:
         return []
     if isinstance(raw_exchanges, dict):
@@ -82,7 +83,7 @@ def _extract_exchange_names(raw_exchanges):
     return [raw_exchanges]
 
 
-def _normalize_config(raw):
+def _normalize_config(raw: Any) -> Dict[str, Any]:
     normalized = deepcopy(DEFAULT_CONFIG)
     if not isinstance(raw, dict):
         return normalized
@@ -114,9 +115,8 @@ def _normalize_config(raw):
             {key: value for key, value in raw["ticker"].items() if value is not None}
         )
 
-    if (
-        (not raw.get("pairs") or not raw.get("timeframes"))
-        and isinstance(raw.get("exchanges"), list)
+    if (not raw.get("pairs") or not raw.get("timeframes")) and isinstance(
+        raw.get("exchanges"), list
     ):
         default_exchange = normalized.get("default_exchange")
         for exchange in raw.get("exchanges", []):
@@ -131,19 +131,19 @@ def _normalize_config(raw):
 
 
 class Config:
-    def __init__(self, data=None):
+    def __init__(self, data: Dict[str, Any] | None = None) -> None:
         self._data = deepcopy(data) if data is not None else deepcopy(DEFAULT_CONFIG)
 
     @classmethod
-    def load(cls, path=None):
-        config_path = Path(path or os.getenv("CONFIG", "data/scheduler_config.json"))
+    def load(cls, path: str | None = None) -> "Config":
+        config_path = Path(path or os.getenv("CONFIG") or "data/scheduler_config.json")
         try:
             raw = json.loads(config_path.read_text(encoding="utf-8"))
         except (FileNotFoundError, json.JSONDecodeError, OSError):
             raw = {}
         return cls(_normalize_config(raw))
 
-    def get(self, key, default=None):
+    def get(self, key: str, default: Any = None) -> Any:
         current = self._data
         for part in key.split("."):
             if isinstance(current, dict) and part in current:
@@ -152,10 +152,10 @@ class Config:
                 return default
         return current
 
-    def as_dict(self):
+    def as_dict(self) -> Dict[str, Any]:
         return deepcopy(self._data)
 
-    def save_to_file(self, path):
+    def save_to_file(self, path: str) -> bool:
         target = Path(path)
         payload = self.as_dict()
         if target.suffix in {".yaml", ".yml"}:
@@ -167,7 +167,7 @@ class Config:
         return False
 
 
-def _format_yaml_scalar(value):
+def _format_yaml_scalar(value: Any) -> str:
     if isinstance(value, str):
         return json.dumps(value)
     if value is True:
@@ -179,7 +179,7 @@ def _format_yaml_scalar(value):
     return str(value)
 
 
-def _build_yaml_lines(data, indent=0):
+def _build_yaml_lines(data: Any, indent: int = 0) -> List[str]:
     lines = []
     pad = " " * indent
     if isinstance(data, dict):
@@ -201,7 +201,7 @@ def _build_yaml_lines(data, indent=0):
     return lines
 
 
-def _to_yaml(data):
+def _to_yaml(data: Any) -> str:
     return "\n".join(_build_yaml_lines(data)) + "\n"
 
 

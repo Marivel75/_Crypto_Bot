@@ -140,14 +140,14 @@ class TestOHLCVCollectorFetchAndStore:
         # Configuration du mock pour le constructeur
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
-        
+
         # Configuration du mock
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
             [1768298400000, 90050.0, 90150.0, 89950.0, 90100.0, 124.56],
         ]
-        
+
         # Configuration du mock du context manager
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
@@ -178,10 +178,10 @@ class TestOHLCVCollectorFetchAndStore:
         # Configuration du mock pour le constructeur
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
-        
+
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.side_effect = Exception("API Error")
-        
+
         # Configuration du mock du context manager
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
@@ -205,12 +205,12 @@ class TestOHLCVCollectorFetchAndStore:
         # Configuration du mock pour le constructeur
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
-        
+
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45]
         ]
-        
+
         # Configuration du mock du context manager
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
@@ -242,13 +242,13 @@ class TestOHLCVCollectorFetchAndStore:
         # Configuration du mock pour le constructeur
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
-        
+
         # Configuration du mock client
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
         ]
-        
+
         # Configuration du mock du context manager
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance

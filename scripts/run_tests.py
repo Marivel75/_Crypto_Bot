@@ -12,27 +12,27 @@ from datetime import datetime
 def run_tests(test_type="all", verbose=False, coverage=False, report=False):
     """
     Exécute les tests avec les options spécifiées.
-    
+
     Args:
         test_type: Type de tests à exécuter (all, unit, validation, etl, integration)
         verbose: Mode verbeux
         coverage: Générer un rapport de couverture
         report: Générer un rapport HTML
     """
-    
+
     # Commande de base
     cmd = [sys.executable, "-m", "pytest"]
-    
+
     # Ajouter les options
     if verbose:
         cmd.append("-v")
-    
+
     if coverage:
         cmd.extend(["--cov=src", "--cov-report=term"])
-    
+
     if report:
         cmd.append("--cov-report=html")
-    
+
     # Sélectionner les tests
     if test_type == "unit":
         cmd.append("tests/test_ohlcv_collector.py")
@@ -49,51 +49,51 @@ def run_tests(test_type="all", verbose=False, coverage=False, report=False):
         cmd.append("tests/integration/")
     else:
         cmd.append("tests/")
-    
+
     # Exécuter la commande
     print(f"🚀 Exécution des tests: {' '.join(cmd)}")
     result = subprocess.run(cmd)
-    
+
     return result.returncode == 0
 
 
 def main():
     """Point d'entrée principal."""
-    
+
     parser = argparse.ArgumentParser(
         description="Script pour exécuter les tests Crypto Bot"
     )
-    
+
     parser.add_argument(
         "--type",
         choices=["all", "unit", "validation", "etl", "integration"],
         default="all",
         help="Type de tests à exécuter (défaut: all)"
     )
-    
+
     parser.add_argument(
         "--verbose",
         action="store_true",
         help="Mode verbeux"
     )
-    
+
     parser.add_argument(
         "--coverage",
         action="store_true",
         help="Générer un rapport de couverture"
     )
-    
+
     parser.add_argument(
         "--report",
         action="store_true",
         help="Générer un rapport HTML (nécessite --coverage)"
     )
-    
+
     args = parser.parse_args()
-    
+
     print("🧪 Crypto Bot - Exécution des Tests")
     print("=" * 50)
-    
+
     # Exécuter les tests
     success = run_tests(
         test_type=args.type,
@@ -101,7 +101,7 @@ def main():
         coverage=args.coverage,
         report=args.report
     )
-    
+
     # Message final
     if success:
         print("\n✅ Tous les tests ont passé avec succès !")

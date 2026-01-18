@@ -7,11 +7,14 @@ Close : Prix de clôture
 Volume : Volume échangé
 """
 
-from sqlalchemy import Column, String, Float, DateTime, Index
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
-Base = declarative_base()
+from sqlalchemy import Column, DateTime, Float, Index, String
+from sqlalchemy.orm import DeclarativeBase
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 class OHLCV(Base):
@@ -31,9 +34,7 @@ class OHLCV(Base):
 
     # Données de marché essentielles
     timestamp = Column(DateTime, nullable=False, comment="Timestamp de la bougie")
-    symbol = Column(
-        String(20), nullable=False, comment="Paire de trading (ex: BTC/USDT)"
-    )
+    symbol = Column(String(20), nullable=False, comment="Paire de trading (ex: BTC/USDT)")
     timeframe = Column(String(10), nullable=False, comment="Timeframe (ex: 1h, 4h, 1d)")
     open = Column(Float, nullable=False, comment="Prix d'ouverture")
     high = Column(Float, nullable=False, comment="Prix le plus haut")
@@ -75,7 +76,7 @@ class OHLCV(Base):
         Index("idx_ohlcv_symbol_timestamp", "symbol", "timestamp"),
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"<OHLCV(id={self.id}, symbol={self.symbol}, "
             f"timeframe={self.timeframe}, timestamp={self.timestamp})>"

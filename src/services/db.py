@@ -1,9 +1,11 @@
 import os
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from src.config.logger_settings import logger
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
+
 from config.settings import config
+from src.config.logger_settings import logger
 
 # Configuration de la base de données - Utiliser la configuration centralisée
 DATABASE_URL = config.get("database.url")
@@ -11,9 +13,10 @@ DATABASE_URL = config.get("database.url")
 Base = declarative_base()
 
 
-def get_db_engine():
+def get_db_engine() -> Engine:
     """
-    Crée et retourne un moteur SQLAlchemy pour la base de données. Crée automatiquement les dossiers et la base de données si nécessaire.
+    Crée et retourne un moteur SQLAlchemy pour la base de données. Crée
+    automatiquement les dossiers et la base de données si nécessaire.
     """
     try:
         # Créer les dossiers si nécessaire (pour SQLite)
@@ -47,7 +50,7 @@ def get_db_engine():
         raise
 
 
-def get_db_session():
+def get_db_session() -> Session:
     """
     Crée et retourne une session de base de données.
 
@@ -60,6 +63,6 @@ def get_db_session():
 
 
 # Engine par défaut pour la compatibilité (lazy loading)
-def get_engine():
+def get_engine() -> Engine:
     """Retourne l'engine de base de données (pour la compatibilité)"""
     return get_db_engine()

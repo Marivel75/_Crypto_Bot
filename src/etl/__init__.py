@@ -12,25 +12,18 @@ Composants principaux:
 """
 
 # Import des composants disponibles
-from .extractor import OHLCVExtractor, ExtractionError
-
-# Composants à implémenter (imports conditionnels pour éviter les erreurs)
-try:
-    from .transformer import OHLCVTransformer, TransformationError
-    from .loader import OHLCVLoader, LoadingError
-    from .pipeline_ohlcv import ETLPipeline, PipelineResult
-except ImportError:
-    # Ces modules seront disponibles lors de l'implémentation complète
-    OHLCVTransformer = None
-    TransformationError = None
-    OHLCVLoader = None
-    LoadingError = None
-    ETLPipeline = None
-    PipelineResult = None
+from .extractor import ExtractionError, OHLCVExtractor
+from .loader import LoadingError, OHLCVLoader
+from .pipeline_ohlcv import ETLPipelineOHLCV, PipelineResult
+from .transformer import OHLCVTransformer, TransformationError
 
 __all__ = [
-    'OHLCVExtractor', 'ExtractionError',
-    'OHLCVTransformer', 'TransformationError',
-    'OHLCVLoader', 'LoadingError',
-    'ETLPipeline', 'PipelineResult'
+    "OHLCVExtractor",
+    "ExtractionError",
+    "OHLCVTransformer",
+    "TransformationError",
+    "OHLCVLoader",
+    "LoadingError",
+    "ETLPipelineOHLCV",
+    "PipelineResult",
 ]

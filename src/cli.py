@@ -1,4 +1,5 @@
 import time
+from typing import Any, Sequence
 
 import click
 
@@ -7,15 +8,15 @@ from src.config.logger_settings import logger
 from src.schedulers.scheduler_ohlcv import OHLCVScheduler
 
 
-def _as_tuple(value, fallback):
+def _as_tuple(value: Any, fallback: Sequence[str]) -> tuple[str, ...]:
     if not value:
-        return fallback
+        return tuple(fallback)
     if isinstance(value, (list, tuple, set)):
-        return tuple(value)
-    return (value,)
+        return tuple(str(item) for item in value)
+    return (str(value),)
 
 
-def _normalize_exchanges(value):
+def _normalize_exchanges(value: Any) -> list[str]:
     if not value:
         return []
     if isinstance(value, (list, tuple, set)):
@@ -35,7 +36,7 @@ DEFAULT_SCHEDULE_TIME = config.get("scheduler.schedule_time", "09:00")
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """CLI pour orchestrer le scheduler de collecte de donnees marche."""
 
 
@@ -63,7 +64,7 @@ def cli():
     show_default=True,
     help="Exchange a utiliser.",
 )
-def run_command(pairs, timeframes, exchange):
+def run_command(pairs: tuple[str, ...], timeframes: tuple[str, ...], exchange: str) -> None:
     """Execute une collecte immediate."""
     logger.info("Lancement immediat via CLI.")
     scheduler = OHLCVScheduler(
@@ -104,7 +105,12 @@ def run_command(pairs, timeframes, exchange):
     show_default=True,
     help="Exchange a utiliser.",
 )
-def schedule_command(pairs, timeframes, schedule_time, exchange):
+def schedule_command(
+    pairs: tuple[str, ...],
+    timeframes: tuple[str, ...],
+    schedule_time: str,
+    exchange: str,
+) -> None:
     """Demarre la planification quotidienne."""
     logger.info("Demarrage du scheduler via CLI.")
     scheduler = OHLCVScheduler(

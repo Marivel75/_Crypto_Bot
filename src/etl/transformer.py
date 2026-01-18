@@ -2,10 +2,10 @@
 Module Transformer pour le pipeline ETL
 """
 
+from typing import Dict, List
+
 import pandas as pd
-import numpy as np
-from typing import List, Dict, Optional
-from datetime import datetime
+
 from src.config.logger_settings import logger
 from src.quality.validator import DataValidator0HCLV
 
@@ -35,17 +35,13 @@ class OHLCVTransformer:
         self.exchange = exchange
         logger.info(f"Transformeur initialisé pour {exchange}")
 
-    def transform(
-        self, raw_data: List[List], symbol: str, timeframe: str
-    ) -> pd.DataFrame:
+    def transform(self, raw_data: List[List], symbol: str, timeframe: str) -> pd.DataFrame:
         """
         Transforme les données OHLCV brutes en DataFrame validé et enrichi.
         """
         try:
             # Étape 1: Conversion en DataFrame
-            logger.info(
-                f"Transformation de {len(raw_data)} bougies pour {symbol} {timeframe}"
-            )
+            logger.info(f"Transformation de {len(raw_data)} bougies pour {symbol} {timeframe}")
             df = self._to_dataframe(raw_data)
 
             # Étape 2: Ajout des métadonnées
@@ -60,9 +56,7 @@ class OHLCVTransformer:
             if not is_valid:
                 error_details = ", ".join(validation_report["errors"][:3])
                 if len(validation_report["errors"]) > 3:
-                    error_details += (
-                        f", ... et {len(validation_report['errors']) - 3} autres"
-                    )
+                    error_details += f", ... et {len(validation_report['errors']) - 3} autres"
                 raise TransformationError(
                     f"Données invalides pour {symbol} {timeframe}: {error_details}"
                 )
@@ -88,16 +82,12 @@ class OHLCVTransformer:
             raise TransformationError("Aucune donnée à transformer")
 
         # Colonnes CCXT: [timestamp, open, high, low, close, volume]
-        df = pd.DataFrame(
-            raw_data, columns=["timestamp", "open", "high", "low", "close", "volume"]
-        )
+        df = pd.DataFrame(raw_data, columns=["timestamp", "open", "high", "low", "close", "volume"])
 
         logger.debug(f"DataFrame créé: {df.shape}")
         return df
 
-    def _add_metadata(
-        self, df: pd.DataFrame, symbol: str, timeframe: str
-    ) -> pd.DataFrame:
+    def _add_metadata(self, df: pd.DataFrame, symbol: str, timeframe: str) -> pd.DataFrame:
         """
         Ajoute les métadonnées au DataFrame.
         """
@@ -127,9 +117,7 @@ class OHLCVTransformer:
         # Ajout d'une colonne de date pour facilitée les requêtes
         df["date"] = df["timestamp"].dt.date
 
-        logger.debug(
-            f"Timestamps convertis: {df['timestamp'].min()} à {df['timestamp'].max()}"
-        )
+        logger.debug(f"Timestamps convertis: {df['timestamp'].min()} à {df['timestamp'].max()}")
         return df
 
     def _enrich_data(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -145,9 +133,7 @@ class OHLCVTransformer:
         # Calculs de base
         df["price_range"] = df["high"] - df["low"]  # Amplitude de prix
         df["price_change"] = df["close"] - df["open"]  # Variation de prix
-        df["price_change_pct"] = (
-            df["price_change"] / df["open"]
-        ) * 100  # Variation en %
+        df["price_change_pct"] = (df["price_change"] / df["open"]) * 100  # Variation en %
 
         # TODO: Ajouter des indicateurs techniques avancés
         # df = self._calculate_sma(df, window=50)

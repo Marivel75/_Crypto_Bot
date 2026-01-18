@@ -1,23 +1,27 @@
 """
-Module de gestion des clients d'exchange avec context managers. Fournit des classes pour gérer les connexions aux exchanges.
+Module de gestion des clients d'exchange avec context managers. Fournit des
+classes pour gérer les connexions aux exchanges.
 """
 
 from contextlib import contextmanager
-from typing import Generator, Any
+from typing import Any, Generator
+
 from src.config.logger_settings import logger
 from src.services.exchange_factory import ExchangeFactory
 
 
 class ExchangeClient:
     """
-    Context manager pour la gestion des clients d'exchange, garantit que les clients d'exchange sont correctement initialisés et fermés, même en cas d'erreur.
+    Context manager pour la gestion des clients d'exchange, garantit que les
+    clients d'exchange sont correctement initialisés et fermés, même en cas
+    d'erreur.
     """
 
-    def __init__(self, exchange_name: str):
+    def __init__(self, exchange_name: str) -> None:
         self.exchange_name = exchange_name
-        self.client = None
+        self.client: Any = None
 
-    def __enter__(self):
+    def __enter__(self) -> Any:
         """
         Initialise et retourne le client d'exchange ccxt.Exchange.
         """
@@ -26,12 +30,15 @@ class ExchangeClient:
             logger.debug(f"✅ Client {self.exchange_name} initialisé")
             return self.client
         except Exception as e:
-            logger.error(
-                f"❌ Échec de l'initialisation du client {self.exchange_name}: {e}"
-            )
+            logger.error(f"❌ Échec de l'initialisation du client {self.exchange_name}: {e}")
             raise
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: Any | None,
+    ) -> bool:
         """
         Fermeture propre du client, même en cas d'erreur.
         Arguments:
@@ -46,9 +53,7 @@ class ExchangeClient:
                     self.client.close()
                 logger.debug(f"✅ Client {self.exchange_name} fermé")
         except Exception as e:
-            logger.error(
-                f"❌ Échec de la fermeture du client {self.exchange_name}: {e}"
-            )
+            logger.error(f"❌ Échec de la fermeture du client {self.exchange_name}: {e}")
             if exc_type is not None:
                 return False
         return True

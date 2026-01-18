@@ -2,11 +2,51 @@
 Module de validation des données OHLCV.
 """
 
+from datetime import datetime
+from typing import List, Optional, Tuple, TypedDict
+
 import pandas as pd
-import numpy as np
-from typing import List, Dict, Optional, Tuple
-from src.config.logger_settings import logger
-from datetime import datetime, timedelta
+
+
+class StructureReport(TypedDict):
+    errors: List[str]
+    warnings: List[str]
+
+
+class ValidationReport(TypedDict):
+    total_rows: int
+    valid_rows: int
+    errors: List[str]
+    warnings: List[str]
+    validity_rate: float
+
+
+class ConsistencyReport(TypedDict):
+    total_rows: int
+    is_sorted: bool
+    has_gaps: bool
+    gap_count: int
+    gaps: List[float]
+    time_range: Optional[str]
+
+
+class CompletenessReport(TypedDict):
+    actual_count: int
+    expected_count: Optional[int]
+    completeness_rate: float
+    missing_data: bool
+    missing_count: int
+
+
+class ValidationSummary(TypedDict):
+    timestamp: str
+    data_shape: Tuple[int, int]
+    columns: List[str]
+    value_validation: ValidationReport
+    temporal_validation: ConsistencyReport
+    completeness_validation: CompletenessReport
+    is_valid: bool
+    quality_score: float
 
 
 class DataValidator0HCLV:
@@ -20,17 +60,17 @@ class DataValidator0HCLV:
     - Détection des valeurs aberrantes
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialise le valideur avec des paramètres par défaut."""
         self.min_price = 0.01  # Prix minimum acceptable (en USD)
         self.max_volume = 1e12  # Volume maximum acceptable
         self.allowed_exchanges = ["binance", "kraken", "coinbase"]
 
-    def _validate_dataframe_structure(self, df: pd.DataFrame) -> Tuple[bool, Dict]:
+    def _validate_dataframe_structure(self, df: pd.DataFrame) -> Tuple[bool, "StructureReport"]:
         """
         Valide la structure du DataFrame (non vide et colonnes requises).
         """
-        report = {"errors": [], "warnings": []}
+        report: StructureReport = {"errors": [], "warnings": []}
 
         # Vérifier que le DataFrame n'est pas vide
         if df.empty:
@@ -62,8 +102,8 @@ class DataValidator0HCLV:
         """
         Valide une valeur de prix individuelle.
         """
-        errors = []
-        warnings = []
+        errors: List[str] = []
+        warnings: List[str] = []
 
         if pd.isna(price_value):
             errors.append(f"{price_name} est NaN")
@@ -80,8 +120,8 @@ class DataValidator0HCLV:
         """
         Valide une valeur de volume.
         """
-        errors = []
-        warnings = []
+        errors: List[str] = []
+        warnings: List[str] = []
 
         if pd.isna(volume_value):
             errors.append("volume est NaN")
@@ -94,18 +134,16 @@ class DataValidator0HCLV:
 
         return errors, warnings
 
-    def _validate_price_consistency(
-        self, row: pd.Series
-    ) -> Tuple[List[str], List[str]]:
+    def _validate_price_consistency(self, row: pd.Series) -> Tuple[List[str], List[str]]:
         """
         Valide la cohérence entre les différents prix.
         """
-        errors = []
-        warnings = []
+        errors: List[str] = []
+        warnings: List[str] = []
 
         # Vérifier que high >= low
         if row["high"] < row["low"]:
-            errors.append(f'high ({row["high"]}) < low ({row["low"]})')
+            errors.append(f"high ({row['high']}) < low ({row['low']})")
 
         # Vérifier que open et close sont positifs
         if row["open"] < 0 or row["close"] < 0:
@@ -117,8 +155,8 @@ class DataValidator0HCLV:
         """
         Valide les métadonnées (symbol et timeframe).
         """
-        errors = []
-        warnings = []
+        errors: List[str] = []
+        warnings: List[str] = []
 
         if not isinstance(row["symbol"], str) or not row["symbol"]:
             errors.append("symbol invalide")
@@ -128,15 +166,16 @@ class DataValidator0HCLV:
 
         return errors, warnings
 
-    def validate_ohlcv_values(self, df: pd.DataFrame) -> Tuple[bool, Dict]:
+    def validate_ohlcv_values(self, df: pd.DataFrame) -> Tuple[bool, "ValidationReport"]:
         """
         Fonction orchestratrice pour valider les valeurs OHLCV d'un DataFrame.
         """
-        validation_report = {
+        validation_report: ValidationReport = {
             "total_rows": len(df),
             "valid_rows": 0,
             "errors": [],
             "warnings": [],
+            "validity_rate": 0.0,
         }
 
         # 1. Structure du DataFrame
@@ -149,9 +188,9 @@ class DataValidator0HCLV:
         valid_rows = 0
 
         # 2. Validation des valeurs ligne par ligne
-        for idx, row in df.iterrows():
-            row_errors = []
-            row_warnings = []
+        for _idx, row in df.iterrows():
+            row_errors: List[str] = []
+            row_warnings: List[str] = []
 
             # Valider chaque colonne de prix
             for price_name in ["open", "high", "low", "close"]:
@@ -168,9 +207,7 @@ class DataValidator0HCLV:
 
             # Valider la cohérence des prix (si pas d'erreurs précédentes)
             if len(row_errors) == 0:
-                consistency_errors, consistency_warnings = (
-                    self._validate_price_consistency(row)
-                )
+                consistency_errors, consistency_warnings = self._validate_price_consistency(row)
                 row_errors.extend(consistency_errors)
                 row_warnings.extend(consistency_warnings)
 
@@ -190,17 +227,15 @@ class DataValidator0HCLV:
         validation_report["valid_rows"] = valid_rows
 
         # Calculer le taux de validité (corrigé)
-        validation_report["validity_rate"] = (
-            valid_rows / len(df) if not df.empty else 0.0
-        )
+        validation_report["validity_rate"] = valid_rows / len(df) if not df.empty else 0.0
 
         return validation_report["valid_rows"] == len(df), validation_report
 
-    def validate_temporal_consistency(self, df: pd.DataFrame) -> Tuple[bool, Dict]:
+    def validate_temporal_consistency(self, df: pd.DataFrame) -> Tuple[bool, ConsistencyReport]:
         """
         Valide la cohérence temporelle des données, recherche les trous temporels.
         """
-        consistency_report = {
+        consistency_report: ConsistencyReport = {
             "total_rows": len(df),
             "is_sorted": True,
             "has_gaps": False,
@@ -247,16 +282,16 @@ class DataValidator0HCLV:
 
     def validate_data_completeness(
         self, df: pd.DataFrame, expected_count: Optional[int] = None
-    ) -> Dict:
+    ) -> CompletenessReport:
         """
         Valide la complétude des données dans un DataFrame.
         """
-        completeness_report = {
+        completeness_report: CompletenessReport = {
             "actual_count": len(df),
             "expected_count": expected_count,
             "completeness_rate": 1.0,
-            "missing_data": False,  # booléen indiquant si des données sont manquantes
-            "missing_count": 0,  # nombre de données manquantes
+            "missing_data": False,
+            "missing_count": 0,
         }
 
         if expected_count is not None and expected_count > 0:
@@ -268,55 +303,46 @@ class DataValidator0HCLV:
 
         return completeness_report
 
-    def get_validation_summary(self, df: pd.DataFrame) -> Dict:
+    def get_validation_summary(self, df: pd.DataFrame) -> ValidationSummary:
         """
-        Génère un rapport de validation
+        Génère un rapport de validation.
         """
-        summary = {
+        values_valid, value_report = self.validate_ohlcv_values(df)
+        temporal_valid, temporal_report = self.validate_temporal_consistency(df)
+        completeness_report = self.validate_data_completeness(df)
+
+        summary: ValidationSummary = {
             "timestamp": datetime.utcnow().isoformat(),
             "data_shape": df.shape,
             "columns": list(df.columns),
-            "value_validation": None,
-            "temporal_validation": None,
-            "completeness_validation": None,
+            "value_validation": value_report,
+            "temporal_validation": temporal_report,
+            "completeness_validation": completeness_report,
+            "is_valid": False,
+            "quality_score": 0.0,
         }
 
-        # Validation des valeurs
-        values_valid, summary["value_validation"] = self.validate_ohlcv_values(df)
-
-        # Validation temporelle
-        temporal_valid, summary["temporal_validation"] = (
-            self.validate_temporal_consistency(df)
-        )
-
-        # Validation de la complétude (sans attente spécifique pour l'instant)
-        summary["completeness_validation"] = self.validate_data_completeness(df)
-
-        # Statut global
         summary["is_valid"] = values_valid and temporal_valid
         summary["quality_score"] = self._calculate_quality_score(summary)
 
         return summary
 
-    def _calculate_quality_score(self, validation_summary: Dict) -> float:
+    def _calculate_quality_score(self, validation_summary: ValidationSummary) -> float:
         """
         Calcule un score de qualité entre 0 et 1 basé sur les validations.
         """
         score = 1.0
 
-        # Pénaliser les erreurs de valeurs
         value_report = validation_summary["value_validation"]
         if value_report["errors"]:
             error_penalty = min(0.5, len(value_report["errors"]) * 0.01)
             score -= error_penalty
 
-        # Pénaliser les trous temporels
         temporal_report = validation_summary["temporal_validation"]
         if temporal_report["has_gaps"]:
             gap_penalty = min(0.3, temporal_report["gap_count"] * 0.01)
             score -= gap_penalty
 
-        # Pénaliser les données manquantes
         completeness_report = validation_summary["completeness_validation"]
         if completeness_report["missing_data"]:
             missing_penalty = min(0.2, completeness_report["completeness_rate"] * 0.1)

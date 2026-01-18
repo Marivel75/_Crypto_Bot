@@ -44,7 +44,7 @@ def setup_test_config():
             "timeout": 30
         }
     }
-    
+
     # Mettre à jour la configuration globale avec les valeurs de test
     # Cela permet aux tests de fonctionner même sans fichier de config
     for key, value in test_config.items():
@@ -53,5 +53,5 @@ def setup_test_config():
                 config._config[key][subkey] = subvalue
         else:
             config._config[key] = value
-    
+
     return config

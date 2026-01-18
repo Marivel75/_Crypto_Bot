@@ -4,35 +4,37 @@ Service de gestion des données de tickers avec stockage hybride :
 - sauvegarde périodique en base de données pour l'historique.
 """
 
-import time
 import threading
+import time
 import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List
-from src.config.logger_settings import logger
-from config.settings import config
-from src.services.db_context import database_transaction
-from src.models.ticker import TickerSnapshot
-from src.services.exchange_factory import ExchangeFactory
+from typing import Any, Dict, List, Optional
+
 from sqlalchemy import text
+
+from config.settings import config
+from src.config.logger_settings import logger
+from src.models.ticker import TickerSnapshot
+from src.services.db import get_db_engine
+from src.services.db_context import database_transaction
+from src.services.exchange_factory import ExchangeFactory
 
 
 class TickerCache:
     """
-    Cache mémoire pour les données de tickers en temps réel. limite de taille pour éviter la surcharge mémoire.
+    Cache mémoire pour les données de tickers en temps réel. Limite de taille
+    pour éviter la surcharge mémoire.
     """
 
-    def __init__(self, max_items_per_symbol: int = 100):
+    def __init__(self, max_items_per_symbol: int = 100) -> None:
         """
         Initialise le cache des tickers.
         """
-        self.cache = {}  # format du dict : {symbol: [list of ticker entries]}
+        self.cache: Dict[str, List[Dict[str, Any]]] = {}
         self.max_items = max_items_per_symbol
-        logger.info(
-            f"📊 Cache de tickers initialisé (max {max_items_per_symbol} par symbole)"
-        )
+        logger.info(f"📊 Cache de tickers initialisé (max {max_items_per_symbol} par symbole)")
 
-    def add_ticker(self, symbol: str, ticker_data: dict):
+    def add_ticker(self, symbol: str, ticker_data: Dict[str, Any]) -> None:
         """
         Ajoute un ticker au cache.
         """
@@ -47,11 +49,10 @@ class TickerCache:
         if len(self.cache[symbol]) > self.max_items:
             self.cache[symbol].pop(0)  # Supprime le plus ancien
 
-        logger.debug(
-            f"✅ Ticker ajouté pour {symbol}: {ticker_data.get('price', ticker_data.get('last', 'N/A'))} USD"
-        )
+        price = ticker_data.get("price", ticker_data.get("last", "N/A"))
+        logger.debug(f"✅ Ticker ajouté pour {symbol}: {price} USD")
 
-    def get_recent_tickers(self, symbol: str, minutes: int = 60) -> List[dict]:
+    def get_recent_tickers(self, symbol: str, minutes: int = 60) -> List[Dict[str, Any]]:
         """
         Récupère les tickers récents pour un symbole.
         """
@@ -61,17 +62,13 @@ class TickerCache:
         cutoff = datetime.utcnow() - timedelta(minutes=minutes)
         return [t for t in self.cache[symbol] if t["timestamp"] >= cutoff]
 
-    def get_current_prices(self) -> Dict[str, dict]:
+    def get_current_prices(self) -> Dict[str, Dict[str, Any]]:
         """
         Récupère les prix actuels pour tous les symboles.
         """
-        return {
-            symbol: tickers[-1]["data"]
-            for symbol, tickers in self.cache.items()
-            if tickers
-        }
+        return {symbol: tickers[-1]["data"] for symbol, tickers in self.cache.items() if tickers}
 
-    def clear_old_data(self, hours: int = 24):
+    def clear_old_data(self, hours: int = 24) -> None:
         """
         Nettoie les données plus anciennes que le seuil.
         """
@@ -96,11 +93,10 @@ class TickerCollector:
         self,
         pairs: List[str],
         exchange: str = "binance",
-        snapshot_interval: int = None,
-        cache_size: int = None,
-        cache_cleanup_interval: int = None,
-    ):
-
+        snapshot_interval: Optional[int] = None,
+        cache_size: Optional[int] = None,
+        cache_cleanup_interval: Optional[int] = None,
+    ) -> None:
         self.pairs = pairs
         self.exchange = exchange.lower()
 
@@ -115,11 +111,7 @@ class TickerCollector:
             if cache_cleanup_interval is not None
             else config.get("ticker.cache_cleanup_interval", 30)
         )
-        cache_size = (
-            cache_size
-            if cache_size is not None
-            else config.get("ticker.cache_size", 100)
-        )
+        cache_size = cache_size if cache_size is not None else config.get("ticker.cache_size", 100)
 
         # Initialisation du client d'API en fonction de l'exchange
         self.client = ExchangeFactory.create_exchange(exchange)
@@ -128,15 +120,13 @@ class TickerCollector:
         self.cache = TickerCache(max_items_per_symbol=cache_size)
 
         # Thread pour la collecte périodique
-        self.collector_thread = None
+        self.collector_thread: threading.Thread | None = None
         self.running = False
 
         logger.info(f"TickerCollector initialisé pour {exchange} - {len(pairs)} paires")
-        logger.info(
-            f"   Nettoyage du cache toutes les {self.cache_cleanup_interval} minutes"
-        )
+        logger.info(f"   Nettoyage du cache toutes les {self.cache_cleanup_interval} minutes")
 
-    def start_collection(self):
+    def start_collection(self) -> None:
         """
         Démarre la collecte périodique des tickers.
         """
@@ -151,7 +141,7 @@ class TickerCollector:
         self.collector_thread.start()
         logger.info("Collecte des tickers démarrée")
 
-    def stop_collection(self):
+    def stop_collection(self) -> None:
         """
         Arrête la collecte périodique.
         """
@@ -161,7 +151,7 @@ class TickerCollector:
         self.collector_thread = None
         logger.info("Collecte des tickers arrêtée")
 
-    def _collection_loop(self):
+    def _collection_loop(self) -> None:
         """
         Boucle principale de collecte des tickers.
         """
@@ -175,9 +165,7 @@ class TickerCollector:
                 # 2. Sauvegarder un snapshot si nécessaire
                 if datetime.utcnow() >= next_snapshot:
                     self._save_snapshot()
-                    next_snapshot = datetime.utcnow() + timedelta(
-                        minutes=self.snapshot_interval
-                    )
+                    next_snapshot = datetime.utcnow() + timedelta(minutes=self.snapshot_interval)
 
                 # 3. Nettoyer le cache régulièrement
                 if datetime.utcnow().minute % self.cache_cleanup_interval == 0:
@@ -190,7 +178,7 @@ class TickerCollector:
                 logger.error(f"❌ Erreur dans la collecte des tickers: {e}")
                 time.sleep(10)  # Attendre avant de réessayer
 
-    def _normalize_ticker_data(self, ticker_data: dict) -> dict:
+    def _normalize_ticker_data(self, ticker_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Normalise les données de ticker selon l'exchange.
         """
@@ -220,7 +208,7 @@ class TickerCollector:
 
         return normalized
 
-    def _fetch_and_cache_tickers(self):
+    def _fetch_and_cache_tickers(self) -> None:
         """
         Récupère les tickers depuis l'exchange et les ajoute au cache.
         """
@@ -234,7 +222,7 @@ class TickerCollector:
             except Exception as e:
                 logger.error(f"❌ Échec récupération ticker {pair}: {e}")
 
-    def _save_snapshot(self):
+    def _save_snapshot(self) -> None:
         """
         Sauvegarde un snapshot des tickers actuels en base de données.
         Utilise des context managers pour la gestion des ressources.
@@ -269,10 +257,14 @@ class TickerCollector:
                     db_conn.execute(
                         text(
                             """
-                            INSERT INTO ticker_snapshots (id, snapshot_time, symbol, exchange, price, volume_24h, 
-                            price_change_24h, price_change_pct_24h, high_24h, low_24h)
-                            VALUES (:id, :snapshot_time, :symbol, :exchange, :price, :volume_24h, 
-                            :price_change_24h, :price_change_pct_24h, :high_24h, :low_24h)
+                            INSERT INTO ticker_snapshots (
+                                id, snapshot_time, symbol, exchange, price, volume_24h,
+                                price_change_24h, price_change_pct_24h, high_24h, low_24h
+                            )
+                            VALUES (
+                                :id, :snapshot_time, :symbol, :exchange, :price, :volume_24h,
+                                :price_change_24h, :price_change_pct_24h, :high_24h, :low_24h
+                            )
                             """
                         ),
                         {
@@ -294,13 +286,13 @@ class TickerCollector:
         except Exception as e:
             logger.error(f"❌ Échec sauvegarde snapshot: {e}")
 
-    def get_current_prices(self) -> Dict[str, dict]:
+    def get_current_prices(self) -> Dict[str, Dict[str, Any]]:
         """
         Récupère les prix actuels depuis le cache.
         """
         return self.cache.get_current_prices()
 
-    def get_historical_snapshots(self, symbol: str, hours: int = 24) -> List[dict]:
+    def get_historical_snapshots(self, symbol: str, hours: int = 24) -> List[Dict[str, Any]]:
         """
         Récupère l'historique des snapshots depuis la base de données.
         """

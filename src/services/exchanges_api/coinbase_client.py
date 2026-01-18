@@ -4,13 +4,11 @@ Client pour l'exchange Coinbase.
 Ce module fournit une interface pour interagir avec l'API Coinbase Advanced Trade.
 """
 
+from typing import Any, Dict, List, cast
+
 import ccxt
+
 from src.config.logger_settings import logger
-from src.config.settings import (
-    COINBASE_API_KEY,
-    COINBASE_API_SECRET,
-    COINBASE_API_PASSPHRASE,
-)
 
 
 class CoinbaseClient:
@@ -24,8 +22,12 @@ class CoinbaseClient:
     """
 
     def __init__(
-        self, use_auth=False, api_key=None, api_secret=None, api_passphrase=None
-    ):
+        self,
+        use_auth: bool = False,
+        api_key: str | None = None,
+        api_secret: str | None = None,
+        api_passphrase: str | None = None,
+    ) -> None:
         """
         Initialise le client Coinbase.
 
@@ -40,7 +42,10 @@ class CoinbaseClient:
         """
         if use_auth:
             if not api_key or not api_secret or not api_passphrase:
-                error_msg = "Les clés API Coinbase (y compris la passphrase) sont requises pour les opérations authentifiées"
+                error_msg = (
+                    "Les clés API Coinbase (y compris la passphrase) sont requises "
+                    "pour les opérations authentifiées"
+                )
                 logger.error(error_msg)
                 raise ValueError(error_msg)
 
@@ -67,20 +72,18 @@ class CoinbaseClient:
         # Vérification de l'initialisation
         self._check_exchange_initialization()
 
-    def _sync_time(self):
+    def _sync_time(self) -> None:
         """
         Synchronisation horloge locale avec Coinbase.
         """
         try:
             server_time = self.exchange.fetch_time()
-            self.exchange.options["timeDifference"] = (
-                server_time - self.exchange.milliseconds()
-            )
+            self.exchange.options["timeDifference"] = server_time - self.exchange.milliseconds()
             logger.info("Synchronisation de l'heure Coinbase réussie")
         except Exception as e:
             logger.warning(f"Échec de la synchronisation de l'heure Coinbase: {e}")
 
-    def _check_exchange_initialization(self):
+    def _check_exchange_initialization(self) -> None:
         """
         Vérifie que l'exchange Coinbase est correctement initialisé et accessible.
 
@@ -95,12 +98,10 @@ class CoinbaseClient:
             else:
                 raise RuntimeError("Réponse inattendue de l'API Coinbase")
         except Exception as e:
-            logger.error(
-                f"Échec de la vérification de l'initialisation de Coinbase: {e}"
-            )
-            raise RuntimeError(f"Échec de l'initialisation de l'exchange Coinbase: {e}")
+            logger.error(f"Échec de la vérification de l'initialisation de Coinbase: {e}")
+            raise RuntimeError(f"Échec de l'initialisation de l'exchange Coinbase: {e}") from e
 
-    def fetch_ticker(self, symbol: str) -> dict:
+    def fetch_ticker(self, symbol: str) -> Dict[str, Any]:
         """
         Récupère le ticker pour une paire de trading.
 
@@ -114,14 +115,12 @@ class CoinbaseClient:
             Exception: En cas d'erreur lors de la récupération
         """
         try:
-            return self.exchange.fetch_ticker(symbol)
+            return cast(Dict[str, Any], self.exchange.fetch_ticker(symbol))
         except Exception as e:
-            logger.error(
-                f"Échec de la récupération du ticker Coinbase pour {symbol}: {e}"
-            )
+            logger.error(f"Échec de la récupération du ticker Coinbase pour {symbol}: {e}")
             raise
 
-    def fetch_ohlcv(self, symbol: str, timeframe: str = "1h", limit: int = 100) -> list:
+    def fetch_ohlcv(self, symbol: str, timeframe: str = "1h", limit: int = 100) -> List[List[Any]]:
         """
         Récupère les données OHLCV pour une paire sur Coinbase Advanced Trade.
         Coinbase Advanced Trade utilise les timeframes standards de ccxt.
@@ -144,21 +143,6 @@ class CoinbaseClient:
             # Conversion du timeframe en chaîne de caractères pour éviter les erreurs
             timeframe_str = str(timeframe)
 
-            # Mapping du timeframe en secondes pour Coinbase Advanced Trade
-            timeframe_mapping = {
-                "1m": 60,
-                "5m": 300,
-                "15m": 900,
-                "1h": 3600,
-                "4h": 14400,
-                "6h": 21600,
-                "1d": 86400,
-            }
-
-            # Utiliser la granularité en secondes directement
-            # Coinbase Advanced Trade utilise les timeframes standards de ccxt
-            granularity = timeframe_mapping.get(timeframe_str, 3600)  # Par défaut : 1h
-
             # Limiter à 300 bougies maximum
             limit = min(limit, 300)
 
@@ -168,10 +152,13 @@ class CoinbaseClient:
             timeframe_str = str(timeframe)
 
             # Utiliser la méthode standard de ccxt avec le timeframe en chaîne
-            ohlcv = self.exchange.fetch_ohlcv(
-                symbol=symbol,
-                timeframe=timeframe_str,  # Timeframe en chaîne de caractères
-                limit=limit,
+            ohlcv = cast(
+                List[List[Any]],
+                self.exchange.fetch_ohlcv(
+                    symbol=symbol,
+                    timeframe=timeframe_str,  # Timeframe en chaîne de caractères
+                    limit=limit,
+                ),
             )
             return ohlcv
 

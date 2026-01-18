@@ -2,16 +2,18 @@
 Module de planification dédié aux tâches OHLCV (données historiques).
 """
 
-import schedule
-import time
 import threading
-from typing import List, Optional
-from src.config.logger_settings import logger
+import time
+from typing import Any, List, Optional
+
+import schedule
+
 from config.settings import config
 from src.collectors.ohlcv_collector import OHLCVCollector
+from src.config.logger_settings import logger
 
 
-def _normalize_list(value):
+def _normalize_list(value: Any) -> list[Any]:
     if value is None:
         return []
     if isinstance(value, (list, tuple, set)):
@@ -19,14 +21,15 @@ def _normalize_list(value):
     return [value]
 
 
-def _normalize_exchanges(value):
+def _normalize_exchanges(value: Any) -> list[str]:
     exchanges = _normalize_list(value)
     return [str(item).lower() for item in exchanges if item]
 
 
 class OHLCVScheduler:
     """
-    Classe de planification pour la collecte quotidienne de données OHLCV. Utilise une configuration centralisée.
+    Classe de planification pour la collecte quotidienne de données OHLCV.
+    Utilise une configuration centralisée.
     """
 
     def __init__(
@@ -38,19 +41,15 @@ class OHLCVScheduler:
     ):
         """Initialise le scheduler OHLCV avec la configuration centralisée."""
         self.pairs = _normalize_list(pairs) or _normalize_list(config.get("pairs"))
-        self.timeframes = _normalize_list(timeframes) or _normalize_list(
-            config.get("timeframes")
-        )
+        self.timeframes = _normalize_list(timeframes) or _normalize_list(config.get("timeframes"))
         self.exchanges = _normalize_exchanges(exchanges or config.get("exchanges"))
         if not self.exchanges:
             default_exchange = config.get("default_exchange")
             if default_exchange:
                 self.exchanges = [str(default_exchange).lower()]
-        self.schedule_time = schedule_time or config.get(
-            "scheduler.schedule_time", "09:00"
-        )
+        self.schedule_time = schedule_time or config.get("scheduler.schedule_time", "09:00")
         self.running = False
-        self.scheduler_thread = None
+        self.scheduler_thread: threading.Thread | None = None
 
         if not self.pairs:
             raise ValueError("Aucune paire configuree pour le scheduler OHLCV.")
@@ -67,9 +66,7 @@ class OHLCVScheduler:
         Fonction de collecte quotidienne de données OHLCV pour un exchange spécifique.
         """
         try:
-            logger.info(
-                f"Début de la collecte quotidienne OHLCV sur l'exchange : {exchange}"
-            )
+            logger.info(f"Début de la collecte quotidienne OHLCV sur l'exchange : {exchange}")
 
             # Normalisation des timeframes pour l'exchange
             normalized_timeframes = []
@@ -96,9 +93,7 @@ class OHLCVScheduler:
             # Exécution de la collecte
             collector.fetch_and_store()
 
-            logger.info(
-                f"✅ Collecte quotidienne OHLCV {exchange} terminée avec succès"
-            )
+            logger.info(f"✅ Collecte quotidienne OHLCV {exchange} terminée avec succès")
 
         except Exception as e:
             logger.error(f"❌ Échec de la collecte quotidienne OHLCV {exchange}: {e}")
@@ -106,7 +101,8 @@ class OHLCVScheduler:
 
     def start(self) -> None:
         """
-        Démarre le planificateur OHLCV, planifie les tâches quotidiennes et lance le threadde planification.
+        Démarre le planificateur OHLCV, planifie les tâches quotidiennes et
+        lance le thread de planification.
         """
         if self.running:
             logger.warning("⚠️  Le scheduler OHLCV est déjà en cours d'exécution")
@@ -114,7 +110,8 @@ class OHLCVScheduler:
 
         try:
             logger.info(
-                f"Démarrage du planificateur OHLCV - Collecte prévue à {self.schedule_time} quotidiennement"
+                "Démarrage du planificateur OHLCV - Collecte prévue à "
+                f"{self.schedule_time} quotidiennement"
             )
             logger.info(f"Exchanges configurés: {', '.join(self.exchanges)}")
 
@@ -127,10 +124,11 @@ class OHLCVScheduler:
             self.running = True
 
             # Démarrer le thread de planification
-            self.scheduler_thread = threading.Thread(
+            thread = threading.Thread(
                 target=self._run_scheduler_loop, daemon=True, name="OHLCVScheduler"
             )
-            self.scheduler_thread.start()
+            self.scheduler_thread = thread
+            thread.start()
 
             logger.info("✅ Planificateur OHLCV démarré avec succès")
 
@@ -181,7 +179,7 @@ class OHLCVScheduler:
         Exécute une collecte immédiate OHLCV pour les tests ou le démarrage.
         """
         try:
-            logger.info(f"Exécution immédiate de la collecte OHLCV")
+            logger.info("Exécution immédiate de la collecte OHLCV")
             for exchange in self.exchanges:
                 self._ohlcv_collection(exchange)
         except Exception as e:

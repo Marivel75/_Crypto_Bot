@@ -1,25 +1,26 @@
-import pandas as pd
+from typing import List
+
 from src.config.logger_settings import logger
-from src.services.exchange_factory import ExchangeFactory
-from src.services.db_context import database_transaction
-from src.services.exchange_context import ExchangeClient
-from src.quality.validator import DataValidator0HCLV
 from src.etl.extractor import OHLCVExtractor
-from src.etl.transformer import OHLCVTransformer
 from src.etl.loader import OHLCVLoader
 from src.etl.pipeline_ohlcv import ETLPipelineOHLCV
-from typing import List
+from src.etl.transformer import OHLCVTransformer
+from src.quality.validator import DataValidator0HCLV
+from src.services.db_context import database_transaction
+from src.services.exchange_context import ExchangeClient
+from src.services.exchange_factory import ExchangeFactory
 
 
 class OHLCVCollector:
     """
-    Récupère les données OHLCV (Open, High, Low, Close, Volume) pour des paires de trading spécifiques et des timeframes donnés, puis les stocke dans une base de données.
-    Utilise le pipeline ETL ohlcv pour gérer le processus d'extraction, de transformation et de chargement des données.
+    Récupère les données OHLCV (Open, High, Low, Close, Volume) pour des paires
+    de trading spécifiques et des timeframes donnés, puis les stocke dans une
+    base de données.
+    Utilise le pipeline ETL ohlcv pour gérer le processus d'extraction, de
+    transformation et de chargement des données.
     """
 
-    def __init__(
-        self, pairs: List[str], timeframes: List[str], exchange: str = "binance"
-    ):
+    def __init__(self, pairs: List[str], timeframes: List[str], exchange: str = "binance") -> None:
         # Validation des entrées
         if not pairs or not timeframes:
             error_msg = "Les listes de paires et timeframes ne peuvent pas être vides"
@@ -27,16 +28,12 @@ class OHLCVCollector:
             raise ValueError(error_msg)
 
         if not all(isinstance(pair, str) and pair.strip() for pair in pairs):
-            error_msg = (
-                "Toutes les paires doivent être des chaînes de caractères non vides"
-            )
+            error_msg = "Toutes les paires doivent être des chaînes de caractères non vides"
             logger.error(error_msg)
             raise ValueError(error_msg)
 
         if not all(isinstance(tf, str) and tf.strip() for tf in timeframes):
-            error_msg = (
-                "Tous les timeframes doivent être des chaînes de caractères non vides"
-            )
+            error_msg = "Tous les timeframes doivent être des chaînes de caractères non vides"
             logger.error(error_msg)
             raise ValueError(error_msg)
 
@@ -56,6 +53,7 @@ class OHLCVCollector:
 
         # Créer un mock d'engine pour les tests
         from unittest.mock import MagicMock
+
         self.engine = MagicMock()  # Pour la compatibilité avec les tests
 
         # Initialisation du valideur de données OHLCV
@@ -76,7 +74,8 @@ class OHLCVCollector:
 
     def fetch_and_store(self) -> None:
         """
-        Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données.
+        Récupère les données OHLCV pour toutes les paires et timeframes configurés
+        et les stocke dans la base de données.
         Utilise des context managers pour la gestion des ressources.
         """
         all_batch_results = {}
@@ -86,10 +85,10 @@ class OHLCVCollector:
 
             # Utiliser des context managers pour les ressources
             with ExchangeClient(self.exchange) as client:
-                with database_transaction() as db_conn:
+                with database_transaction():
                     # Mettre à jour le client dans le pipeline
                     self.pipeline.extractor.client = client
-                    
+
                     # Exécuter le pipeline ETL
                     batch_results = self.pipeline.run_batch(self.pairs, timeframe)
 
@@ -102,7 +101,7 @@ class OHLCVCollector:
         summary = self.pipeline.get_summary(all_batch_results)
 
         # Log du résumé global
-        logger.info(f"📊 Résumé du pipeline ETL:")
+        logger.info("📊 Résumé du pipeline ETL:")
         logger.info(f"  Symboles traités: {summary['total_symbols']}")
         logger.info(f"  Succès: {summary['successful']}")
         logger.info(f"  Échecs: {summary['failed']}")
@@ -116,7 +115,7 @@ class OHLCVCollector:
         # Log des échecs individuels si nécessaire
         failed_symbols = [s for s, r in all_batch_results.items() if not r.success]
         if failed_symbols:
-            logger.warning(f"⚠️  Échecs individuels:")
+            logger.warning("⚠️  Échecs individuels:")
             for symbol in failed_symbols:
                 result = all_batch_results[symbol]
                 logger.warning(f"  - {symbol}: {result.error_step} - {result.error}")

@@ -2,21 +2,24 @@
 Module de planification dédié aux tâches de ticker en temps réel.
 """
 
-import time
 import threading
-from typing import List, Dict, Optional
+import time
 from datetime import datetime, timedelta
-from src.config.logger_settings import logger
+from typing import Dict, Optional
+
 from config.settings import config
 from src.collectors.ticker_collector import TickerCollector
+from src.config.logger_settings import logger
 
 
 class TickerScheduler:
     """
-    Classe de planification pour la collecte de ticker en temps réel. Gère la collecte et le stockage hybride des données de ticker pour plusieurs exchanges avec cache mémoire et sauvegarde périodique.
+    Classe de planification pour la collecte de ticker en temps réel. Gère la
+    collecte et le stockage hybride des données de ticker pour plusieurs
+    exchanges avec cache mémoire et sauvegarde périodique.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialise le scheduler de ticker avec la configuration centralisée."""
         self.pairs = config.get("pairs")
         self.exchanges = config.get("exchanges")
@@ -24,9 +27,9 @@ class TickerScheduler:
         self.runtime_minutes = config.get("ticker.runtime", 60)
         self.cache_size = config.get("ticker.cache_size", 1000)
 
-        self.collectors = {}  # {exchange: TickerCollector}
+        self.collectors: Dict[str, TickerCollector] = {}
         self.running = False
-        self.scheduler_thread = None
+        self.scheduler_thread: threading.Thread | None = None
 
         logger.info(f"TickerScheduler initialisé pour {len(self.exchanges)} exchanges")
         logger.info(f"Intervalle de snapshot: {self.snapshot_interval} minutes")
@@ -40,9 +43,7 @@ class TickerScheduler:
             return
 
         try:
-            logger.info(
-                f"Démarrage de la collecte de ticker pour {len(self.exchanges)} exchanges"
-            )
+            logger.info(f"Démarrage de la collecte de ticker pour {len(self.exchanges)} exchanges")
             logger.info(f"Paires surveillées: {', '.join(self.pairs)}")
 
             # Créer un collecteur de ticker pour chaque exchange
@@ -73,8 +74,9 @@ class TickerScheduler:
 
     def _collection_loop(self) -> None:
         """
-        Boucle principale de collecte des tickers, gère la collecte périodique, les snapshots et
-        le nettoyage du cache. Elle est exécutée dans un thread séparé.
+        Boucle principale de collecte des tickers, gère la collecte périodique,
+        les snapshots et le nettoyage du cache. Elle est exécutée dans un
+        thread séparé.
         """
         try:
             start_time = time.time()
@@ -82,9 +84,7 @@ class TickerScheduler:
                 self.runtime_minutes * 60 if self.runtime_minutes > 0 else float("inf")
             )
             last_display_time = start_time
-            next_snapshot = datetime.utcnow() + timedelta(
-                minutes=self.snapshot_interval
-            )
+            next_snapshot = datetime.utcnow() + timedelta(minutes=self.snapshot_interval)
 
             while self.running and (time.time() - start_time < runtime_seconds):
                 # 1. Afficher les prix actuels périodiquement
@@ -100,9 +100,7 @@ class TickerScheduler:
                 # 2. Sauvegarder un snapshot si nécessaire
                 if datetime.utcnow() >= next_snapshot:
                     self._save_snapshots()
-                    next_snapshot = datetime.utcnow() + timedelta(
-                        minutes=self.snapshot_interval
-                    )
+                    next_snapshot = datetime.utcnow() + timedelta(minutes=self.snapshot_interval)
 
                 time.sleep(10)
 
@@ -120,9 +118,7 @@ class TickerScheduler:
             if current_prices:
                 logger.info(f"Prix actuels {exchange}: {current_prices}")
 
-    def _display_remaining_time(
-        self, start_time: float, runtime_seconds: float
-    ) -> None:
+    def _display_remaining_time(self, start_time: float, runtime_seconds: float) -> None:
         """Affiche le temps restant pour l'exécution."""
         elapsed = time.time() - start_time
         remaining_seconds = max(0, runtime_seconds - elapsed)

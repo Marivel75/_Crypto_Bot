@@ -1,26 +1,32 @@
 """
-Module de gestion des connexions à la base de données avec context managers. Fournit des classes pour gérer les ressources de base de données.
+Module de gestion des connexions à la base de données avec context managers.
+Fournit des classes pour gérer les ressources de base de données.
 """
 
 from contextlib import contextmanager
+from typing import Any, Generator
+
 from sqlalchemy import create_engine
+from sqlalchemy.engine import Connection, Engine
 from sqlalchemy.exc import SQLAlchemyError
-from src.config.logger_settings import logger
+
 from config.settings import config
-from typing import Generator, Any
+from src.config.logger_settings import logger
 
 
 class DatabaseConnection:
     """
-    Context manager pour la gestion des connexions database, garantit que les connexions à la base de données sont correctement ouvertes et fermées, même en cas d'erreur.
+    Context manager pour la gestion des connexions database, garantit que les
+    connexions à la base de données sont correctement ouvertes et fermées,
+    même en cas d'erreur.
     """
 
-    def __init__(self):
-        self.engine = None
-        self.connection = None
+    def __init__(self) -> None:
+        self.engine: Engine | None = None
+        self.connection: Connection | None = None
         self.db_url = config.get("database.url")
 
-    def __enter__(self):
+    def __enter__(self) -> Connection:
         """
         Ouvre la connexion à la base de données.
         Returns:
@@ -35,7 +41,12 @@ class DatabaseConnection:
             logger.error(f"❌ Échec de l'ouverture de la connexion: {e}")
             raise
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: Any | None,
+    ) -> bool:
         """
         Fermeture propre de la connexion, même en cas d'erreur.
 
@@ -63,7 +74,9 @@ class DatabaseConnection:
 @contextmanager
 def database_session() -> Generator[Any, None, None]:
     """
-    Context manager pour les sessions de base de données, utilise SQLAlchemy's sessionmaker pour créer une session et s'assure qu'elle est correctement fermée.
+    Context manager pour les sessions de base de données, utilise SQLAlchemy's
+    sessionmaker pour créer une session et s'assure qu'elle est correctement
+    fermée.
 
     Yields:
         sqlalchemy.orm.session.Session: Session de base de données
@@ -90,7 +103,8 @@ def database_session() -> Generator[Any, None, None]:
 @contextmanager
 def database_transaction() -> Generator[Any, None, None]:
     """
-    Context manager pour les transactions de base de données, gère les transactions avec commit/rollback automatique.
+    Context manager pour les transactions de base de données, gère les
+    transactions avec commit/rollback automatique.
 
     Yields:
         sqlalchemy.engine.Connection: Connexion avec gestion des transactions
