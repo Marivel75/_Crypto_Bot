@@ -1,5 +1,5 @@
 import pandas as pd
-from logger_settings import logger
+from src.config.logger_settings import logger
 from src.services.exchange_factory import ExchangeFactory
 from src.services.db_context import database_transaction
 from src.services.exchange_context import ExchangeClient

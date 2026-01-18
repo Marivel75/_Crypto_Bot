@@ -12,10 +12,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from src.collectors.market_collector import MarketCollector
 # Ne pas importer get_db_engine ici pour éviter l'exécution au niveau du module
-import logger_settings
-logger = logger_settings.logger
-
-
+from src.config.logger_settings import logger
 def test_live_collection():
     """Teste la collecte de données réelles avec SQLite"""
     try:

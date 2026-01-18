@@ -4,7 +4,7 @@ Module de gestion des clients d'exchange avec context managers. Fournit des clas
 
 from contextlib import contextmanager
 from typing import Generator, Any
-from logger_settings import logger
+from src.config.logger_settings import logger
 from src.services.exchange_factory import ExchangeFactory
 
 

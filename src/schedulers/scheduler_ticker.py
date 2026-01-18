@@ -6,7 +6,7 @@ import time
 import threading
 from typing import List, Dict, Optional
 from datetime import datetime, timedelta
-from logger_settings import logger
+from src.config.logger_settings import logger
 from config.settings import config
 from src.collectors.ticker_collector import TickerCollector
 

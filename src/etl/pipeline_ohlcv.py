@@ -6,7 +6,7 @@ import pandas as pd
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 from datetime import datetime
-from logger_settings import logger
+from src.config.logger_settings import logger
 from src.etl.extractor import OHLCVExtractor, ExtractionError
 from src.etl.transformer import OHLCVTransformer, TransformationError
 from src.etl.loader import OHLCVLoader, LoadingError

@@ -7,7 +7,7 @@ Ce module fournit une interface unifiée pour créer et utiliser différents cli
 from src.services.exchanges_api.binance_client import BinanceClient
 from src.services.exchanges_api.kraken_client import KrakenClient
 from src.services.exchanges_api.coinbase_client import CoinbaseClient
-from logger_settings import logger
+from src.config.logger_settings import logger
 from typing import Union
 
 

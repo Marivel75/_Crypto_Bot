@@ -4,7 +4,7 @@ Ce module fournit une interface pour interagir avec l'API Kraken. Pas besoin de 
 """
 
 import ccxt
-from logger_settings import logger
+from src.config.logger_settings import logger
 
 
 class KrakenClient:

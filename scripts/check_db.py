@@ -13,7 +13,7 @@ from datetime import datetime
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
-from logger_settings import logger
+from src.config.logger_settings import logger
 
 
 def get_db_connection(db_path=None):

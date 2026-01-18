@@ -10,7 +10,7 @@ PAIRS ?=
 TIMEFRAMES ?=
 EXCHANGE ?=
 SCHEDULE_TIME ?=
-SCHEDULER_ARGS_SCRIPT = ./scheduler_args.sh
+SCHEDULER_ARGS_SCRIPT = ./scheduler.sh
 SHOW_ARGS ?= 0
 
 export CONFIG PAIRS TIMEFRAMES EXCHANGE SCHEDULE_TIME
@@ -86,12 +86,16 @@ test-report: ## Run tests with HTML coverage report
 
 validate-config: ## Validate scheduler arguments against config
 	$(LOAD_ENV) && $(SCHEDULER_ARGS_SCRIPT) validate >/dev/null
+	@$(LOAD_ENV) && $(SCHEDULER_ARGS_SCRIPT) info
 	@if [ "$(SHOW_ARGS)" = "1" ]; then \
 		echo "run args: $$($(SCHEDULER_ARGS_SCRIPT) run)"; \
 		echo "schedule args: $$($(SCHEDULER_ARGS_SCRIPT) schedule)"; \
 	fi
 
-show-args: ## Print args computed from config (SHOW_ARGS=1)
+show-config: ## Print scheduler config summary
+	@$(LOAD_ENV) && $(SCHEDULER_ARGS_SCRIPT) info
+
+lance: ## Print args computed from config (SHOW_ARGS=1)
 	@$(MAKE) validate-config SHOW_ARGS=1
 
 run: ## Run immediate collection (PAIRS=a,b TIMEFRAMES=1h,4h EXCHANGE=...)

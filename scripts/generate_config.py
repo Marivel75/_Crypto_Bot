@@ -6,7 +6,7 @@ Permet de créer config.yaml ou config.json avec les valeurs par défaut.
 
 import argparse
 from config.settings import Config
-from logger_settings import logger
+from src.config.logger_settings import logger
 
 
 def main():

@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 from typing import Optional
 from sqlalchemy.exc import IntegrityError
-from logger_settings import logger
+from src.config.logger_settings import logger
 
 
 class LoadingError(Exception):

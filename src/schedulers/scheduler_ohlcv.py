@@ -6,9 +6,22 @@ import schedule
 import time
 import threading
 from typing import List, Optional
-from logger_settings import logger
+from src.config.logger_settings import logger
 from config.settings import config
 from src.collectors.ohlcv_collector import OHLCVCollector
+
+
+def _normalize_list(value):
+    if value is None:
+        return []
+    if isinstance(value, (list, tuple, set)):
+        return [item for item in value if item is not None]
+    return [value]
+
+
+def _normalize_exchanges(value):
+    exchanges = _normalize_list(value)
+    return [str(item).lower() for item in exchanges if item]
 
 
 class OHLCVScheduler:
@@ -16,14 +29,35 @@ class OHLCVScheduler:
     Classe de planification pour la collecte quotidienne de données OHLCV. Utilise une configuration centralisée.
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        pairs: Optional[List[str]] = None,
+        timeframes: Optional[List[str]] = None,
+        exchanges: Optional[List[str]] = None,
+        schedule_time: Optional[str] = None,
+    ):
         """Initialise le scheduler OHLCV avec la configuration centralisée."""
-        self.pairs = config.get("pairs")
-        self.timeframes = config.get("timeframes")
-        self.exchanges = config.get("exchanges")
-        self.schedule_time = config.get("scheduler.schedule_time", "09:00")
+        self.pairs = _normalize_list(pairs) or _normalize_list(config.get("pairs"))
+        self.timeframes = _normalize_list(timeframes) or _normalize_list(
+            config.get("timeframes")
+        )
+        self.exchanges = _normalize_exchanges(exchanges or config.get("exchanges"))
+        if not self.exchanges:
+            default_exchange = config.get("default_exchange")
+            if default_exchange:
+                self.exchanges = [str(default_exchange).lower()]
+        self.schedule_time = schedule_time or config.get(
+            "scheduler.schedule_time", "09:00"
+        )
         self.running = False
         self.scheduler_thread = None
+
+        if not self.pairs:
+            raise ValueError("Aucune paire configuree pour le scheduler OHLCV.")
+        if not self.timeframes:
+            raise ValueError("Aucun timeframe configure pour le scheduler OHLCV.")
+        if not self.exchanges:
+            raise ValueError("Aucun exchange configure pour le scheduler OHLCV.")
 
         logger.info(f"OHLCVScheduler initialisé pour {len(self.exchanges)} exchanges")
         logger.info(f"Planification quotidienne à {self.schedule_time}")

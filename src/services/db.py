@@ -2,7 +2,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from logger_settings import logger
+from src.config.logger_settings import logger
 from config.settings import config
 
 # Configuration de la base de données - Utiliser la configuration centralisée

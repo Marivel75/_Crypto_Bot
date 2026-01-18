@@ -4,8 +4,8 @@ set -euo pipefail
 ACTION="${1:-}"
 CONFIG="${CONFIG:-data/scheduler_config.json}"
 
-if [[ "$ACTION" != "run" && "$ACTION" != "schedule" && "$ACTION" != "validate" ]]; then
-  echo "Usage: $0 {run|schedule|validate}" >&2
+if [[ "$ACTION" != "run" && "$ACTION" != "schedule" && "$ACTION" != "validate" && "$ACTION" != "info" ]]; then
+  echo "Usage: $0 {run|schedule|validate|info}" >&2
   exit 2
 fi
 
@@ -20,7 +20,7 @@ if [[ ! -f "$CONFIG" ]]; then
 fi
 
 default_exchange="$(jq -r '.default_exchange // empty' "$CONFIG")"
-default_schedule_time="$(jq -r '.schedule_time // empty' "$CONFIG")"
+default_schedule_time="$(jq -r '.scheduler.schedule_time // .schedule_time // empty' "$CONFIG")"
 
 exchange="${EXCHANGE:-$default_exchange}"
 
@@ -29,7 +29,9 @@ if [[ -z "$exchange" || "$exchange" == "null" ]]; then
   exit 2
 fi
 
-mapfile -t allowed_exchanges < <(jq -r '.exchanges[]?.name' "$CONFIG")
+mapfile -t allowed_exchanges < <(
+  jq -r '.exchanges[]? | if type=="object" then .name else . end' "$CONFIG"
+)
 if [[ ${#allowed_exchanges[@]} -gt 0 ]]; then
   found_exchange=false
   for ex in "${allowed_exchanges[@]}"; do
@@ -46,7 +48,7 @@ fi
 
 mapfile -t allowed_pairs < <(
   jq -r --arg ex "$exchange" \
-    '(.exchanges // []) | map(select(.name==$ex)) | first | .pairs[]?' \
+    '(.exchanges // []) | map(select((type=="object" and .name==$ex) or (type!="object" and .==$ex))) | first | .pairs[]?' \
     "$CONFIG"
 )
 if [[ ${#allowed_pairs[@]} -eq 0 ]]; then
@@ -55,7 +57,7 @@ fi
 
 mapfile -t allowed_timeframes < <(
   jq -r --arg ex "$exchange" \
-    '(.exchanges // []) | map(select(.name==$ex)) | first | .timeframes[]?' \
+    '(.exchanges // []) | map(select((type=="object" and .name==$ex) or (type!="object" and .==$ex))) | first | .timeframes[]?' \
     "$CONFIG"
 )
 if [[ ${#allowed_timeframes[@]} -eq 0 ]]; then
@@ -139,6 +141,34 @@ if [[ "$ACTION" == "schedule" || "$ACTION" == "validate" ]]; then
 fi
 
 if [[ "$ACTION" == "validate" ]]; then
+  exit 0
+fi
+
+print_list() {
+  local label="$1"
+  shift
+  local items=("$@")
+  if [[ ${#items[@]} -eq 0 ]]; then
+    echo "$label: <none>"
+  else
+    echo "$label: ${items[*]}"
+  fi
+}
+
+if [[ "$ACTION" == "info" ]]; then
+  echo "Config: $CONFIG"
+  echo "Raw config:"
+  jq '.' "$CONFIG"
+  echo
+  echo "Resolved parameters:"
+  echo "Exchange: $exchange"
+  print_list "Pairs" "${pairs[@]}"
+  print_list "Timeframes" "${timeframes[@]}"
+  if [[ -n "$schedule_time" && "$schedule_time" != "null" ]]; then
+    echo "Schedule time: $schedule_time"
+  else
+    echo "Schedule time: <none>"
+  fi
   exit 0
 fi
 
