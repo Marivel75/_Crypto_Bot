@@ -18,7 +18,7 @@ from .extractor import OHLCVExtractor, ExtractionError
 try:
     from .transformer import OHLCVTransformer, TransformationError
     from .loader import OHLCVLoader, LoadingError
-    from .pipeline import ETLPipeline, PipelineResult
+    from .pipeline_ohlcv import ETLPipeline, PipelineResult
 except ImportError:
     # Ces modules seront disponibles lors de l'implémentation complète
     OHLCVTransformer = None

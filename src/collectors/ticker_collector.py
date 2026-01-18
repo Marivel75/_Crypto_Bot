@@ -10,7 +10,8 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List
 from logger_settings import logger
-from src.services.db import get_db_engine
+from config.settings import config
+from src.services.db_context import database_transaction
 from src.models.ticker import TickerSnapshot
 from src.services.exchange_factory import ExchangeFactory
 from sqlalchemy import text
@@ -25,7 +26,7 @@ class TickerCache:
         """
         Initialise le cache des tickers.
         """
-        self.cache = {}  # {symbol: [list of ticker entries]}
+        self.cache = {}  # format du dict : {symbol: [list of ticker entries]}
         self.max_items = max_items_per_symbol
         logger.info(
             f"📊 Cache de tickers initialisé (max {max_items_per_symbol} par symbole)"
@@ -46,7 +47,9 @@ class TickerCache:
         if len(self.cache[symbol]) > self.max_items:
             self.cache[symbol].pop(0)  # Supprime le plus ancien
 
-        logger.debug(f"✅ Ticker ajouté pour {symbol}: {ticker_data['price']} USD")
+        logger.debug(
+            f"✅ Ticker ajouté pour {symbol}: {ticker_data.get('price', ticker_data.get('last', 'N/A'))} USD"
+        )
 
     def get_recent_tickers(self, symbol: str, minutes: int = 60) -> List[dict]:
         """
@@ -93,26 +96,32 @@ class TickerCollector:
         self,
         pairs: List[str],
         exchange: str = "binance",
-        snapshot_interval: int = 5,
-        cache_size: int = 100,
-        cache_cleanup_interval: int = 30,
+        snapshot_interval: int = None,
+        cache_size: int = None,
+        cache_cleanup_interval: int = None,
     ):
-        """
-        Initialise le collecteur de tickers.
-        
-        Args:
-            pairs: Liste des paires à surveiller
-            exchange: Nom de l'exchange
-            snapshot_interval: Intervalle de sauvegarde en minutes
-            cache_size: Taille maximale du cache par symbole
-            cache_cleanup_interval: Intervalle de nettoyage du cache en minutes
-        """
-        self.pairs = pairs
-        self.exchange = exchange
-        self.snapshot_interval = snapshot_interval
-        self.cache_cleanup_interval = cache_cleanup_interval
 
-        # Initialiser le client d'exchange
+        self.pairs = pairs
+        self.exchange = exchange.lower()
+
+        # Utiliser la configuration centralisée ou les valeurs par défaut
+        self.snapshot_interval = (
+            snapshot_interval
+            if snapshot_interval is not None
+            else config.get("ticker.snapshot_interval", 5)
+        )
+        self.cache_cleanup_interval = (
+            cache_cleanup_interval
+            if cache_cleanup_interval is not None
+            else config.get("ticker.cache_cleanup_interval", 30)
+        )
+        cache_size = (
+            cache_size
+            if cache_size is not None
+            else config.get("ticker.cache_size", 100)
+        )
+
+        # Initialisation du client d'API en fonction de l'exchange
         self.client = ExchangeFactory.create_exchange(exchange)
 
         # Initialiser le cache
@@ -122,10 +131,10 @@ class TickerCollector:
         self.collector_thread = None
         self.running = False
 
+        logger.info(f"TickerCollector initialisé pour {exchange} - {len(pairs)} paires")
         logger.info(
-            f"TickerCollector initialisé pour {exchange} - {len(pairs)} paires"
+            f"   Nettoyage du cache toutes les {self.cache_cleanup_interval} minutes"
         )
-        logger.info(f"   Nettoyage du cache toutes les {cache_cleanup_interval} minutes")
 
     def start_collection(self):
         """
@@ -181,6 +190,36 @@ class TickerCollector:
                 logger.error(f"❌ Erreur dans la collecte des tickers: {e}")
                 time.sleep(10)  # Attendre avant de réessayer
 
+    def _normalize_ticker_data(self, ticker_data: dict) -> dict:
+        """
+        Normalise les données de ticker selon l'exchange.
+        """
+        normalized = ticker_data.copy()
+
+        # Normalisation selon l'exchange
+        if self.exchange == "binance":
+            # Binance utilise 'last' au lieu de 'price'
+            if "last" in normalized and "price" not in normalized:
+                normalized["price"] = normalized["last"]
+
+            # Mapping des champs spécifiques à Binance
+            if "quoteVolume" in normalized and "volume_24h" not in normalized:
+                normalized["volume_24h"] = normalized["quoteVolume"]
+
+            if "percentage" in normalized and "price_change_pct_24h" not in normalized:
+                normalized["price_change_pct_24h"] = normalized["percentage"]
+
+        elif self.exchange == "kraken":
+            # Kraken a sa propre structure
+            if "c" in normalized and "price" not in normalized:
+                normalized["price"] = normalized["c"][0]  # Dernier prix
+
+        elif self.exchange == "coinbase":
+            # Coinbase utilise 'price' directement
+            pass
+
+        return normalized
+
     def _fetch_and_cache_tickers(self):
         """
         Récupère les tickers depuis l'exchange et les ajoute au cache.
@@ -189,13 +228,16 @@ class TickerCollector:
             try:
                 ticker = self.client.fetch_ticker(pair)
                 if ticker:
-                    self.cache.add_ticker(pair, ticker)
+                    # Normaliser les données avant de les ajouter au cache
+                    normalized_ticker = self._normalize_ticker_data(ticker)
+                    self.cache.add_ticker(pair, normalized_ticker)
             except Exception as e:
                 logger.error(f"❌ Échec récupération ticker {pair}: {e}")
 
     def _save_snapshot(self):
         """
         Sauvegarde un snapshot des tickers actuels en base de données.
+        Utilise des context managers pour la gestion des ressources.
         """
         try:
             current_prices = self.cache.get_current_prices()
@@ -221,11 +263,10 @@ class TickerCollector:
                 )
                 snapshots.append(snapshot)
 
-            # Sauvegarder en base de données
-            engine = get_db_engine()
-            with engine.connect() as connection:
+            # Utiliser un context manager pour la base de données
+            with database_transaction() as db_conn:
                 for snapshot in snapshots:
-                    connection.execute(
+                    db_conn.execute(
                         text(
                             """
                             INSERT INTO ticker_snapshots (id, snapshot_time, symbol, exchange, price, volume_24h, 
@@ -245,9 +286,8 @@ class TickerCollector:
                             "price_change_pct_24h": snapshot.price_change_pct_24h,
                             "high_24h": snapshot.high_24h,
                             "low_24h": snapshot.low_24h,
-                        }
+                        },
                     )
-                connection.commit()
 
             logger.info(f"Snapshot sauvegardé: {len(snapshots)} tickers")
 
