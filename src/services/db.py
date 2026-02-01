@@ -4,16 +4,20 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from logger_settings import logger
 from config.settings import config
+from src.config.settings import ENVIRONMENT, SUPABASE_DB_URL, SQLITE_DB_PATH
 
-# Configuration de la base de données - Utiliser la configuration centralisée
-DATABASE_URL = config.get("database.url")
+# Configuration de la base de données
+if ENVIRONMENT == "production":
+    DATABASE_URL = SUPABASE_DB_URL
+else:
+    DATABASE_URL = f"sqlite:///{SQLITE_DB_PATH}"
 
 Base = declarative_base()
 
-
 def get_db_engine():
     """
-    Crée et retourne un moteur SQLAlchemy pour la base de données. Crée automatiquement les dossiers et la base de données si nécessaire.
+    Crée et retourne un moteur SQLAlchemy pour la base de données.
+    Crée automatiquement les dossiers et la base de données si nécessaire (SQLite).
     """
     try:
         # Créer les dossiers si nécessaire (pour SQLite)
@@ -22,16 +26,21 @@ def get_db_engine():
             os.makedirs(os.path.dirname(db_path), exist_ok=True)
             logger.info(f"Assure que le dossier existe: {os.path.dirname(db_path)}")
 
-        # Créer le moteur avec des paramètres spécifiques pour SQLite
+        # Paramètres spécifiques pour SQLite
         connect_args = {}
         if DATABASE_URL.startswith("sqlite:///"):
             connect_args = {"check_same_thread": False}
 
-        engine = create_engine(
-            DATABASE_URL,
-            echo=False,  # Mettre à True pour le débogage SQL
-            connect_args=connect_args,
-        )
+        # Paramètres spécifiques pour PostgreSQL (Supabase)
+        engine_args = {}
+        if DATABASE_URL.startswith("postgresql://"):
+            engine_args = {
+                "pool_size": 5,
+                "max_overflow": 10,
+                "pool_pre_ping": True,
+            }
+
+        engine = create_engine(DATABASE_URL, connect_args=connect_args, **engine_args)
 
         # Créer les tables si absentes
         from src.models.ohlcv import Base as OHLCVBase
@@ -46,7 +55,6 @@ def get_db_engine():
         logger.error(f"❌ Erreur de connexion à la base de données: {e}")
         raise
 
-
 def get_db_session():
     """
     Crée et retourne une session de base de données.
@@ -57,7 +65,6 @@ def get_db_session():
     engine = get_db_engine()
     Session = sessionmaker(bind=engine)
     return Session()
-
 
 # Engine par défaut pour la compatibilité (lazy loading)
 def get_engine():

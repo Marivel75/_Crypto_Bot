@@ -1,33 +1,50 @@
 """
-Module de gestion des connexions à la base de données avec context managers. Fournit des classes pour gérer les ressources de base de données.
+Module de gestion des connexions à la base de données avec context managers.
+Fournit des classes pour gérer les ressources de base de données.
 """
 
 from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from logger_settings import logger
-from config.settings import config
+from src.config.settings import ENVIRONMENT, SUPABASE_DB_URL, SQLITE_DB_PATH
 from typing import Generator, Any
+
+# Configuration de la base de données
+if ENVIRONMENT == "production":
+    DATABASE_URL = SUPABASE_DB_URL
+else:
+    DATABASE_URL = f"sqlite:///{SQLITE_DB_PATH}"
 
 
 class DatabaseConnection:
     """
-    Context manager pour la gestion des connexions database, garantit que les connexions à la base de données sont correctement ouvertes et fermées, même en cas d'erreur.
+    Context manager pour la gestion des connexions à la base de données.
+    Garantit que les connexions sont correctement ouvertes et fermées, même en cas d'erreur.
     """
 
     def __init__(self):
         self.engine = None
         self.connection = None
-        self.db_url = config.get("database.url")
 
     def __enter__(self):
         """
         Ouvre la connexion à la base de données.
+
         Returns:
             sqlalchemy.engine.Connection: Connexion à la base de données
         """
         try:
-            self.engine = create_engine(self.db_url)
+            # Paramètres spécifiques pour PostgreSQL (Supabase)
+            engine_args = {}
+            if DATABASE_URL.startswith("postgresql://"):
+                engine_args = {
+                    "pool_size": 5,
+                    "max_overflow": 10,
+                    "pool_pre_ping": True,
+                }
+
+            self.engine = create_engine(DATABASE_URL, **engine_args)
             self.connection = self.engine.connect()
             logger.debug("✅ Connexion à la base de données ouverte")
             return self.connection
@@ -63,14 +80,22 @@ class DatabaseConnection:
 @contextmanager
 def database_session() -> Generator[Any, None, None]:
     """
-    Context manager pour les sessions de base de données, utilise SQLAlchemy's sessionmaker pour créer une session et s'assure qu'elle est correctement fermée.
+    Context manager pour les sessions de base de données.
+    Utilise SQLAlchemy's sessionmaker pour créer une session et s'assure qu'elle est correctement fermée.
 
     Yields:
         sqlalchemy.orm.session.Session: Session de base de données
     """
-    from sqlalchemy.orm import sessionmaker
+    # Paramètres spécifiques pour PostgreSQL (Supabase)
+    engine_args = {}
+    if DATABASE_URL.startswith("postgresql://"):
+        engine_args = {
+            "pool_size": 5,
+            "max_overflow": 10,
+            "pool_pre_ping": True,
+        }
 
-    Session = sessionmaker(bind=create_engine(config.get("database.url")))
+    Session = sessionmaker(bind=create_engine(DATABASE_URL, **engine_args))
     session = Session()
 
     try:
@@ -90,12 +115,22 @@ def database_session() -> Generator[Any, None, None]:
 @contextmanager
 def database_transaction() -> Generator[Any, None, None]:
     """
-    Context manager pour les transactions de base de données, gère les transactions avec commit/rollback automatique.
+    Context manager pour les transactions de base de données.
+    Gère les transactions avec commit/rollback automatique.
 
     Yields:
         sqlalchemy.engine.Connection: Connexion avec gestion des transactions
     """
-    engine = create_engine(config.get("database.url"))
+    # Paramètres spécifiques pour PostgreSQL (Supabase)
+    engine_args = {}
+    if DATABASE_URL.startswith("postgresql://"):
+        engine_args = {
+            "pool_size": 5,
+            "max_overflow": 10,
+            "pool_pre_ping": True,
+        }
+
+    engine = create_engine(DATABASE_URL, **engine_args)
     connection = engine.connect()
     transaction = connection.begin()
 
