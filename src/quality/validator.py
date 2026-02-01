@@ -7,6 +7,7 @@ import numpy as np
 from typing import List, Dict, Optional, Tuple
 from logger_settings import logger
 from datetime import datetime, timedelta
+from src.config.settings import ENVIRONMENT
 
 
 class DataValidator0HCLV:
@@ -15,7 +16,7 @@ class DataValidator0HCLV:
 
     Checks effectués :
     - Validité des valeurs numériques (prix, volume)
-    - Ccohérence temporelle
+    - Cohérence temporelle
     - Complétude des données
     - Détection des valeurs aberrantes
     """
@@ -25,6 +26,7 @@ class DataValidator0HCLV:
         self.min_price = 0.01  # Prix minimum acceptable (en USD)
         self.max_volume = 1e12  # Volume maximum acceptable
         self.allowed_exchanges = ["binance", "kraken", "coinbase"]
+        logger.info(f"DataValidator0HCLV initialisé (Environnement: {ENVIRONMENT})")
 
     def _validate_dataframe_structure(self, df: pd.DataFrame) -> Tuple[bool, Dict]:
         """
@@ -35,6 +37,7 @@ class DataValidator0HCLV:
         # Vérifier que le DataFrame n'est pas vide
         if df.empty:
             report["errors"].append("DataFrame vide")
+            logger.warning("DataFrame vide détecté")
             return False, report
 
         # Vérifier les colonnes requises
@@ -52,6 +55,7 @@ class DataValidator0HCLV:
 
         if missing_columns:
             report["errors"].append(f"Colonnes manquantes: {missing_columns}")
+            logger.warning(f"Colonnes manquantes détectées: {missing_columns}")
             return False, report
 
         return True, report
@@ -139,6 +143,8 @@ class DataValidator0HCLV:
             "warnings": [],
         }
 
+        logger.info(f"Validation des valeurs OHLCV (Environnement: {ENVIRONMENT})")
+
         # 1. Structure du DataFrame
         structure_valid, structure_report = self._validate_dataframe_structure(df)
         if not structure_valid:
@@ -189,10 +195,12 @@ class DataValidator0HCLV:
 
         validation_report["valid_rows"] = valid_rows
 
-        # Calculer le taux de validité (corrigé)
+        # Calculer le taux de validité
         validation_report["validity_rate"] = (
             valid_rows / len(df) if not df.empty else 0.0
         )
+
+        logger.info(f"Validation terminée: {valid_rows}/{len(df)} lignes valides")
 
         return validation_report["valid_rows"] == len(df), validation_report
 
@@ -209,7 +217,12 @@ class DataValidator0HCLV:
             "time_range": None,
         }
 
+        logger.info(
+            f"Validation de la cohérence temporelle (Environnement: {ENVIRONMENT})"
+        )
+
         if df.empty:
+            logger.warning("DataFrame vide pour la validation temporelle")
             return False, consistency_report
 
         # Convertir en datetime si nécessaire
@@ -222,6 +235,7 @@ class DataValidator0HCLV:
         consistency_report["is_sorted"] = is_sorted
 
         if not is_sorted:
+            logger.warning("Timestamps non triés détectés")
             return False, consistency_report
 
         # Calculer l'intervalle de temps
@@ -234,7 +248,7 @@ class DataValidator0HCLV:
             # Considérer qu'il y a un trou si la différence est > 2 fois la médiane
             if len(time_diffs) > 1:
                 median_diff = time_diffs.median()
-                if median_diff > 0:  # Eviter la division par zéro
+                if median_diff > 0:  # Éviter la division par zéro
                     gap_threshold = median_diff * 2
                     gaps = time_diffs[time_diffs > gap_threshold]
 
@@ -242,6 +256,7 @@ class DataValidator0HCLV:
                         consistency_report["has_gaps"] = True
                         consistency_report["gap_count"] = len(gaps)
                         consistency_report["gaps"] = gaps.tolist()
+                        logger.warning(f"{len(gaps)} trous temporels détectés")
 
         return not consistency_report["has_gaps"], consistency_report
 
@@ -259,10 +274,18 @@ class DataValidator0HCLV:
             "missing_count": 0,  # nombre de données manquantes
         }
 
+        logger.info(
+            f"Validation de la complétude des données (Environnement: {ENVIRONMENT})"
+        )
+
         if expected_count is not None and expected_count > 0:
             completeness_report["completeness_rate"] = len(df) / expected_count
             completeness_report["missing_data"] = len(df) < expected_count
             completeness_report["missing_count"] = max(0, expected_count - len(df))
+            if completeness_report["missing_data"]:
+                logger.warning(
+                    f"{completeness_report['missing_count']} données manquantes détectées"
+                )
         else:
             completeness_report["completeness_rate"] = 1.0
 
@@ -270,7 +293,7 @@ class DataValidator0HCLV:
 
     def get_validation_summary(self, df: pd.DataFrame) -> Dict:
         """
-        Génère un rapport de validation
+        Génère un rapport de validation complet.
         """
         summary = {
             "timestamp": datetime.utcnow().isoformat(),
@@ -281,6 +304,10 @@ class DataValidator0HCLV:
             "completeness_validation": None,
         }
 
+        logger.info(
+            f"Génération du rapport de validation (Environnement: {ENVIRONMENT})"
+        )
+
         # Validation des valeurs
         values_valid, summary["value_validation"] = self.validate_ohlcv_values(df)
 
@@ -289,12 +316,16 @@ class DataValidator0HCLV:
             self.validate_temporal_consistency(df)
         )
 
-        # Validation de la complétude (sans attente spécifique pour l'instant)
+        # Validation de la complétude
         summary["completeness_validation"] = self.validate_data_completeness(df)
 
         # Statut global
         summary["is_valid"] = values_valid and temporal_valid
         summary["quality_score"] = self._calculate_quality_score(summary)
+
+        logger.info(
+            f"Rapport de validation généré: validité globale = {summary['is_valid']}"
+        )
 
         return summary
 
@@ -322,4 +353,7 @@ class DataValidator0HCLV:
             missing_penalty = min(0.2, completeness_report["completeness_rate"] * 0.1)
             score -= missing_penalty
 
-        return max(0.0, min(1.0, score))
+        score = max(0.0, min(1.0, score))
+        logger.info(f"Score de qualité calculé: {score:.2f}")
+
+        return score

@@ -9,12 +9,14 @@ from src.etl.transformer import OHLCVTransformer
 from src.etl.loader import OHLCVLoader
 from src.etl.pipeline_ohlcv import ETLPipelineOHLCV
 from typing import List
+from src.config.settings import ENVIRONMENT
 
 
 class OHLCVCollector:
     """
-    Récupère les données OHLCV (Open, High, Low, Close, Volume) pour des paires de trading spécifiques et des timeframes donnés, puis les stocke dans une base de données.
-    Utilise le pipeline ETL ohlcv pour gérer le processus d'extraction, de transformation et de chargement des données.
+    Récupère les données OHLCV (Open, High, Low, Close, Volume) pour des paires de trading spécifiques et des timeframes donnés,
+    puis les stocke dans une base de données. Utilise le pipeline ETL OHLCV pour gérer le processus d'extraction,
+    de transformation et de chargement des données.
     """
 
     def __init__(
@@ -54,19 +56,19 @@ class OHLCVCollector:
         # Initialisation du client d'API en fonction de l'exchange
         self.client = ExchangeFactory.create_exchange(exchange)
 
-        # Créer un mock d'engine pour les tests
-        from unittest.mock import MagicMock
-        self.engine = MagicMock()  # Pour la compatibilité avec les tests
-
         # Initialisation du valideur de données OHLCV
         self.data_validator = DataValidator0HCLV()
 
         # Initialisation du pipeline ETL
         self.pipeline = self._create_ohlcv_etl_pipeline()
 
+        logger.info(
+            f"OHLCVCollector initialisé pour {exchange} (Environnement: {ENVIRONMENT})"
+        )
+
     def _create_ohlcv_etl_pipeline(self) -> ETLPipelineOHLCV:
         """
-        Crée le pipeline ETL avec les composants appropriés pour les data OHLCV
+        Crée le pipeline ETL avec les composants appropriés pour les données OHLCV.
         """
         extractor = OHLCVExtractor(self.client)
         transformer = OHLCVTransformer(self.data_validator, self.exchange)
@@ -81,6 +83,8 @@ class OHLCVCollector:
         """
         all_batch_results = {}
 
+        logger.info(f"📊 Début de la collecte OHLCV (Environnement: {ENVIRONMENT})")
+
         for timeframe in self.timeframes:
             logger.info(f"📊 Traitement du timeframe: {timeframe}")
 
@@ -89,7 +93,7 @@ class OHLCVCollector:
                 with database_transaction() as db_conn:
                     # Mettre à jour le client dans le pipeline
                     self.pipeline.extractor.client = client
-                    
+
                     # Exécuter le pipeline ETL
                     batch_results = self.pipeline.run_batch(self.pairs, timeframe)
 

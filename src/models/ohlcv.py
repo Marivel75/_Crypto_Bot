@@ -7,17 +7,19 @@ Close : Prix de clôture
 Volume : Volume échangé
 """
 
-from sqlalchemy import Column, String, Float, DateTime, Index
+from sqlalchemy import Column, String, Float, DateTime, Index, text
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import pandas as pd
+import uuid
 
 Base = declarative_base()
 
 
 class OHLCV(Base):
     """
-    Structure de la table ohlcv dans PostgreSQL avec SQLAlchemy.
+    Structure de la table ohlcv dans la base de données avec SQLAlchemy.
+    Compatible avec SQLite et PostgreSQL (Supabase).
     Comprend :
     - Types de données appropriés
     - Contraintes de non-nullité
@@ -28,7 +30,9 @@ class OHLCV(Base):
     __tablename__ = "ohlcv"
 
     # Clé primaire unique
-    id = Column(String(36), primary_key=True, nullable=False)
+    id = Column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False
+    )
 
     # Données de marché essentielles
     timestamp = Column(DateTime, nullable=False, comment="Timestamp de la bougie")
@@ -101,3 +105,12 @@ class OHLCV(Base):
             },
             errors="ignore",
         )
+
+    @classmethod
+    def create_table(cls, engine):
+        """
+        Crée la table dans la base de données si elle n'existe pas.
+        Args:
+            engine: SQLAlchemy engine
+        """
+        Base.metadata.create_all(engine)
