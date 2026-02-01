@@ -2,10 +2,12 @@ import argparse
 import time
 import threading
 import subprocess
+import os
 from logger_settings import logger
 from config.settings import config
 from src.schedulers.scheduler_ohlcv import OHLCVScheduler
 from src.schedulers.scheduler_ticker import TickerScheduler
+from src.config.settings import ENVIRONMENT
 
 
 def run_collection_once():
@@ -15,9 +17,11 @@ def run_collection_once():
     """
     ohlcv_scheduler = None
     ticker_scheduler = None
-    
+
     try:
-        logger.info("Démarrage de la collecte unique de données")
+        logger.info(
+            f"Démarrage de la collecte unique de données (Environnement: {ENVIRONMENT})"
+        )
 
         # Récupérer la configuration centralisée
         include_ticker = config.get("ticker.enabled", False)
@@ -42,7 +46,7 @@ def run_collection_once():
         if include_ticker:
             logger.info("Démarrage de la collecte de ticker en temps réel...")
             ticker_scheduler = TickerScheduler()
-            
+
             # Exécuter pendant la durée spécifiée
             runtime_minutes = config.get("ticker.runtime", 60)
             if runtime_minutes > 0:
@@ -59,9 +63,13 @@ def run_collection_once():
         raise
     finally:
         # Arrêter proprement les schedulers si nécessaire
-        if ticker_scheduler and config.get("ticker.runtime", 60) > 0:
+        if (
+            "ticker_scheduler" in locals()
+            and ticker_scheduler
+            and config.get("ticker.runtime", 60) > 0
+        ):
             ticker_scheduler.stop_collection()
-        
+
         # Exécuter le script de vérification de la base de données
         try:
             logger.info("Exécution du script de vérification de la base de données...")
@@ -81,9 +89,11 @@ def run_scheduled_collection():
     """
     ohlcv_scheduler = None
     ticker_scheduler = None
-    
+
     try:
-        logger.info("Démarrage du collecteur de données avec planification")
+        logger.info(
+            f"Démarrage du collecteur de données avec planification (Environnement: {ENVIRONMENT})"
+        )
 
         # Récupérer la configuration centralisée
         include_ticker = config.get("ticker.enabled", False)
@@ -91,7 +101,9 @@ def run_scheduled_collection():
         logger.info(
             f"Configuration OHLCV: {len(config.get('pairs'))} paires, {len(config.get('timeframes'))} timeframes"
         )
-        logger.info(f"Planification: Collecte quotidienne à {config.get('scheduler.schedule_time', '09:00')}")
+        logger.info(
+            f"Planification: Collecte quotidienne à {config.get('scheduler.schedule_time', '09:00')}"
+        )
         logger.info(f"Exchanges: {', '.join(config.get('exchanges'))}")
 
         if include_ticker:
@@ -176,11 +188,22 @@ def parse_arguments():
         default="09:00",
         help="Heure de planification quotidienne (format HH:MM, par défaut: 09:00)",
     )
+    parser.add_argument(
+        "--env",
+        type=str,
+        default="development",
+        choices=["development", "production"],
+        help="Environnement d'exécution (développement ou production, par défaut: développement)",
+    )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_arguments()
+
+    # Définir l'environnement
+    os.environ["ENVIRONMENT"] = args.env
+    logger.info(f"Environnement défini sur: {args.env}")
 
     # Mettre à jour la configuration avec les arguments de ligne de commande
     config.update_from_args(args)
