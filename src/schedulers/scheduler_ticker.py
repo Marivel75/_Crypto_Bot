@@ -8,6 +8,7 @@ from typing import List, Dict, Optional
 from datetime import datetime, timedelta
 from logger_settings import logger
 from config.settings import config
+from src.config.settings import ENVIRONMENT
 from src.collectors.ticker_collector import TickerCollector
 
 
@@ -29,6 +30,7 @@ class TickerScheduler:
         self.scheduler_thread = None
 
         logger.info(f"TickerScheduler initialisé pour {len(self.exchanges)} exchanges")
+        logger.info(f"Environnement: {ENVIRONMENT}")
         logger.info(f"Intervalle de snapshot: {self.snapshot_interval} minutes")
 
     def start_collection(self) -> None:

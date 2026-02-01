@@ -8,6 +8,7 @@ import threading
 from typing import List, Optional
 from logger_settings import logger
 from config.settings import config
+from src.config.settings import ENVIRONMENT
 from src.collectors.ohlcv_collector import OHLCVCollector
 
 
@@ -26,6 +27,7 @@ class OHLCVScheduler:
         self.scheduler_thread = None
 
         logger.info(f"OHLCVScheduler initialisé pour {len(self.exchanges)} exchanges")
+        logger.info(f"Environnement: {ENVIRONMENT}")
         logger.info(f"Planification quotidienne à {self.schedule_time}")
 
     def _ohlcv_collection(self, exchange: str) -> None:
@@ -72,7 +74,7 @@ class OHLCVScheduler:
 
     def start(self) -> None:
         """
-        Démarre le planificateur OHLCV, planifie les tâches quotidiennes et lance le threadde planification.
+        Démarre le planificateur OHLCV, planifie les tâches quotidiennes et lance le thread de planification.
         """
         if self.running:
             logger.warning("⚠️  Le scheduler OHLCV est déjà en cours d'exécution")
@@ -113,7 +115,7 @@ class OHLCVScheduler:
         try:
             while self.running:
                 schedule.run_pending()
-                time.sleep(60)  # Vérificatiob toutes les minutes
+                time.sleep(60)  # Vérification toutes les minutes
         except KeyboardInterrupt:
             logger.info("Planificateur OHLCV arrêté par l'utilisateur")
         except Exception as e:
@@ -147,7 +149,9 @@ class OHLCVScheduler:
         Exécute une collecte immédiate OHLCV pour les tests ou le démarrage.
         """
         try:
-            logger.info(f"Exécution immédiate de la collecte OHLCV")
+            logger.info(
+                f"Exécution immédiate de la collecte OHLCV (Environnement: {ENVIRONMENT})"
+            )
             for exchange in self.exchanges:
                 self._ohlcv_collection(exchange)
         except Exception as e:
