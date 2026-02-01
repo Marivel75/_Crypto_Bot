@@ -8,13 +8,12 @@ from typing import List, Dict, Optional
 from datetime import datetime
 from logger_settings import logger
 from src.quality.validator import DataValidator0HCLV
-
+from src.config.settings import ENVIRONMENT
 
 class TransformationError(Exception):
     """Exception levée lors d'un échec de transformation."""
 
     pass
-
 
 class OHLCVTransformer:
     """
@@ -23,8 +22,9 @@ class OHLCVTransformer:
     - Conversion des données brutes en DataFrame
     - Ajout des métadonnées (symbol, timeframe, exchange)
     - Validation des données avec DataValidator0HCLV
-    - Enrichissement des données (calculs d'indicateurs)
+    - Enrichissement des données (calculs de base)
     - Normalisation des formats
+    Compatible avec SQLite et PostgreSQL (Supabase).
     """
 
     def __init__(self, validator: DataValidator0HCLV, exchange: str = "binance"):
@@ -33,7 +33,7 @@ class OHLCVTransformer:
         """
         self.validator = validator
         self.exchange = exchange
-        logger.info(f"Transformeur initialisé pour {exchange}")
+        logger.info(f"Transformeur OHLCVTransformer initialisé pour {exchange} (Environnement: {ENVIRONMENT})")
 
     def transform(
         self, raw_data: List[List], symbol: str, timeframe: str
@@ -44,7 +44,7 @@ class OHLCVTransformer:
         try:
             # Étape 1: Conversion en DataFrame
             logger.info(
-                f"Transformation de {len(raw_data)} bougies pour {symbol} {timeframe}"
+                f"Transformation de {len(raw_data)} bougies pour {symbol} {timeframe} (Environnement: {ENVIRONMENT})"
             )
             df = self._to_dataframe(raw_data)
 
@@ -54,7 +54,7 @@ class OHLCVTransformer:
             # Étape 3: Conversion des timestamps
             df = self._convert_timestamps(df)
 
-            # Étape 4: Validation des données (le validator attend un df pandas)
+            # Étape 4: Validation des données
             is_valid, validation_report = self.validator.validate_ohlcv_values(df)
 
             if not is_valid:
@@ -64,21 +64,21 @@ class OHLCVTransformer:
                         f", ... et {len(validation_report['errors']) - 3} autres"
                     )
                 raise TransformationError(
-                    f"Données invalides pour {symbol} {timeframe}: {error_details}"
+                    f"Données invalides pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {error_details}"
                 )
 
-            # Étape 5: Enrichissement (calculs d'indicateurs)
+            # Étape 5: Enrichissement (calculs de base)
             df = self._enrich_data(df)
 
             # Étape 6: Normalisation finale
             df = self._normalize_data(df)
 
-            logger.info(f"✅ Transformation réussie: {len(df)} lignes valides")
+            logger.info(f"✅ Transformation réussie: {len(df)} lignes valides (Environnement: {ENVIRONMENT})")
             return df
 
         except Exception as e:
-            logger.error(f"❌ Échec de la transformation: {e}")
-            raise TransformationError(f"Échec de la transformation: {e}") from e
+            logger.error(f"❌ Échec de la transformation (Environnement: {ENVIRONMENT}): {e}")
+            raise TransformationError(f"Échec de la transformation (Environnement: {ENVIRONMENT}): {e}") from e
 
     def _to_dataframe(self, raw_data: List[List]) -> pd.DataFrame:
         """
@@ -92,7 +92,7 @@ class OHLCVTransformer:
             raw_data, columns=["timestamp", "open", "high", "low", "close", "volume"]
         )
 
-        logger.debug(f"DataFrame créé: {df.shape}")
+        logger.debug(f"DataFrame créé: {df.shape} (Environnement: {ENVIRONMENT})")
         return df
 
     def _add_metadata(
@@ -112,7 +112,7 @@ class OHLCVTransformer:
         df["timeframe"] = timeframe
         df["exchange"] = self.exchange
 
-        logger.debug(f"Métadonnées ajoutées: {symbol}, {timeframe}, {self.exchange}")
+        logger.debug(f"Métadonnées ajoutées: {symbol}, {timeframe}, {self.exchange} (Environnement: {ENVIRONMENT})")
         return df
 
     def _convert_timestamps(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -124,21 +124,20 @@ class OHLCVTransformer:
         # Conversion depuis millisecondes (format CCXT)
         df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
 
-        # Ajout d'une colonne de date pour facilitée les requêtes
+        # Ajout d'une colonne de date pour faciliter les requêtes
         df["date"] = df["timestamp"].dt.date
 
         logger.debug(
-            f"Timestamps convertis: {df['timestamp'].min()} à {df['timestamp'].max()}"
+            f"Timestamps convertis: {df['timestamp'].min()} à {df['timestamp'].max()} (Environnement: {ENVIRONMENT})"
         )
         return df
 
     def _enrich_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Enrichit les données avec des calculs d'indicateurs techniques.
+        Enrichit les données avec des calculs de base.
         1. Calcul de l'amplitude de prix (high - low)
         2. Calcul de la variation de prix (close - open)
         3. Calcul du pourcentage de variation de prix
-        4. (Optionnel) Ajout d'indicateurs techniques avancés
         """
         df = df.copy()
 
@@ -149,12 +148,7 @@ class OHLCVTransformer:
             df["price_change"] / df["open"]
         ) * 100  # Variation en %
 
-        # TODO: Ajouter des indicateurs techniques avancés
-        # df = self._calculate_sma(df, window=50)
-        # df = self._calculate_rsi(df, window=14)
-        # df = self._calculate_macd(df)
-
-        logger.debug(f"📊 Données enrichies avec {len(df.columns)} colonnes")
+        logger.debug(f"📊 Données enrichies avec {len(df.columns)} colonnes (Environnement: {ENVIRONMENT})")
         return df
 
     def _normalize_data(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -181,7 +175,7 @@ class OHLCVTransformer:
         # Tri par timestamp (pour la cohérence)
         df = df.sort_values("timestamp").reset_index(drop=True)
 
-        logger.debug(f"Données normalisées: {df.dtypes.to_dict()}")
+        logger.debug(f"Données normalisées: {df.dtypes.to_dict()} (Environnement: {ENVIRONMENT})")
         return df
 
     def transform_batch(
@@ -197,25 +191,10 @@ class OHLCVTransformer:
                 try:
                     results[symbol] = self.transform(raw_data, symbol, timeframe)
                 except TransformationError as e:
-                    logger.error(f"❌ Échec transformation {symbol}: {e}")
+                    logger.error(f"❌ Échec transformation {symbol} (Environnement: {ENVIRONMENT}): {e}")
                     results[symbol] = None
             else:
                 results[symbol] = None
 
+        logger.info(f"Transformation par lots terminée (Environnement: {ENVIRONMENT})")
         return results
-
-    # Méthodes pour les indicateurs techniques (à implémenter)
-    def _calculate_sma(self, df: pd.DataFrame, window: int = 50) -> pd.DataFrame:
-        """Calcule la moyenne mobile simple (à implémenter)."""
-        # df[f"sma_{window}"] = df["close"].rolling(window).mean()
-        return df
-
-    def _calculate_rsi(self, df: pd.DataFrame, window: int = 14) -> pd.DataFrame:
-        """Calcule le RSI (à implémenter)."""
-        # Implémentation standard du RSI
-        return df
-
-    def _calculate_macd(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Calcule le MACD (à implémenter)."""
-        # Implémentation standard du MACD
-        return df

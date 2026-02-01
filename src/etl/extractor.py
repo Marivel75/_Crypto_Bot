@@ -1,85 +1,115 @@
 """
-Gère l'extraction des données OHLCV depuis les exchanges.
+Module d'extraction des données OHLCV depuis les exchanges.
+Fait partie du pipeline ETL pour les données de marché.
 """
 
-from typing import List, Optional
+import pandas as pd
+from typing import List, Dict, Optional
 from logger_settings import logger
-
-
-class ExtractionError(Exception):
-    """Exception levée lors d'un échec d'extraction."""
-
-    pass
+from src.config.settings import ENVIRONMENT
 
 
 class OHLCVExtractor:
     """
-    Extracteur de données OHLCV depuis les exchanges, responsable de la récupération des données brutes
-    depuis les APIs des exchanges.
+    Classe pour extraire les données OHLCV depuis les exchanges.
+    Utilise un client d'exchange pour récupérer les données brutes.
     """
 
-    def __init__(self, client, max_retries: int = 3):
+    def __init__(self, client):
         """
         Initialise l'extracteur avec un client d'exchange.
+
+        Args:
+            client: Client d'exchange (Binance, Kraken, Coinbase)
         """
         self.client = client
-        self.max_retries = max_retries
-        logger.info(f"Extracteur initialisé pour {client.__class__.__name__}")
+        logger.info(f"OHLCVExtractor initialisé (Environnement: {ENVIRONMENT})")
 
-    def extract(self, symbol: str, timeframe: str, limit: int = 100) -> List[List]:
+    def extract_ohlcv_data(
+        self, pairs: List[str], timeframe: str, limit: int = 1000
+    ) -> Dict[str, pd.DataFrame]:
         """
-        Extrait les données OHLCV brutes depuis l'exchange.
-        """
-        last_error = None
+        Extrait les données OHLCV pour les paires et le timeframe spécifiés.
 
-        for attempt in range(1, self.max_retries + 1):
+        Args:
+            pairs: Liste des paires de trading (ex: ["BTC/USDT", "ETH/USDT"])
+            timeframe: Timeframe (ex: "1h", "4h", "1d")
+            limit: Nombre maximum de bougies à récupérer
+
+        Returns:
+            Dict[str, pd.DataFrame]: Dictionnaire avec les données OHLCV par paire
+        """
+        logger.info(
+            f"Extraction des données OHLCV pour {len(pairs)} paires, timeframe: {timeframe} (Environnement: {ENVIRONMENT})"
+        )
+
+        ohlcv_data = {}
+
+        for pair in pairs:
             try:
-                logger.info(
-                    f"Extraction tentative {attempt}/{self.max_retries}: {symbol} {timeframe}"
-                )
+                logger.debug(f"Extraction des données pour {pair} ({timeframe})")
+                data = self.client.fetch_ohlcv(pair, timeframe, limit=limit)
 
-                raw_data = self.client.fetch_ohlcv(symbol, timeframe, limit)
-
-                if not raw_data or len(raw_data) == 0:
-                    raise ExtractionError(
-                        f"Aucune donnée retournée pour {symbol} {timeframe}"
+                if data and len(data) > 0:
+                    # Convertir les données en DataFrame
+                    df = pd.DataFrame(
+                        data,
+                        columns=[
+                            "timestamp",
+                            "open",
+                            "high",
+                            "low",
+                            "close",
+                            "volume",
+                        ],
                     )
 
-                logger.info(
-                    f"✅ Extraction réussie: {len(raw_data)} bougies pour {symbol} {timeframe}"
-                )
-                return raw_data
+                    # Ajouter des métadonnées
+                    df["symbol"] = pair
+                    df["timeframe"] = timeframe
+                    df["exchange"] = self.client.exchange_name
+
+                    ohlcv_data[pair] = df
+                    logger.debug(f"Données extraites pour {pair}: {len(df)} bougies")
+                else:
+                    logger.warning(
+                        f"Aucune donnée disponible pour {pair} ({timeframe})"
+                    )
+                    ohlcv_data[pair] = pd.DataFrame()  # DataFrame vide
 
             except Exception as e:
-                last_error = e
-                logger.warning(f"⚠️ Échec tentative {attempt}/{self.max_retries}: {e}")
+                logger.error(f"Erreur lors de l'extraction pour {pair}: {e}")
+                ohlcv_data[pair] = pd.DataFrame()  # DataFrame vide en cas d'erreur
 
-                # Attendre avant de réessayer (sauf dernière tentative)
-                if attempt < self.max_retries:
-                    import time
+        logger.info(f"Extraction terminée: {len(ohlcv_data)} paires traitées")
+        return ohlcv_data
 
-                    time.sleep(2**attempt)
+    def extract_batch(
+        self, pairs: List[str], timeframes: List[str], limit: int = 1000
+    ) -> Dict[str, Dict[str, pd.DataFrame]]:
+        """
+        Extrait les données OHLCV pour plusieurs paires et timeframes.
 
-        # Toutes les tentatives ont échoué
-        error_msg = (
-            f"Échec d'extraction après {self.max_retries} tentatives: {last_error}"
+        Args:
+            pairs: Liste des paires de trading
+            timeframes: Liste des timeframes
+            limit: Nombre maximum de bougies par requête
+
+        Returns:
+            Dict[str, Dict[str, pd.DataFrame]]: Dictionnaire imbriqué avec les données par timeframe et paire
+        """
+        logger.info(
+            f"Extraction par lots pour {len(pairs)} paires et {len(timeframes)} timeframes (Environnement: {ENVIRONMENT})"
         )
-        logger.error(f"❌ {error_msg}")
-        raise ExtractionError(error_msg)
 
-    def extract_multiple(
-        self, symbols: List[str], timeframe: str, limit: int = 100
-    ) -> dict:
-        """
-        Extrait les données pour plusieurs symboles.
-        """
-        results = {}
+        batch_data = {}
 
-        for symbol in symbols:
-            try:
-                results[symbol] = self.extract(symbol, timeframe, limit)
-            except ExtractionError as e:
-                logger.error(f"❌ Échec extraction {symbol}: {e}")
-                results[symbol] = None
+        for timeframe in timeframes:
+            logger.debug(f"Traitement du timeframe: {timeframe}")
+            timeframe_data = self.extract_ohlcv_data(pairs, timeframe, limit)
+            batch_data[timeframe] = timeframe_data
 
-        return results
+        logger.info(
+            f"Extraction par lots terminée: {len(batch_data)} timeframes traités"
+        )
+        return batch_data

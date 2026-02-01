@@ -10,6 +10,7 @@ from logger_settings import logger
 from src.etl.extractor import OHLCVExtractor, ExtractionError
 from src.etl.transformer import OHLCVTransformer, TransformationError
 from src.etl.loader import OHLCVLoader, LoadingError
+from src.config.settings import ENVIRONMENT
 
 
 @dataclass
@@ -131,7 +132,7 @@ class ETLPipelineOHLCV:
         self.extractor = extractor
         self.transformer = transformer
         self.loader = loader
-        logger.info("Pipeline ETL initialisé et prêt")
+        logger.info(f"Pipeline ETL initialisé (Environnement: {ENVIRONMENT})")
 
     def run(self, symbol: str, timeframe: str, limit: int = 100) -> PipelineResult:
         """
@@ -143,6 +144,9 @@ class ETLPipelineOHLCV:
             limit: Nombre de bougies à extraire (défaut: 100)
         """
         result = PipelineResult(symbol, timeframe)
+        logger.info(
+            f"Exécution du pipeline pour {symbol} {timeframe} (Environnement: {ENVIRONMENT})"
+        )
 
         try:
             # Étape 1: Extraction
@@ -162,36 +166,66 @@ class ETLPipelineOHLCV:
 
             result.success = True
             logger.info(
-                f"✅ Pipeline ETL terminé avec succès pour {symbol} {timeframe}"
+                f"✅ Pipeline ETL terminé avec succès pour {symbol} {timeframe} (Environnement: {ENVIRONMENT})"
             )
 
         except ExtractionError as e:
             result.fail_extraction(str(e))
+            logger.error(
+                f"❌ Échec de l'extraction pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {e}"
+            )
         except TransformationError as e:
             result.fail_transformation(str(e))
+            logger.error(
+                f"❌ Échec de la transformation pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {e}"
+            )
         except LoadingError as e:
             result.fail_loading(str(e))
+            logger.error(
+                f"❌ Échec du chargement pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {e}"
+            )
         except Exception as e:
             result.fail(str(e))
+            logger.error(
+                f"❌ Échec du pipeline pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {e}"
+            )
 
         return result
 
     def _extract_data(self, symbol: str, timeframe: str, limit: int) -> List[List]:
         """Extrait les données brutes."""
-        logger.info(f"Extraction: {symbol} {timeframe}")
-        return self.extractor.extract(symbol, timeframe, limit)
+        logger.info(f"Extraction: {symbol} {timeframe} (Environnement: {ENVIRONMENT})")
+        try:
+            return self.extractor.extract_ohlcv_data([symbol], timeframe, limit)[symbol]
+        except Exception as e:
+            logger.error(
+                f"❌ Échec de l'extraction pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {e}"
+            )
+            raise ExtractionError(f"Échec de l'extraction: {e}") from e
 
     def _transform_data(
         self, raw_data: List[List], symbol: str, timeframe: str
     ) -> pd.DataFrame:
         """Transforme les données brutes."""
-        logger.info(f"Transformation: {symbol} {timeframe}")
-        return self.transformer.transform(raw_data, symbol, timeframe)
+        logger.info(
+            f"Transformation: {symbol} {timeframe} (Environnement: {ENVIRONMENT})"
+        )
+        try:
+            return self.transformer.transform(raw_data, symbol, timeframe)
+        except Exception as e:
+            logger.error(
+                f"❌ Échec de la transformation pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {e}"
+            )
+            raise TransformationError(f"Échec de la transformation: {e}") from e
 
     def _load_data(self, df: pd.DataFrame) -> int:
         """Charge les données transformées."""
-        logger.info(f"Chargement: {len(df)} lignes")
-        return self.loader.load(df)
+        logger.info(f"Chargement: {len(df)} lignes (Environnement: {ENVIRONMENT})")
+        try:
+            return self.loader.load(df)
+        except Exception as e:
+            logger.error(f"❌ Échec du chargement (Environnement: {ENVIRONMENT}): {e}")
+            raise LoadingError(f"Échec du chargement: {e}") from e
 
     def run_batch(
         self, symbols: List[str], timeframe: str, limit: int = 100
@@ -205,6 +239,9 @@ class ETLPipelineOHLCV:
             limit: Nombre de bougies par symbole
         """
         results = {}
+        logger.info(
+            f"Exécution du pipeline par lots pour {len(symbols)} symboles (Environnement: {ENVIRONMENT})"
+        )
 
         for symbol in symbols:
             try:
@@ -213,8 +250,11 @@ class ETLPipelineOHLCV:
                 error_result = PipelineResult(symbol, timeframe)
                 error_result.fail(str(e))
                 results[symbol] = error_result
-                logger.error(f"❌ Échec du pipeline pour {symbol}: {e}")
+                logger.error(
+                    f"❌ Échec du pipeline pour {symbol} (Environnement: {ENVIRONMENT}): {e}"
+                )
 
+        logger.info(f"Pipeline par lots terminé (Environnement: {ENVIRONMENT})")
         return results
 
     def run_extract_transform_batch(
@@ -229,6 +269,9 @@ class ETLPipelineOHLCV:
             limit: Nombre de bougies par symbole
         """
         results = {}
+        logger.info(
+            f"Exécution Extract+Transform pour {len(symbols)} symboles (Environnement: {ENVIRONMENT})"
+        )
 
         for symbol in symbols:
             try:
@@ -239,12 +282,19 @@ class ETLPipelineOHLCV:
                 df = self._transform_data(raw_data, symbol, timeframe)
 
                 results[symbol] = df
-                logger.info(f"✅ Extract+Transform réussi pour {symbol} {timeframe}")
+                logger.info(
+                    f"✅ Extract+Transform réussi pour {symbol} {timeframe} (Environnement: {ENVIRONMENT})"
+                )
 
             except Exception as e:
-                logger.error(f"❌ Échec Extract+Transform pour {symbol}: {e}")
+                logger.error(
+                    f"❌ Échec Extract+Transform pour {symbol} (Environnement: {ENVIRONMENT}): {e}"
+                )
                 results[symbol] = None
 
+        logger.info(
+            f"Extract+Transform par lots terminé (Environnement: {ENVIRONMENT})"
+        )
         return results
 
     def get_summary(self, results: Dict[str, PipelineResult]) -> dict:
@@ -262,7 +312,7 @@ class ETLPipelineOHLCV:
         total_time = sum(r.total_time() for r in results.values())
         avg_time = total_time / total_symbols if total_symbols > 0 else 0
 
-        return {
+        summary = {
             "total_symbols": total_symbols,
             "successful": successful,
             "failed": failed,
@@ -273,4 +323,8 @@ class ETLPipelineOHLCV:
             "total_time": total_time,
             "average_time": avg_time,
             "timestamp": datetime.utcnow().isoformat(),
+            "environment": ENVIRONMENT,
         }
+
+        logger.info(f"Résumé du pipeline généré (Environnement: {ENVIRONMENT})")
+        return summary
