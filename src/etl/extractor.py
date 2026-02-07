@@ -9,20 +9,27 @@ from logger_settings import logger
 from src.config.settings import ENVIRONMENT
 
 
+class ExtractionError(Exception):
+    """Exception levée lors d'un échec d'extraction."""
+    pass
+
+
 class OHLCVExtractor:
     """
     Classe pour extraire les données OHLCV depuis les exchanges.
     Utilise un client d'exchange pour récupérer les données brutes.
     """
 
-    def __init__(self, client):
+    def __init__(self, client, exchange_name: str = None):
         """
         Initialise l'extracteur avec un client d'exchange.
 
         Args:
             client: Client d'exchange (Binance, Kraken, Coinbase)
+            exchange_name: Nom de l'exchange (optionnel, pour compatibilité)
         """
         self.client = client
+        self.exchange_name = exchange_name
         logger.info(f"OHLCVExtractor initialisé (Environnement: {ENVIRONMENT})")
 
     def extract_ohlcv_data(
@@ -67,7 +74,7 @@ class OHLCVExtractor:
                     # Ajouter des métadonnées
                     df["symbol"] = pair
                     df["timeframe"] = timeframe
-                    df["exchange"] = self.client.exchange_name
+                    df["exchange"] = self.exchange_name
 
                     ohlcv_data[pair] = df
                     logger.debug(f"Données extraites pour {pair}: {len(df)} bougies")

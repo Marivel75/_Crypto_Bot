@@ -196,7 +196,15 @@ class ETLPipelineOHLCV:
         """Extrait les données brutes."""
         logger.info(f"Extraction: {symbol} {timeframe} (Environnement: {ENVIRONMENT})")
         try:
-            return self.extractor.extract_ohlcv_data([symbol], timeframe, limit)[symbol]
+            # L'extractor retourne un DataFrame avec métadonnées, nous devons extraire uniquement les données brutes
+            df = self.extractor.extract_ohlcv_data([symbol], timeframe, limit)[symbol]
+            if df is None or df.empty:
+                return []
+            # Sélectionner uniquement les 6 colonnes de base (format CCXT attendu par le transformer)
+            base_columns = ["timestamp", "open", "high", "low", "close", "volume"]
+            raw_df = df[base_columns]
+            # Convertir le DataFrame en liste de listes (format attendu par le transformer)
+            return raw_df.values.tolist()
         except Exception as e:
             logger.error(
                 f"❌ Échec de l'extraction pour {symbol} {timeframe} (Environnement: {ENVIRONMENT}): {e}"

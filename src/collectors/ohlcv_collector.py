@@ -70,7 +70,7 @@ class OHLCVCollector:
         """
         Crée le pipeline ETL avec les composants appropriés pour les données OHLCV.
         """
-        extractor = OHLCVExtractor(self.client)
+        extractor = OHLCVExtractor(self.client, self.exchange)
         transformer = OHLCVTransformer(self.data_validator, self.exchange)
         loader = OHLCVLoader(None)  # L'engine sera passé via context manager
 

@@ -7,14 +7,19 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from logger_settings import logger
+from config.settings import config
 from src.config.settings import ENVIRONMENT, SUPABASE_DB_URL, SQLITE_DB_PATH
 from typing import Generator, Any
 
 # Configuration de la base de données
-if ENVIRONMENT == "production":
+# Utiliser le type de base de données depuis la configuration
+db_type = config.get("database.type", "sqlite")
+if db_type == "postgresql":
     DATABASE_URL = SUPABASE_DB_URL
+    logger.info(f"db_context: Utilisation de PostgreSQL/Supabase (Environnement: {ENVIRONMENT})")
 else:
     DATABASE_URL = f"sqlite:///{SQLITE_DB_PATH}"
+    logger.info(f"db_context: Utilisation de SQLite (Environnement: {ENVIRONMENT})")
 
 
 class DatabaseConnection:

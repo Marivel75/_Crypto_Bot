@@ -7,10 +7,14 @@ from config.settings import config
 from src.config.settings import ENVIRONMENT, SUPABASE_DB_URL, SQLITE_DB_PATH
 
 # Configuration de la base de données
-if ENVIRONMENT == "production":
+# Utiliser le type de base de données depuis la configuration
+db_type = config.get("database.type", "sqlite")
+if db_type == "postgresql":
     DATABASE_URL = SUPABASE_DB_URL
+    logger.info(f"Utilisation de PostgreSQL/Supabase (Environnement: {ENVIRONMENT})")
 else:
     DATABASE_URL = f"sqlite:///{SQLITE_DB_PATH}"
+    logger.info(f"Utilisation de SQLite (Environnement: {ENVIRONMENT})")
 
 Base = declarative_base()
 
