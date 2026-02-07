@@ -32,7 +32,7 @@ class OHLCVScheduler:
 
     def _ohlcv_collection(self, exchange: str) -> None:
         """
-        Fonction de collecte quotidienne de données OHLCV pour un exchange spécifique.
+        Fonction principale de collecte quotidienne de données OHLCV pour un exchange spécifique.
         """
         try:
             logger.info(
