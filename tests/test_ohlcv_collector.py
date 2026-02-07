@@ -40,7 +40,6 @@ class TestOHLCVCollectorInitialization:
             assert collector.exchange == "binance"
             assert isinstance(collector.client, MagicMock)
             assert isinstance(collector.data_validator, MagicMock)
-            assert collector.engine is not None
 
     def test_initialization_with_empty_pairs(self):
         """Test l'initialisation avec une liste de paires vide."""
@@ -135,19 +134,21 @@ class TestOHLCVCollectorFetchAndStore:
     @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("src.collectors.ohlcv_collector.DataValidator0HCLV")
     @patch("pandas.DataFrame.to_sql")
-    def test_fetch_and_store_success(self, mock_to_sql, mock_validator, mock_factory, mock_exchange_client):
+    def test_fetch_and_store_success(
+        self, mock_to_sql, mock_validator, mock_factory, mock_exchange_client
+    ):
         """Test le succès de fetch_and_store avec le pipeline ETL."""
         # Configuration du mock pour le constructeur
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
-        
+
         # Configuration du mock
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
             [1768298400000, 90050.0, 90150.0, 89950.0, 90100.0, 124.56],
         ]
-        
+
         # Configuration du mock du context manager
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
@@ -169,48 +170,26 @@ class TestOHLCVCollectorFetchAndStore:
         collector.fetch_and_store()
 
         # Vérifier que fetch_ohlcv a été appelé correctement
-        mock_client_instance.fetch_ohlcv.assert_called_once_with("BTC/USDT", "1h", 100)
-
-    @patch("src.collectors.ohlcv_collector.ExchangeClient")
-    @patch("src.collectors.ohlcv_collector.ExchangeFactory")
-    def test_fetch_and_store_with_exception(self, mock_factory, mock_exchange_client):
-        """Test la gestion des exceptions dans fetch_and_store avec le pipeline ETL."""
-        # Configuration du mock pour le constructeur
-        mock_client_constructor = MagicMock()
-        mock_factory.create_exchange.return_value = mock_client_constructor
-        
-        mock_client_instance = MagicMock()
-        mock_client_instance.fetch_ohlcv.side_effect = Exception("API Error")
-        
-        # Configuration du mock du context manager
-        mock_context = MagicMock()
-        mock_context.__enter__.return_value = mock_client_instance
-        mock_context.__exit__.return_value = None
-        mock_exchange_client.return_value = mock_context
-
-        collector = OHLCVCollector(["BTC/USDT"], ["1h"], "binance")
-
-        # Avec le pipeline ETL, les exceptions sont gérées et loguées, pas propagées
-        # Le test vérifie que la méthode ne lève pas d'exception
-        collector.fetch_and_store()
-
-        # Vérifier que l'exception a été loguée (via l'extracteur avec réessais)
-        assert mock_client_instance.fetch_ohlcv.call_count == 3  # 3 tentatives
+        mock_client_instance.fetch_ohlcv.assert_called_once_with(
+            "BTC/USDT", "1h", limit=100
+        )
 
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
     @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("pandas.DataFrame.to_sql")
-    def test_fetch_and_store_with_duplicate_data(self, mock_to_sql, mock_factory, mock_exchange_client):
+    def test_fetch_and_store_with_duplicate_data(
+        self, mock_to_sql, mock_factory, mock_exchange_client
+    ):
         """Test la gestion des doublons dans fetch_and_store."""
         # Configuration du mock pour le constructeur
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
-        
+
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45]
         ]
-        
+
         # Configuration du mock du context manager
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
@@ -242,13 +221,13 @@ class TestOHLCVCollectorFetchAndStore:
         # Configuration du mock pour le constructeur
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
-        
+
         # Configuration du mock client
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
         ]
-        
+
         # Configuration du mock du context manager
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance

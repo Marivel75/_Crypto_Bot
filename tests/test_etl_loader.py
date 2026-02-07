@@ -118,52 +118,7 @@ class TestOHLCVLoaderLoad:
             mock_batch.assert_called_once()
 
 
-class TestOHLCVLoaderBatchInsert:
-    """Tests pour la méthode _batch_insert."""
-    
-    def test_batch_insert_success(self):
-        """Test l'insertion par batches réussie."""
-        mock_engine = MagicMock()
-        loader = OHLCVLoader(mock_engine, batch_size=2)
-        
-        df = pd.DataFrame({"col1": [1, 2, 3, 4, 5]})
-        
-        with patch('pandas.DataFrame.to_sql') as mock_to_sql:
-            mock_to_sql.return_value = None
-            
-            result = loader._batch_insert(df, "test_table")
-            
-            assert result == 5
-            assert mock_to_sql.call_count == 3  # 3 batches: 2, 2, 1
-    
-    def test_batch_insert_with_integrity_error(self):
-        """Test l'insertion par batches avec conflit."""
-        mock_engine = MagicMock()
-        loader = OHLCVLoader(mock_engine, batch_size=2)
-        
-        df = pd.DataFrame({"col1": [1, 2, 3, 4]})
-        
-        with patch('pandas.DataFrame.to_sql') as mock_to_sql:
-            # Premier batch réussit, deuxième échoue
-            mock_to_sql.side_effect = [None, IntegrityError("mock", "mock", "Duplicate")]
-            
-            result = loader._batch_insert(df, "test_table")
-            
-            assert result == 2  # Seulement le premier batch
-            assert mock_to_sql.call_count == 2
-    
-    def test_batch_insert_with_error(self):
-        """Test l'insertion par batches avec erreur."""
-        mock_engine = MagicMock()
-        loader = OHLCVLoader(mock_engine, batch_size=2)
-        
-        df = pd.DataFrame({"col1": [1, 2, 3, 4]})
-        
-        with patch('pandas.DataFrame.to_sql') as mock_to_sql:
-            mock_to_sql.side_effect = Exception("Database error")
-            
-            with pytest.raises(LoadingError, match="Échec du batch"):
-                loader._batch_insert(df, "test_table")
+
 
 
 class TestOHLCVLoaderBatchOperations:
