@@ -1,6 +1,7 @@
 # Secrets et environnement
 .env
 .venv/
+.env.production
 
 # Python
 __pycache__/
