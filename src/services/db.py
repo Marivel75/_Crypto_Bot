@@ -4,69 +4,43 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from logger_settings import logger
 from config.settings import config
-from src.services.db_environment import db_env
 
-# Importer les bases de modèles ici pour éviter les erreurs tardives
-from src.models.ohlcv import Base as OHLCVBase
-from src.models.ticker import Base as TickerBase
+# Configuration de la base de données - Utiliser la configuration centralisée
+DATABASE_URL = config.get("database.url")
 
 Base = declarative_base()
 
 
-def get_db_engine(environment=None):
+def get_db_engine():
     """
-    Crée et retourne un moteur SQLAlchemy pour la base de données.
-    Crée automatiquement les dossiers et la base de données si nécessaire.
-
-    Args:
-        environment: Environnement cible (production/testing, None utilise l'env actuel)
-
-    Raises:
-        ValueError: Si l'environnement est invalide
+    Crée et retourne un moteur SQLAlchemy pour la base de données. Crée automatiquement les dossiers et la base de données si nécessaire.
     """
     try:
-        # Vérifier la validité de l'environnement
-        if environment and environment not in ["production", "testing"]:
-            logger.error(f"Environnement invalide: {environment}")
-            raise ValueError(
-                f"Environnement invalide: {environment}. Utilisez 'production' ou 'testing'."
-            )
-
-        # Obtenir l'URL de base de données appropriée
-        if environment:
-            db_url = db_env.get_db_url(environment)
-            db_env.set_environment(environment)
-            logger.info(f"Configuration DB - Environnement forcé: {environment}")
-        else:
-            db_url = db_env.get_current_db_url()
-            logger.info(
-                f"Configuration DB - Environnement actuel: {db_env.current_env}"
-            )
-
-        logger.info(f"Configuration DB - URL: {db_url}")
-
-        # S'assurer que les répertoires existent
-        db_env.ensure_directories()
-
-        logger.info(f"🔒 Environnement final: {db_env.current_env}")
-        logger.info(f"📂 Base de données cible: {db_url}")
+        # Créer les dossiers si nécessaire (pour SQLite)
+        if DATABASE_URL.startswith("sqlite:///"):
+            db_path = DATABASE_URL.replace("sqlite:///", "")
+            os.makedirs(os.path.dirname(db_path), exist_ok=True)
+            logger.info(f"Assure que le dossier existe: {os.path.dirname(db_path)}")
 
         # Créer le moteur avec des paramètres spécifiques pour SQLite
         connect_args = {}
-        if db_url.startswith("sqlite:///"):
+        if DATABASE_URL.startswith("sqlite:///"):
             connect_args = {"check_same_thread": False}
 
         engine = create_engine(
-            db_url,
+            DATABASE_URL,
             echo=False,  # Mettre à True pour le débogage SQL
             connect_args=connect_args,
         )
 
-        # Créer les tables si absentes (checkfirst=True pour éviter les erreurs)
-        OHLCVBase.metadata.create_all(engine, checkfirst=True)
-        TickerBase.metadata.create_all(engine, checkfirst=True)
+        # Créer les tables si absentes
+        from src.models.ohlcv import Base as OHLCVBase
+        from src.models.ticker import Base as TickerBase
 
-        logger.info(f"✅ Connexion réussie à la base de données: {db_url}")
+        OHLCVBase.metadata.create_all(engine)
+        TickerBase.metadata.create_all(engine)
+
+        logger.info(f"Connexion à la base de données: {DATABASE_URL}")
         return engine
     except Exception as e:
         logger.error(f"❌ Erreur de connexion à la base de données: {e}")
@@ -87,8 +61,5 @@ def get_db_session():
 
 # Engine par défaut pour la compatibilité (lazy loading)
 def get_engine():
-    """
-    Retourne l'engine de base de données (pour la compatibilité).
-    Alias de get_db_engine().
-    """
+    """Retourne l'engine de base de données (pour la compatibilité)"""
     return get_db_engine()
