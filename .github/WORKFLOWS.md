@@ -7,8 +7,8 @@ Ce document explique la configuration GitHub Actions pour utiliser le système d
 ### **`.github/workflows/tests.yml`** (Workflow actuel)
 
 **Caractéristiques :**
-- ✅ **Isolation garantie** : Force `CRYPTO_BOT_ENV=testing`
-- ✅ **Setup automatique** : Crée les environnements avant les tests
+- ✅ **Isolation garantie** : Force `CRYPTO_BOT_ENV=testing` dans `run_tests.py`
+- ✅ **Setup automatique** : `run_tests.py` configure les environnements automatiquement
 - ✅ **Tests matriciels** : Exécute différents types de tests en parallèle
 - ✅ **Couverture** : Génère et upload les rapports de couverture
 - ✅ **Vérification** : Contrôle l'isolation après les tests
@@ -16,15 +16,36 @@ Ce document explique la configuration GitHub Actions pour utiliser le système d
 
 ## 🚀 **Workflow Complet**
 
-### Phase 1: Préparation
+### Phase 1: Exécution des Tests
 ```yaml
-- name: Setup test environment
+- name: Run ${{ matrix.name }}
   run: |
-    python scripts/setup_environments.py
-    python scripts/manage_environments.py info
+    # Force testing environment (géré par run_tests.py)
+    export CRYPTO_BOT_ENV=testing
+    
+    # Run specific test type with coverage
+    python scripts/run_tests.py --type ${{ matrix.test-type }} --coverage
 ```
 
-### Phase 2: Exécution des Tests (Matricielle)
+### Phase 2: Upload et Vérification
+```yaml
+- name: Upload coverage to Codecov
+  uses: codecov/codecov-action@v4
+
+- name: Verify isolation
+  run: |
+    python scripts/manage_environments.py info
+    # Vérifie que la base de production n'est pas affectée
+```
+
+## 📊 **Matrice de Tests**
+
+### Types de tests exécutés en parallèle :
+- **All Tests** : Suite complète avec couverture (--type all)
+- **Unit Tests** : Tests unitaires uniquement (--type unit)
+- **Integration Tests** : Tests d'intégration (--type integration)
+
+### Configuration de la matrice :
 ```yaml
 strategy:
   matrix:
@@ -33,37 +54,44 @@ strategy:
       - test-type: 'test'      name: 'All Tests'
       - test-type: 'unit'      name: 'Unit Tests'
       - test-type: 'integration' name: 'Integration Tests'
-
-- name: Run ${{ matrix.name }}
-  run: |
-    export CRYPTO_BOT_ENV=testing
-    python scripts/run_isolated_tests.py ${{ matrix.test-type }}
 ```
 
-### Phase 3: Upload et Vérification
-```yaml
-- name: Upload coverage to Codecov
-  uses: codecov/codecov-action@v4
-  with:
-    files: ./htmlcov/index.html
-    directory: ./htmlcov
-    flags: ${{ matrix.test-type }}
+## 🎯 **Script `run_tests.py`**
 
-- name: Verify isolation
-  run: |
-    python scripts/manage_environments.py info
-    # Vérifie que la base de production n'est pas affectée
+### Caractéristiques principales :
+- **Isolation automatique** : Force `CRYPTO_BOT_ENV=testing`
+- **Setup de la base** : Crée automatiquement la base de test
+- **Types de tests** : Supporte all, unit, validation, etl, integration
+- **Couverture** : Génération de rapports avec `--coverage`
+- **Vérification** : Affiche l'état des bases après exécution
+
+### Commandes disponibles :
+```bash
+# Tous les tests avec couverture
+python scripts/run_tests.py --type all --coverage
+
+# Tests unitaires uniquement
+python scripts/run_tests.py --type unit
+
+# Tests d'intégration
+python scripts/run_tests.py --type integration
+
+# Mode verbeux
+python scripts/run_tests.py --type all --verbose
+
+# Rapport HTML
+python scripts/run_tests.py --type all --coverage --report
 ```
 
 ## 📊 **Résultats Attendus**
 
 ### ✅ **Isolation Confirmée**
-- Base de test : Créée et utilisée
-- Base de production : Intacte et protégée
+- Base de test : Créée et utilisée (40KB+ après tests)
+- Base de production : Intacte et protégée (0KB ou inchangée)
 - Logs clairs indiquant l'isolation
 
 ### 📈 **Coverage et Artifacts**
-- Rapports de couverture uploadés sur Codecov (par type de test)
+- Rapports de couverture uploadés sur Codecov
 - Artifacts disponibles pour 7 jours
 - Logs d'exécution conservés
 
@@ -76,7 +104,7 @@ strategy:
 
 ### 🔒 **Protection des Données**
 - **Jamais** de tests sur la base de production
-- **Isolation** forcée par variable d'environnement
+- **Isolation** forcée par `run_tests.py`
 - **Vérification** systématique post-execution
 
 ### 🛡️ **Traçabilité**
@@ -84,23 +112,25 @@ strategy:
 - Artifacts séparés par type de tests
 - Vérification automatique de l'isolation
 
-## 📝 **Configuration Actuelle**
+## 📝 **Scripts Utilisés**
 
-### **Tests exécutés en parallèle :**
-- **All Tests** : Suite complète avec couverture
-- **Unit Tests** : Tests unitaires uniquement
-- **Integration Tests** : Tests d'intégration uniquement
+### **`scripts/run_tests.py`** (Principal)
+- Configuration automatique de l'environnement de test
+- Exécution des différents types de tests
+- Génération des rapports de couverture
+- Vérification de l'isolation
 
-### **Variables d'environnement :**
-- `CRYPTO_BOT_ENV=testing` : Forcé pour tous les jobs
-- Isolation garantie dans le contexte CI/CD
+### **`scripts/manage_environments.py`** (Vérification)
+- Information sur les environnements
+- Vérification de l'état des bases de données
+- Support pour les opérations de maintenance
 
-### **Artifacts générés :**
-- `test-artifacts-test` : Résultats des tests complets
-- `test-artifacts-unit` : Résultats des tests unitaires
-- `test-artifacts-integration` : Résultats des tests d'intégration
+### **`scripts/setup_environments.py`** (Initialisation)
+- Création initiale des environnements
+- Configuration des bases de données
+- Vérification du bon fonctionnement
 
-## 🚀 **Avantages du Workflow Actuel**
+## 🚀 **Avantages du Système Actuel**
 
 ### 🛡️ **Sécurité**
 - **Isolation absolue** entre tests et production
@@ -113,45 +143,40 @@ strategy:
 - **Cache** des dépendances
 
 ### 🔧 **Maintenance**
-- **Scripts centralisés** pour la gestion des environnements
+- **Script unique** pour tous les types de tests
 - **Configuration** explicite et documentée
 - **Débogage** facilité avec logs détaillés
 
 ## 📝 **Personnalisation**
 
-### Pour exécuter seulement certains tests :
-Commenter les lignes correspondantes dans la matrice :
-
+### Modifier les types de tests :
+Éditer la matrice dans `.github/workflows/tests.yml` :
 ```yaml
 strategy:
   matrix:
-    test-type: ['test']  # Seulement les tests complets
-    # test-type: ['unit']  # Seulement les tests unitaires
+    test-type: ['all']  # Seulement les tests complets
 ```
 
-### Pour désactiver la couverture :
+### Désactiver la couverture :
 ```yaml
-- name: Run ${{ matrix.name }} (no coverage)
+- name: Run ${{ matrix.name }}
   run: |
-    export CRYPTO_BOT_ENV=testing
-    python scripts/run_isolated_tests.py test
+    python scripts/run_tests.py --type ${{ matrix.test-type }}
 ```
 
-### Pour modifier les secrets Codecov :
-```yaml
-- name: Upload coverage to Codecov
-  uses: codecov/codecov-action@v4
-  with:
-    token: ${{ secrets.CODECOV_TOKEN }}  # Configurer dans GitHub Settings
-```
+### Ajouter de nouveaux types de tests :
+1. Créer les fichiers de tests dans `tests/`
+2. Ajouter le type dans `run_tests.py`
+3. Mettre à jour la matrice dans le workflow
 
 ## 🔍 **Débogage CI/CD**
 
 ### Vérifier les logs d'environnement :
-Les logs incluent automatiquement :
-```bash
-# Depuis le step "Setup test environment"
-python scripts/manage_environments.py info
+Les logs incluent automatiquement la configuration de l'isolation :
+```
+🧪 Configuration de l'environnement de test isolé
+📊 Tests utiliseront: sqlite:///data/testing/crypto_data_test.db
+🔒 Production protégée: sqlite:///data/production/crypto_data.db
 ```
 
 ### Examiner les artifacts :
@@ -161,21 +186,18 @@ python scripts/manage_environments.py info
 
 ### Vérification d'isolation :
 Le step final affiche :
-```bash
-=== ISOLATION CHECK ===
-Test DB: X.X MB
-Prod DB: 0 bytes
-Isolation OK: true
-=== CHECK COMPLETE ===
+```
+📊 Base de test utilisée: 40.00 KB
+🏭 Base de production non créée (protégée)
 ```
 
 ## 🎉 **État Actuel**
 
-Le workflow utilise déjà :
-- ✅ **`scripts/run_isolated_tests.py`** (tests isolés)
-- ✅ **`scripts/setup_environments.py`** (préparation)
-- ✅ **`scripts/manage_environments.py`** (vérification)
-- ❌ **`scripts/run_tests.py`** (supprimé)
-- ❌ **`tests-matrix.yml`** (fusionné dans `tests.yml`)
+Le workflow utilise :
+- ✅ **`scripts/run_tests.py`** : Tests isolés avec configuration automatique
+- ✅ **`scripts/setup_environments.py`** : Initialisation des environnements
+- ✅ **`scripts/manage_environments.py`** : Vérification et monitoring
+- ❌ **`scripts/run_isolated_tests.py`** : Supprimé (remplacé par run_tests.py)
+- ✅ **GitHub Actions** : Configuration matricielle fonctionnelle
 
 Le système GitHub Actions est parfaitement aligné avec l'architecture d'environnements isolés ! 🎉

@@ -50,7 +50,7 @@ jobs:
           export CRYPTO_BOT_ENV=testing
 
           # Run specific test type
-          python scripts/run_tests.py ${{ matrix.test-type }}
+          python scripts/run_tests.py --type ${{ matrix.test-type }} --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
