@@ -36,9 +36,9 @@ class Config:
     def _get_default_config(self) -> Dict[str, Any]:
         """Configuration par défaut"""
         return {
-            "pairs": ["BTC/USDT", "ETH/USDT"],
+            "pairs": ["BTC/USDT", "ETH/USDT", "BNB/USDT", "SOL/USDT", "ADA/USDT"],
             "timeframes": ["1h", "4h"],
-            "exchanges": ["binance"],
+            "exchanges": ["binance", "kraken", "coinbase"],
             "ticker": {
                 "enabled": False,
                 "pairs": None,  # Utilise les mêmes que pairs si None
@@ -167,11 +167,17 @@ class Config:
         # Mettre à jour les paramètres de base
         # Utiliser args.pairs même s'il est vide pour permettre de réinitialiser
         if hasattr(args, "pairs"):
-            self._config["pairs"] = args.pairs if args.pairs else self._config.get("pairs")
+            self._config["pairs"] = (
+                args.pairs if args.pairs else self._config.get("pairs")
+            )
         if hasattr(args, "timeframes"):
-            self._config["timeframes"] = args.timeframes if args.timeframes else self._config.get("timeframes")
+            self._config["timeframes"] = (
+                args.timeframes if args.timeframes else self._config.get("timeframes")
+            )
         if hasattr(args, "exchanges"):
-            self._config["exchanges"] = args.exchanges if args.exchanges else self._config.get("exchanges")
+            self._config["exchanges"] = (
+                args.exchanges if args.exchanges else self._config.get("exchanges")
+            )
 
         # Mettre à jour les paramètres du scheduler
         if hasattr(args, "schedule"):
@@ -182,18 +188,22 @@ class Config:
         # Mettre à jour les paramètres du ticker si activé
         if hasattr(args, "ticker") and args.ticker:
             self._config["ticker"]["enabled"] = True
-            
+
             # Mettre à jour les paires de ticker
             if hasattr(args, "ticker_pairs") and args.ticker_pairs:
                 # Si ticker_pairs est spécifié, l'utiliser pour le ticker ET les paires principales
                 self._config["ticker"]["pairs"] = args.ticker_pairs
-                self._config["pairs"] = args.ticker_pairs  # Mettre aussi à jour les paires principales
+                self._config["pairs"] = (
+                    args.ticker_pairs
+                )  # Mettre aussi à jour les paires principales
             elif hasattr(args, "pairs") and args.pairs:
                 # Sinon, utiliser les paires principales si elles sont spécifiées
                 self._config["ticker"]["pairs"] = args.pairs
             else:
                 # Sinon, utiliser les paires principales actuelles
-                self._config["ticker"]["pairs"] = self._config.get("pairs", ["BTC/USDT", "ETH/USDT"])
+                self._config["ticker"]["pairs"] = self._config.get(
+                    "pairs", ["BTC/USDT", "ETH/USDT"]
+                )
 
             # Mettre à jour l'intervalle de snapshot (toujours mettre à jour si fourni)
             if hasattr(args, "snapshot_interval"):
@@ -207,13 +217,23 @@ class Config:
             self._config["ticker"]["enabled"] = False
 
         # Journaliser les paramètres mis à jour
-        logger.info(f"✅ Configuration mise à jour depuis les arguments de ligne de commande:")
+        logger.info(
+            f"✅ Configuration mise à jour depuis les arguments de ligne de commande:"
+        )
         logger.info(f"  Paires: {self._config.get('pairs')}")
         logger.info(f"  Exchanges: {self._config.get('exchanges')}")
-        logger.info(f"  Ticker enabled: {self._config.get('ticker', {}).get('enabled')}")
-        logger.info(f"  Snapshot interval: {self._config.get('ticker', {}).get('snapshot_interval')}")
-        logger.info(f"  Runtime: {self._config.get('ticker', {}).get('runtime')} minutes")
-        logger.info(f"  Schedule enabled: {self._config.get('scheduler', {}).get('enabled')}")
+        logger.info(
+            f"  Ticker enabled: {self._config.get('ticker', {}).get('enabled')}"
+        )
+        logger.info(
+            f"  Snapshot interval: {self._config.get('ticker', {}).get('snapshot_interval')}"
+        )
+        logger.info(
+            f"  Runtime: {self._config.get('ticker', {}).get('runtime')} minutes"
+        )
+        logger.info(
+            f"  Schedule enabled: {self._config.get('scheduler', {}).get('enabled')}"
+        )
 
     def get_all(self) -> Dict[str, Any]:
         """Récupérer toute la configuration"""
