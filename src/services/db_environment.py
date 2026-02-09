@@ -31,13 +31,13 @@ class DatabaseEnvironment:
 
         Priority:
         1. Variable d'environnement CRYPTO_BOT_ENV
-        2. Argument de ligne de commande --test-env
+        2. Variable d'environnement alternative CRYPTO_BOT_TEST
         3. Par défaut: PRODUCTION
 
         Returns:
             str: Type d'environnement (PRODUCTION ou TESTING)
         """
-        # 1. Variable d'environnement
+        # 1. Variable d'environnement principale
         env_var = os.getenv("CRYPTO_BOT_ENV", "").lower()
         if env_var in [self.PRODUCTION, self.TESTING]:
             logger.info(f"Environnement détecté depuis CRYPTO_BOT_ENV: {env_var}")
@@ -105,8 +105,11 @@ class DatabaseEnvironment:
             raise ValueError(f"Environnement non valide: {environment}")
 
         old_env = self.current_env
-        self.current_env = environment
-        logger.info(f"Environnement changé: {old_env} -> {environment}")
+        if old_env != environment:
+            self.current_env = environment
+            logger.info(f"Environnement changé: {old_env} -> {environment}")
+        else:
+            logger.debug(f"Environnement déjà: {environment} (pas de changement)")
 
     def ensure_directories(self) -> None:
         """
