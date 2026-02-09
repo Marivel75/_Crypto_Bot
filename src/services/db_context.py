@@ -16,7 +16,9 @@ from typing import Generator, Any
 db_type = config.get("database.type", "sqlite")
 if db_type == "postgresql":
     DATABASE_URL = SUPABASE_DB_URL
-    logger.info(f"db_context: Utilisation de PostgreSQL/Supabase (Environnement: {ENVIRONMENT})")
+    logger.info(
+        f"db_context: Utilisation de PostgreSQL/Supabase (Environnement: {ENVIRONMENT})"
+    )
 else:
     DATABASE_URL = f"sqlite:///{SQLITE_DB_PATH}"
     logger.info(f"db_context: Utilisation de SQLite (Environnement: {ENVIRONMENT})")
@@ -34,14 +36,33 @@ class DatabaseConnection:
 
     def __enter__(self):
         """
-        Ouvre la connexion à la base de données.
+        Ouvre une connexion à la base de données en utilisant l'URL définie dans `DATABASE_URL`.
+        Configure automatiquement les paramètres spécifiques pour PostgreSQL (comme Supabase)
+        et gère les erreurs de connexion.
 
         Returns:
-            sqlalchemy.engine.Connection: Connexion à la base de données
+            sqlalchemy.engine.Connection: Une connexion active à la base de données.
+                                        Doit être utilisée dans un bloc `with` pour garantir
+                                        la fermeture automatique.
+
+        Raises:
+            ValueError: Si `DATABASE_URL` n'est pas définie (variable d'environnement manquante).
+            SQLAlchemyError: En cas d'échec de la connexion (ex: URL invalide, serveur inaccessible,
+                            authentification échouée). L'erreur est loggée avant d'être relancée.
+
+        Notes:
+            - Pour Supabase (PostgreSQL), les paramètres de pool sont optimisés :
+            `pool_size=5`, `max_overflow=10`, `pool_pre_ping=True`.
+            - Les logs sont écrits via `logger` pour le débogage (niveau DEBUG pour les succès,
+            ERROR pour les échecs).
         """
         try:
             # Paramètres spécifiques pour PostgreSQL (Supabase)
             engine_args = {}
+            if DATABASE_URL is None:
+                raise ValueError(
+                    "DATABASE_URL is not set. Please configure your database connection."
+                )
             if DATABASE_URL.startswith("postgresql://"):
                 engine_args = {
                     "pool_size": 5,
