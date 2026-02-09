@@ -5,6 +5,7 @@ Encapsule les opérations courantes dans une classe dédiée : DBInspector.
 
 from typing import Optional, Dict, Any, List
 import pandas as pd
+from datetime import datetime
 from sqlalchemy import text
 from logger_settings import logger
 from src.services.db_context import database_session, DatabaseConnection
@@ -211,4 +212,289 @@ class DBInspector:
             logger.error(
                 f"❌ Erreur lors de la récupération des snapshots de tickers: {e}"
             )
+            raise
+
+    def get_db_stats(self) -> Optional[Dict[str, Any]]:
+        """
+        Récupère des statistiques globales sur la base de données.
+
+        Returns:
+            Dict[str, Any]: Statistiques complètes de la base de données
+        """
+        try:
+            with DatabaseConnection() as conn:
+                # Récupérer la liste des tables
+                result = conn.execute(
+                    text(
+                        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+                    )
+                )
+                tables = [row[0] for row in result.fetchall()]
+
+                # Récupérer des informations pour chaque table
+                table_stats = {}
+                total_rows = 0
+                total_size = 0
+
+                for table_name in tables:
+                    if table_name.startswith("sqlite_"):
+                        continue  # Ignorer les tables système
+
+                    table_info = self._get_table_info_detailed(table_name)
+                    if table_info:
+                        table_stats[table_name] = table_info
+                        total_rows += table_info["row_count"]
+                        total_size += table_info["table_size_bytes"]
+
+                # Récupérer la taille totale de la base de données
+                result = conn.execute(
+                    text(
+                        "SELECT page_count * page_size as db_size FROM pragma_page_count(), pragma_page_size()"
+                    )
+                )
+                db_size_result = result.fetchone()
+                db_size_bytes = db_size_result[0] if db_size_result else 0
+
+                return {
+                    "table_count": len(table_stats),
+                    "total_rows": total_rows,
+                    "total_size_bytes": db_size_bytes,
+                    "tables": table_stats,
+                }
+
+        except Exception as e:
+            logger.error(
+                f"❌ Erreur lors de la récupération des statistiques de la base de données: {e}"
+            )
+            return None
+
+    def _get_table_info_detailed(self, table_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Récupère des informations détaillées sur une table spécifique.
+
+        Args:
+            table_name: Nom de la table
+
+        Returns:
+            Dict[str, Any]: Informations détaillées sur la table
+        """
+        try:
+            with DatabaseConnection() as conn:
+                # Compter le nombre de lignes
+                result = conn.execute(
+                    text(f"SELECT COUNT(*) as count FROM {table_name}")
+                )
+                row_count = result.fetchone()[0]
+
+                # Récupérer la structure de la table
+                result = conn.execute(text(f"PRAGMA table_info({table_name})"))
+                columns = result.fetchall()
+                column_names = [col[1] for col in columns]
+
+                # Récupérer la dernière mise à jour
+                last_update = None
+                if "timestamp" in column_names:
+                    result = conn.execute(
+                        text(f"SELECT MAX(timestamp) as last_update FROM {table_name}")
+                    )
+                elif "snapshot_time" in column_names:
+                    result = conn.execute(
+                        text(
+                            f"SELECT MAX(snapshot_time) as last_update FROM {table_name}"
+                        )
+                    )
+                elif "created_at" in column_names:
+                    result = conn.execute(
+                        text(f"SELECT MAX(created_at) as last_update FROM {table_name}")
+                    )
+
+                result_row = result.fetchone()
+                if result_row and result_row[0]:
+                    last_update = result_row[0]
+
+                # Estimation de la taille (1KB par ligne en moyenne)
+                table_size = row_count * 1024
+
+                return {
+                    "table_name": table_name,
+                    "row_count": row_count,
+                    "column_count": len(columns),
+                    "columns": column_names,
+                    "last_update": last_update,
+                    "table_size_bytes": table_size,
+                }
+
+        except Exception as e:
+            logger.error(
+                f"❌ Erreur lors de la récupération des informations pour {table_name}: {e}"
+            )
+            return None
+
+    def format_bytes(self, size_bytes: int) -> str:
+        """
+        Formate la taille en bytes dans une unité plus lisible.
+
+        Args:
+            size_bytes: Taille en bytes
+
+        Returns:
+            str: Taille formatée
+        """
+        if size_bytes == 0:
+            return "0 bytes"
+
+        size_names = ["bytes", "KB", "MB", "GB", "TB"]
+        i = 0
+        size = float(size_bytes)
+
+        while size >= 1024 and i < len(size_names) - 1:
+            size /= 1024
+            i += 1
+
+        return f"{size:.2f} {size_names[i]}"
+
+    def print_db_summary(self, stats: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Affiche un résumé des statistiques de la base de données.
+
+        Args:
+            stats: Statistiques (si None, les récupère automatiquement)
+        """
+        if not stats:
+            stats = self.get_db_stats()
+
+        if not stats:
+            logger.warning("⚠️  Aucune statistique disponible")
+            return
+
+        logger.info("📊 Résumé de la base de données:")
+        logger.info(f"   Nombre de tables: {stats['table_count']}")
+        logger.info(f"   Nombre total de lignes: {stats['total_rows']:,}")
+        logger.info(
+            f"   Taille totale de la base: {self.format_bytes(stats['total_size_bytes'])}"
+        )
+        logger.info("")
+
+        for table_name, table_info in stats["tables"].items():
+            logger.info(f"📋 Table: {table_name}")
+            logger.info(f"   Lignes: {table_info['row_count']:,}")
+            logger.info(f"   Colonnes: {table_info['column_count']}")
+            logger.info(
+                f"   Taille: {self.format_bytes(table_info['table_size_bytes'])}"
+            )
+
+            if table_info["last_update"]:
+                last_update_str = table_info["last_update"]
+                if isinstance(last_update_str, str):
+                    try:
+                        last_update = datetime.strptime(
+                            last_update_str, "%Y-%m-%d %H:%M:%S"
+                        )
+                    except ValueError:
+                        last_update = last_update_str
+                else:
+                    last_update = table_info["last_update"]
+
+                logger.info(f"   Dernière mise à jour: {last_update}")
+            else:
+                logger.info(f"   Dernière mise à jour: Non disponible")
+
+            logger.info("")
+
+    def check_db_health(self) -> Optional[Dict[str, Any]]:
+        """
+        Vérifie la santé générale de la base de données.
+
+        Returns:
+            Dict[str, Any]: Indicateurs de santé de la base de données
+        """
+        try:
+            with DatabaseConnection() as conn:
+                # Vérifier l'intégrité de la base de données
+                result = conn.execute(text("PRAGMA integrity_check"))
+                integrity_result = result.fetchone()
+                integrity_ok = (
+                    integrity_result[0] == "ok" if integrity_result else False
+                )
+
+                # Vérifier les tables spécifiques
+                health_indicators = {"integrity_ok": integrity_ok, "tables_present": {}}
+
+                # Vérifier la présence des tables principales
+                required_tables = ["ohlcv", "ticker_snapshots"]
+                result = conn.execute(
+                    text("SELECT name FROM sqlite_master WHERE type='table'")
+                )
+                existing_tables = [row[0] for row in result.fetchall()]
+
+                for table in required_tables:
+                    health_indicators["tables_present"][table] = (
+                        table in existing_tables
+                    )
+
+                return health_indicators
+
+        except Exception as e:
+            logger.error(
+                f"❌ Erreur lors de la vérification de la santé de la base de données: {e}"
+            )
+            return None
+
+    def print_health_summary(self, health: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Affiche un résumé de la santé de la base de données.
+
+        Args:
+            health: Indicateurs de santé (si None, les récupère automatiquement)
+        """
+        if not health:
+            health = self.check_db_health()
+
+        if not health:
+            logger.warning("⚠️  Aucune information de santé disponible")
+            return
+
+        logger.info("Santé de la base de données:")
+
+        if health["integrity_ok"]:
+            logger.info("   ✅ Intégrité de la base: OK")
+        else:
+            logger.error("   ❌ Intégrité de la base: PROBLÈME DÉTECTÉ")
+
+        logger.info("   Tables principales:")
+        for table, present in health["tables_present"].items():
+            if present:
+                logger.info(f"      ✅ {table}: Présente")
+            else:
+                logger.warning(f"      ⚠️  {table}: Absente")
+
+        logger.info("")
+
+    def run_complete_check(self) -> None:
+        """
+        Exécute une vérification complète de la base de données.
+        Combine inspection, statistiques et vérification de santé.
+        """
+        try:
+            logger.info(
+                "🔍 Démarrage de la vérification complète de la base de données"
+            )
+
+            # Inspection de la structure
+            self.inspect_db()
+
+            # Statistiques détaillées
+            stats = self.get_db_stats()
+            if stats:
+                self.print_db_summary(stats)
+
+            # Vérification de la santé
+            health = self.check_db_health()
+            if health:
+                self.print_health_summary(health)
+
+            logger.info("✅ Vérification complète de la base de données terminée")
+
+        except Exception as e:
+            logger.error(f"❌ Erreur lors de la vérification complète: {e}")
             raise
