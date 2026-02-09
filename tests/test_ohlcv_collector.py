@@ -128,107 +128,139 @@ class TestOHLCVCollectorValidation:
 
 
 class TestOHLCVCollectorFetchAndStore:
-    """Tests pour la méthode fetch_and_store."""
+    """Tests pour la méthode fetch_and_store, isolés de la base de données."""
 
+    @patch(
+        "src.collectors.ohlcv_collector.database_transaction"
+    )  # Mock la connexion DB
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
     @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("src.collectors.ohlcv_collector.DataValidator0HCLV")
     @patch("pandas.DataFrame.to_sql")
     def test_fetch_and_store_success(
-        self, mock_to_sql, mock_validator, mock_factory, mock_exchange_client
+        self,
+        mock_to_sql,
+        mock_validator,
+        mock_factory,
+        mock_exchange_client,
+        mock_db_transaction,
     ):
         """Test le succès de fetch_and_store avec le pipeline ETL."""
-        # Configuration du mock pour le constructeur
+        # Configuration du mock pour database_transaction
+        mock_conn = MagicMock()
+        mock_db_transaction.return_value.__enter__.return_value = mock_conn
+
+        # Configuration du mock pour le constructeur ExchangeFactory
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
 
-        # Configuration du mock
+        # Configuration du mock ExchangeClient
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
             [1768298400000, 90050.0, 90150.0, 89950.0, 90100.0, 124.56],
         ]
 
-        # Configuration du mock du context manager
+        # Configuration du mock du context manager pour ExchangeClient
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
         mock_context.__exit__.return_value = None
         mock_exchange_client.return_value = mock_context
 
-        # Configuration du mock du valideur - utiliser un valideur réel pour le test
+        # Configuration du mock du valideur (utilisation d'un vrai valideur)
         from src.quality.validator import DataValidator0HCLV
 
         real_validator = DataValidator0HCLV()
         mock_validator.return_value = real_validator
 
-        # Configuration du mock to_sql pour le loader
+        # Configuration du mock to_sql pour simuler l'insertion en DB
         mock_to_sql.return_value = 2
 
         collector = OHLCVCollector(["BTC/USDT"], ["1h"], "binance")
 
-        # Exécuter la méthode
+        # Exécution de la méthode
         collector.fetch_and_store()
 
-        # Vérifier que fetch_ohlcv a été appelé correctement
+        # Vérifications
         mock_client_instance.fetch_ohlcv.assert_called_once_with(
             "BTC/USDT", "1h", limit=100
         )
+        assert mock_to_sql.called  # Vérifie que to_sql a été appelé
 
+    @patch(
+        "src.collectors.ohlcv_collector.database_transaction"
+    )  # Mock la connexion DB
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
     @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("pandas.DataFrame.to_sql")
     def test_fetch_and_store_with_duplicate_data(
-        self, mock_to_sql, mock_factory, mock_exchange_client
+        self, mock_to_sql, mock_factory, mock_exchange_client, mock_db_transaction
     ):
         """Test la gestion des doublons dans fetch_and_store."""
-        # Configuration du mock pour le constructeur
+        # Configuration du mock pour database_transaction
+        mock_conn = MagicMock()
+        mock_db_transaction.return_value.__enter__.return_value = mock_conn
+
+        # Configuration du mock pour le constructeur ExchangeFactory
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
 
+        # Configuration du mock ExchangeClient
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45]
         ]
 
-        # Configuration du mock du context manager
+        # Configuration du mock du context manager pour ExchangeClient
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
         mock_context.__exit__.return_value = None
         mock_exchange_client.return_value = mock_context
 
-        # Configurer to_sql pour simuler un IntegrityError (doublon)
+        # Configuration du mock to_sql pour simuler un IntegrityError (doublon)
         from sqlalchemy.exc import IntegrityError
 
         mock_to_sql.side_effect = IntegrityError("mock", "mock", "Duplicate entry")
 
         collector = OHLCVCollector(["BTC/USDT"], ["1h"], "binance")
 
-        # Exécuter la méthode
+        # Exécution de la méthode
         collector.fetch_and_store()
 
-        # Vérifier que to_sql a été appelé
-        assert mock_to_sql.called
-        # Vérifier que l'erreur a été gérée (pas de propagation)
+        # Vérifications
+        assert mock_to_sql.called  # Vérifie que to_sql a été appelé (même si ça échoue)
 
+    @patch(
+        "src.collectors.ohlcv_collector.database_transaction"
+    )  # Mock la connexion DB
     @patch("src.collectors.ohlcv_collector.ExchangeClient")
     @patch("src.collectors.ohlcv_collector.ExchangeFactory")
     @patch("src.collectors.ohlcv_collector.DataValidator0HCLV")
     @patch("pandas.DataFrame.to_sql")
     def test_fetch_and_store_with_invalid_data(
-        self, mock_to_sql, mock_validator, mock_factory, mock_exchange_client
+        self,
+        mock_to_sql,
+        mock_validator,
+        mock_factory,
+        mock_exchange_client,
+        mock_db_transaction,
     ):
         """Test que les données invalides ne sont pas sauvegardées."""
-        # Configuration du mock pour le constructeur
+        # Configuration du mock pour database_transaction
+        mock_conn = MagicMock()
+        mock_db_transaction.return_value.__enter__.return_value = mock_conn
+
+        # Configuration du mock pour le constructeur ExchangeFactory
         mock_client_constructor = MagicMock()
         mock_factory.create_exchange.return_value = mock_client_constructor
 
-        # Configuration du mock client
+        # Configuration du mock ExchangeClient
         mock_client_instance = MagicMock()
         mock_client_instance.fetch_ohlcv.return_value = [
             [1768294800000, 90000.0, 90100.0, 89900.0, 90050.0, 123.45],
         ]
 
-        # Configuration du mock du context manager
+        # Configuration du mock du context manager pour ExchangeClient
         mock_context = MagicMock()
         mock_context.__enter__.return_value = mock_client_instance
         mock_context.__exit__.return_value = None
@@ -249,14 +281,14 @@ class TestOHLCVCollectorFetchAndStore:
 
         collector = OHLCVCollector(["BTC/USDT"], ["1h"], "binance")
 
-        # Exécuter la méthode
+        # Exécution de la méthode
         collector.fetch_and_store()
 
-        # Vérifier que la validation a été appelée
-        mock_validator_instance.validate_ohlcv_values.assert_called_once()
-
-        # Vérifier que to_sql n'a pas été appelé (données invalides)
-        assert not mock_to_sql.called
+        # Vérifications
+        mock_validator_instance.validate_ohlcv_values.assert_called_once()  # Vérifie que la validation a été appelée
+        assert (
+            not mock_to_sql.called
+        )  # Vérifie que to_sql n'a PAS été appelé (données invalides)
 
 
 if __name__ == "__main__":
