@@ -7,20 +7,10 @@ on:
     branches: [main, dev]
 
 jobs:
-  # Sous-jobs pour chaque type de test
   test:
+    name: Run Python Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        test-type: ["all", "unit", "integration"]
-        include:
-          - test-type: "all"
-            name: "All Tests"
-          - test-type: "unit"
-            name: "Unit Tests"
-          - test-type: "integration"
-            name: "Integration Tests"
-    name: "Run Python Tests (${{ matrix.name }})"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,12 +30,10 @@ jobs:
           python scripts/setup_environments.py
           python scripts/manage_environments.py info
 
-      - name: Run ${{ matrix.name }}
-        id: test
-        continue-on-error: false
+      - name: Run all tests
         run: |
           export CRYPTO_BOT_ENV=testing
-          python scripts/run_tests.py --type ${{ matrix.test-type }} --coverage
+          python scripts/run_tests.py --type all --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -53,14 +41,14 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./htmlcov/index.html
           directory: ./htmlcov
-          flags: ${{ matrix.test-type }}
-          name: codecov-${{ matrix.test-type }}
-        if: matrix.test-type == 'all' && always()
+          flags: all
+          name: codecov-all
+        if: always()
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: test-artifacts-${{ matrix.test-type }}
+          name: test-artifacts-all
           path: |
             htmlcov/
             logs/
@@ -81,12 +69,3 @@ jobs:
           print(f'Isolation OK: {not prod_db.get(\"exists\") or prod_db.get(\"size_bytes\", 0) < 1024}')
           print('=== CHECK COMPLETE ===')
           "
-
-  # Job global qui dépend des sous-jobs
-  test-summary:
-    name: "Run Python Tests"
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: "All tests completed successfully"
-        run: echo "All tests passed!"
