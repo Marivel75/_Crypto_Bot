@@ -7,9 +7,9 @@ on:
     branches: [main, dev]
 
 jobs:
+  # Sous-jobs pour chaque type de test
   test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         test-type: ["all", "unit", "integration"]
@@ -20,7 +20,7 @@ jobs:
             name: "Unit Tests"
           - test-type: "integration"
             name: "Integration Tests"
-
+    name: "Run Python Tests (${{ matrix.name }})"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,20 +37,14 @@ jobs:
 
       - name: Setup test environment
         run: |
-          # Create isolated test environment
           python scripts/setup_environments.py
-
-          # Verify environment isolation
           python scripts/manage_environments.py info
 
       - name: Run ${{ matrix.name }}
         id: test
         continue-on-error: false
         run: |
-          # Force testing environment
           export CRYPTO_BOT_ENV=testing
-
-          # Run specific test type
           python scripts/run_tests.py --type ${{ matrix.test-type }} --coverage
 
       - name: Upload coverage to Codecov
@@ -75,19 +69,24 @@ jobs:
 
       - name: Verify isolation
         run: |
-          # Ensure tests didn't affect production
           python scripts/manage_environments.py info
-
           python -c "
           from src.services.db_environment import db_env
           databases = db_env.list_databases()
-
           test_db = databases.get('testing', {})
           prod_db = databases.get('production', {})
-
           print('=== ISOLATION CHECK ===')
           print(f'Test DB: {test_db.get(\"size_formatted\", \"0 bytes\")}')
           print(f'Prod DB: {prod_db.get(\"size_formatted\", \"0 bytes\")}')
           print(f'Isolation OK: {not prod_db.get(\"exists\") or prod_db.get(\"size_bytes\", 0) < 1024}')
           print('=== CHECK COMPLETE ===')
           "
+
+  # Job global qui dépend des sous-jobs
+  test-summary:
+    name: "Run Python Tests"
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: "All tests completed successfully"
+        run: echo "All tests passed!"
