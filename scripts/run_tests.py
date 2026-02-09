@@ -14,36 +14,18 @@ from datetime import datetime
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
-from src.services.db_environment import db_env
-from src.services.db import get_db_engine
 import logger_settings
 
 logger = logger_settings.logger
-
 
 def setup_test_environment():
     """
     Configure l'environnement de test isolé.
     """
     logger.info("🧪 Configuration de l'environnement de test isolé")
-
-    # Forcer l'environnement de test
-    db_env.set_environment("testing")
-
-    # S'assurer que la base de test existe et est prête
-    try:
-        engine = get_db_engine("testing")
-        logger.info("✅ Base de données de test prête")
-
-        # Afficher les informations pour vérification
-        info = db_env.get_database_info()
-        logger.info(f"📊 Tests utiliseront: {info['testing_url']}")
-        logger.info(f"🔒 Production protégée: {info['production_url']}")
-
-    except Exception as e:
-        logger.error(f"❌ Erreur lors de la préparation de la base de test: {e}")
-        raise
-
+    os.environ["CRYPTO_BOT_ENV"] = "testing"
+    logger.info("✅ CRYPTO_BOT_ENV forcé à 'testing'")
+    return True
 
 def run_tests(
     test_type="all", verbose=False, coverage=False, report=False, ignore_warnings=True
@@ -79,7 +61,6 @@ def run_tests(
     if test_type == "all":
         cmd.append("tests/")
     elif test_type == "unit":
-        # Tests unitaires : fichiers spécifiques
         unit_files = [
             "tests/test_data_validator.py",
             "tests/test_ohlcv_collector.py",
@@ -88,7 +69,6 @@ def run_tests(
             "tests/test_etl_loader.py",
             "tests/test_etl_pipeline.py",
         ]
-        # Ajouter seulement les fichiers qui existent
         existing_unit_files = [f for f in unit_files if os.path.exists(f)]
         if existing_unit_files:
             cmd.extend(existing_unit_files)
@@ -101,9 +81,7 @@ def run_tests(
         if existing_files:
             cmd.extend(existing_files)
         else:
-            logger.info(
-                "💡 Aucun test de validation trouvé, exécution de tous les tests"
-            )
+            logger.info("💡 Aucun test de validation trouvé, exécution de tous les tests")
             cmd.append("tests/")
     elif test_type == "etl":
         etl_files = [
@@ -119,41 +97,36 @@ def run_tests(
             logger.info("💡 Aucun test ETL trouvé, exécution de tous les tests")
             cmd.append("tests/")
     elif test_type == "integration":
-        # Tests d'intégration : tester si fichier existe, sinon fallback sur tous
         integration_files = [
             "tests/test_scheduler_integration.py",
-            "tests/test_ticker_service.py",  # Considéré comme integration
+            "tests/test_ticker_service.py",
         ]
         existing_files = [f for f in integration_files if os.path.exists(f)]
-
         if existing_files:
             cmd.extend(existing_files)
         else:
-            logger.info(
-                "💡 Aucun test d'intégration spécifique trouvé, exécution de tous les tests"
-            )
+            logger.info("💡 Aucun test d'intégration spécifique trouvé, exécution de tous les tests")
             cmd.append("tests/")
     else:
         cmd.append("tests/")
 
-    # Exécuter la commande dans l'environnement de test
+    # Forcer l'environnement avant d'exécuter les tests
     env = os.environ.copy()
-    env["CRYPTO_BOT_ENV"] = "testing"  # Force l'environnement de test
+    env["CRYPTO_BOT_ENV"] = "testing"
 
     logger.info(f"🚀 Exécution des tests: {' '.join(cmd)}")
     logger.info(f"🔒 Base de test isolée activée")
 
     try:
+        # Exécuter directement pytest avec l'environnement forcé
         result = subprocess.run(cmd, env=env, cwd=project_root)
         return result.returncode == 0
     except Exception as e:
         logger.error(f"❌ Erreur lors de l'exécution des tests: {e}")
         return False
 
-
 def main():
     """Point d'entrée principal."""
-
     parser = argparse.ArgumentParser(
         description="Script pour exécuter les tests Crypto Bot (base de test isolée)"
     )
@@ -197,22 +170,6 @@ def main():
 
         if success:
             print("✅ Tous les tests ont passé avec succès !")
-
-            # Vérification finale de l'isolation
-            databases = db_env.list_databases()
-            test_db = databases.get("testing", {})
-            prod_db = databases.get("production", {})
-
-            logger.info(
-                f"📊 Base de test utilisée: {test_db.get('size_formatted', '0 bytes')}"
-            )
-            if prod_db.get("exists"):
-                logger.info(
-                    f"🏭 Base de production intacte: {prod_db.get('size_formatted', '0 bytes')}"
-                )
-            else:
-                logger.info("🏭 Base de production non créée (protégée)")
-
         else:
             print("❌ Certains tests ont échoué")
             sys.exit(1)
@@ -220,7 +177,6 @@ def main():
     except Exception as e:
         logger.error(f"❌ Erreur fatale lors de l'exécution: {e}")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()
