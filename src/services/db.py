@@ -4,31 +4,42 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from logger_settings import logger
 from config.settings import config
+from src.services.db_environment import db_env
 
-# Configuration de la base de données - Utiliser la configuration centralisée
-DATABASE_URL = config.get("database.url")
+# Configuration de la base de données - Utiliser l'environnement actuel
+DATABASE_URL = db_env.get_current_db_url()
 
 Base = declarative_base()
 
 
-def get_db_engine():
+def get_db_engine(environment=None):
     """
-    Crée et retourne un moteur SQLAlchemy pour la base de données. Crée automatiquement les dossiers et la base de données si nécessaire.
+    Crée et retourne un moteur SQLAlchemy pour la base de données.
+    Crée automatiquement les dossiers et la base de données si nécessaire.
+
+    Args:
+        environment: Environnement cible (production/testing, None utilise l'env actuel)
     """
     try:
-        # Créer les dossiers si nécessaire (pour SQLite)
-        if DATABASE_URL.startswith("sqlite:///"):
-            db_path = DATABASE_URL.replace("sqlite:///", "")
-            os.makedirs(os.path.dirname(db_path), exist_ok=True)
-            logger.info(f"Assure que le dossier existe: {os.path.dirname(db_path)}")
+        # Obtenir l'URL de base de données appropriée
+        if environment:
+            db_url = db_env.get_db_url(environment)
+        else:
+            db_url = db_env.get_current_db_url()
+
+        logger.info(f"Configuration DB - Environnement: {db_env.current_env}")
+        logger.info(f"Configuration DB - URL: {db_url}")
+
+        # S'assurer que les répertoires existent
+        db_env.ensure_directories()
 
         # Créer le moteur avec des paramètres spécifiques pour SQLite
         connect_args = {}
-        if DATABASE_URL.startswith("sqlite:///"):
+        if db_url.startswith("sqlite:///"):
             connect_args = {"check_same_thread": False}
 
         engine = create_engine(
-            DATABASE_URL,
+            db_url,
             echo=False,  # Mettre à True pour le débogage SQL
             connect_args=connect_args,
         )
@@ -40,7 +51,7 @@ def get_db_engine():
         OHLCVBase.metadata.create_all(engine)
         TickerBase.metadata.create_all(engine)
 
-        logger.info(f"Connexion à la base de données: {DATABASE_URL}")
+        logger.info(f"✅ Connexion réussie à la base de données: {db_url}")
         return engine
     except Exception as e:
         logger.error(f"❌ Erreur de connexion à la base de données: {e}")

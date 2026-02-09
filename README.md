@@ -338,8 +338,63 @@ Le système inclut une validation complète des données via `DataValidator0HCLV
 
 ### Exécution des Tests
 
+#### 🧪 Tests Isolés (Recommandé)
+
 ```bash
-# Exécuter tous les tests
+# Exécuter tous les tests dans une base isolée
+python scripts/run_isolated_tests.py test
+
+# Tests avec rapport de couverture
+python scripts/run_isolated_tests.py coverage
+
+# Tests unitaires uniquement
+python scripts/run_isolated_tests.py unit
+
+# Tests d'intégration uniquement  
+python scripts/run_isolated_tests.py integration
+
+# Vérifier l'environnement de test
+python scripts/run_isolated_tests.py info
+```
+
+#### 🔧 Gestion des Environnements
+
+```bash
+# Créer les bases de données
+python scripts/manage_environments.py create-test
+python scripts/manage_environments.py create-prod
+
+# Basculer entre environnements
+python scripts/manage_environments.py switch-test
+python scripts/manage_environments.py switch-prod
+
+# Informations sur les environnements
+python scripts/manage_environments.py info
+
+# Nettoyer la base de test
+python scripts/manage_environments.py clean-test
+```
+
+#### 🔄 Variables d'Environnement
+
+```bash
+# Forcer le mode test
+export CRYPTO_BOT_ENV=testing
+python scripts/run_isolated_tests.py test
+
+# Alternative pour forcer le mode test
+export CRYPTO_BOT_TEST=true
+python scripts/run_isolated_tests.py test
+
+# Pour la production
+export CRYPTO_BOT_ENV=production
+python main.py --ticker
+```
+
+#### 📊 Tests Légataires
+
+```bash
+# Exécuter tous les tests (affecte la base actuelle)
 python -m pytest tests/ -v
 
 # Tests avec couverture
