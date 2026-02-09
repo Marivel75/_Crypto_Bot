@@ -316,7 +316,7 @@ Le système inclut une validation complète des données via `DataValidator0HCLV
 
 ### Suite de Tests Complète
 
-**89 tests unitaires et d'intégration couvrant :**
+**98 tests unitaires et d'intégration couvrant :**
 
 **Tests ETL (42 tests) :**
 - `test_etl_extractor.py` (9 tests) : Extraction des données
@@ -342,7 +342,7 @@ Le système inclut une validation complète des données via `DataValidator0HCLV
 
 ```bash
 # Exécuter tous les tests dans une base isolée
-python scripts/run_isolated_tests.py test
+python scripts/run_tests.py test
 
 # Tests avec rapport de couverture
 python scripts/run_isolated_tests.py coverage
