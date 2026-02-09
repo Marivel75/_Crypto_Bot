@@ -443,8 +443,11 @@ python scripts/reset_db.py
 
 **Gestion de la base de données :**
 ```bash
-# Vérifier l'état de la base
-python scripts/check_db.py
+# Vérification de la base
+python scripts/check_db_modern.py
+
+# Vérification complète via DBInspector
+python -c "from src.analytics.db_inspector import DBInspector; DBInspector().run_complete_check()"
 
 # Réinitialiser complètement la base
 python scripts/reset_db.py
@@ -474,8 +477,19 @@ from src.analytics.db_inspector import DBInspector
 # Créer un inspecteur
 inspector = DBInspector()
 
-# Inspecter la structure
+# Vérification complète (recommandée)
+inspector.run_complete_check()
+
+# Inspection individuelle
 inspector.inspect_db()
+
+# Statistiques détaillées
+stats = inspector.get_db_stats()
+inspector.print_db_summary(stats)
+
+# Vérification de santé
+health = inspector.check_db_health()
+inspector.print_health_summary(health)
 
 # Récupérer les données OHLCV
 ohlcv_data = inspector.get_ohlcv_data(
@@ -483,6 +497,9 @@ ohlcv_data = inspector.get_ohlcv_data(
     limit=100,
     start_date="2024-01-01"
 )
+
+# Formater la taille
+size_formatted = inspector.format_bytes(1048576)  # Returns "1.00 MB"
 ```
 
 **Analytics et indicateurs :**
