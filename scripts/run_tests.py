@@ -79,19 +79,45 @@ def run_tests(
     if test_type == "all":
         cmd.append("tests/")
     elif test_type == "unit":
-        # Tests unitaires : tous les fichiers test_*
-        cmd.extend(["tests/test_*.py"])
+        # Tests unitaires : fichiers spécifiques
+        unit_files = [
+            "tests/test_data_validator.py",
+            "tests/test_ohlcv_collector.py",
+            "tests/test_etl_extractor.py",
+            "tests/test_etl_transformer.py",
+            "tests/test_etl_loader.py",
+            "tests/test_etl_pipeline.py",
+        ]
+        # Ajouter seulement les fichiers qui existent
+        existing_unit_files = [f for f in unit_files if os.path.exists(f)]
+        if existing_unit_files:
+            cmd.extend(existing_unit_files)
+        else:
+            logger.info("💡 Aucun test unitaire trouvé, exécution de tous les tests")
+            cmd.append("tests/")
     elif test_type == "validation":
-        cmd.extend(["tests/test_data_validator.py"])
+        validation_files = ["tests/test_data_validator.py"]
+        existing_files = [f for f in validation_files if os.path.exists(f)]
+        if existing_files:
+            cmd.extend(existing_files)
+        else:
+            logger.info(
+                "💡 Aucun test de validation trouvé, exécution de tous les tests"
+            )
+            cmd.append("tests/")
     elif test_type == "etl":
-        cmd.extend(
-            [
-                "tests/test_etl_extractor.py",
-                "tests/test_etl_transformer.py",
-                "tests/test_etl_loader.py",
-                "tests/test_etl_pipeline.py",
-            ]
-        )
+        etl_files = [
+            "tests/test_etl_extractor.py",
+            "tests/test_etl_transformer.py",
+            "tests/test_etl_loader.py",
+            "tests/test_etl_pipeline.py",
+        ]
+        existing_etl_files = [f for f in etl_files if os.path.exists(f)]
+        if existing_etl_files:
+            cmd.extend(existing_etl_files)
+        else:
+            logger.info("💡 Aucun test ETL trouvé, exécution de tous les tests")
+            cmd.append("tests/")
     elif test_type == "integration":
         # Tests d'intégration : tester si fichier existe, sinon fallback sur tous
         integration_files = [

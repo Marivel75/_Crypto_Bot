@@ -13,9 +13,9 @@ jobs:
 
     strategy:
       matrix:
-        test-type: ["test", "unit", "integration"]
+        test-type: ["all", "unit", "integration"]
         include:
-          - test-type: "test"
+          - test-type: "all"
             name: "All Tests"
           - test-type: "unit"
             name: "Unit Tests"
@@ -60,7 +60,7 @@ jobs:
           directory: ./htmlcov
           flags: ${{ matrix.test-type }}
           name: codecov-${{ matrix.test-type }}
-        if: matrix.test-type == 'test' && always()
+        if: matrix.test-type == 'all' && always()
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v4
