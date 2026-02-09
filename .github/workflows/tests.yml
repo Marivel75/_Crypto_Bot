@@ -2,56 +2,56 @@ name: Test Suite
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main, dev ]
+    branches: [main, dev]
 
 jobs:
   test:
     name: Run Tests (Isolated Environment)
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
-        test-type: ['test', 'unit', 'integration']
+        test-type: ["test", "unit", "integration"]
         include:
-          - test-type: 'test'
-            name: 'All Tests'
-          - test-type: 'unit'
-            name: 'Unit Tests'
-          - test-type: 'integration'
-            name: 'Integration Tests'
-    
+          - test-type: "test"
+            name: "All Tests"
+          - test-type: "unit"
+            name: "Unit Tests"
+          - test-type: "integration"
+            name: "Integration Tests"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      
+
       - name: Setup test environment
         run: |
           # Create isolated test environment
           python scripts/setup_environments.py
-          
+
           # Verify environment isolation
           python scripts/manage_environments.py info
-      
+
       - name: Run ${{ matrix.name }}
         run: |
           # Force testing environment
           export CRYPTO_BOT_ENV=testing
-          
+
           # Run specific test type
-          python scripts/run_isolated_tests.py ${{ matrix.test-type }}
-      
+          python scripts/run_tests.py ${{ matrix.test-type }}
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -61,7 +61,7 @@ jobs:
           flags: ${{ matrix.test-type }}
           name: codecov-${{ matrix.test-type }}
         if: matrix.test-type == 'test' && always()
-      
+
       - name: Upload test artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -71,19 +71,19 @@ jobs:
             logs/
           retention-days: 7
         if: always()
-      
+
       - name: Verify isolation
         run: |
           # Ensure tests didn't affect production
           python scripts/manage_environments.py info
-          
+
           python -c "
           from src.services.db_environment import db_env
           databases = db_env.list_databases()
-          
+
           test_db = databases.get('testing', {})
           prod_db = databases.get('production', {})
-          
+
           print('=== ISOLATION CHECK ===')
           print(f'Test DB: {test_db.get(\"size_formatted\", \"0 bytes\")}')
           print(f'Prod DB: {prod_db.get(\"size_formatted\", \"0 bytes\")}')
