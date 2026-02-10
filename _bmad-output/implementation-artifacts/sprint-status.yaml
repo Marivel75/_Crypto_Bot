@@ -1,0 +1,74 @@
+# generated: 2026-02-10
+# project: k3s-mono-pgsql
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog -> in-progress: Automatically when first story is created (via create-story)
+#   - in-progress -> done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-02-10
+project: k3s-mono-pgsql
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: in-progress
+  1-1-provisionner-le-socle-hote-durci: ready-for-dev
+  1-2-garantir-idempotence-et-execution-par-tags: ready-for-dev
+  1-3-activer-un-acces-administration-vpn-first: ready-for-dev
+  1-4-initialiser-la-gestion-des-secrets-chiffres: ready-for-dev
+  epic-1-retrospective: optional
+
+  epic-2: in-progress
+  2-1-installer-k3s-mono-noeud-version-epinglee: ready-for-dev
+  2-2-bootstrap-argo-cd-en-app-of-apps: ready-for-dev
+  2-3-mettre-en-place-derive-et-rollback: ready-for-dev
+  2-4-appliquer-les-gates-ci-de-qualite: ready-for-dev
+  epic-2-retrospective: optional
+
+  epic-3: in-progress
+  3-1-deployer-metriques-et-dashboards-de-base: ready-for-dev
+  3-2-configurer-alertes-email-actionnables: ready-for-dev
+  3-3-exposer-statuts-ops-et-contrat-d-erreur: ready-for-dev
+  epic-3-retrospective: optional
+
+  epic-4: in-progress
+  4-1-deployer-postgresql-persistant: ready-for-dev
+  4-2-restreindre-l-acces-db-au-reseau-prive: ready-for-dev
+  4-3-valider-durabilite-donnees-et-monitoring-db: ready-for-dev
+  epic-4-retrospective: optional
+
+  epic-5: in-progress
+  5-1-mettre-en-place-backups-planifies-avec-retention: ready-for-dev
+  5-2-executer-un-restore-drill-mesure: ready-for-dev
+  5-3-structurer-gouvernance-et-piste-d-audit: ready-for-dev
+  5-4-publier-la-documentation-ops-et-matrice-de-validation: ready-for-dev
+  epic-5-retrospective: optional
