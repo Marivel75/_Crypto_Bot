@@ -121,60 +121,117 @@ class PlotManager:
         price_column: str = "close",
     ) -> None:
         """
-        Version simplifiée pour garantir la cohérence.
+        Trace un graphique OHLCV avec l'indicateur RSI.
+
+        Args:
+            data: DataFrame avec les données OHLCV
+            rsi_series: Série RSI pré-calculée (optionnelle)
+            window: Période pour le calcul du RSI
+            title: Titre du graphique
+            limit: Nombre maximum de bougies à afficher
+            price_column: Colonne de prix à utiliser pour le calcul
         """
         logger.info(f"Tracé du graphique avec RSI (fenêtre: {window})")
 
-        # 1. Tronquer à une limite suffisante pour calculer le RSI
-        if limit is None:
-            limit = self.MAX_CANDLES
+        if data.empty:
+            raise ValueError("Données vides")
 
-        # S'assurer d'avoir assez de données pour le RSI
-        min_limit = max(limit, window + 50)
-        if len(data) > min_limit:
-            data = data.iloc[-min_limit:]
-        elif len(data) < window + 10:
-            raise ValueError(
-                f"Besoin d'au moins {window + 10} bougies pour calculer le RSI"
+        # 1. Déterminer la limite d'affichage
+        display_limit = limit if limit is not None else self.MAX_CANDLES
+
+        # 2. Calculer ou récupérer le RSI
+        if rsi_serie is None:
+            calculator = TechnicalCalculator()
+            rsi_serie = calculator.calculate_rsi(
+                data, window=window, price_column=price_column
             )
 
-        # 2. Calculer le RSI sur toutes les données disponibles
-        calculator = TechnicalCalculator()
-        all_rsi = calculator.calculate_rsi(
-            data, window=window, price_column=price_column
-        )
+        # Convertir list en Series si nécessaire
+        if isinstance(rsi_serie, list):
+            rsi_series = pd.Series(rsi_serie, index=data.index[-len(rsi_serie) :])
 
-        if isinstance(all_rsi, list):
-            all_rsi = pd.Series(all_rsi, index=data.index[-len(all_rsi) :])
+        # 3. S'assurer que le RSI a le même index que les données
+        # Garder uniquement les indices communs
+        common_idx = data.index.intersection(rsi_serie.index)
+        if len(common_idx) == 0:
+            raise ValueError("Aucun index commun entre les données et le RSI")
 
-        # 3. Tronquer pour l'affichage final
-        display_data = data.iloc[-limit:] if len(data) > limit else data
-        display_rsi = all_rsi.iloc[-len(display_data) :]
+        data = data.loc[common_idx]
+        rsi_serie = rsi_serie.loc[common_idx]
 
-        # 4. Préparer les données
-        plot_data = self._prepare_data_for_mplfinance(display_data)
+        # 4. Appliquer la limite d'affichage
+        if len(data) > display_limit:
+            logger.info(
+                f"Troncature des données à {display_limit} bougies pour l'affichage"
+            )
+            data = data.iloc[-display_limit:]
+            rsi_serie = rsi_serie.iloc[-display_limit:]
 
-        # 5. Tracer
+        # 5. Supprimer les valeurs NaN du RSI
+        valid_mask = rsi_serie.notna()
+        if not valid_mask.any():
+            raise ValueError("RSI ne contient que des valeurs NaN")
+
+        # Garder seulement les données avec RSI valide
+        data = data[valid_mask]
+        rsi_serie = rsi_serie[valid_mask]
+
+        if data.empty:
+            raise ValueError("Aucune donnée valide après filtrage des NaN")
+
+        # 6. Préparer les données pour mplfinance
+        plot_data = self._prepare_data_for_mplfinance(data)
+
+        # 7. Créer les addplots pour le RSI
         addplots = [
-            mpf.make_addplot(display_rsi, panel=1, color="purple", ylabel="RSI"),
             mpf.make_addplot(
-                [70] * len(display_rsi), panel=1, color="red", linestyle="--"
+                rsi_serie,
+                panel=1,  # Panel séparé pour le RSI
+                color="purple",
+                ylabel="RSI",
+                title=f"RSI({window})",
+                width=1.5,
             ),
             mpf.make_addplot(
-                [30] * len(display_rsi), panel=1, color="green", linestyle="--"
+                [70] * len(rsi_serie),
+                panel=1,
+                color="red",
+                linestyle="--",
+                alpha=0.7,
+                width=0.8,
+            ),
+            mpf.make_addplot(
+                [30] * len(rsi_serie),
+                panel=1,
+                color="green",
+                linestyle="--",
+                alpha=0.7,
+                width=0.8,
             ),
         ]
 
-        mpf.plot(
-            plot_data,
-            type="candle",
-            volume=True,
-            addplot=addplots,
-            panel_ratios=(3, 1),
-            title=title,
-            style=self.mplfinance_style,
-            figratio=(12, 8),
+        # 8. Configurer les paramètres du graphique
+        plot_kwargs = self.default_plot_kwargs.copy()
+        plot_kwargs.update(
+            {
+                "title": f"{title} (window: {window})",
+                "addplot": addplots,
+                "volume": True,
+                "panel_ratios": (3, 1),  # Ratio entre panel prix et RSI
+                "main_panel": 0,
+                "volume_panel": 2,
+            }
         )
+
+        # 9. Tracer le graphique
+        try:
+            mpf.plot(plot_data, **plot_kwargs)
+            logger.info(
+                f"Graphique RSI tracé avec succès: {len(data)} bougies, RSI({window})"
+            )
+        except Exception as e:
+            logger.error(f"Erreur lors du tracé du RSI: {str(e)}")
+            raise
 
     def plot_sma(
         self,
