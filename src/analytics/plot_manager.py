@@ -24,6 +24,7 @@ class PlotManager:
         """Initialise le gestionnaire de visualisation et configure les styles globaux."""
         logger.debug("Initialisation de PlotManager")
         self._set_global_styles()
+        self.calculator = TechnicalCalculator()
         self.mplfinance_style = "binance"
         self.default_plot_kwargs = {
             "type": "candle",
@@ -89,6 +90,211 @@ class PlotManager:
             prepared_data.index = pd.to_datetime(prepared_data.index)
         return prepared_data
 
+    def _calculate_indicator(
+        self,
+        data: pd.DataFrame,
+        indicator_type: str,
+        window: int,
+        price_column: str = "close",
+    ) -> pd.Series:
+        """
+        Calcule l'indicateur technique en fonction du type.
+        """
+        if indicator_type.upper() == "SMA":
+            return self.calculator.calculate_sma(
+                data, window=window, price_column=price_column
+            )
+        elif indicator_type.upper() == "EMA":
+            return self.calculator.calculate_ema(
+                data, window=window, price_column=price_column
+            )
+        elif indicator_type.upper() == "RSI":
+            return self.calculator.calculate_rsi(
+                data, window=window, price_column=price_column
+            )
+        else:
+            raise ValueError(f"Indicateur non supporté : {indicator_type}")
+
+    def _convert_to_series_and_align(
+        self, indicator_data: Optional[pd.Series], data: pd.DataFrame
+    ) -> pd.Series:
+        """
+        Convertit les données d'indicateur en Series si nécessaire et les aligne avec les données.
+        """
+        if isinstance(indicator_data, list):
+            indicator_data = pd.Series(
+                indicator_data, index=data.index[-len(indicator_data) :]
+            )
+
+        if indicator_data is not None:
+            common_idx = data.index.intersection(indicator_data.index)
+            if len(common_idx) == 0:
+                raise ValueError("Aucun index commun entre les données et l'indicateur")
+            return indicator_data.loc[common_idx]
+
+        return indicator_data
+
+    def _apply_limit_and_clean(
+        self,
+        data: pd.DataFrame,
+        indicator_serie: Optional[pd.Series],
+        limit: Optional[int],
+    ) -> tuple[pd.DataFrame, Optional[pd.Series]]:
+        """
+        Applique la limite et nettoie les données NaN.
+        """
+        if limit and len(data) > limit:
+            data = data.iloc[-limit:]
+            if indicator_serie is not None:
+                indicator_serie = indicator_serie.iloc[-limit:]
+
+        if indicator_serie is not None:
+            # Supprimer les valeurs NaN
+            valid_mask = indicator_serie.notna()
+            if not valid_mask.any():
+                raise ValueError("L'indicateur ne contient que des valeurs NaN")
+
+            data = data[valid_mask]
+            indicator_serie = indicator_serie[valid_mask]
+
+        return data, indicator_serie
+
+    def _create_base_addplot(
+        self,
+        indicator_serie: pd.Series,
+        color: str = "orange",
+        label: str = "Indicator",
+    ) -> List[Any]:
+        """
+        Crée un addplot de base pour les indicateurs simples (SMA, EMA).
+        """
+        return [
+            mpf.make_addplot(
+                indicator_serie,
+                color=color,
+                width=1.5,
+                label=label,
+            )
+        ]
+
+    def _create_rsi_addplots(self, rsi_serie: pd.Series, window: int) -> List[Any]:
+        """
+        Crée les addplots spécifiques pour le RSI.
+        """
+        return [
+            mpf.make_addplot(
+                rsi_serie,
+                panel=1,
+                color="purple",
+                ylabel="RSI",
+                title=f"RSI({window})",
+                width=1.5,
+            ),
+            mpf.make_addplot(
+                [70] * len(rsi_serie),
+                panel=1,
+                color="red",
+                linestyle="--",
+                alpha=0.7,
+                width=0.8,
+            ),
+            mpf.make_addplot(
+                [30] * len(rsi_serie),
+                panel=1,
+                color="green",
+                linestyle="--",
+                alpha=0.7,
+                width=0.8,
+            ),
+        ]
+
+    def _plot_with_indicator(
+        self,
+        data: pd.DataFrame,
+        indicator_name: str,
+        indicator_serie: Optional[pd.Series] = None,
+        window: int = 20,
+        title: str = "Prix avec indicateur",
+        limit: Optional[int] = None,
+        price_column: str = "close",
+        indicator_color: str = "orange",
+        **kwargs,
+    ) -> None:
+        """
+        Méthode générique pour tracer un graphique avec un indicateur.
+        """
+        logger.info(f"Tracé du graphique avec {indicator_name}, window : {window}")
+
+        if data.empty:
+            raise ValueError("Données vides")
+
+        # 1. Garder une copie des données originales
+        original_data = data.copy()
+
+        # 2. Calculer l'indicateur si non fourni
+        if indicator_serie is None:
+            indicator_serie = self._calculate_indicator(
+                original_data, indicator_name, window, price_column
+            )
+
+        # 3. Convertir et aligner l'indicateur
+        indicator_serie = self._convert_to_series_and_align(
+            indicator_serie, original_data
+        )
+
+        # 4. Appliquer la limite et nettoyer
+        data, indicator_serie = self._apply_limit_and_clean(
+            data, indicator_serie, limit
+        )
+
+        if data.empty:
+            raise ValueError("Aucune donnée valide après filtrage")
+
+        # 5. Préparer les données pour mplfinance
+        plot_data = self._prepare_data_for_mplfinance(data)
+
+        # 6. Créer les addplots selon le type d'indicateur
+        if indicator_name.upper() == "RSI":
+            addplots = self._create_rsi_addplots(indicator_serie, window)
+            panel_ratios = (3, 1)
+            main_panel = 0
+            volume_panel = 2
+        else:
+            label = f"{indicator_name}{window}"
+            addplots = self._create_base_addplot(
+                indicator_serie, indicator_color, label
+            )
+            panel_ratios = None
+            main_panel = None
+            volume_panel = None
+
+        # 7. Configurer les paramètres du graphique
+        plot_kwargs = self.default_plot_kwargs.copy()
+        plot_kwargs.update(
+            {
+                "title": f"{title} (window : {window})",
+                "addplot": addplots,
+                "volume": True,
+            }
+        )
+
+        if indicator_name.upper() == "RSI":
+            plot_kwargs["panel_ratios"] = panel_ratios
+            plot_kwargs["main_panel"] = main_panel
+            plot_kwargs["volume_panel"] = volume_panel
+
+        # 8. Tracer le graphique
+        try:
+            mpf.plot(plot_data, **plot_kwargs)
+            logger.info(
+                f"Graphique tracé avec succès: {len(data)} bougies, {indicator_name}{window}"
+            )
+        except Exception as e:
+            logger.error(f"Erreur lors du tracé: {str(e)}")
+            # En cas d'erreur, tracer sans l'indicateur
+            logger.info(f"Tentative de tracé sans {indicator_name}...")
+            self.plot_ohlcv(data, limit=limit)
+
     def plot_ohlcv(
         self, data: pd.DataFrame, limit: Optional[int] = None, plot_type: str = "candle"
     ) -> None:
@@ -125,113 +331,21 @@ class PlotManager:
 
         Args:
             data: DataFrame avec les données OHLCV
-            rsi_series: Série RSI pré-calculée (optionnelle)
+            rsi_serie: Série RSI pré-calculée (optionnelle)
             window: Période pour le calcul du RSI
             title: Titre du graphique
             limit: Nombre maximum de bougies à afficher
             price_column: Colonne de prix à utiliser pour le calcul
         """
-        logger.info(f"Tracé du graphique avec RSI (fenêtre: {window})")
-
-        if data.empty:
-            raise ValueError("Données vides")
-
-        # 1. Déterminer la limite d'affichage
-        display_limit = limit if limit is not None else self.MAX_CANDLES
-
-        # 2. Calculer ou récupérer le RSI
-        if rsi_serie is None:
-            calculator = TechnicalCalculator()
-            rsi_serie = calculator.calculate_rsi(
-                data, window=window, price_column=price_column
-            )
-
-        # Convertir list en Series si nécessaire
-        if isinstance(rsi_serie, list):
-            rsi_series = pd.Series(rsi_serie, index=data.index[-len(rsi_serie) :])
-
-        # 3. S'assurer que le RSI a le même index que les données
-        # Garder uniquement les indices communs
-        common_idx = data.index.intersection(rsi_serie.index)
-        if len(common_idx) == 0:
-            raise ValueError("Aucun index commun entre les données et le RSI")
-
-        data = data.loc[common_idx]
-        rsi_serie = rsi_serie.loc[common_idx]
-
-        # 4. Appliquer la limite d'affichage
-        if len(data) > display_limit:
-            logger.info(
-                f"Troncature des données à {display_limit} bougies pour l'affichage"
-            )
-            data = data.iloc[-display_limit:]
-            rsi_serie = rsi_serie.iloc[-display_limit:]
-
-        # 5. Supprimer les valeurs NaN du RSI
-        valid_mask = rsi_serie.notna()
-        if not valid_mask.any():
-            raise ValueError("RSI ne contient que des valeurs NaN")
-
-        # Garder seulement les données avec RSI valide
-        data = data[valid_mask]
-        rsi_serie = rsi_serie[valid_mask]
-
-        if data.empty:
-            raise ValueError("Aucune donnée valide après filtrage des NaN")
-
-        # 6. Préparer les données pour mplfinance
-        plot_data = self._prepare_data_for_mplfinance(data)
-
-        # 7. Créer les addplots pour le RSI
-        addplots = [
-            mpf.make_addplot(
-                rsi_serie,
-                panel=1,  # Panel séparé pour le RSI
-                color="purple",
-                ylabel="RSI",
-                title=f"RSI({window})",
-                width=1.5,
-            ),
-            mpf.make_addplot(
-                [70] * len(rsi_serie),
-                panel=1,
-                color="red",
-                linestyle="--",
-                alpha=0.7,
-                width=0.8,
-            ),
-            mpf.make_addplot(
-                [30] * len(rsi_serie),
-                panel=1,
-                color="green",
-                linestyle="--",
-                alpha=0.7,
-                width=0.8,
-            ),
-        ]
-
-        # 8. Configurer les paramètres du graphique
-        plot_kwargs = self.default_plot_kwargs.copy()
-        plot_kwargs.update(
-            {
-                "title": f"{title} (window: {window})",
-                "addplot": addplots,
-                "volume": True,
-                "panel_ratios": (3, 1),  # Ratio entre panel prix et RSI
-                "main_panel": 0,
-                "volume_panel": 2,
-            }
+        self._plot_with_indicator(
+            data=data,
+            indicator_name="RSI",
+            indicator_serie=rsi_serie,
+            window=window,
+            title=title,
+            limit=limit,
+            price_column=price_column,
         )
-
-        # 9. Tracer le graphique
-        try:
-            mpf.plot(plot_data, **plot_kwargs)
-            logger.info(
-                f"Graphique RSI tracé avec succès: {len(data)} bougies, RSI({window})"
-            )
-        except Exception as e:
-            logger.error(f"Erreur lors du tracé du RSI: {str(e)}")
-            raise
 
     def plot_sma(
         self,
@@ -247,86 +361,40 @@ class PlotManager:
         """
         Trace un graphique OHLCV avec une Simple Moving Average (SMA).
         """
-        logger.info(f"Tracé du graphique avec SMA, window : {window}")
-
-        if data.empty:
-            raise ValueError("Données vides")
-
-        # 1. Garder une copie des données originales pour référence
-        original_data = data.copy()
-
-        # 2. Calculer la SMA sur toutes les données d'abord
-        if sma_serie is None:
-            prices = (
-                original_data[price_column]
-                if price_column in original_data.columns
-                else original_data["close"]
-            )
-            # Calculer la SMA sur toutes les données
-            sma_all = prices.rolling(window=window).mean()
-        else:
-            sma_all = sma_serie
-
-        # 3. Appliquer la limite après le calcul de la SMA
-        if limit and len(original_data) > limit:
-            data = original_data.iloc[-limit:]
-            # Prendre aussi la SMA correspondante
-            sma_to_plot = sma_all.loc[data.index]
-        else:
-            data = original_data
-            sma_to_plot = sma_all
-
-        # 4. Supprimer les NaN de la SMA
-        sma_clean = sma_to_plot.dropna()
-        if sma_clean.empty:
-            logger.warning(f"SMA{window} vide - affichage sans SMA")
-            self.plot_ohlcv(data, limit=limit)
-            return
-
-        # 5. S'assurer que les données et la SMA ont les mêmes indices
-        # Garder seulement les indices communs
-        common_idx = data.index.intersection(sma_clean.index)
-        if len(common_idx) == 0:
-            logger.error(
-                f"Aucun index commun entre données ({len(data)}) et SMA ({len(sma_clean)})"
-            )
-            logger.warning(f"Affichage sans SMA")
-            self.plot_ohlcv(data, limit=limit)
-            return
-
-        data = data.loc[common_idx]
-        sma_final = sma_clean.loc[common_idx]
-
-        logger.debug(
-            f"Données finales: {len(data)} points, SMA: {len(sma_final)} points"
+        self._plot_with_indicator(
+            data=data,
+            indicator_name="SMA",
+            indicator_serie=sma_serie,
+            window=window,
+            title=title,
+            limit=limit,
+            price_column=price_column,
+            indicator_color=sma_color,
+            line_width=line_width,
         )
 
-        # 6. Préparer les données pour mplfinance
-        plot_data = self._prepare_data_for_mplfinance(data)
-
-        # 7. Créer le graphique
-        ap = mpf.make_addplot(
-            sma_final,
-            color=sma_color,
-            width=line_width,
-            label=f"SMA{window}",
+    def plot_ema(
+        self,
+        data: pd.DataFrame,
+        ema_serie: Optional[pd.Series] = None,
+        window: int = 20,
+        title: str = "Prix avec EMA",
+        limit: Optional[int] = None,
+        price_column: str = "close",
+        ema_color: str = "blue",
+        line_width: float = 1.5,
+    ) -> None:
+        """
+        Trace un graphique OHLCV avec une Exponential Moving Average (EMA).
+        """
+        self._plot_with_indicator(
+            data=data,
+            indicator_name="EMA",
+            indicator_serie=ema_serie,
+            window=window,
+            title=title,
+            limit=limit,
+            price_column=price_column,
+            indicator_color=ema_color,
+            line_width=line_width,
         )
-
-        plot_kwargs = self.default_plot_kwargs.copy()
-        plot_kwargs.update(
-            {
-                "title": f"{title} (window : {window})",
-                "addplot": [ap],
-                "volume": True,
-            }
-        )
-
-        try:
-            mpf.plot(plot_data, **plot_kwargs)
-            logger.info(
-                f"Graphique tracé avec succès: {len(data)} bougies, SMA{window}"
-            )
-        except Exception as e:
-            logger.error(f"Erreur lors du tracé: {str(e)}")
-            logger.info("Tentative de tracé sans SMA...")
-            self.plot_ohlcv(data, limit=limit)

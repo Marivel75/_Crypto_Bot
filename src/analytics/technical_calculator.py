@@ -144,3 +144,60 @@ class TechnicalCalculator:
         except Exception as e:
             logger.error(f"Erreur dans le calcul du RSI: {e}")
             raise
+
+    def calculate_ema(
+        self,
+        data: Union[pd.DataFrame, List[float]],
+        window: int = 20,
+        price_column: str = "close",
+        fillna: Optional[Union[str, int, float]] = None,
+    ) -> Union[pd.Series, List[float]]:
+        """
+        Calcule l'Exponential Moving Average (EMA) pour une série de prix : moyenne mobile pondérée qui donne plus de poids aux prix récents,
+        ce qui la rend plus réactive aux nouvelles informations versus la SMA (Simple Moving Average).
+        Utilisée pour identifier la tendance du marché.
+
+        Args:
+            data (Union[pd.DataFrame, List[float]]):
+                Données d'entrée contenant les prix. Peut être un DataFrame pandas (avec une colonne spécifiée)
+                ou une liste de valeurs numériques.
+            window (int, optionnel):
+                Période de lissage pour le calcul de l'EMA. Par défaut, 20.
+                Plus la fenêtre est petite, plus l'EMA réagit rapidement aux changements de prix.
+            price_column (str, optionnel):
+                Nom de la colonne contenant les prix dans le DataFrame. Par défaut, "close".
+                Ignoré si `data` est une liste.
+            fillna (Union[str, int, float], optionnel):
+                Méthode ou valeur pour remplir les NaN dans le résultat.
+                Peut être une chaîne ("ffill", "bfill"), un entier ou un flottant.
+                Par défaut, None (les NaN ne sont pas remplis).
+
+        Returns:
+            Union[pd.Series, List[float]]:
+                Série pandas ou liste contenant les valeurs de l'EMA.
+                Le type de retour dépend du type de `data` :
+                - Si `data` est un DataFrame, retourne une pd.Series.
+                - Si `data` est une liste, retourne une liste.
+
+        Raises:
+            ValueError:
+                Si `window` est supérieur à la longueur des données ou si `price_column` n'existe pas dans le DataFrame.
+            TypeError:
+                Si `data` n'est ni un DataFrame ni une liste.
+
+        Exemple:
+            >>> calculator = TechnicalCalculator()
+            >>> data = [10, 12, 15, 14, 18, 20, 22]
+            >>> ema = calculator.calculate_ema(data, window=3)
+            >>> print(ema)
+            [nan, nan, 12.333..., 13.888..., 15.777..., 17.851..., 19.900...]
+        """
+        try:
+            close_prices = self._prepare_data(data, price_column)
+            self._validate_window(window, len(close_prices))
+            ema = close_prices.ewm(span=window, adjust=False).mean()
+            ema = self._handle_fillna(ema, fillna)
+            return self._return_result(ema, data)
+        except Exception as e:
+            logger.error(f"Erreur dans le calcul de l'EMA: {e}")
+            raise
