@@ -7,207 +7,269 @@ import mplfinance as mpf
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from typing import Optional, Dict, Any, List, Union
+from typing import Optional, Dict, Any, List
 from logger_settings import logger
-from src.models.ohlcv import OHLCV
+from src.analytics.technical_calculator import TechnicalCalculator
 
 
 class PlotManager:
     """
     Classe pour gérer la visualisation des données financières.
-    Permet de tracer des graphiques OHLCV avec des indicateurs (SMA, etc.).
+    Permet de tracer des graphiques OHLCV avec des indicateurs (SMA, RSI, etc.).
     """
+
+    MAX_CANDLES = 500  # Limite maximale de bougies pour garantir la lisibilité
 
     def __init__(self):
         """Initialise le gestionnaire de visualisation et configure les styles globaux."""
         logger.debug("Initialisation de PlotManager")
         self._set_global_styles()
-        self._default_plot_kwargs = {
+        self.mplfinance_style = "binance"
+        self.default_plot_kwargs = {
             "type": "candle",
             "ylabel": "Prix",
             "ylabel_lower": "Volume",
             "figratio": (12, 8),
             "figscale": 1.1,
+            "warn_too_much_data": self.MAX_CANDLES + 100,
+            "style": self.mplfinance_style,
         }
 
     def _set_global_styles(self) -> None:
-        """
-        Configure les styles globaux pour matplotlib, seaborn et pandas.
-        """
+        """Configure les styles globaux pour matplotlib, seaborn et pandas."""
         plt.style.use("seaborn-v0_8-dark")
         sns.set_theme(style="whitegrid")
         pd.set_option("display.max_columns", None)
         logger.debug("Styles globaux configurés.")
 
-    def _prepare_data_for_mplfinance(self, data: pd.DataFrame) -> pd.DataFrame:
+    def _validate_data_length(
+        self, data: pd.DataFrame, limit: Optional[int] = None
+    ) -> pd.DataFrame:
         """
-        Prépare les données pour le plot en utilisant OHLCV.prepare_for_mplfinance
-        et en vérifiant que l'index est un DatetimeIndex.
+        Valide que le nombre de bougies ne dépasse pas la limite spécifiée (ou MAX_CANDLES).
+        Tronque les données si nécessaire et log un warning.
 
         Args:
             data: DataFrame avec les données OHLCV.
+            limit: Limite personnalisée (optionnelle). Si None, utilise MAX_CANDLES.
 
         Returns:
-            DataFrame prêt pour mplfinance.
+            DataFrame: Données tronquées si nécessaire.
         """
-        data = OHLCV.prepare_for_mplfinance(data)
-        if not isinstance(data.index, pd.DatetimeIndex):
-            if "timestamp" in data.columns:
-                data = data.set_index("timestamp")
-            data.index = pd.to_datetime(data.index)
+        max_limit = limit if limit is not None else self.MAX_CANDLES
+
+        if len(data) > max_limit:
+            logger.warning(
+                f"Trop de données à tracer ({len(data)} bougies). "
+                f"Seules les {max_limit} dernières seront affichées pour garantir la lisibilité."
+            )
+            data = data.iloc[-max_limit:]
+            if data.empty:
+                raise ValueError("Aucune donnée valide après troncature.")
+
         return data
 
-    def _get_plot_kwargs(
-        self, title: str, style: str, volume: bool = True, **kwargs
-    ) -> Dict[str, Any]:
+    def _prepare_data_for_mplfinance(self, data: pd.DataFrame) -> pd.DataFrame:
         """
-        Retourne les arguments de configuration pour mpf.plot.
-
-        Args:
-            title: Titre du graphique.
-            style: Style de mplfinance.
-            volume: Si True, affiche le volume.
-            **kwargs: Arguments supplémentaires pour mpf.plot().
-
-        Returns:
-            Dictionnaire des arguments pour mpf.plot.
+        Prépare les données pour mplfinance en vérifiant les colonnes et l'index.
         """
-        plot_kwargs = self._default_plot_kwargs.copy()
-        plot_kwargs.update(
-            {
-                "title": title,
-                "style": style,
-                "volume": volume,
-            }
+        prepared_data = data.rename(
+            columns={
+                "open": "Open",
+                "high": "High",
+                "low": "Low",
+                "close": "Close",
+                "volume": "Volume",
+            },
+            errors="ignore",
         )
-        plot_kwargs.update(kwargs)
-        return plot_kwargs
-
-    def _plot_with_mplfinance(self, data: pd.DataFrame, **plot_kwargs) -> None:
-        """
-        Trace un graphique avec mplfinance.
-
-        Args:
-            data: DataFrame avec colonnes OHLCV.
-            **plot_kwargs: Arguments pour mpf.plot().
-        """
-        try:
-            mpf.plot(data, **plot_kwargs)
-        except Exception as e:
-            logger.error(f"❌ Erreur lors du traçage: {e}")
-            raise
+        if not isinstance(prepared_data.index, pd.DatetimeIndex):
+            if "timestamp" in prepared_data.columns:
+                prepared_data = prepared_data.set_index("timestamp")
+            prepared_data.index = pd.to_datetime(prepared_data.index)
+        return prepared_data
 
     def plot_ohlcv(
-        self,
-        data: pd.DataFrame,
-        title: str = "Prix OHLCV",
-        style: str = "binance",
-        volume: bool = True,
-        **kwargs: Dict[str, Any],
+        self, data: pd.DataFrame, limit: Optional[int] = None, plot_type: str = "candle"
     ) -> None:
         """
-        Trace un graphique OHLCV de base.
+        Trace un graphique OHLCV avec une limite personnalisable de bougies.
 
         Args:
-            data: DataFrame avec colonnes OHLCV.
-            title: Titre du graphique.
-            style: Style de mplfinance.
-            volume: Si True, affiche le volume.
-            **kwargs: Arguments supplémentaires pour mpf.plot().
+            data: DataFrame avec les données OHLCV.
+            limit: Limite personnalisée du nombre de bougies (optionnelle).
+                   Si None, utilise MAX_CANDLES.
+            plot_type: Type de graphique ('candle', 'line', etc.).
         """
-        logger.info(f"Tracé du graphique OHLCV : {title}")
+        logger.info(f"Tracé du graphique OHLCV (type: {plot_type})")
+        data = self._validate_data_length(data, limit)  # Applique la limite
         data = self._prepare_data_for_mplfinance(data)
-        plot_kwargs = self._get_plot_kwargs(title, style, volume, **kwargs)
-        self._plot_with_mplfinance(data, **plot_kwargs)
 
-    def plot_with_sma(
+        mpf.plot(
+            data,
+            **self.default_plot_kwargs,
+            volume=True,
+        )
+
+    def plot_rsi(
         self,
         data: pd.DataFrame,
-        sma_data: pd.Series,
+        rsi_serie: Optional[pd.Series] = None,
+        window: int = 14,
+        title: str = "Prix avec RSI",
+        limit: Optional[int] = None,
+        price_column: str = "close",
+    ) -> None:
+        """
+        Version simplifiée pour garantir la cohérence.
+        """
+        logger.info(f"Tracé du graphique avec RSI (fenêtre: {window})")
+
+        # 1. Tronquer à une limite suffisante pour calculer le RSI
+        if limit is None:
+            limit = self.MAX_CANDLES
+
+        # S'assurer d'avoir assez de données pour le RSI
+        min_limit = max(limit, window + 50)
+        if len(data) > min_limit:
+            data = data.iloc[-min_limit:]
+        elif len(data) < window + 10:
+            raise ValueError(
+                f"Besoin d'au moins {window + 10} bougies pour calculer le RSI"
+            )
+
+        # 2. Calculer le RSI sur toutes les données disponibles
+        calculator = TechnicalCalculator()
+        all_rsi = calculator.calculate_rsi(
+            data, window=window, price_column=price_column
+        )
+
+        if isinstance(all_rsi, list):
+            all_rsi = pd.Series(all_rsi, index=data.index[-len(all_rsi) :])
+
+        # 3. Tronquer pour l'affichage final
+        display_data = data.iloc[-limit:] if len(data) > limit else data
+        display_rsi = all_rsi.iloc[-len(display_data) :]
+
+        # 4. Préparer les données
+        plot_data = self._prepare_data_for_mplfinance(display_data)
+
+        # 5. Tracer
+        addplots = [
+            mpf.make_addplot(display_rsi, panel=1, color="purple", ylabel="RSI"),
+            mpf.make_addplot(
+                [70] * len(display_rsi), panel=1, color="red", linestyle="--"
+            ),
+            mpf.make_addplot(
+                [30] * len(display_rsi), panel=1, color="green", linestyle="--"
+            ),
+        ]
+
+        mpf.plot(
+            plot_data,
+            type="candle",
+            volume=True,
+            addplot=addplots,
+            panel_ratios=(3, 1),
+            title=title,
+            style=self.mplfinance_style,
+            figratio=(12, 8),
+        )
+
+    def plot_sma(
+        self,
+        data: pd.DataFrame,
+        sma_serie: Optional[pd.Series] = None,
         window: int = 20,
         title: str = "Prix avec SMA",
-        style: str = "binance",
-        **kwargs: Dict[str, Any],
+        limit: Optional[int] = None,
+        price_column: str = "close",
+        sma_color: str = "orange",
+        line_width: float = 1.5,
     ) -> None:
         """
-        Trace un graphique OHLCV avec une SMA.
-
-        Args:
-            data: DataFrame avec colonnes OHLCV.
-            sma_data: Série pandas contenant les valeurs SMA.
-            window: Période de la SMA.
-            title: Titre du graphique.
-            style: Style de mplfinance.
-            **kwargs: Arguments supplémentaires pour mpf.plot().
+        Trace un graphique OHLCV avec une Simple Moving Average (SMA).
         """
-        logger.info(f"Tracé du graphique avec SMA (fenêtre: {window})")
-        data = self._prepare_data_for_mplfinance(data)
-        data[f"SMA_{window}"] = sma_data
-        plot_kwargs = self._get_plot_kwargs(title, style, **kwargs)
-        plot_kwargs["mav"] = (window,)
-        self._plot_with_mplfinance(data, **plot_kwargs)
+        logger.info(f"Tracé du graphique avec SMA, window : {window}")
 
-    def plot_prices_evolution(
-        self, data: pd.DataFrame, symbol: str = "BTC/USDT"
-    ) -> None:
-        """
-        Trace l'évolution des prix pour un symbole donné.
+        if data.empty:
+            raise ValueError("Données vides")
 
-        Args:
-            data: DataFrame avec colonnes OHLCV.
-            symbol: Symbole à tracer.
-        """
-        if "timestamp" in data.columns:
-            data = data.set_index("timestamp")
-        data.index = pd.to_datetime(data.index)
-        df_symbol = data[data["symbol"] == symbol].sort_index()
+        # 1. Garder une copie des données originales pour référence
+        original_data = data.copy()
 
-        plt.figure(figsize=(8, 3))
-        plt.plot(df_symbol.index, df_symbol["close"], label="Prix", color="blue")
-        plt.title(f"Évolution du prix {symbol}", fontsize=16)
-        plt.xlabel("Date", fontsize=12)
-        plt.ylabel("Prix (USD)", fontsize=12)
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
+        # 2. Calculer la SMA sur toutes les données d'abord
+        if sma_serie is None:
+            prices = (
+                original_data[price_column]
+                if price_column in original_data.columns
+                else original_data["close"]
+            )
+            # Calculer la SMA sur toutes les données
+            sma_all = prices.rolling(window=window).mean()
+        else:
+            sma_all = sma_serie
 
-    def plot_prices_variations_distrib(self, data: pd.DataFrame) -> None:
-        """
-        Trace la distribution des variations de prix.
+        # 3. Appliquer la limite après le calcul de la SMA
+        if limit and len(original_data) > limit:
+            data = original_data.iloc[-limit:]
+            # Prendre aussi la SMA correspondante
+            sma_to_plot = sma_all.loc[data.index]
+        else:
+            data = original_data
+            sma_to_plot = sma_all
 
-        Args:
-            data: DataFrame avec colonnes OHLCV.
-        """
-        if "timestamp" in data.columns:
-            data = data.set_index("timestamp")
-        data.index = pd.to_datetime(data.index)
+        # 4. Supprimer les NaN de la SMA
+        sma_clean = sma_to_plot.dropna()
+        if sma_clean.empty:
+            logger.warning(f"SMA{window} vide - affichage sans SMA")
+            self.plot_ohlcv(data, limit=limit)
+            return
 
-        plt.figure(figsize=(8, 3))
-        sns.histplot(data=data, x="price_change_pct", hue="symbol", kde=True, bins=50)
-        plt.title("Distribution des variations de prix (%)", fontsize=16)
-        plt.xlabel("Variation de prix (%)", fontsize=12)
-        plt.ylabel("Fréquence", fontsize=12)
-        plt.grid(True, alpha=0.3)
-        plt.show()
+        # 5. S'assurer que les données et la SMA ont les mêmes indices
+        # Garder seulement les indices communs
+        common_idx = data.index.intersection(sma_clean.index)
+        if len(common_idx) == 0:
+            logger.error(
+                f"Aucun index commun entre données ({len(data)}) et SMA ({len(sma_clean)})"
+            )
+            logger.warning(f"Affichage sans SMA")
+            self.plot_ohlcv(data, limit=limit)
+            return
 
-    def plot_symbols_volumes(self, data: pd.DataFrame) -> None:
-        """
-        Trace la distribution des volumes par symbole.
+        data = data.loc[common_idx]
+        sma_final = sma_clean.loc[common_idx]
 
-        Args:
-            data: DataFrame avec colonnes OHLCV.
-        """
-        if "timestamp" in data.columns:
-            data = data.set_index("timestamp")
-        data.index = pd.to_datetime(data.index)
+        logger.debug(
+            f"Données finales: {len(data)} points, SMA: {len(sma_final)} points"
+        )
 
-        plt.figure(figsize=(8, 6))
-        sns.boxplot(data=data, x="symbol", y="volume")
-        plt.title("Distribution des volumes par symbole", fontsize=16)
-        plt.xlabel("Symbole", fontsize=12)
-        plt.ylabel("Volume", fontsize=12)
-        plt.yscale("log")
-        plt.grid(True, alpha=0.3)
-        plt.show()
+        # 6. Préparer les données pour mplfinance
+        plot_data = self._prepare_data_for_mplfinance(data)
+
+        # 7. Créer le graphique
+        ap = mpf.make_addplot(
+            sma_final,
+            color=sma_color,
+            width=line_width,
+            label=f"SMA{window}",
+        )
+
+        plot_kwargs = self.default_plot_kwargs.copy()
+        plot_kwargs.update(
+            {
+                "title": f"{title} (window : {window})",
+                "addplot": [ap],
+                "volume": True,
+            }
+        )
+
+        try:
+            mpf.plot(plot_data, **plot_kwargs)
+            logger.info(
+                f"Graphique tracé avec succès: {len(data)} bougies, SMA{window}"
+            )
+        except Exception as e:
+            logger.error(f"Erreur lors du tracé: {str(e)}")
+            logger.info("Tentative de tracé sans SMA...")
+            self.plot_ohlcv(data, limit=limit)

@@ -24,30 +24,25 @@ class DBInspector:
         """Initialise l'inspecteur de base de données."""
         logger.debug("Initialisation de DBInspector")
 
-    def get_ohlcv_data(
+    def _build_ohlcv_query(
         self,
-        limit: Optional[int] = None,
         symbol: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-    ) -> pd.DataFrame:
+        limit: Optional[int] = None,
+    ) -> tuple[str, Dict[str, Any]]:
         """
-        Récupère les données OHLCV depuis la base de données.
+        Construit la requête SQL et les paramètres pour récupérer les données OHLCV.
 
         Args:
-            limit: Limite le nombre de résultats.
-            symbol: Filtre par symbole (ex: 'BTC/USDT').
-            start_date: Date de début (format: 'YYYY-MM-DD').
-            end_date: Date de fin (format: 'YYYY-MM-DD').
+            symbol: Filtre par symbole (ex: 'BTC/USDT')
+            start_date: Date de début (format: 'YYYY-MM-DD')
+            end_date: Date de fin (format: 'YYYY-MM-DD')
+            limit: Limite le nombre de résultats
 
         Returns:
-            pd.DataFrame: DataFrame contenant les données OHLCV.
-
-        Raises:
-            Exception: En cas d'erreur lors de la requête.
+            tuple: (requête SQL, dictionnaire des paramètres)
         """
-        logger.info("Récupération des données OHLCV depuis la base de données...")
-
         query = "SELECT * FROM ohlcv"
         conditions = []
         params: Dict[str, Any] = {}
@@ -68,6 +63,22 @@ class DBInspector:
         if limit:
             query += f" LIMIT {limit}"
 
+        return query, params
+
+    def _execute_ohlcv_query(self, query: str, params: Dict[str, Any]) -> pd.DataFrame:
+        """
+        Exécute une requête OHLCV et retourne les résultats sous forme de DataFrame.
+
+        Args:
+            query: Requête SQL à exécuter
+            params: Paramètres de la requête
+
+        Returns:
+            pd.DataFrame: Résultats de la requête
+
+        Raises:
+            Exception: En cas d'erreur lors de la requête
+        """
         try:
             with database_session() as session:
                 result = session.execute(text(query), params)
@@ -77,6 +88,64 @@ class DBInspector:
         except Exception as e:
             logger.error(f"❌ Erreur lors de la récupération des données OHLCV: {e}")
             raise
+
+    def get_ohlcv_data_for_symbol(
+        self,
+        symbol: str,
+        limit: Optional[int] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """
+        Récupère les données OHLCV pour un symbole spécifique.
+
+        Args:
+            symbol: Symbole à récupérer (ex: 'BTC/USDT')
+            limit: Limite le nombre de résultats
+            start_date: Date de début (format: 'YYYY-MM-DD')
+            end_date: Date de fin (format: 'YYYY-MM-DD')
+
+        Returns:
+            pd.DataFrame: DataFrame contenant les données OHLCV pour le symbole
+
+        Raises:
+            Exception: En cas d'erreur lors de la requête
+        """
+        logger.info(f"Récupération des données OHLCV pour le symbole {symbol}...")
+
+        query, params = self._build_ohlcv_query(
+            symbol=symbol, start_date=start_date, end_date=end_date, limit=limit
+        )
+
+        return self._execute_ohlcv_query(query, params)
+
+    def get_all_ohlcv_data(
+        self,
+        limit: Optional[int] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """
+        Récupère toutes les données OHLCV de la base de données.
+
+        Args:
+            limit: Limite le nombre de résultats
+            start_date: Date de début (format: 'YYYY-MM-DD')
+            end_date: Date de fin (format: 'YYYY-MM-DD')
+
+        Returns:
+            pd.DataFrame: DataFrame contenant toutes les données OHLCV
+
+        Raises:
+            Exception: En cas d'erreur lors de la requête
+        """
+        logger.info("Récupération de toutes les données OHLCV...")
+
+        query, params = self._build_ohlcv_query(
+            start_date=start_date, end_date=end_date, limit=limit
+        )
+
+        return self._execute_ohlcv_query(query, params)
 
     def inspect_db(self) -> None:
         """
