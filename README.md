@@ -1,1 +1,0 @@
-# Test des règles GitHub
