@@ -7,7 +7,7 @@ import mplfinance as mpf
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Union
 from logger_settings import logger
 from src.analytics.technical_calculator import TechnicalCalculator
 
@@ -30,7 +30,7 @@ class PlotManager:
             "type": "candle",
             "ylabel": "Prix",
             "ylabel_lower": "Volume",
-            "figratio": (12, 8),
+            "figratio": (12, 10),
             "figscale": 1.1,
             "warn_too_much_data": self.MAX_CANDLES + 100,
             "style": self.mplfinance_style,
@@ -398,3 +398,247 @@ class PlotManager:
             indicator_color=ema_color,
             line_width=line_width,
         )
+
+    def plot_macd(
+        self,
+        data: pd.DataFrame,
+        macd_df: Optional[pd.DataFrame] = None,
+        fast: int = 12,
+        slow: int = 26,
+        signal: int = 9,
+        title: str = "Prix avec MACD",
+        limit: Optional[int] = None,
+        price_column: str = "close",
+    ) -> None:
+        """
+        Trace un graphique OHLCV avec l'indicateur MACD.
+
+        Args:
+            data: DataFrame avec données OHLCV.
+            macd_df: DataFrame MACD pré-calculé (optionnel).
+                    Doit contenir les colonnes:
+                    ['MACD', 'MACD_signal', 'MACD_hist']
+            fast: Période EMA rapide.
+            slow: Période EMA lente.
+            signal: Période EMA signal.
+            title: Titre du graphique.
+            limit: Nombre max de bougies à afficher.
+            price_column: Colonne prix pour le calcul.
+        """
+        logger.info(f"Tracé du graphique avec MACD ({fast}, {slow}, {signal})")
+
+        if data.empty:
+            raise ValueError("Données vides")
+
+        original_data = data.copy()
+
+        # 1Calcul du MACD si non fourni
+        if macd_df is None:
+            macd_df = self.calculator.calculate_macd(
+                original_data,
+                fast=fast,
+                slow=slow,
+                signal=signal,
+                price_column=price_column,
+                return_with_prices=False,
+            )
+
+        if not isinstance(macd_df, pd.DataFrame):
+            raise ValueError("Le MACD doit être un DataFrame")
+
+        required_cols = {"MACD", "MACD_signal", "MACD_hist"}
+        if not required_cols.issubset(macd_df.columns):
+            raise ValueError(
+                "Le DataFrame MACD doit contenir : "
+                "['MACD', 'MACD_signal', 'MACD_hist']"
+            )
+
+        # Alignement index
+        macd_df = macd_df.loc[macd_df.index.intersection(original_data.index)]
+
+        data = original_data.loc[macd_df.index]
+
+        # Appliquer limite
+        if limit and len(data) > limit:
+            data = data.iloc[-limit:]
+            macd_df = macd_df.iloc[-limit:]
+
+        # Supprimer NaN
+        valid_mask = macd_df["MACD"].notna()
+        if not valid_mask.any():
+            raise ValueError("Le MACD ne contient que des NaN")
+
+        data = data[valid_mask]
+        macd_df = macd_df[valid_mask]
+
+        # Préparer données mplfinance
+        plot_data = self._prepare_data_for_mplfinance(data)
+
+        # Création des addplots MACD (panel secondaire)
+        macd_line = mpf.make_addplot(
+            macd_df["MACD"],
+            panel=1,
+            color="blue",
+            width=1.5,
+            ylabel="MACD",
+        )
+
+        signal_line = mpf.make_addplot(
+            macd_df["MACD_signal"],
+            panel=1,
+            color="orange",
+            width=1.2,
+        )
+
+        hist_colors = ["green" if v >= 0 else "red" for v in macd_df["MACD_hist"]]
+
+        histogram = mpf.make_addplot(
+            macd_df["MACD_hist"],
+            type="bar",
+            panel=1,
+            color=hist_colors,
+            alpha=0.6,
+        )
+
+        addplots = [macd_line, signal_line, histogram]
+
+        # Configuration graphique
+        plot_kwargs = self.default_plot_kwargs.copy()
+        plot_kwargs.update(
+            {
+                "title": f"{title} ({fast},{slow},{signal})",
+                "addplot": addplots,
+                "volume": True,
+                "panel_ratios": (3, 3, 1),
+                "main_panel": 0,
+                "volume_panel": 2,
+            }
+        )
+
+        # Plot
+        try:
+            mpf.plot(plot_data, **plot_kwargs)
+            logger.info(f"MACD tracé avec succès: {len(data)} bougies")
+        except Exception as e:
+            logger.error(f"Erreur lors du tracé MACD: {str(e)}")
+            logger.info("Tentative de tracé sans MACD...")
+            self.plot_ohlcv(data, limit=limit)
+
+    def plot_bollinger_bands(
+        self,
+        data: pd.DataFrame,
+        bb_df: Optional[pd.DataFrame] = None,
+        window: int = 20,
+        std: float = 2.0,
+        title: str = "Prix avec Bandes de Bollinger",
+        limit: Optional[int] = None,
+        price_column: str = "close",
+        middle_color: str = "orange",
+        upper_color: str = "green",
+        lower_color: str = "red",
+    ) -> None:
+        """
+        Trace un graphique OHLCV avec les bandes de Bollinger.
+        """
+        logger.info(
+            f"Tracé du graphique avec Bandes de Bollinger (window: {window}, std: {std})"
+        )
+
+        if data.empty:
+            raise ValueError("Données vides")
+
+        original_data = data.copy()
+
+        # Calcul des bandes de Bollinger si non fournies
+        if bb_df is None:
+            bb_df = self.calculator.calculate_bollinger_bands(
+                original_data,
+                window=window,
+                price_column=price_column,
+                std=std,
+            )
+
+        if not isinstance(bb_df, pd.DataFrame):
+            raise ValueError("Les bandes de Bollinger doivent être un DataFrame")
+
+        required_cols = {"BB_middle", "BB_upper", "BB_lower"}
+        if not required_cols.issubset(bb_df.columns):
+            raise ValueError(
+                "Le DataFrame des bandes de Bollinger doit contenir : "
+                "['BB_middle', 'BB_upper', 'BB_lower']"
+            )
+
+        # Alignement des index
+        bb_df = bb_df.loc[bb_df.index.intersection(original_data.index)]
+        data = original_data.loc[bb_df.index]
+
+        # Appliquer la limite
+        if limit and len(data) > limit:
+            data = data.iloc[-limit:]
+            bb_df = bb_df.iloc[-limit:]
+
+        # Supprimer les NaN
+        valid_mask = bb_df["BB_middle"].notna()
+        if not valid_mask.any():
+            raise ValueError("Les bandes de Bollinger ne contiennent que des NaN")
+
+        data = data[valid_mask]
+        bb_df = bb_df[valid_mask]
+
+        # Préparer les données pour mplfinance
+        plot_data = self._prepare_data_for_mplfinance(data)
+
+        # Création des addplots pour les bandes de Bollinger
+        middle_band = mpf.make_addplot(
+            bb_df["BB_middle"],
+            color=middle_color,
+            width=1.5,
+            label=f"Bande centrale ({window})",
+        )
+
+        upper_band = mpf.make_addplot(
+            bb_df["BB_upper"],
+            color=upper_color,
+            width=1.2,
+            linestyle="--",
+            label=f"Bande supérieure ({window}, {std}σ)",
+        )
+
+        lower_band = mpf.make_addplot(
+            bb_df["BB_lower"],
+            color=lower_color,
+            width=1.2,
+            linestyle="--",
+            label=f"Bande inférieure ({window}, {std}σ)",
+        )
+
+        addplots = [middle_band, upper_band, lower_band]
+
+        # Configuration du graphique
+        plot_kwargs = self.default_plot_kwargs.copy()
+        plot_kwargs.update(
+            {
+                "title": f"{title} (window: {window}, std: {std})",
+                "addplot": addplots,
+                "volume": True,
+                "returnfig": True,  # Important pour récupérer la figure
+            }
+        )
+
+        # Tracé avec mplfinance
+        fig, axes = mpf.plot(plot_data, **plot_kwargs)
+
+        # Ajout du remplissage avec matplotlib
+        for ax in axes:
+            if ax.get_label() == "main":
+                ax.fill_between(
+                    plot_data.index,
+                    bb_df["BB_lower"],
+                    bb_df["BB_upper"],
+                    color="gray",
+                    alpha=0.1,
+                    label="Écart-type",
+                )
+                ax.legend()
+
+        plt.show()
