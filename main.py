@@ -6,6 +6,7 @@ from logger_settings import logger
 from config.settings import config
 from src.schedulers.scheduler_ohlcv import OHLCVScheduler
 from src.schedulers.scheduler_ticker import TickerScheduler
+from src.schedulers.scheduler_market_data import MarketDataScheduler
 
 
 def run_collection_once():
@@ -15,12 +16,14 @@ def run_collection_once():
     """
     ohlcv_scheduler = None
     ticker_scheduler = None
-    
+    market_data_scheduler = None
+
     try:
         logger.info("Démarrage de la collecte unique de données")
 
         # Récupérer la configuration centralisée
         include_ticker = config.get("ticker.enabled", False)
+        include_market_data = config.get("market_data.enabled", True)
 
         logger.info(
             f"Configuration OHLCV: {len(config.get('pairs'))} paires, {len(config.get('timeframes'))} timeframes"
@@ -33,6 +36,11 @@ def run_collection_once():
                 f"snapshot toutes les {config.get('ticker.snapshot_interval')} minutes"
             )
 
+        if include_market_data:
+            logger.info(
+                f"Configuration Market Data: Collecte depuis CoinGecko à {config.get('market_data.schedule_time', '10:00')}"
+            )
+
         # 1. Exécuter la collecte OHLCV pour tous les exchanges
         logger.info("📊 Exécution de la collecte OHLCV...")
         ohlcv_scheduler = OHLCVScheduler()
@@ -42,7 +50,7 @@ def run_collection_once():
         if include_ticker:
             logger.info("Démarrage de la collecte de ticker en temps réel...")
             ticker_scheduler = TickerScheduler()
-            
+
             # Exécuter pendant la durée spécifiée
             runtime_minutes = config.get("ticker.runtime", 60)
             if runtime_minutes > 0:
@@ -51,8 +59,14 @@ def run_collection_once():
                 # Exécution illimitée - démarrer et laisser tourner
                 ticker_scheduler.start_collection()
                 logger.info("Collecte de ticker en cours (mode illimité)...")
-        else:
-            logger.info("✅ Collecte OHLCV terminée avec succès")
+
+        # 3. Exécuter la collecte Market Data si activée
+        if include_market_data:
+            logger.info("Exécution de la collecte Market Data (CoinGecko)...")
+            market_data_scheduler = MarketDataScheduler()
+            market_data_scheduler.run_once()
+
+        logger.info("✅ Collecte OHLCV terminée avec succès")
 
     except Exception as e:
         logger.error(f"❌ Erreur fatale dans la collecte unique: {e}")
@@ -61,7 +75,7 @@ def run_collection_once():
         # Arrêter proprement les schedulers si nécessaire
         if ticker_scheduler and config.get("ticker.runtime", 60) > 0:
             ticker_scheduler.stop_collection()
-        
+
         # Exécuter le script de vérification de la base de données
         try:
             logger.info("Exécution du script de vérification de la base de données...")
@@ -81,23 +95,32 @@ def run_scheduled_collection():
     """
     ohlcv_scheduler = None
     ticker_scheduler = None
-    
+    market_data_scheduler = None
+
     try:
         logger.info("Démarrage du collecteur de données avec planification")
 
         # Récupérer la configuration centralisée
         include_ticker = config.get("ticker.enabled", False)
+        include_market_data = config.get("market_data.enabled", True)
 
         logger.info(
             f"Configuration OHLCV: {len(config.get('pairs'))} paires, {len(config.get('timeframes'))} timeframes"
         )
-        logger.info(f"Planification: Collecte quotidienne à {config.get('scheduler.schedule_time', '09:00')}")
+        logger.info(
+            f"Planification: Collecte quotidienne à {config.get('scheduler.schedule_time', '09:00')}"
+        )
         logger.info(f"Exchanges: {', '.join(config.get('exchanges'))}")
 
         if include_ticker:
             logger.info(
                 f"Configuration Ticker: {len(config.get('ticker.pairs') or config.get('pairs'))} paires, "
                 f"snapshot toutes les {config.get('ticker.snapshot_interval')} minutes"
+            )
+
+        if include_market_data:
+            logger.info(
+                f"Configuration Market Data: Collecte quotidienne à {config.get('market_data.schedule_time', '10:00')}"
             )
 
         # 1. Exécution immédiate au démarrage pour chaque exchange
@@ -111,7 +134,14 @@ def run_scheduled_collection():
             ticker_scheduler = TickerScheduler()
             ticker_scheduler.start_collection()
 
-        # 3. Puis planification quotidienne pour tous les exchanges
+        # 3. Démarrer la collecte Market Data si activée
+        if include_market_data:
+            logger.info("Démarrage de la collecte Market Data (CoinGecko)...")
+            market_data_scheduler = MarketDataScheduler()
+            market_data_scheduler.run_once()  # Exécution immédiate
+            market_data_scheduler.start()  # Planification quotidienne
+
+        # 4. Planification quotidienne OHLCV
         logger.info("Démarrage du planificateur quotidien...")
         ohlcv_scheduler.start()
 

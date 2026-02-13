@@ -47,6 +47,10 @@ class Config:
                 "cache_size": 1000,
             },
             "scheduler": {"enabled": False, "schedule_time": "09:00"},
+            "market_data": {
+                "enabled": True,
+                "schedule_time": "10:00",
+            },
             "database": {
                 "url": "sqlite:///data/processed/crypto_data.db",
                 "backup_interval": 24,  # heures
