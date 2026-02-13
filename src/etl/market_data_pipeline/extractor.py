@@ -1,4 +1,5 @@
 from logger_settings import logger
+import time
 
 
 class ExtractionErrorMarketData(Exception):
@@ -118,6 +119,9 @@ class MarketDataExtractor:
                 logger.error(
                     f"❌ Échec après {self.max_retries} tentatives pour {crypto_id}"
                 )
+
+            # Délai entre chaque crypto pour éviter les rate limits
+            time.sleep(2.0)
 
         logger.info(f"✅ Extraction détails: {len(results)}/{len(crypto_ids)} cryptos")
         return results

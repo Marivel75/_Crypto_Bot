@@ -5,6 +5,7 @@ from src.etl.market_data_pipeline.transformer import MarketDataTransformer
 from src.etl.market_data_pipeline.loader import MarketDataLoader
 from src.services.db import get_db_engine
 from logger_settings import logger
+import time
 
 
 class MarketDataCollector:
@@ -12,7 +13,7 @@ class MarketDataCollector:
     Collecte les données global_market depuis CoinGecko et les envoie dans le pipeline ETL.
     """
 
-    def __init__(self, rate_limit_delay: float = 1.5):
+    def __init__(self, rate_limit_delay: float = 2.5):
         self.client = ExchangeFactory.create_exchange(
             "coingecko", rate_limit_delay=rate_limit_delay
         )
