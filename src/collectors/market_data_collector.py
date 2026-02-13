@@ -1,4 +1,4 @@
-from src.services.exchanges_api.coingecko_client import CoinGeckoClient
+from src.services.exchange_factory import ExchangeFactory
 from src.etl.market_data_pipeline.pipeline_market_data import ETLPipelineMarketData
 from src.etl.market_data_pipeline.extractor import MarketDataExtractor
 from src.etl.market_data_pipeline.transformer import MarketDataTransformer
@@ -13,7 +13,7 @@ class MarketDataCollector:
     """
 
     def __init__(self):
-        self.client = CoinGeckoClient()
+        self.client = ExchangeFactory.create_exchange("coingecko", rate_limit_delay=0.3)
         self.pipeline = self._create_pipeline()
 
     def _create_pipeline(self):
