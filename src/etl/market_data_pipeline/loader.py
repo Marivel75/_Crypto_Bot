@@ -6,6 +6,8 @@ from src.models.global_snapshot import GlobalMarketSnapshot
 from src.models.global_market_cap import GlobalMarketCap
 from src.models.global_market_volume import GlobalMarketVolume
 from src.models.global_market_dominance import GlobalMarketDominance
+from src.models.top_crypto_snapshot import TopCryptoSnapshot
+from src.models.top_crypto import TopCrypto
 
 
 class LoadingErrorMarketData(Exception):
@@ -55,6 +57,39 @@ class MarketDataLoader:
         except SQLAlchemyError as e:
             session.rollback()
             logger.error(f"❌ Échec du chargement MarketData: {e}")
+            raise LoadingErrorMarketData(e)
+        finally:
+            session.close()
+
+    def load_top_cryptos(self, snapshot, cryptos):
+        """
+        Charge les données des top cryptomonnaies dans la base.
+
+        Args:
+            snapshot: TopCryptoSnapshot
+            cryptos: list[TopCrypto]
+
+        Returns:
+            int: ID du snapshot créé
+        """
+        session = Session(self.engine)
+        try:
+            session.add(snapshot)
+            session.commit()
+            logger.info(f"Snapshot top cryptos inséré avec id={snapshot.id}")
+
+            for crypto in cryptos:
+                crypto.snapshot_id = snapshot.id
+
+            session.bulk_save_objects(cryptos)
+            session.commit()
+
+            logger.info(f"✅ Chargement top cryptos réussi: {len(cryptos)} cryptos")
+            return snapshot.id
+
+        except SQLAlchemyError as e:
+            session.rollback()
+            logger.error(f"❌ Échec du chargement top cryptos: {e}")
             raise LoadingErrorMarketData(e)
         finally:
             session.close()

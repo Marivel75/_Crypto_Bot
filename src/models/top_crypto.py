@@ -1,4 +1,11 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Index
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from src.models.market_data_base import MarketDataBase
+
+Base = MarketDataBase
 
 
 class TopCrypto(Base):

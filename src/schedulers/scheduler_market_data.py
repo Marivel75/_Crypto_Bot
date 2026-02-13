@@ -8,25 +8,39 @@ from src.collectors.market_data_collector import MarketDataCollector
 
 class MarketDataScheduler:
     """
-    Scheduler pour la collecte quotidienne de données global_market depuis CoinGecko.
+    Scheduler pour la collecte quotidienne de données global_market et top cryptos depuis CoinGecko.
     """
 
     def __init__(self):
         self.schedule_time = config.get("scheduler.market_data_time", "10:00")
+        self.top_cryptos_limit = config.get("market_data.top_cryptos_limit", 50)
+        self.top_cryptos_currency = config.get(
+            "market_data.top_cryptos_currency", "usd"
+        )
         self.running = False
         self.scheduler_thread = None
 
-        logger.info(f"MarketDataScheduler initialisé, collecte prévue à {self.schedule_time}")
+        logger.info(
+            f"MarketDataScheduler initialisé, collecte prévue à {self.schedule_time}"
+        )
 
     def _market_data_collection(self):
         """
-        Exécute la collecte quotidienne de données global_market.
+        Exécute la collecte quotidienne de données global_market et top cryptos.
         """
         try:
-            logger.info("Début de la collecte MarketData")
+            logger.info("Début de la collecte MarketData (global + top cryptos)")
             collector = MarketDataCollector()
+
+            # Collecte global market data
             collector.fetch_and_store()
-            logger.info("✅ Collecte MarketData terminée")
+
+            # Collecte top cryptos
+            collector.fetch_top_cryptos(
+                limit=self.top_cryptos_limit, vs_currency=self.top_cryptos_currency
+            )
+
+            logger.info("✅ Collecte MarketData complète terminée")
         except Exception as e:
             logger.error(f"❌ Échec de la collecte MarketData: {e}")
 

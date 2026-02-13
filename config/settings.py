@@ -50,6 +50,8 @@ class Config:
             "market_data": {
                 "enabled": True,
                 "schedule_time": "10:00",
+                "top_cryptos_limit": 50,
+                "top_cryptos_currency": "usd",
             },
             "database": {
                 "url": "sqlite:///data/processed/crypto_data.db",

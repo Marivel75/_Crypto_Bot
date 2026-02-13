@@ -5,6 +5,8 @@ from src.models.global_snapshot import GlobalMarketSnapshot
 from src.models.global_market_cap import GlobalMarketCap
 from src.models.global_market_volume import GlobalMarketVolume
 from src.models.global_market_dominance import GlobalMarketDominance
+from src.models.top_crypto_snapshot import TopCryptoSnapshot
+from src.models.top_crypto import TopCrypto
 
 
 class TransformationErrorMarketData(Exception):
@@ -73,4 +75,49 @@ class MarketDataTransformer:
 
         except Exception as e:
             logger.error(f"❌ Échec transformation: {e}")
+            raise TransformationErrorMarketData(e)
+
+    def transform_top_cryptos(self, raw_data: list, vs_currency: str = "usd"):
+        """
+        Transforme les données des top cryptomonnaies en objets SQLAlchemy.
+
+        Args:
+            raw_data: Liste des cryptomonnaies depuis CoinGecko
+            vs_currency: Devise de référence
+
+        Returns:
+            tuple: (snapshot, list[TopCrypto])
+        """
+        try:
+            logger.info(f"Transformation des données top {len(raw_data)} cryptos")
+
+            # Snapshot principal
+            snapshot = TopCryptoSnapshot(
+                snapshot_time=datetime.utcnow(),
+                vs_currency=vs_currency,
+            )
+
+            # Liste des cryptos
+            cryptos = []
+            for item in raw_data:
+                crypto = TopCrypto(
+                    snapshot_id=None,
+                    rank=item.get("market_cap_rank"),
+                    crypto_id=item.get("id"),
+                    symbol=item.get("symbol", "").upper(),
+                    name=item.get("name"),
+                    market_cap=item.get("market_cap"),
+                    price=item.get("current_price"),
+                    volume_24h=item.get("total_volume"),
+                    price_change_pct_24h=item.get("price_change_percentage_24h"),
+                )
+                cryptos.append(crypto)
+
+            logger.info(
+                f"✅ Transformation top cryptos réussie: snapshot + {len(cryptos)} cryptos"
+            )
+            return snapshot, cryptos
+
+        except Exception as e:
+            logger.error(f"❌ Échec transformation top cryptos: {e}")
             raise TransformationErrorMarketData(e)
