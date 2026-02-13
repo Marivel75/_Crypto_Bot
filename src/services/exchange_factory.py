@@ -14,7 +14,7 @@ from typing import Union
 class ExchangeFactory:
     """
     Factory pour créer et gérer des clients d'exchange.
-    Classe unifiée pour accéder à différents exchanges via leurs clients respectifs.
+    Classe pour accéder à différents exchanges via leurs clients respectifs.
     """
 
     @staticmethod
