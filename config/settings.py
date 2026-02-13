@@ -47,6 +47,13 @@ class Config:
                 "cache_size": 1000,
             },
             "scheduler": {"enabled": False, "schedule_time": "09:00"},
+            "market_data": {
+                "enabled": True,
+                "schedule_time": "10:00",
+                "top_cryptos_limit": 50,
+                "top_cryptos_currency": "usd",
+                "crypto_details_ids": ["bitcoin", "ethereum", "solana"],
+            },
             "database": {
                 "url": "sqlite:///data/processed/crypto_data.db",
                 "backup_interval": 24,  # heures

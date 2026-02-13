@@ -7,6 +7,7 @@ Ce module fournit une interface unifiée pour créer et utiliser différents cli
 from src.services.exchanges_api.binance_client import BinanceClient
 from src.services.exchanges_api.kraken_client import KrakenClient
 from src.services.exchanges_api.coinbase_client import CoinbaseClient
+from src.services.exchanges_api.coingecko_client import CoinGeckoClient
 from logger_settings import logger
 from typing import Union
 
@@ -20,7 +21,7 @@ class ExchangeFactory:
     @staticmethod
     def create_exchange(
         exchange_name: str, **kwargs
-    ) -> Union[BinanceClient, KrakenClient]:
+    ) -> Union[BinanceClient, KrakenClient, CoinbaseClient, CoinGeckoClient]:
         """
         Crée une instance de client pour l'exchange spécifié.
         """
@@ -40,6 +41,11 @@ class ExchangeFactory:
             # Pour les données publiques, pas d'authentification
             return CoinbaseClient(use_auth=False)
 
+        elif exchange_name == "coingecko":
+            logger.info("Création du client CoinGecko")
+            rate_limit_delay = kwargs.get("rate_limit_delay", 0.3)
+            return CoinGeckoClient(rate_limit_delay=rate_limit_delay)
+
         else:
             error_msg = f"Exchange non supporté: {exchange_name}"
             logger.error(error_msg)
@@ -53,19 +59,21 @@ class ExchangeFactory:
         Returns:
             list: Liste des noms d'exchanges supportés
         """
-        return ["binance", "kraken", "coinbase"]
+        return ["binance", "kraken", "coinbase", "coingecko"]
 
 
 def get_exchange_client(
     exchange_name: str,
-) -> Union[BinanceClient, KrakenClient, CoinbaseClient]:
+    **kwargs,
+) -> Union[BinanceClient, KrakenClient, CoinbaseClient, CoinGeckoClient]:
     """
     Fonction utilitaire pour obtenir un client d'exchange sans instancier la classe.
 
     Args:
         exchange_name: Nom de l'exchange
+        **kwargs: Arguments additionnels (ex: rate_limit_delay pour CoinGecko)
 
     Returns:
         Instance du client d'exchange
     """
-    return ExchangeFactory.create_exchange(exchange_name)
+    return ExchangeFactory.create_exchange(exchange_name, **kwargs)
