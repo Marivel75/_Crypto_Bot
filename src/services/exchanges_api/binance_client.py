@@ -53,9 +53,7 @@ class BinanceClient:
         if not isinstance(BINANCE_API_KEY, str) or not isinstance(
             BINANCE_API_SECRET, str
         ):
-            error_msg = (
-                "La clé API Binance et le secret doivent être des chaînes de caractères (str)"
-            )
+            error_msg = "La clé API Binance et le secret doivent être des chaînes de caractères (str)"
             logger.error(error_msg)
             raise ValueError(error_msg)
 
@@ -123,3 +121,93 @@ class BinanceClient:
                 f"Échec de la récupération des OHLCV pour {symbol} avec timeframe {timeframe}: {e}"
             )
             raise
+
+    def fetch_top_cryptos_by_volume(
+        self, limit: int = 50, quote: str = "USDT", show_errors: bool = False
+    ) -> list[dict]:
+        """
+        Récupère les cryptomonnaies les plus échangées (par volume) sur Binance.
+        """
+        try:
+            logger.info(
+                f"Récupération des tickers sur Binance pour le Top {limit} par volume en {quote}..."
+            )
+
+            tickers = self.exchange.fetch_tickers()
+
+            # Stocker les erreurs dans l'instance
+            self.error_logs = {
+                "missing_price": [],
+                "missing_volume": [],
+                "conversion_errors": [],
+            }
+
+            filtered_tickers = []
+
+            for symbol, ticker in tickers.items():
+                if symbol.endswith(f"/{quote}"):
+
+                    last_price = ticker.get("last")
+                    if last_price is None:
+                        self.error_logs["missing_price"].append(symbol)
+                        continue
+
+                    volume = ticker.get("quoteVolume")
+                    if volume is None:
+                        self.error_logs["missing_volume"].append(symbol)
+                        continue
+
+                    try:
+                        filtered_tickers.append(
+                            {
+                                "symbol": symbol,
+                                "base": symbol.split("/")[0],
+                                "quote": quote,
+                                "volume": float(volume),
+                                "last_price": float(last_price),
+                                "info": ticker,
+                            }
+                        )
+                    except (ValueError, TypeError):
+                        self.error_logs["conversion_errors"].append(symbol)
+                        continue
+
+            total_errors = sum(len(v) for v in self.error_logs.values())
+            if total_errors > 0:
+                logger.warning(
+                    f"{total_errors} tickers avec données invalides. "
+                    f"Utilisez client.show_ticker_errors() pour les détails."
+                )
+
+            if not filtered_tickers:
+                logger.warning(f"Aucune paire valide trouvée en {quote}.")
+                return []
+
+            sorted_tickers = sorted(
+                filtered_tickers, key=lambda x: x["volume"], reverse=True
+            )
+
+            result = sorted_tickers[:limit]
+
+            logger.info(f"Top {len(result)} cryptos récupéré avec succès.")
+
+            if show_errors:
+                self.show_ticker_errors()
+
+            return result
+
+        except Exception as e:
+            logger.error(f"Erreur dans fetch_top_cryptos_by_volume: {e}", exc_info=True)
+            raise
+
+    def show_ticker_errors(self):
+        """Affiche les erreurs détaillées des tickers."""
+        if hasattr(self, "error_logs") and self.error_logs:
+            for error_type, symbols in self.error_logs.items():
+                if symbols:
+                    logger.warning(
+                        f"{error_type.replace('_', ' ').title()}: "
+                        f"{', '.join(symbols)}"
+                    )
+        else:
+            logger.warning("Aucune erreur enregistrée.")

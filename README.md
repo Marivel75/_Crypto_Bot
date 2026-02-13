@@ -11,6 +11,7 @@ Le système collecte par défaut les données pour 5 paires majeures (BTC/USDT, 
 Le projet utilise une architecture modulaire avec séparation claire des responsabilités :
 
 ### Architecture Principale
+
 - **Point d'entrée** : `main.py` - Interface CLI unifiée avec gestion des arguments
 - **Planificateurs** : `src/schedulers/` - Gestion OHLCV (historique) et Ticker (temps réel)
 - **Collecteurs** : `src/collectors/` - Collecte des données depuis les exchanges
@@ -21,6 +22,7 @@ Le projet utilise une architecture modulaire avec séparation claire des respons
 - **Qualité** : `src/quality/` - Validation et intégrité des données
 
 ### Patterns de Conception
+
 - **Factory Pattern** : `ExchangeFactory` pour la création des clients d'exchanges
 - **Pipeline Pattern** : ETL orchestré pour le traitement des données
 - **Scheduler Pattern** : Planification automatique de la collecte
@@ -30,16 +32,19 @@ Le projet utilise une architecture modulaire avec séparation claire des respons
 ### Flux de Données
 
 **Pipeline OHLCV :**
+
 ```
 Exchange API → OHLCVCollector → OHLCVExtractor → OHLCVTransformer → OHLCVLoader → Base de données
 ```
 
 **Pipeline Ticker :**
+
 ```
 Exchange API → TickerCollector → Cache mémoire → Snapshots périodiques → Base de données
 ```
 
 **Processus ETL :**
+
 1. **Extract** : Récupération des données brutes depuis les APIs
 2. **Transform** : Validation, normalisation et enrichissement des données
 3. **Load** : Stockage avec gestion des transactions et déduplication
@@ -74,6 +79,7 @@ python scripts/test_main.py
 ```
 
 **Le script `test_main.py` teste :**
+
 - Collecte OHLCV depuis plusieurs exchanges
 - Collecte de ticker en temps réel
 - Fonctionnement multi-exchanges
@@ -81,14 +87,14 @@ python scripts/test_main.py
 
 **Options disponibles :**
 
-| Argument              | Description                                      | Valeur par défaut               |
-| --------------------- | ------------------------------------------------ | ------------------------------- |
-| `--ticker`            | Active la collecte de ticker en temps réel       | Désactivé                       |
-| `--pairs`             | Liste des paires de trading                      | ["BTC/USDT", "ETH/USDT", "BNB/USDT", "SOL/USDT", "ADA/USDT"]             |
-| `--ticker-pairs`      | Liste des paires pour le ticker                  | Même que les paires principales |
-| `--snapshot-interval` | Intervalle de sauvegarde des snapshots (minutes) | 5                               |
-| `--runtime`           | Durée d'exécution (minutes, 0=illimité)          | 60                              |
-| `--exchanges`         | Liste des exchanges à utiliser                   | ["binance", "kraken", coinbase"]|
+| Argument              | Description                                      | Valeur par défaut                                            |
+| --------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| `--ticker`            | Active la collecte de ticker en temps réel       | Désactivé                                                    |
+| `--pairs`             | Liste des paires de trading                      | ["BTC/USDT", "ETH/USDT", "BNB/USDT", "SOL/USDT", "ADA/USDT"] |
+| `--ticker-pairs`      | Liste des paires pour le ticker                  | Même que les paires principales                              |
+| `--snapshot-interval` | Intervalle de sauvegarde des snapshots (minutes) | 5                                                            |
+| `--runtime`           | Durée d'exécution (minutes, 0=illimité)          | 60                                                           |
+| `--exchanges`         | Liste des exchanges à utiliser                   | ["binance", "kraken", coinbase"]                             |
 
 **Exemples :**
 
@@ -152,6 +158,7 @@ python scripts/generate_config.py --format yaml --output config/config.yaml
 ### Variables d'Environnement
 
 Les variables suivantes sont supportées :
+
 - `CRYPTO_BOT_PAIRS` : Liste des paires
 - `CRYPTO_BOT_EXCHANGES` : Liste des exchanges
 - `CRYPTO_BOT_TICKER_ENABLED` : Activer/désactiver le ticker
@@ -188,6 +195,7 @@ CREATE TABLE ohlcv (
 ```
 
 **Index optimisés :**
+
 - `idx_ohlcv_symbol_timeframe` : Requêtes par paire/timeframe
 - `idx_ohlcv_timestamp` : Requêtes temporelles
 - `idx_ohlcv_symbol_timestamp` : Requêtes combinées
@@ -213,6 +221,7 @@ CREATE TABLE ticker_snapshots (
 ```
 
 **Index optimisés :**
+
 - `idx_ticker_snapshot_time` : Requêtes temporelles
 - `idx_ticker_symbol_time` : Requêtes par symbole et temps
 
@@ -267,19 +276,23 @@ Ce commande va :
 Le système inclut une validation complète des données via `DataValidator0HCLV` :
 
 **Validation des prix :**
+
 - Détection des valeurs NaN et négatives
 - Vérification de la cohérence (high ≥ low)
 - Alertes pour les valeurs anormales
 
 **Validation des volumes :**
+
 - Détection des volumes négatifs
 - Alertes pour les volumes excessifs
 
 **Validation temporelle :**
+
 - Détection des trous temporels
 - Vérification de la continuité
 
 **Validation structurelle :**
+
 - Vérification des colonnes requises
 - Validation des types de données
 
@@ -301,12 +314,14 @@ Le système inclut une validation complète des données via `DataValidator0HCLV
 ### Monitoring et Logging
 
 **Système de logging complet :**
+
 - Niveaux configurables (DEBUG, INFO, WARNING, ERROR)
 - Sorties multiples (console, fichier)
 - Rotation automatique des logs
 - Contexte structuré pour le débuggage
 
 **Métriques et monitoring :**
+
 - Métriques de performance du pipeline ETL
 - Compteurs de succès/échec par exchange
 - Temps de traitement par symbole/timeframe
@@ -319,19 +334,23 @@ Le système inclut une validation complète des données via `DataValidator0HCLV
 **89 tests unitaires et d'intégration couvrant :**
 
 **Tests ETL (42 tests) :**
+
 - `test_etl_extractor.py` (9 tests) : Extraction des données
 - `test_etl_transformer.py` (12 tests) : Transformation et validation
 - `test_etl_loader.py` (18 tests) : Chargement en base de données
 - `test_etl_pipeline.py` (13 tests) : Orchestration complète
 
 **Tests de Qualité (22 tests) :**
+
 - `test_data_validator.py` : Validation des données OHLCV
 
 **Tests de Services (15 tests) :**
+
 - `test_ohlcv_collector.py` : Collecte des données historiques
 - `test_ticker_service.py` : Services de ticker temps réel
 
 **Tests d'intégration :**
+
 - Tests multi-exchanges
 - Validation de bout en bout
 - Tests de performance
@@ -417,11 +436,13 @@ python scripts/test_live_sqlite.py
 ### Environnement de Développement
 
 **Prérequis :**
+
 - Python 3.8+
 - pip (gestionnaire de paquets)
 - Git
 
 **Installation :**
+
 ```bash
 # Cloner le dépôt
 git clone <repository-url>
@@ -442,6 +463,7 @@ python scripts/reset_db.py
 ### Scripts de Maintenance
 
 **Gestion de la base de données :**
+
 ```bash
 # Vérification de la base
 python scripts/check_db_modern.py
@@ -460,6 +482,7 @@ python scripts/restore_db.py
 ```
 
 **Planification des sauvegardes :**
+
 ```bash
 # Démarrer le service de sauvegarde automatique
 python scripts/schedule_backups.py
@@ -473,6 +496,7 @@ nohup python scripts/schedule_backups.py > /dev/null 2>&1 &
 Le script `restore_db.py` permet de restaurer la base de données à partir des sauvegardes.
 
 **Types de sauvegardes disponibles :**
+
 - **SQL** (`full_backup_*.sql`) : Dump complet de la base SQLite
 - **CSV** (`csv_*/`) : Sauvegarde des tables en fichiers CSV (ohlcv.csv, ticker.csv)
 - **JSON** (`essential_backup_*.json`) : Métadonnées et statistiques (pas de données brutes)
@@ -491,12 +515,14 @@ python scripts/restore_db.py
 ```
 
 **Mode interactif :**
+
 1. Affiche la liste des sauvegardes disponibles
 2. Permet de choisir laquelle restaurer
 3. Supprime les données existantes et insère les données de la sauvegarde
 4. Vérifie l'intégrité après restauration
 
 **Exemple de sortie :**
+
 ```
 ==================================================
 MENU DE RESTAURATION
@@ -517,9 +543,61 @@ MENU DE RESTAURATION
 
 **Note :** La restauration CSV est recommandée car elle restaure à la fois les tables `ohlcv` et `ticker_snapshots`. La sauvegarde JSON ne contient que les métadonnées.
 
+### Collecte de Données Market Data (CoinGecko)
+
+Le système intègre la collecte de données globales du marché crypto via l'API CoinGecko.
+
+**Données collectées :**
+
+- **Global Market** : Capitalisation totale, volume, dominance par crypto
+- **Top Cryptos** : Top N cryptomonnaies par market cap (prix, volume, market cap)
+- **Crypto Details** : Métadonnées détaillées (categories, genesis date, hashing algorithm, liens, community, developer data)
+
+**Configuration (dans `config/settings.py`) :**
+
+```python
+"market_data": {
+    "enabled": True,                    # Activé par défaut
+    "schedule_time": "10:00",           # Heure de collecte quotidienne
+    "top_cryptos_limit": 50,           # Nombre de cryptos dans le top
+    "top_cryptos_currency": "usd",     # Devise de référence
+    "crypto_details_ids": [             # IDs CoinGecko pour les détails
+        "bitcoin", "ethereum", "solana", "cardano", "binancecoin",
+        "ripple", "polkadot", "dogecoin"
+    ],
+}
+```
+
+**Tables de données :**
+
+| Table | Description |
+|-------|-------------|
+| `global_market_snapshot` | Snapshot principal avec métadonnées globales |
+| `global_market_cap` | Capitalisation par devise (63 devises) |
+| `global_market_volume` | Volume par devise (63 devises) |
+| `global_market_dominance` | Dominance par cryptomonnaie (10+ actifs) |
+| `top_crypto_snapshot` | Snapshot du top cryptos |
+| `top_crypto` | Top cryptomonnaies par market cap |
+| `crypto_detail_snapshot` | Snapshot des détails |
+| `crypto_detail` | Détails (métadonnées, liens, community, developer, market data) |
+
+**Utilisation :**
+
+```bash
+# La collecte Market Data s'exécute automatiquement avec main.py
+python main.py
+
+# Mode planifié (collecte quotidienne)
+python main.py --schedule
+
+# Exécution manuelle
+python -c "from src.schedulers.scheduler_market_data import MarketDataScheduler; MarketDataScheduler().run_once()"
+```
+
 ### Monitoring
 
 **Inspection de la base de données :**
+
 ```python
 from src.analytics.db_inspector import DBInspector
 
@@ -552,6 +630,7 @@ size_formatted = inspector.format_bytes(1048576)  # Returns "1.00 MB"
 ```
 
 **Analytics et indicateurs :**
+
 ```python
 from src.analytics.indicators import calculate_sma
 from src.analytics.plot_manager import PlotManager
@@ -567,6 +646,7 @@ plotter.plot_with_sma(data, sma, window=20)
 ### Gestion des Logs
 
 **Consultation des logs :**
+
 ```bash
 # Logs de l'application
 tail -f crypto_bot.log
@@ -574,7 +654,7 @@ tail -f crypto_bot.log
 # Logs de sauvegarde
 tail -f logs/backup.log
 
-# Logs de restauration  
+# Logs de restauration
 tail -f logs/restore.log
 
 # Logs de planification
@@ -584,6 +664,7 @@ tail -f logs/schedule_backups.log
 ### Performance et Scalabilité
 
 **Optimisations intégrées :**
+
 - Connexions poolées à la base de données
 - Insertion par batches pour gros volumes
 - Cache mémoire pour données temps réel
@@ -591,6 +672,7 @@ tail -f logs/schedule_backups.log
 - Gestion des rate limits des APIs
 
 **Métriques disponibles :**
+
 - Temps de traitement par symbole
 - Taux de succès par exchange
 - Volume de données traitées
@@ -635,11 +717,13 @@ Ce projet est sous license MIT. Voir le fichier LICENSE pour plus de détails.
 Le système est maintenant configuré par défaut pour une couverture maximale du marché :
 
 ### Exchanges Supportés (par défaut)
+
 - **Binance** : Liquidité maximale, paires majeures
 - **Kraken** : Fiabilité européenne, données historiques riches
 - **Coinbase** : Conformité réglementaire, APIs stables
 
 ### Paires Majeures (par défaut)
+
 - **BTC/USDT** : Bitcoin - Référence du marché
 - **ETH/USDT** : Ethereum - Plateforme smart contracts
 - **BNB/USDT** : Binance Coin - Écosystème Binance
@@ -648,17 +732,20 @@ Le système est maintenant configuré par défaut pour une couverture maximale d
 
 ### Avantages de cette Configuration
 
-**Diversification des sources** : 
+**Diversification des sources** :
+
 - Réduction du risque de dépendance à un seul exchange
 - Comparaison des prix et volumes entre plateformes
 - Détection d'anomalies ou d'arbitrages potentiels
 
 **Couverture du marché** :
+
 - 5 paires représentant ~80% de la capitalisation crypto
 - Différentes catégories (store of value, smart contracts, DeFi)
 - Données pertinentes pour l'analyse technique
 
 **Redondance et fiabilité** :
+
 - Si un exchange est indisponible, les autres continuent
 - Validation croisée des données entre exchanges
 - Historique plus robuste et complet
