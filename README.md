@@ -468,6 +468,55 @@ python scripts/schedule_backups.py
 nohup python scripts/schedule_backups.py > /dev/null 2>&1 &
 ```
 
+### Restauration de la Base de Données
+
+Le script `restore_db.py` permet de restaurer la base de données à partir des sauvegardes.
+
+**Types de sauvegardes disponibles :**
+- **SQL** (`full_backup_*.sql`) : Dump complet de la base SQLite
+- **CSV** (`csv_*/`) : Sauvegarde des tables en fichiers CSV (ohlcv.csv, ticker.csv)
+- **JSON** (`essential_backup_*.json`) : Métadonnées et statistiques (pas de données brutes)
+
+**Commandes disponibles :**
+
+```bash
+# Lister les sauvegardes disponibles
+python scripts/restore_db.py --list
+
+# Vérifier l'état actuel de la base de données
+python scripts/restore_db.py --verify
+
+# Mode interactif (choix de la sauvegarde à restaurer)
+python scripts/restore_db.py
+```
+
+**Mode interactif :**
+1. Affiche la liste des sauvegardes disponibles
+2. Permet de choisir laquelle restaurer
+3. Supprime les données existantes et insère les données de la sauvegarde
+4. Vérifie l'intégrité après restauration
+
+**Exemple de sortie :**
+```
+==================================================
+MENU DE RESTAURATION
+==================================================
+
+📦 Sauvegardes SQL:
+  0) full_backup_20260213_075111.sql
+
+📊 Sauvegardes CSV:
+  1) csv_20260213_075111
+
+📋 Sauvegardes essentielles (métadonnées):
+  2) essential_backup_20260213_075111.json
+
+  q) Quitter
+==================================================
+```
+
+**Note :** La restauration CSV est recommandée car elle restaure à la fois les tables `ohlcv` et `ticker_snapshots`. La sauvegarde JSON ne contient que les métadonnées.
+
 ### Monitoring
 
 **Inspection de la base de données :**
