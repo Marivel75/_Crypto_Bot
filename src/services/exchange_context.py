@@ -57,7 +57,7 @@ class ExchangeClient:
 @contextmanager
 def exchange_client(exchange_name: str) -> Generator[Any, None, None]:
     """
-    Context manager pour les clients d'exchange (version fonctionnelle).
+    Context manager pour les clients d'exchange.
     Arguments:
         exchange_name: Nom de l'exchange (binance, kraken, coinbase)
     Yields:

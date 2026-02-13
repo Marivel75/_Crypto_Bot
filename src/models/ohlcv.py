@@ -81,23 +81,3 @@ class OHLCV(Base):
             f"<OHLCV(id={self.id}, symbol={self.symbol}, "
             f"timeframe={self.timeframe}, timestamp={self.timestamp})>"
         )
-
-    @classmethod
-    def prepare_for_mplfinance(cls, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Prépare un DataFrame pour mplfinance en renommant les colonnes.
-        Args:
-            df: DataFrame avec les données
-        Returns:
-            DataFrame avec les colonnes renommées pour mplfinance.
-        """
-        return df.rename(
-            columns={
-                "open": "Open",
-                "high": "High",
-                "low": "Low",
-                "close": "Close",
-                "volume": "Volume",
-            },
-            errors="ignore",
-        )

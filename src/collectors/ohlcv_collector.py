@@ -56,7 +56,8 @@ class OHLCVCollector:
 
         # Créer un mock d'engine pour les tests
         from unittest.mock import MagicMock
-        self.engine = MagicMock()  # Pour la compatibilité avec les tests
+
+        self.engine = MagicMock()
 
         # Initialisation du valideur de données OHLCV
         self.data_validator = DataValidator0HCLV()
@@ -70,7 +71,7 @@ class OHLCVCollector:
         """
         extractor = OHLCVExtractor(self.client)
         transformer = OHLCVTransformer(self.data_validator, self.exchange)
-        loader = OHLCVLoader(None)  # L'engine sera passé via context manager
+        loader = OHLCVLoader(None)  # L'engine est passé via context manager
 
         return ETLPipelineOHLCV(extractor, transformer, loader)
 
@@ -89,7 +90,7 @@ class OHLCVCollector:
                 with database_transaction() as db_conn:
                     # Mettre à jour le client dans le pipeline
                     self.pipeline.extractor.client = client
-                    
+
                     # Exécuter le pipeline ETL
                     batch_results = self.pipeline.run_batch(self.pairs, timeframe)
 
