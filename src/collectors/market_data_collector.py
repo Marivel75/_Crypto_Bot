@@ -12,8 +12,10 @@ class MarketDataCollector:
     Collecte les données global_market depuis CoinGecko et les envoie dans le pipeline ETL.
     """
 
-    def __init__(self):
-        self.client = ExchangeFactory.create_exchange("coingecko", rate_limit_delay=0.3)
+    def __init__(self, rate_limit_delay: float = 1.5):
+        self.client = ExchangeFactory.create_exchange(
+            "coingecko", rate_limit_delay=rate_limit_delay
+        )
         self.pipeline = self._create_pipeline()
 
     def _create_pipeline(self):
@@ -65,4 +67,34 @@ class MarketDataCollector:
             return snapshot_id
         except Exception as e:
             logger.error(f"❌ Échec collecte top cryptos: {e}")
+            raise
+
+    def fetch_crypto_details(self, crypto_ids: list):
+        """
+        Exécute la collecte des détails de cryptomonnaies spécifiques.
+
+        Args:
+            crypto_ids: Liste des IDs CoinGecko (ex: ['bitcoin', 'ethereum', 'solana'])
+        """
+        try:
+            logger.info(f"Collecte détails pour {len(crypto_ids)} cryptomonnaies")
+
+            engine = get_db_engine()
+            extractor = MarketDataExtractor(self.client)
+            transformer = MarketDataTransformer()
+            loader = MarketDataLoader(engine)
+
+            raw_data = extractor.extract_crypto_details(crypto_ids)
+            if raw_data:
+                snapshot, details = transformer.transform_crypto_details(raw_data)
+                snapshot_id = loader.load_crypto_details(snapshot, details)
+                logger.info(
+                    f"✅ Détails de {len(details)} cryptos collectés (snapshot_id={snapshot_id})"
+                )
+                return snapshot_id
+            else:
+                logger.warning("⚠️ Aucun détail collecté")
+                return None
+        except Exception as e:
+            logger.error(f"❌ Échec collecte crypto details: {e}")
             raise

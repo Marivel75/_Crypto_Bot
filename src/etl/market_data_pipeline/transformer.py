@@ -7,6 +7,9 @@ from src.models.global_market_volume import GlobalMarketVolume
 from src.models.global_market_dominance import GlobalMarketDominance
 from src.models.top_crypto_snapshot import TopCryptoSnapshot
 from src.models.top_crypto import TopCrypto
+from src.models.crypto_detail_snapshot import CryptoDetailSnapshot
+from src.models.crypto_detail import CryptoDetail
+import json
 
 
 class TransformationErrorMarketData(Exception):
@@ -120,4 +123,90 @@ class MarketDataTransformer:
 
         except Exception as e:
             logger.error(f"❌ Échec transformation top cryptos: {e}")
+            raise TransformationErrorMarketData(e)
+
+    def transform_crypto_details(self, raw_data: list):
+        """
+        Transforme les détails des cryptomonnaies en objets SQLAlchemy.
+
+        Args:
+            raw_data: Liste des détails depuis CoinGecko
+
+        Returns:
+            tuple: (snapshot, list[CryptoDetail])
+        """
+        try:
+            logger.info(f"Transformation des détails de {len(raw_data)} cryptos")
+
+            snapshot = CryptoDetailSnapshot(
+                snapshot_time=datetime.utcnow(),
+                cryptos_count=len(raw_data),
+            )
+
+            details = []
+            for item in raw_data:
+                links = item.get("links", {})
+                community = item.get("community_data", {})
+                developer = item.get("developer_data", {})
+                market = item.get("market_data", {})
+                image = item.get("image", {})
+
+                detail = CryptoDetail(
+                    snapshot_id=None,
+                    crypto_id=item.get("id"),
+                    symbol=item.get("symbol", "").upper(),
+                    name=item.get("name"),
+                    rank=item.get("market_cap_rank"),
+                    categories=json.dumps(item.get("categories", []))
+                    if item.get("categories")
+                    else None,
+                    genesis_date=item.get("genesis_date"),
+                    hashing_algorithm=item.get("hashing_algorithm"),
+                    block_time_minutes=item.get("block_time_in_minutes"),
+                    image_large=image.get("large"),
+                    image_small=image.get("small"),
+                    links_homepage=json.dumps(links.get("homepage", []))
+                    if links.get("homepage")
+                    else None,
+                    links_blockchain_site=json.dumps(links.get("blockchain_site", []))
+                    if links.get("blockchain_site")
+                    else None,
+                    links_whitepaper=links.get("whitepaper"),
+                    links_reddit=links.get("subreddit_url"),
+                    links_twitter=links.get("twitter_screen_name"),
+                    community_twitter=community.get("twitter_followers"),
+                    community_reddit=community.get("reddit_subscribers"),
+                    community_facebook=community.get("facebook_likes"),
+                    developer_stars=developer.get("stars"),
+                    developer_forks=developer.get("forks"),
+                    developer_subscribers=developer.get("subscribers"),
+                    developer_issues=developer.get("total_issues"),
+                    developer_pull_requests=developer.get("total_pull_requests"),
+                    market_cap_rank=market.get("market_cap_rank"),
+                    market_cap=market.get("market_cap", {}).get("usd"),
+                    total_volume=market.get("total_volume", {}).get("usd"),
+                    high_24h=market.get("high_24h", {}).get("usd"),
+                    low_24h=market.get("low_24h", {}).get("usd"),
+                    price_change_24h=market.get("price_change_24h"),
+                    price_change_pct_24h=market.get("price_change_percentage_24h"),
+                    ath_price=market.get("ath", {}).get("usd"),
+                    ath_date=market.get("ath_date", {}).get("usd"),
+                    ath_change_pct=market.get("ath_change_percentage", {}).get("usd"),
+                    atl_price=market.get("atl", {}).get("usd"),
+                    atl_date=market.get("atl_date", {}).get("usd"),
+                    atl_change_pct=market.get("atl_change_percentage", {}).get("usd"),
+                    circulating_supply=market.get("circulating_supply"),
+                    total_supply=market.get("total_supply"),
+                    max_supply=market.get("max_supply"),
+                    last_updated=datetime.utcnow(),
+                )
+                details.append(detail)
+
+            logger.info(
+                f"✅ Transformation crypto details réussie: snapshot + {len(details)} détails"
+            )
+            return snapshot, details
+
+        except Exception as e:
+            logger.error(f"❌ Échec transformation crypto details: {e}")
             raise TransformationErrorMarketData(e)

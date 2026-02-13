@@ -17,6 +17,10 @@ class MarketDataScheduler:
         self.top_cryptos_currency = config.get(
             "market_data.top_cryptos_currency", "usd"
         )
+        self.crypto_details_ids = config.get(
+            "market_data.crypto_details_ids",
+            ["bitcoin", "ethereum", "solana", "cardano", "binancecoin"],
+        )
         self.running = False
         self.scheduler_thread = None
 
@@ -29,7 +33,9 @@ class MarketDataScheduler:
         Exécute la collecte quotidienne de données global_market et top cryptos.
         """
         try:
-            logger.info("Début de la collecte MarketData (global + top cryptos)")
+            logger.info(
+                "Début de la collecte MarketData (global + top cryptos + details)"
+            )
             collector = MarketDataCollector()
 
             # Collecte global market data
@@ -39,6 +45,10 @@ class MarketDataScheduler:
             collector.fetch_top_cryptos(
                 limit=self.top_cryptos_limit, vs_currency=self.top_cryptos_currency
             )
+
+            # Collecte crypto details
+            if self.crypto_details_ids:
+                collector.fetch_crypto_details(self.crypto_details_ids)
 
             logger.info("✅ Collecte MarketData complète terminée")
         except Exception as e:

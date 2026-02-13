@@ -52,6 +52,16 @@ class Config:
                 "schedule_time": "10:00",
                 "top_cryptos_limit": 50,
                 "top_cryptos_currency": "usd",
+                "crypto_details_ids": [
+                    "bitcoin",
+                    "ethereum",
+                    "solana",
+                    "cardano",
+                    "binancecoin",
+                    "ripple",
+                    "polkadot",
+                    "dogecoin",
+                ],
             },
             "database": {
                 "url": "sqlite:///data/processed/crypto_data.db",
