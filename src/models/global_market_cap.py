@@ -2,8 +2,13 @@
 
 from sqlalchemy import Column, Integer, Float, String, ForeignKey, Index
 from sqlalchemy.ext.declarative import declarative_base
+import sys
+from pathlib import Path
 
-Base = declarative_base()
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from src.models.market_data_base import MarketDataBase
+
+Base = MarketDataBase
 
 
 class GlobalMarketCap(Base):
@@ -20,4 +25,6 @@ class GlobalMarketCap(Base):
     currency = Column(String(10), nullable=False, index=True)
     value = Column(Float, nullable=False)
 
-    __table_args__ = (Index("idx_marketcap_snapshot_currency", "snapshot_id", "currency"),)
+    __table_args__ = (
+        Index("idx_marketcap_snapshot_currency", "snapshot_id", "currency"),
+    )

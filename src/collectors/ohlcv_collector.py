@@ -4,10 +4,10 @@ from src.services.exchange_factory import ExchangeFactory
 from src.services.db_context import database_transaction
 from src.services.exchange_context import ExchangeClient
 from src.quality.validator import DataValidator0HCLV
-from src.etl.extractor import OHLCVExtractor
-from src.etl.transformer import OHLCVTransformer
-from src.etl.loader import OHLCVLoader
-from src.etl.pipeline_ohlcv import ETLPipelineOHLCV
+from src.etl.ohlcv_pipeline.extractor import OHLCVExtractor
+from src.etl.ohlcv_pipeline.transformer import OHLCVTransformer
+from src.etl.ohlcv_pipeline.loader import OHLCVLoader
+from src.etl.ohlcv_pipeline.pipeline_ohlcv import ETLPipelineOHLCV
 from typing import List
 
 

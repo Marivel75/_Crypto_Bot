@@ -203,19 +203,3 @@ class OHLCVTransformer:
                 results[symbol] = None
 
         return results
-
-    # Méthodes pour les indicateurs techniques (à implémenter)
-    def _calculate_sma(self, df: pd.DataFrame, window: int = 50) -> pd.DataFrame:
-        """Calcule la moyenne mobile simple (à implémenter)."""
-        # df[f"sma_{window}"] = df["close"].rolling(window).mean()
-        return df
-
-    def _calculate_rsi(self, df: pd.DataFrame, window: int = 14) -> pd.DataFrame:
-        """Calcule le RSI (à implémenter)."""
-        # Implémentation standard du RSI
-        return df
-
-    def _calculate_macd(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Calcule le MACD (à implémenter)."""
-        # Implémentation standard du MACD
-        return df
