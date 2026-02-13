@@ -549,26 +549,37 @@ Le système intègre la collecte de données globales du marché crypto via l'AP
 
 **Données collectées :**
 
-- Capitalisation totale du marché (par devise: USD, EUR, BTC, etc.)
-- Volume total d'échange (par devise)
-- Dominance des principales cryptomonnaies (BTC, ETH, etc.)
-- Nombre de cryptomonnaies, de marchés, d'ICOs
+- **Global Market** : Capitalisation totale, volume, dominance par crypto
+- **Top Cryptos** : Top N cryptomonnaies par market cap (prix, volume, market cap)
+- **Crypto Details** : Métadonnées détaillées (categories, genesis date, hashing algorithm, liens, community, developer data)
 
 **Configuration (dans `config/settings.py`) :**
 
 ```python
 "market_data": {
-    "enabled": True,           # Activé par défaut
-    "schedule_time": "10:00",  # Heure de collecte quotidienne
+    "enabled": True,                    # Activé par défaut
+    "schedule_time": "10:00",           # Heure de collecte quotidienne
+    "top_cryptos_limit": 50,           # Nombre de cryptos dans le top
+    "top_cryptos_currency": "usd",     # Devise de référence
+    "crypto_details_ids": [             # IDs CoinGecko pour les détails
+        "bitcoin", "ethereum", "solana", "cardano", "binancecoin",
+        "ripple", "polkadot", "dogecoin"
+    ],
 }
 ```
 
 **Tables de données :**
 
-- `global_market_snapshot` : Snapshot principal avec métadonnées globales
-- `global_market_cap` : Capitalisation par devise (63 devises)
-- `global_market_volume` : Volume par devise (63 devises)
-- `global_market_dominance` : Dominance par cryptomonnaie (10+ actifs)
+| Table | Description |
+|-------|-------------|
+| `global_market_snapshot` | Snapshot principal avec métadonnées globales |
+| `global_market_cap` | Capitalisation par devise (63 devises) |
+| `global_market_volume` | Volume par devise (63 devises) |
+| `global_market_dominance` | Dominance par cryptomonnaie (10+ actifs) |
+| `top_crypto_snapshot` | Snapshot du top cryptos |
+| `top_crypto` | Top cryptomonnaies par market cap |
+| `crypto_detail_snapshot` | Snapshot des détails |
+| `crypto_detail` | Détails (métadonnées, liens, community, developer, market data) |
 
 **Utilisation :**
 
