@@ -32,7 +32,7 @@ class MarketDataTransformer:
 
             # Snapshot principal
             snapshot = GlobalMarketSnapshot(
-                timestamp=datetime.utcfromtimestamp(raw_data["updated_at"] / 1000),
+                timestamp=datetime.utcfromtimestamp(raw_data["updated_at"]),
                 active_cryptocurrencies=raw_data.get("active_cryptocurrencies"),
                 upcoming_icos=raw_data.get("upcoming_icos"),
                 ongoing_icos=raw_data.get("ongoing_icos"),
