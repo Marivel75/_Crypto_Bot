@@ -123,101 +123,91 @@ class BinanceClient:
             raise
 
     def fetch_top_cryptos_by_volume(
-        self, limit: int = 50, quote: str = "USDT"
+        self, limit: int = 50, quote: str = "USDT", show_errors: bool = False
     ) -> list[dict]:
         """
         Récupère les cryptomonnaies les plus échangées (par volume) sur Binance.
-
-        Args:
-            limit: Nombre de cryptos à retourner (default 50).
-            quote: Devise de cotation (ex. "USDT", "BUSD", "BTC").
-
-        Returns:
-            list[dict]: Liste des cryptos triées par volume décroissant.
         """
         try:
             logger.info(
-                f"Récupération des tickers pour le Top {limit} par volume en {quote}..."
+                f"Récupération des tickers sur Binance pour le Top {limit} par volume en {quote}..."
             )
 
-            # Récupérer tous les tickers
             tickers = self.exchange.fetch_tickers()
 
-            # Dictionnaire pour stocker les erreurs
-            error_logs = {
+            # Stocker les erreurs dans l'instance
+            self.error_logs = {
                 "missing_price": [],
                 "missing_volume": [],
                 "conversion_errors": [],
             }
 
-            # Filtrer les paires en {quote} et extraire les infos utiles
             filtered_tickers = []
+
             for symbol, ticker in tickers.items():
                 if symbol.endswith(f"/{quote}"):
-                    try:
-                        last_price = ticker.get("last")
-                        if last_price is None:
-                            error_logs["missing_price"].append(symbol)
-                            continue
 
-                        volume = ticker.get("quoteVolume")
-                        if volume is None:
-                            error_logs["missing_volume"].append(symbol)
-                            continue
-
-                        try:
-                            filtered_tickers.append(
-                                {
-                                    "symbol": symbol,
-                                    "base": symbol.split("/")[0],
-                                    "quote": quote,
-                                    "volume": float(volume),
-                                    "last_price": float(last_price),
-                                    "info": ticker,
-                                }
-                            )
-                        except (ValueError, TypeError) as e:
-                            error_logs["conversion_errors"].append(symbol)
-                            continue
-
-                    except Exception as e:
-                        error_logs["conversion_errors"].append(symbol)
+                    last_price = ticker.get("last")
+                    if last_price is None:
+                        self.error_logs["missing_price"].append(symbol)
                         continue
 
-            # Log général des erreurs
-            total_errors = sum(len(errors) for errors in error_logs.values())
+                    volume = ticker.get("quoteVolume")
+                    if volume is None:
+                        self.error_logs["missing_volume"].append(symbol)
+                        continue
+
+                    try:
+                        filtered_tickers.append(
+                            {
+                                "symbol": symbol,
+                                "base": symbol.split("/")[0],
+                                "quote": quote,
+                                "volume": float(volume),
+                                "last_price": float(last_price),
+                                "info": ticker,
+                            }
+                        )
+                    except (ValueError, TypeError):
+                        self.error_logs["conversion_errors"].append(symbol)
+                        continue
+
+            total_errors = sum(len(v) for v in self.error_logs.values())
             if total_errors > 0:
                 logger.warning(
-                    f"Absence de données valides pour {total_errors} tickers. "
-                    f"Tapez 'client.show_ticker_errors()' pour consulter les logs détaillés."
+                    f"{total_errors} tickers avec données invalides. "
+                    f"Utilisez client.show_ticker_errors() pour les détails."
                 )
 
             if not filtered_tickers:
                 logger.warning(f"Aucune paire valide trouvée en {quote}.")
                 return []
 
-            # Trier par volume décroissant
             sorted_tickers = sorted(
                 filtered_tickers, key=lambda x: x["volume"], reverse=True
             )
 
-            # Limiter au nombre demandé
             result = sorted_tickers[:limit]
-            logger.info(f"Top {len(result)} cryptos par volume récupéré avec succès.")
+
+            logger.info(f"Top {len(result)} cryptos récupéré avec succès.")
+
+            if show_errors:
+                self.show_ticker_errors()
+
             return result
 
         except Exception as e:
             logger.error(f"Erreur dans fetch_top_cryptos_by_volume: {e}", exc_info=True)
             raise
 
-        # Méthode pour afficher les erreurs détaillées
-        def show_ticker_errors(self):
-            """Affiche les erreurs détaillées des tickers."""
-            if hasattr(self, "error_logs") and self.error_logs:
-                for error_type, symbols in self.error_logs.items():
-                    if symbols:
-                        logger.warning(
-                            f"{error_type.replace('_', ' ').title()}: {', '.join(symbols)}"
-                        )
-            else:
-                logger.warning("Aucune erreur enregistrée.")
+    def show_ticker_errors(self):
+        """Affiche les erreurs détaillées des tickers."""
+        if hasattr(self, "error_logs") and self.error_logs:
+            for error_type, symbols in self.error_logs.items():
+                if symbols:
+                    logger.warning(
+                        f"{error_type.replace('_', ' ').title()}: "
+                        f"{', '.join(symbols)}"
+                    )
+        else:
+            logger.warning("Aucune erreur enregistrée.")
