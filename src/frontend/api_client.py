@@ -403,6 +403,84 @@ class APIClient:
         resp = self.get("/api/v1/health")  # S11: consistent /api/v1 prefix
         return self._extract_data(resp, HealthResponse)
 
+    def refresh_token(self) -> str | None:
+        """Refresh JWT token and return new access token, or None on failure."""
+        resp = self.post("/api/v1/auth/refresh")
+        if resp is None:
+            return None
+        login_resp = self._extract_data(resp, LoginResponse)
+        if login_resp:
+            st.session_state["token"] = login_resp.access_token
+            return login_resp.access_token
+        return None
+
+    # ------------------------------------------------------------------
+    # Portfolio extended endpoints (Semaine 3)
+    # ------------------------------------------------------------------
+
+    def fetch_portfolio_summary(self) -> dict[str, Any] | None:
+        """Return portfolio summary: total_value, total_cost, pnl_pct, asset_allocation."""
+        resp = self.get("/api/v1/portfolio/summary")
+        if resp is None:
+            return None
+        return resp.get("data")
+
+    def fetch_portfolio_history(self, limit: int = 90) -> list[dict[str, Any]] | None:
+        """Return portfolio value history over time (daily snapshots)."""
+        resp = self.get("/api/v1/portfolio/history", params={"limit": limit})
+        return self._extract_list(resp, dict)  # type: ignore
+
+    # ------------------------------------------------------------------
+    # Watchlist extended endpoints (Semaine 3)
+    # ------------------------------------------------------------------
+
+    def fetch_watchlist_prices(self) -> list[dict[str, Any]] | None:
+        """Return watchlist with live prices and 24h change."""
+        resp = self.get("/api/v1/watchlist/prices")
+        return self._extract_list(resp, dict)  # type: ignore
+
+    # ------------------------------------------------------------------
+    # Signals extended endpoints (Semaine 3)
+    # ------------------------------------------------------------------
+
+    def fetch_signals_history(
+        self,
+        symbol: str | None = None,
+        direction: str | None = None,
+        date_from: str | None = None,
+        date_to: str | None = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> dict[str, Any] | None:
+        """Return paginated signal history with filters.
+
+        Returns dict with 'items' (list) and 'total' (int).
+        """
+        params: dict[str, Any] = {"limit": limit, "offset": offset}
+        if symbol:
+            params["symbol"] = symbol
+        if direction:
+            params["direction"] = direction
+        if date_from:
+            params["date_from"] = date_from
+        if date_to:
+            params["date_to"] = date_to
+        resp = self.get("/api/v1/signals/history", params=params)
+        if resp is None:
+            return None
+        return resp.get("data")
+
+    # ------------------------------------------------------------------
+    # System endpoints (Semaine 3)
+    # ------------------------------------------------------------------
+
+    def fetch_system_metrics(self) -> dict[str, Any] | None:
+        """Return system metrics: uptime, request_count, error_rate, db_size."""
+        resp = self.get("/api/v1/system/metrics")
+        if resp is None:
+            return None
+        return resp.get("data")
+
     # ------------------------------------------------------------------
     # Legacy helpers (kept for backward compatibility)
     # ------------------------------------------------------------------

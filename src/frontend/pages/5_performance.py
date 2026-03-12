@@ -44,6 +44,22 @@ def _fetch_signals(symbol: str | None) -> list[dict[str, Any]] | None:
     return _get_client().fetch_signals(symbol)
 
 
+@st.cache_data(ttl=30)
+def _fetch_signals_history(
+    symbol: str | None,
+    direction: str | None,
+    limit: int = 100,
+) -> dict[str, Any] | None:
+    """Return paginated signal history with optional filters."""
+    return _get_client().fetch_signals_history(symbol=symbol, direction=direction, limit=limit)
+
+
+@st.cache_data(ttl=300)
+def _fetch_system_metrics() -> dict[str, Any] | None:
+    """Return system metrics: uptime, request count, error rate, DB size."""
+    return _get_client().fetch_system_metrics()
+
+
 def _format_confidence(value: Any) -> str:
     """Format a confidence score as a percentage string, safely."""
     if value is None:
@@ -113,6 +129,27 @@ def page() -> None:
         _render_per_timeframe_table(signals_all)
 
     st.divider()
+
+    # --- System metrics (Semaine 3) ---
+    metrics = _fetch_system_metrics()
+    if metrics:
+        with st.container(border=True):
+            st.subheader(t("performance.system_metrics"))
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                uptime = metrics.get("uptime_hours", "—")
+                st.metric(t("performance.uptime"), f"{uptime}h" if isinstance(uptime, (int, float)) else uptime)
+            with col2:
+                requests = metrics.get("request_count", "—")
+                st.metric(t("performance.request_count"), requests)
+            with col3:
+                error_rate = metrics.get("error_rate", 0.0)
+                st.metric(t("performance.error_rate"), f"{float(error_rate):.2f}%")
+            with col4:
+                db_size = metrics.get("db_size_mb", "—")
+                st.metric(t("performance.db_size"), f"{db_size}MB" if isinstance(db_size, (int, float)) else db_size)
+
+        st.divider()
 
     # --- Filterable signal history table ---
     with st.container(border=True):

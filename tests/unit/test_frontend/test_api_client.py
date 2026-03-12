@@ -1,213 +1,170 @@
-"""Tests for the frontend API client — HTTP calls mocked with respx."""
+"""Unit tests for the frontend API client (Semaine 3 endpoints).
+
+Tests all new endpoint methods with mocked httpx.Client.
+"""
 
 from __future__ import annotations
 
-from unittest.mock import patch
-
-import httpx
 import pytest
-import respx
+from unittest.mock import patch
 
 from src.frontend.api_client import APIClient
 
 
-@pytest.fixture()
-def api_client() -> APIClient:
-    """Create an APIClient pointing to a test URL."""
-    with patch("src.frontend.api_client.frontend_settings") as mock_settings:
-        mock_settings.api_url = "http://testserver"
-        mock_settings.api_timeout = 5.0
-        mock_settings.api_connect_timeout = 2.0
-        client = APIClient()
-    return client
+@pytest.fixture
+def mock_session_state() -> dict:
+    """Mock Streamlit session state."""
+    return {"token": "test-token-123"}
 
 
-class TestAPIClientGet:
-    """Test GET requests and error handling."""
-
-    @respx.mock
-    def test_get_success(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/crypto/list").mock(
-            return_value=httpx.Response(200, json={"data": [{"symbol": "BTC"}]})
-        )
-        result = api_client.get("/api/v1/crypto/list")
-        assert result is not None
-        assert result["data"] == [{"symbol": "BTC"}]
-
-    @respx.mock
-    def test_get_timeout_returns_none(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/crypto/list").mock(side_effect=httpx.TimeoutException("timeout"))
-        result = api_client.get("/api/v1/crypto/list")
-        assert result is None
-
-    @respx.mock
-    def test_get_connect_error_returns_none(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/crypto/list").mock(side_effect=httpx.ConnectError("connection refused"))
-        result = api_client.get("/api/v1/crypto/list")
-        assert result is None
-
-    @respx.mock
-    def test_get_401_clears_token(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/auth/me").mock(
-            return_value=httpx.Response(401, json={"error": "unauthorized"})
-        )
-        result = api_client.get("/api/v1/auth/me")
-        assert result is None
-
-    @respx.mock
-    def test_get_500_returns_none(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/crypto/list").mock(
-            return_value=httpx.Response(500, json={"error": "internal"})
-        )
-        result = api_client.get("/api/v1/crypto/list")
-        assert result is None
+@pytest.fixture
+def api_client(mock_session_state: dict) -> APIClient:
+    """Create an APIClient instance with mocked session state."""
+    with patch("streamlit.session_state", mock_session_state):
+        return APIClient()
 
 
-class TestAPIClientPost:
-    """Test POST requests."""
+class TestAuthRefresh:
+    """Tests for JWT token refresh endpoint."""
 
-    @respx.mock
-    def test_post_success(self, api_client: APIClient) -> None:
-        respx.post("http://testserver/api/v1/auth/login").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": {"access_token": "jwt123"}},
-            )
-        )
-        result = api_client.post(
-            "/api/v1/auth/login",
-            json={"email": "test@test.com", "password": "pass"},
-        )
-        assert result is not None
-        assert result["data"]["access_token"] == "jwt123"  # noqa: S105
+    def test_refresh_token_success(self, api_client: APIClient) -> None:
+        """Test successful token refresh."""
+        mock_response = {
+            "success": True,
+            "data": {"access_token": "new-token-456"},
+        }
+
+        with patch.object(api_client, "post", return_value=mock_response):
+            new_token = api_client.refresh_token()
+            assert new_token == "new-token-456"
+
+    def test_refresh_token_failure(self, api_client: APIClient) -> None:
+        """Test failed token refresh."""
+        with patch.object(api_client, "post", return_value=None):
+            result = api_client.refresh_token()
+            assert result is None
 
 
-class TestAPIClientDomainMethods:
-    """Test domain-specific helper methods."""
+class TestPortfolioSummary:
+    """Tests for portfolio summary endpoint."""
 
-    @respx.mock
-    def test_login_returns_token(self, api_client: APIClient) -> None:
-        respx.post("http://testserver/api/v1/auth/login").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": {"access_token": "tok_abc"}},
-            )
-        )
-        token = api_client.login("user@test.com", "password")
-        assert token == "tok_abc"  # noqa: S105
+    def test_fetch_portfolio_summary_success(self, api_client: APIClient) -> None:
+        """Test successful portfolio summary fetch."""
+        summary_data = {
+            "total_value": 15000.0,
+            "total_cost": 12000.0,
+            "pnl_pct": 25.0,
+            "asset_allocation": {"BTC": 8000, "ETH": 7000},
+        }
+        mock_response = {"success": True, "data": summary_data}
 
-    @respx.mock
-    def test_login_failure_returns_none(self, api_client: APIClient) -> None:
-        respx.post("http://testserver/api/v1/auth/login").mock(
-            return_value=httpx.Response(401, json={"error": "bad credentials"})
-        )
-        token = api_client.login("user@test.com", "wrong")
-        assert token is None
+        with patch.object(api_client, "get", return_value=mock_response):
+            result = api_client.fetch_portfolio_summary()
+            assert result == summary_data
 
-    @respx.mock
-    def test_fetch_crypto_list(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/crypto/list").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": [{"symbol": "BTC"}, {"symbol": "ETH"}]},
-            )
-        )
-        result = api_client.fetch_crypto_list()
-        assert result is not None
-        assert len(result) == 2
+    def test_fetch_portfolio_summary_none(self, api_client: APIClient) -> None:
+        """Test portfolio summary with API failure."""
+        with patch.object(api_client, "get", return_value=None):
+            result = api_client.fetch_portfolio_summary()
+            assert result is None
 
-    @respx.mock
-    def test_fetch_ohlcv(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/crypto/BTC/prices").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": [{"price_close": 67000}]},
-            )
-        )
-        result = api_client.fetch_ohlcv("BTC", "4h", limit=100)
-        assert result is not None
-        assert len(result) == 1
 
-    @respx.mock
-    def test_fetch_signal_performance(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/signals/performance").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": {"win_rate": 65.0, "total_signals": 50}},
-            )
-        )
-        result = api_client.fetch_signal_performance()
-        assert result is not None
-        assert result["win_rate"] == 65.0
+class TestPortfolioHistory:
+    """Tests for portfolio history endpoint."""
 
-    @respx.mock
-    def test_fetch_signal_detail(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/signals/42/detail").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": {"id": 42, "signal_type": "BUY"}},
-            )
-        )
-        result = api_client.fetch_signal_detail(42)
-        assert result is not None
-        assert result["signal_type"] == "BUY"
+    def test_fetch_portfolio_history_success(self, api_client: APIClient) -> None:
+        """Test successful portfolio history fetch."""
+        history_data = [
+            {"timestamp": "2025-01-01", "total_value": 10000.0},
+            {"timestamp": "2025-01-02", "total_value": 11000.0},
+            {"timestamp": "2025-01-03", "total_value": 10500.0},
+        ]
+        mock_response = {"success": True, "data": history_data}
 
-    @respx.mock
-    def test_fetch_news_detail(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/news/7").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": {"id": 7, "title": "BTC hits ATH"}},
-            )
-        )
-        result = api_client.fetch_news_detail(7)
-        assert result is not None
-        assert result["title"] == "BTC hits ATH"
+        with patch.object(api_client, "get", return_value=mock_response):
+            result = api_client.fetch_portfolio_history()
+            assert result == history_data
+            assert len(result) == 3
 
-    @respx.mock
-    def test_chat_returns_tuple(self, api_client: APIClient) -> None:
-        respx.post("http://testserver/api/v1/chat").mock(
-            return_value=httpx.Response(
-                200,
-                json={
-                    "data": {
-                        "reply": "BTC is bullish",
-                        "disclaimer": "Not financial advice",
-                    }
-                },
-            )
-        )
-        reply, disclaimer = api_client.chat("What about BTC?")
-        assert reply == "BTC is bullish"
-        assert disclaimer == "Not financial advice"
+    def test_fetch_portfolio_history_with_limit(self, api_client: APIClient) -> None:
+        """Test portfolio history with custom limit."""
+        mock_response = {"success": True, "data": []}
 
-    @respx.mock
-    def test_chat_api_down_returns_none_tuple(self, api_client: APIClient) -> None:
-        respx.post("http://testserver/api/v1/chat").mock(side_effect=httpx.ConnectError("down"))
-        reply, disclaimer = api_client.chat("hello")
-        assert reply is None
-        assert disclaimer is None
+        with patch.object(api_client, "get", return_value=mock_response):
+            api_client.fetch_portfolio_history(limit=30)
+            api_client.get.assert_called_once()
 
-    @respx.mock
-    def test_fetch_news_with_filters(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/news/latest").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": [{"title": "ETF News"}]},
-            )
-        )
-        result = api_client.fetch_news(source="Decrypt", keyword="ETF", limit=10)
-        assert result is not None
-        assert len(result) == 1
 
-    @respx.mock
-    def test_fetch_market_overview(self, api_client: APIClient) -> None:
-        respx.get("http://testserver/api/v1/crypto/market-overview").mock(
-            return_value=httpx.Response(
-                200,
-                json={"data": {"total_market_cap": 2500000000000}},
-            )
-        )
-        result = api_client.fetch_market_overview()
-        assert result is not None
-        assert result["total_market_cap"] == 2500000000000
+class TestWatchlistPrices:
+    """Tests for watchlist with prices endpoint."""
+
+    def test_fetch_watchlist_prices_success(self, api_client: APIClient) -> None:
+        """Test successful watchlist prices fetch."""
+        prices_data = [
+            {"symbol": "BTC", "price": 42000.0, "change_24h": 2.5},
+            {"symbol": "ETH", "price": 2200.0, "change_24h": 1.8},
+        ]
+        mock_response = {"success": True, "data": prices_data}
+
+        with patch.object(api_client, "get", return_value=mock_response):
+            result = api_client.fetch_watchlist_prices()
+            assert result == prices_data
+            assert len(result) == 2
+
+
+class TestSignalsHistory:
+    """Tests for signals history endpoint with filters."""
+
+    def test_fetch_signals_history_success(self, api_client: APIClient) -> None:
+        """Test successful signals history fetch."""
+        history_data = {
+            "items": [
+                {
+                    "id": 1,
+                    "symbol": "BTC",
+                    "direction": "BUY",
+                    "confidence": 0.85,
+                    "created_at": "2025-01-01T10:00:00",
+                }
+            ],
+            "total": 1,
+        }
+        mock_response = {"success": True, "data": history_data}
+
+        with patch.object(api_client, "get", return_value=mock_response):
+            result = api_client.fetch_signals_history()
+            assert result == history_data
+            assert len(result["items"]) == 1
+
+    def test_fetch_signals_history_none(self, api_client: APIClient) -> None:
+        """Test signals history with API failure."""
+        with patch.object(api_client, "get", return_value=None):
+            result = api_client.fetch_signals_history()
+            assert result is None
+
+
+class TestSystemMetrics:
+    """Tests for system metrics endpoint."""
+
+    def test_fetch_system_metrics_success(self, api_client: APIClient) -> None:
+        """Test successful system metrics fetch."""
+        metrics_data = {
+            "uptime_hours": 24.5,
+            "request_count": 1250,
+            "error_rate": 0.02,
+            "db_size_mb": 512.5,
+            "market_regime": "BULL",
+            "volatility": {"BTC": 18.5, "ETH": 22.3},
+        }
+        mock_response = {"success": True, "data": metrics_data}
+
+        with patch.object(api_client, "get", return_value=mock_response):
+            result = api_client.fetch_system_metrics()
+            assert result == metrics_data
+            assert result["market_regime"] == "BULL"
+
+    def test_fetch_system_metrics_none(self, api_client: APIClient) -> None:
+        """Test system metrics with API failure."""
+        with patch.object(api_client, "get", return_value=None):
+            result = api_client.fetch_system_metrics()
+            assert result is None

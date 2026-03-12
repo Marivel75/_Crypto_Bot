@@ -238,13 +238,41 @@ TRANSLATIONS: dict[str, str] = {
     "chatbot.disclaimer": "I am not a financial advisor. This information is for educational purposes only.",
     "chatbot.placeholder": "Your question...",
     "chatbot.unavailable": "Sorry, the chat service is currently unavailable.",
-    # --- Signal card component ---
+    # --- Signal card component (Semaine 3) ---
     "signal.confidence": "Confidence",
     "signal.leverage": "Leverage",
+    "signal.entry_price": "Entry price",
+    "signal.stop_loss": "Stop loss",
+    "signal.take_profit": "Take profit",
     "signal.rules_triggered": "Rules triggered: {rules}",
     "signal.margin_ok": "Margin safety: OK ({value}x)",
     "signal.margin_low": "Margin safety LOW: {value}x (min {min}x)",
     "signal.active_signals": "Active Signals",
     "signal.load_error": "Could not load signals (API unavailable).",
     "signal.no_active": "No active signals at the moment.",
+    # --- Dashboard (Semaine 3) ---
+    "dashboard.market_regime": "Market Regime",
+    # --- Portfolio (Semaine 3) ---
+    "portfolio.summary_header": "Portfolio Summary",
+    "portfolio.allocation_title": "Asset Allocation",
+    "portfolio.allocation_empty": "No asset allocation data available.",
+    "portfolio.value_history_title": "Portfolio Value History",
+    "portfolio.history_empty": "No history data available.",
+    "portfolio.date_label": "Date",
+    "portfolio.value_label": "Portfolio Value ($)",
+    # --- Analytics (Semaine 3) ---
+    "analytics.market_regime_title": "Market Status",
+    "analytics.regime_label": "Market Regime",
+    "analytics.regime_bull": "Bull Market",
+    "analytics.regime_bear": "Bear Market",
+    "analytics.regime_sideways": "Sideways Market",
+    "analytics.volatility_label": "Volatility Analysis",
+    "analytics.volatility_unavailable": "Volatility data not available.",
+    "analytics.col_volatility": "Volatility (%)",
+    # --- Performance (Semaine 3) ---
+    "performance.system_metrics": "System Metrics",
+    "performance.uptime": "Uptime",
+    "performance.request_count": "Requests",
+    "performance.error_rate": "Error Rate",
+    "performance.db_size": "DB Size",
 }

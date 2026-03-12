@@ -23,6 +23,7 @@ from src.frontend.components.indicators import (
     render_multi_timeframe_table,
 )
 from src.frontend.components.news_feed import render_news_card
+from src.frontend.components.regime_badge import render_regime_badge
 from src.frontend.components.signal_card import render_signals_panel
 from src.frontend.config import frontend_settings
 from src.frontend.i18n import t
@@ -63,6 +64,11 @@ def _fetch_news() -> list[dict[str, Any]] | None:
 @st.cache_data(ttl=60)
 def _fetch_multi_tf(symbol: str) -> list[dict[str, Any]] | None:
     return _get_client().fetch_multi_timeframe(symbol)
+
+
+@st.cache_data(ttl=300)
+def _fetch_system_metrics() -> dict[str, Any] | None:
+    return _get_client().fetch_system_metrics()
 
 
 def _latest_indicator(indicators: list[dict[str, Any]] | None) -> dict[str, Any] | None:
@@ -223,6 +229,13 @@ def page() -> None:
         # render_signals_panel manages its own subheader internally
         signals = _fetch_signals(symbol)
         render_signals_panel(signals)
+
+        # Market regime badge (Semaine 3)
+        st.divider()
+        st.markdown(f"### {t('dashboard.market_regime')}")
+        metrics = _fetch_system_metrics()
+        regime = metrics.get("market_regime") if metrics else None
+        render_regime_badge(regime)
 
     with col_mtf, st.container(border=True):
         st.subheader(t("dashboard.multi_tf_header"))

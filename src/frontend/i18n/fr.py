@@ -238,13 +238,41 @@ TRANSLATIONS: dict[str, str] = {
     "chatbot.disclaimer": "Je ne suis pas un conseiller financier. Ces informations sont à titre informatif uniquement.",
     "chatbot.placeholder": "Votre question...",
     "chatbot.unavailable": "Désolé, le service de chat n'est pas disponible pour le moment.",
-    # --- Signal card component ---
+    # --- Signal card component (Semaine 3) ---
     "signal.confidence": "Confiance",
     "signal.leverage": "Levier",
+    "signal.entry_price": "Prix d'entree",
+    "signal.stop_loss": "Stop loss",
+    "signal.take_profit": "Take profit",
     "signal.rules_triggered": "Règles déclenchées: {rules}",
     "signal.margin_ok": "Marge de sécurité: OK ({value}x)",
     "signal.margin_low": "Marge de sécurité BASSE: {value}x (min {min}x)",
     "signal.active_signals": "Signaux actifs",
     "signal.load_error": "Impossible de charger les signaux (API non disponible).",
     "signal.no_active": "Aucun signal actif pour le moment.",
+    # --- Dashboard (Semaine 3) ---
+    "dashboard.market_regime": "Régime de marché",
+    # --- Portfolio (Semaine 3) ---
+    "portfolio.summary_header": "Résumé du portefeuille",
+    "portfolio.allocation_title": "Allocation d'actifs",
+    "portfolio.allocation_empty": "Aucune donnée d'allocation disponible.",
+    "portfolio.value_history_title": "Historique de la valeur du portefeuille",
+    "portfolio.history_empty": "Aucune donnée d'historique disponible.",
+    "portfolio.date_label": "Date",
+    "portfolio.value_label": "Valeur du portefeuille ($)",
+    # --- Analytics (Semaine 3) ---
+    "analytics.market_regime_title": "Statut du marché",
+    "analytics.regime_label": "Régime de marché",
+    "analytics.regime_bull": "Marché haussier",
+    "analytics.regime_bear": "Marché baissier",
+    "analytics.regime_sideways": "Marché lateral",
+    "analytics.volatility_label": "Analyse de volatilité",
+    "analytics.volatility_unavailable": "Données de volatilité non disponibles.",
+    "analytics.col_volatility": "Volatilité (%)",
+    # --- Performance (Semaine 3) ---
+    "performance.system_metrics": "Métriques du système",
+    "performance.uptime": "Disponibilite",
+    "performance.request_count": "Requêtes",
+    "performance.error_rate": "Taux d'erreur",
+    "performance.db_size": "Taille de la BD",
 }

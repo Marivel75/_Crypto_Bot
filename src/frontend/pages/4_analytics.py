@@ -20,6 +20,7 @@ import streamlit as st
 
 from src.frontend.api_client import APIClient
 from src.frontend.components.candlestick import _DARK_LAYOUT
+from src.frontend.components.regime_badge import render_regime_badge
 from src.frontend.i18n import t
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,12 @@ def _fetch_market() -> dict[str, Any] | None:
 def _fetch_ohlcv_for_symbol(symbol: str) -> list[dict[str, Any]] | None:
     """Fetch 90 daily OHLCV candles for a single symbol."""
     return _get_client().fetch_ohlcv(symbol, "1D", limit=90)
+
+
+@st.cache_data(ttl=300)
+def _fetch_system_metrics() -> dict[str, Any] | None:
+    """Fetch system metrics including market regime and volatility data."""
+    return _get_client().fetch_system_metrics()
 
 
 def _fear_greed_label(value: int) -> str:
@@ -350,6 +357,37 @@ def page() -> None:
                 "</div>",
                 unsafe_allow_html=True,
             )
+
+    st.divider()
+
+    # --- Section 6: Market regime and volatility (Semaine 3) ---
+    st.markdown(f"### {t('analytics.market_regime_title')}")
+    metrics = _fetch_system_metrics()
+    if metrics:
+        col_regime, col_vol = st.columns(2)
+        with col_regime, st.container(border=True):
+            st.markdown(f"#### {t('analytics.regime_label')}")
+            regime = metrics.get("market_regime")
+            render_regime_badge(regime)
+
+        with col_vol, st.container(border=True):
+            st.markdown(f"#### {t('analytics.volatility_label')}")
+            volatility_data = metrics.get("volatility", {})
+            if volatility_data:
+                rows = [
+                    {
+                        t("analytics.col_crypto"): sym,
+                        t("analytics.col_volatility"): f"{float(vol):.2f}%",
+                    }
+                    for sym, vol in volatility_data.items()
+                ]
+                df_vol = pd.DataFrame(rows)
+                st.dataframe(df_vol, use_container_width=True, hide_index=True)
+            else:
+                st.info(t("analytics.volatility_unavailable"))
+    else:
+        with st.container(border=True):
+            st.info(t("analytics.backend_unavailable"))
 
 
 page()

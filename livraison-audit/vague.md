@@ -2,7 +2,7 @@
 
 **Date** : 2026-03-12
 **Branche** : `roulio-mars`
-**Statut** : Vague 2 EN COURS — Semaine 2 COMPLETE, Semaine 3 en execution
+**Statut** : Vague 2 EN COURS — Semaines 2+3 COMPLETE, Semaine 4 (Frontend) en execution
 
 ---
 
@@ -67,8 +67,8 @@ Objectif : Implementer les fonctionnalites metier definies dans le CDC (133 RF +
 
 - [x] 16 RF ETL implementes et testes (commits `c80a283`, `460aa0c`, `00542a7`)
 - [x] Infra deployer : Docker Compose, Ansible, CI/CD, Nginx, monitoring (commit `c80a283`)
-- [ ] 26 RF API implementes avec tests d'integration
-- [ ] 23 RF ML + backtesting fonctionnel
+- [x] 26 RF API implementes avec tests d'integration (commit `f37225c`)
+- [x] 23 RF ML + backtesting fonctionnel (commit `da839b6`)
 - [ ] 53 RF Frontend : 5 pages navigables
 - [ ] Docker Compose : tous les services demarrent proprement
 - [ ] CI/CD : pipeline complet (lint → test → build → deploy)
