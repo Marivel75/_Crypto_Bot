@@ -400,7 +400,7 @@ class APIClient:
 
     def health(self) -> HealthResponse | None:
         """Check application health status."""
-        resp = self.get("/api/health")
+        resp = self.get("/api/v1/health")  # S11: consistent /api/v1 prefix
         return self._extract_data(resp, HealthResponse)
 
     # ------------------------------------------------------------------

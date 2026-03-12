@@ -20,6 +20,7 @@ router = APIRouter(prefix="/system", tags=["system"])
 
 
 @health_router.get("/health", response_model=ApiResponse[HealthResponse])
+# S11: health endpoint now accessible at /api/v1/health (via prefix)
 async def health(
     db: AsyncSession = Depends(get_db),
 ) -> ApiResponse[HealthResponse]:

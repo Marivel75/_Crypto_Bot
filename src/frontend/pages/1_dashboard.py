@@ -74,7 +74,7 @@ def _latest_indicator(indicators: list[dict[str, Any]] | None) -> dict[str, Any]
 
 def _check_api_status() -> bool:
     """Probe the health endpoint and return True if the API is reachable."""
-    result = _get_client().get("/health")
+    result = _get_client().health()  # S11: uses proper /api/v1/health endpoint
     return result is not None
 
 

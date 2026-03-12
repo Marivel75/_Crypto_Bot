@@ -9,7 +9,7 @@ from httpx import AsyncClient
 class TestSystemEndpoints:
     @pytest.mark.asyncio
     async def test_health(self, client: AsyncClient) -> None:
-        resp = await client.get("/health")
+        resp = await client.get("/api/v1/health")  # S11: consistent /api/v1 prefix
         assert resp.status_code == 200
         data = resp.json()["data"]
         assert data["status"] == "ok"

@@ -25,7 +25,7 @@ echo ""
 
 FAILURES=0
 
-check_service "API"       "http://localhost:8000/health"     || FAILURES=$((FAILURES + 1))
+check_service "API"       "http://localhost:8000/api/v1/health" || FAILURES=$((FAILURES + 1))
 check_service "Frontend"  "http://localhost:8501"             || FAILURES=$((FAILURES + 1))
 check_service "MinIO"     "http://localhost:9000/minio/health/live" || FAILURES=$((FAILURES + 1))
 check_service "Nginx"     "http://localhost/health"           || FAILURES=$((FAILURES + 1))
