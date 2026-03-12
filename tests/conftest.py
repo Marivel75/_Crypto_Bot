@@ -10,18 +10,16 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import JSON, String
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
-    async_sessionmaker,
     create_async_engine,
 )
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 from src.api.dependencies import get_current_user, get_db
 from src.api.services.auth_service import create_access_token
 
 
 # SQLite-compatible test Base (avoids PostgreSQL-specific types in db_models)
-class TestBase(DeclarativeBase):
-    """Separate declarative base for test-only models."""
+TestBase = declarative_base()
 
 
 # We re-define minimal ORM models with SQLite-compatible types for tests.
@@ -223,7 +221,7 @@ _chat_router.UserOrm = UserOrm  # type: ignore[misc]
 
 # In-memory SQLite for tests
 TEST_ENGINE = create_async_engine("sqlite+aiosqlite://", echo=False)
-TestSessionFactory = async_sessionmaker(TEST_ENGINE, class_=AsyncSession, expire_on_commit=False)
+TestSessionFactory = sessionmaker(TEST_ENGINE, class_=AsyncSession, expire_on_commit=False)
 
 
 @pytest_asyncio.fixture
