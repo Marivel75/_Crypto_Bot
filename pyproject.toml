@@ -30,6 +30,8 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "src/shared/config.py" = ["S104", "S105"]  # env vars for config
 "src/api/schemas.py" = ["S105"]  # token_type = "bearer" is not a password
+"src/frontend/pages/*" = ["E402"]  # sys.path manipulation required before imports
+"tests/unit/test_frontend/test_api_client.py" = ["S105"]  # test tokens are not real secrets
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]

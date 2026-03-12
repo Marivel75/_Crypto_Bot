@@ -5,8 +5,9 @@ Tests all new endpoint methods with mocked httpx.Client.
 
 from __future__ import annotations
 
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 from src.frontend.api_client import APIClient
 
@@ -14,7 +15,7 @@ from src.frontend.api_client import APIClient
 @pytest.fixture
 def mock_session_state() -> dict:
     """Mock Streamlit session state."""
-    return {"token": "test-token-123"}
+    return {"token": "test-token-123"}  # noqa: S105
 
 
 @pytest.fixture
@@ -31,12 +32,12 @@ class TestAuthRefresh:
         """Test successful token refresh."""
         mock_response = {
             "success": True,
-            "data": {"access_token": "new-token-456"},
+            "data": {"access_token": "new-token-456"},  # noqa: S105
         }
 
         with patch.object(api_client, "post", return_value=mock_response):
             new_token = api_client.refresh_token()
-            assert new_token == "new-token-456"
+            assert new_token == "new-token-456"  # noqa: S105
 
     def test_refresh_token_failure(self, api_client: APIClient) -> None:
         """Test failed token refresh."""

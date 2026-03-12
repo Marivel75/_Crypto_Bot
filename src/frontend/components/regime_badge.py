@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 import streamlit as st
 
@@ -56,15 +55,15 @@ def render_regime_badge(regime: str | None) -> None:
     st.markdown(
         f"""
         <div style="
-            background: {config['bg']};
-            border: 2px solid {config['border']};
+            background: {config["bg"]};
+            border: 2px solid {config["border"]};
             border-radius: 8px;
             padding: 12px 16px;
             text-align: center;
             margin: 0.5rem 0;
         ">
-            <span style="font-size: 1.5rem; margin-right: 8px;">{config['icon']}</span>
-            <span style="font-size: 1.1rem; font-weight: 600; color: {config['text']};">
+            <span style="font-size: 1.5rem; margin-right: 8px;">{config["icon"]}</span>
+            <span style="font-size: 1.1rem; font-weight: 600; color: {config["text"]};">
                 {label}
             </span>
         </div>
