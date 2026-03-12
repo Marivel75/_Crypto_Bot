@@ -45,7 +45,28 @@ docker-compose up -d         # Lancer tous les services
 7. **PR obligatoire** pour merge sur `main`
 8. **Python** : ruff pour le lint, mypy pour les types, pydantic pour la validation
 
-## Documentation
+## Livraison & Audit
+
+Le dossier `livraison-audit/` centralise tous les documents de livraison, audit et remediation du projet, organises en 5 categories :
+
+```
+livraison-audit/
+├── documents-principaux/    CDC, specifications fonctionnelles, audit global
+├── architecture/            Architecture applicative et architecture data
+├── specs-domaine/           Specs ML, frontend, infra
+├── remediation/             Index de remediation, phases 1 a 3
+└── sujets-techniques/       Migrations DB, variables d'env, rate limiting, CI/CD secrets
+```
+
+| Sous-dossier | Contenu |
+|-------------|---------|
+| `documents-principaux/` | Cahier des charges (`CDC.md`), specifications fonctionnelles, rapport d'audit |
+| `architecture/` | Architecture applicative (services, flux) et architecture data (TimescaleDB, MinIO) |
+| `specs-domaine/` | Exigences ML/analytics, frontend, infrastructure |
+| `remediation/` | Plan de remediation en 3 phases avec suivi d'avancement |
+| `sujets-techniques/` | Migrations base de donnees, variables d'environnement, rate limiting, secrets CI/CD |
+
+## Documentation technique
 
 - `docs/00-overview.md` — Vision, personas, fonctionnalites (lu par TOUTES les equipes)
 - `docs/01-data-engineering.md` — Equipe Data Engineering
