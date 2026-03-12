@@ -1,3 +1,4 @@
+# Docker Compose V2+ (no version field needed)
 services:
   # --- Database ---
   timescaledb:
@@ -290,6 +291,7 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infra/grafana/provisioning/alerts.yml:/etc/grafana/provisioning/alerts.yml:ro
       - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
     ports:
       - "127.0.0.1:3000:3000"

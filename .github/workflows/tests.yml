@@ -1,3 +1,16 @@
+# GitHub Actions Workflow: Tests
+#
+# REQUIRED SECRETS (configure in GitHub repository settings):
+# - None required for this workflow
+#
+# OPTIONAL SECRETS:
+# - SLACK_WEBHOOK_URL: For Slack notifications on test failures
+#
+# To configure secrets:
+# 1. Go to: https://github.com/YOUR_ORG/roulio-mars/settings/secrets/actions
+# 2. Click "New repository secret"
+# 3. Add the secrets listed above
+
 name: Run Tests
 
 on:

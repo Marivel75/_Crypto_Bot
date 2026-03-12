@@ -1,186 +1,178 @@
-# docker-compose.override.yml — Development Environment Configuration
+# Docker Compose Override for Development
 #
-# Purpose: Override production docker-compose.yml settings for local development.
-# This file is loaded automatically by `docker-compose up` and should NOT be committed to git.
+# This file overrides production settings for local development.
+# Copy this to docker-compose.override.yml (which is git-ignored) to enable:
 #
-# Usage:
-#   1. Copy this file: cp docker-compose.override.yml.example docker-compose.override.yml
-#   2. Edit values as needed for your local setup
-#   3. Run: docker-compose up -d
-#   4. Add to .gitignore: docker-compose.override.yml (it already is)
+#   cp docker-compose.override.yml.example docker-compose.override.yml
+#   docker-compose up
 #
-# Reference: https://docs.docker.com/compose/extends/
+# Docker Compose automatically merges this file with docker-compose.yml,
+# allowing you to have different configurations for dev vs production.
 
 services:
-  # === API Service (FastAPI Backend) ===
-  api:
-    # Enable development hot-reload
-    environment:
-      LOG_LEVEL: DEBUG
-      # Allow all origins for local testing
-      CORS_ORIGINS: '["http://localhost:8501", "http://localhost:3000", "http://127.0.0.1:8000"]'
-    # Use source code directly (bind mount) for live reload
-    volumes:
-      - ./src:/app/src:rw
-    # Lower resource limits for dev
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-
-  # === Frontend Service (Streamlit) ===
-  frontend:
-    environment:
-      # Point to local API
-      API_URL: http://api:8000
-    # Use source code directly for live reload
-    volumes:
-      - ./src/frontend:/app/src/frontend:rw
-
-  # === ETL Worker Service ===
-  etl-worker:
-    environment:
-      LOG_LEVEL: DEBUG
-      # Disable scheduled jobs in dev; use manual triggers via API
-      ETL_SCHEDULE_MINUTES: 0  # Disable auto-collection
-    volumes:
-      - ./src/etl:/app/src/etl:rw
-
-  # === ML Service ===
-  ml-worker:
-    environment:
-      LOG_LEVEL: DEBUG
-    volumes:
-      - ./src/ml:/app/src/ml:rw
-    # Higher CPU for local training
-    deploy:
-      resources:
-        limits:
-          cpus: "4.0"
-
-  # === PostgreSQL / TimescaleDB ===
+  # --- Database ---
   timescaledb:
-    # Bind to all interfaces for direct psql access from host
+    # Development: expose database port for local client connections
     ports:
-      - "5432:5432"  # Allow connection from host machine
-    environment:
-      POSTGRES_INITDB_ARGS: "-c max_connections=200"  # Higher for dev
+      - "127.0.0.1:5432:5432"
+    # Development: faster health checks
+    healthcheck:
+      interval: 5s
+      timeout: 3s
+      start_period: 10s
+      retries: 3
+    # Development: lower memory limit
     deploy:
       resources:
         limits:
-          memory: 2G  # Higher for dev
+          memory: 512M
 
-  # === MinIO (S3-Compatible Storage) ===
+  # --- Object Storage ---
   minio:
-    ports:
-      - "9000:9000"   # API port (accessible from host)
-      - "9001:9001"   # Web UI (accessible from host)
-    deploy:
-      resources:
-        limits:
-          memory: 512M
+    # Development: faster health checks
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 2
 
-  # === MLflow (Experiment Tracking) ===
+  # --- MLflow ---
   mlflow:
-    ports:
-      - "5000:5000"  # Web UI (accessible from host)
+    # Development: faster health checks
+    healthcheck:
+      interval: 15s
+      timeout: 5s
+      retries: 2
+
+  # --- Backend API ---
+  api:
+    # Development: mount source code for hot reload
+    volumes:
+      - ./src/api:/app/src/api
+    # Development: enable debug logging
     environment:
-      # Enable debug logging
-      MLFLOW_TRACKING_INSECURE_TLS: "true"
+      LOG_LEVEL: DEBUG
+    # Development: faster health checks
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 2
+    # Development: lower memory limit
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # --- Frontend ---
+  frontend:
+    # Development: mount source code for hot reload
+    volumes:
+      - ./src/frontend:/app/src/frontend
+    # Development: enable debug mode
+    environment:
+      STREAMLIT_LOGGER_LEVEL: debug
+      STREAMLIT_LOGGER_HIDE_USER_CODE: "false"
+    # Development: faster health checks
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 2
+    # Development: lower memory limit
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # --- ETL Worker ---
+  etl-worker:
+    # Development: mount source code for hot reload
+    volumes:
+      - ./src/etl:/app/src/etl
+    # Development: enable debug logging
+    environment:
+      LOG_LEVEL: DEBUG
+    # Development: faster health checks
+    healthcheck:
+      interval: 15s
+      timeout: 5s
+      start_period: 15s
+      retries: 2
+    # Development: lower memory limit
     deploy:
       resources:
         limits:
           memory: 512M
 
-  # === Prometheus (Metrics) ===
-  prometheus:
-    ports:
-      - "9090:9090"  # Web UI (accessible from host)
+  # --- ML Worker ---
+  ml-worker:
+    # Development: mount source code for hot reload
     volumes:
-      - ./infra/prometheus/prometheus.dev.yml:/etc/prometheus/prometheus.yml:ro
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-
-  # === Grafana (Monitoring Dashboard) ===
-  grafana:
-    ports:
-      - "3000:3000"  # Web UI (accessible from host)
+      - ./src/ml:/app/src/ml
+    # Development: enable debug logging
     environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin  # Dev only (insecure)
-      GF_SERVER_ROOT_URL: http://localhost:3000
-      GF_INSTALL_PLUGINS: "grafana-piechart-panel"
-    volumes:
-      - grafana-dev-data:/var/lib/grafana
+      LOG_LEVEL: DEBUG
+    # Development: faster health checks
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 2
+    # Development: lower memory limit
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 512M
 
-  # === Nginx (Reverse Proxy) ===
+  # --- Reverse Proxy ---
   nginx:
-    # Bind to all interfaces for local access
+    # Development: expose nginx status endpoint for debugging
     ports:
-      - "80:80"     # HTTP (dev only, no HTTPS required)
-      - "443:443"   # HTTPS (use self-signed cert)
-    volumes:
-      - ./infra/nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - "127.0.0.1:8080:8080"
+    # Development: lower memory limit
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
+  # --- Monitoring ---
+  prometheus:
+    # Development: shorter retention
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=1d"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+    # Development: lower memory limit
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  grafana:
+    # Development: auto-login (not recommended for production!)
     environment:
-      # Dev mode: redirect HTTP to HTTPS is optional
-      REDIRECT_HTTPS: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+    # Development: lower memory limit
     deploy:
       resources:
         limits:
           memory: 128M
 
-# Additional dev volumes
-volumes:
-  grafana-dev-data:
+# Development: expose all internal ports for debugging
+  postgres-exporter:
+    ports:
+      - "127.0.0.1:9187:9187"
+    deploy:
+      resources:
+        limits:
+          memory: 32M
 
-# === Usage Examples ===
-#
-# Start all services with dev config:
-#   docker-compose up -d
-#
-# View logs:
-#   docker-compose logs -f api
-#
-# Access services from host:
-#   API: http://localhost:8000
-#   Frontend: http://localhost:8501
-#   Grafana: http://localhost:3000 (admin/admin)
-#   MinIO: http://localhost:9001
-#   MLflow: http://localhost:5000
-#   Prometheus: http://localhost:9090
-#
-# Connect to database from host:
-#   psql -h 127.0.0.1 -U cryptobot -d cryptobot
-#
-# Disable auto-reload for a service:
-#   docker-compose up -d --no-build api
-#
-# Restart after code changes:
-#   docker-compose restart api frontend
-#
-# Stop all services:
-#   docker-compose down
-#
-# Stop and remove volumes (WARNING: deletes all data):
-#   docker-compose down -v
-#
-# === Troubleshooting ===
-#
-# Port already in use:
-#   - Change the port mapping: ports: ["9000:9000"] → ["9002:9000"]
-#   - Or kill the conflicting process: lsof -i :9000
-#
-# Volume permission denied:
-#   - Fix on Linux: sudo chown -R 1000:1000 ./volumes
-#   - Fix on macOS: docker-compose restart <service>
-#
-# Services not communicating:
-#   - Check docker network: docker network ls
-#   - Verify service health: docker-compose ps
-#   - Check logs: docker-compose logs <service>
+  nginx-exporter:
+    ports:
+      - "127.0.0.1:8000:8000"
+    deploy:
+      resources:
+        limits:
+          memory: 16M

@@ -1,0 +1,230 @@
+apiVersion: 1
+
+groups:
+  - name: CryptoBot
+    interval: 1m
+    rules:
+      # API Performance: p95 latency > 2 seconds
+      - uid: api_latency_high
+        title: "API Latency High (p95 > 2s)"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 5m
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: 'histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="api"}[5m])) > 2'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 2m
+        annotations:
+          description: "API p95 latency has exceeded 2 seconds. Current value: {{ $value }}s"
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#api-latency-high"
+          summary: "High API latency detected"
+        labels:
+          severity: warning
+          team: devops
+
+      # API Errors: error rate > 0.1%
+      - uid: api_error_rate_high
+        title: "API Error Rate High (> 0.1%)"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 5m
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: '(sum(rate(http_requests_total{status=~"5..",job="api"}[5m])) / sum(rate(http_requests_total{job="api"}[5m]))) * 100 > 0.1'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 2m
+        annotations:
+          description: "API error rate has exceeded 0.1%. Current rate: {{ $value }}%"
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#api-errors"
+          summary: "High API error rate detected"
+        labels:
+          severity: critical
+          team: devops
+
+      # Database Connections: >= 90% of max
+      - uid: db_connections_high
+        title: "Database Connections Near Limit (>= 90%)"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 5m
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: '(pg_stat_activity_count / 100) >= 0.9'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 1m
+        annotations:
+          description: "Database connection pool is nearly at capacity. Current usage: {{ $value }}%"
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#db-connections-high"
+          summary: "Database connection limit approaching"
+        labels:
+          severity: warning
+          team: devops
+
+      # Disk Space: < 10% free
+      - uid: disk_space_low
+        title: "Disk Space Low (< 10% free)"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 5m
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: '(1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) > 0.9'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "Less than 10% disk space remaining. Used: {{ $value }}%"
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#disk-space-low"
+          summary: "Low disk space on host"
+        labels:
+          severity: critical
+          team: devops
+
+      # Container Memory: > 80% of limit
+      - uid: container_memory_high
+        title: "Container Memory Usage High (> 80%)"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 5m
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: '(container_memory_usage_bytes / container_spec_memory_limit_bytes) > 0.8'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 3m
+        annotations:
+          description: "Container memory usage exceeds 80% of allocated limit. Current usage: {{ $value }}%"
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#container-memory-high"
+          summary: "High container memory usage"
+        labels:
+          severity: warning
+          team: devops
+
+      # Service Health: API service down
+      - uid: api_down
+        title: "API Service Down"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 1m
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: 'up{job="api"} == 0'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 1m
+        annotations:
+          description: "API service is not responding to health checks"
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#service-down"
+          summary: "API service is down"
+        labels:
+          severity: critical
+          team: devops
+
+      # Service Health: Database down
+      - uid: timescaledb_down
+        title: "TimescaleDB Service Down"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 1m
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: 'up{job="postgres-exporter"} == 0'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 1m
+        annotations:
+          description: "TimescaleDB service is not responding"
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#service-down"
+          summary: "TimescaleDB service is down"
+        labels:
+          severity: critical
+          team: devops
+
+      # ETL Job Failure: Last run failed
+      - uid: etl_job_failure
+        title: "ETL Job Failure"
+        condition: A
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 1h
+              to: now
+            datasourceUid: prometheus-uid
+            model:
+              expr: 'increase(etl_job_failures_total[1h]) > 0'
+              interval: ""
+              refId: A
+        noDataState: NoData
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "ETL job has failed. Check logs for details."
+          runbook_url: "https://github.com/yourusername/roulio-mars/blob/main/docs/PRODUCTION_RUNBOOK.md#etl-failures"
+          summary: "ETL job failure detected"
+        labels:
+          severity: warning
+          team: data-eng
+
+notificationChannels:
+  - uid: email-notify
+    name: "Email Notification"
+    type: email
+    isDefault: false
+    settings:
+      addresses: "devops@example.com"
+    disableResolveMessage: false
+
+  - uid: webhook-notify
+    name: "Webhook Notification"
+    type: webhook
+    isDefault: false
+    settings:
+      url: "${WEBHOOK_URL}"
+    disableResolveMessage: false
