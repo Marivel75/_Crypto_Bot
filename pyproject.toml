@@ -1,0 +1,67 @@
+[project]
+name = "crypto-bot"
+version = "1.0.0"
+requires-python = ">=3.11"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "S",    # flake8-bandit (security)
+    "T20",  # flake8-print (no print statements)
+]
+ignore = [
+    "E501",   # line length handled by formatter
+    "B008",   # Depends() in function defaults — standard FastAPI pattern
+    "S101",   # assert used for type narrowing in ML code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/shared/config.py" = ["S104", "S105"]  # env vars for config
+"src/api/schemas.py" = ["S105"]  # token_type = "bearer" is not a password
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+explicit_package_bases = true
+mypy_path = "."
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+asyncio_mode = "auto"
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "tests/*",
+    "**/__init__.py",
+    "src/frontend/pages/*",
+    "src/frontend/app.py",
+    "src/etl/main.py",
+    "src/etl/jobs.py",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

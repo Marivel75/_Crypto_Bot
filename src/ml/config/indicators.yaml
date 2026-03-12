@@ -1,0 +1,56 @@
+rsi:
+  period: 14
+  overbought: 70
+  oversold: 30
+  timeframes: ["1h", "2h", "3h", "4h"]
+  convergence_threshold: 5  # max difference between adjacent TFs
+  convergence_window: 3     # min TFs that must agree for multi-TF signal
+
+bollinger:
+  period: 20
+  std_dev: 2.0
+  squeeze_threshold: 0.02  # band width as % of middle
+  squeeze_width: 0.02       # alias used by evaluate_bollinger_squeeze
+  timeframes: ["1h", "2h", "3h", "4h", "1D"]
+
+harmonic:
+  patterns:
+    gartley: { xb: 0.618, ac: [0.382, 0.886], bd: [1.272, 1.618], xd: 0.786 }
+    butterfly: { xb: 0.786, ac: [0.382, 0.886], bd: [1.618, 2.618], xd: [1.272, 1.618] }
+    bat: { xb: [0.382, 0.5], ac: [0.382, 0.886], bd: [1.618, 2.618], xd: 0.886 }
+    crab: { xb: [0.382, 0.618], ac: [0.382, 0.886], bd: [2.618, 3.618], xd: 1.618 }
+  tolerance: 0.05
+  timeframes: ["4h", "1D"]
+
+trend:
+  short_window: 20
+  long_window: 50
+  weekly_period: 7
+  monthly_period: 30
+  slope_threshold: 0.001
+  dip_threshold: -0.03
+  weekly:
+    type: stable
+    slope_threshold: 0.001
+  monthly:
+    type: aggressive
+    slope_threshold: 0.005
+  timeframes: ["1D", "1W", "1M"]
+
+multi_tf:
+  timeframes: ["1h", "2h", "3h", "4h"]
+  majority_threshold: 0.6
+  supermajority_threshold: 1.0
+
+leverage:
+  max_leverage: 20
+  margin_safety_multiplier: 2.0
+
+fees:
+  maker: 0.001
+  taker: 0.001
+  funding_rate: 0.0001
+
+confidence:
+  min_threshold: 0.6
+  high_threshold: 0.8

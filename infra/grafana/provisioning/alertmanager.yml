@@ -1,0 +1,317 @@
+---
+# Alert rules configuration for Grafana unified alerting
+# Provisioned automatically at container startup
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: crypto_bot_alerts
+    folder: "Alerts"
+    interval: 1m
+    rules:
+      # API Performance — P95 latency
+      - uid: api_latency_p95
+        title: "API p95 latency > 2s"
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus_uid
+            model:
+              expr: "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{handler=\"api\"}[5m]))"
+              interval: ""
+              refId: A
+          - refId: C
+            queryType: ""
+            expression: A
+            reducer: last
+            mathExpression: "A > 2"
+            conditions:
+              - evaluator:
+                  params:
+                    - 2
+                  type: gt
+                operator:
+                  type: and
+                query:
+                  params:
+                    - A
+                reducer:
+                  params: []
+                  type: last
+                type: query
+        noDataState: NoData
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "API p95 response time exceeds 2 seconds (SLA violation)"
+          runbook_url: "https://github.com/amau/cryptobot/blob/main/docs/PRODUCTION_RUNBOOK.md#api-down"
+        labels:
+          severity: warning
+          team: devops
+
+      # API Error Rate
+      - uid: api_error_rate
+        title: "API error rate > 0.1%"
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus_uid
+            model:
+              expr: "rate(http_requests_total{status=~\"5..\"}[5m]) / rate(http_requests_total[5m])"
+              interval: ""
+              refId: A
+          - refId: C
+            queryType: ""
+            expression: A
+            reducer: last
+            mathExpression: "A > 0.001"  # 0.1%
+            conditions:
+              - evaluator:
+                  params:
+                    - 0.001
+                  type: gt
+                operator:
+                  type: and
+                query:
+                  params:
+                    - A
+                reducer:
+                  params: []
+                  type: last
+                type: query
+        noDataState: NoData
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "API error rate exceeds 0.1% (acceptable threshold)"
+          runbook_url: "https://github.com/amau/cryptobot/blob/main/docs/PRODUCTION_RUNBOOK.md#api-high-error-rate"
+        labels:
+          severity: warning
+          team: devops
+
+      # Database Connectivity
+      - uid: db_connections_high
+        title: "DB connections >= 90% of max"
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus_uid
+            model:
+              expr: "pg_stat_activity_count / 100"  # Assuming max_connections=100
+              interval: ""
+              refId: A
+          - refId: C
+            queryType: ""
+            expression: A
+            reducer: last
+            mathExpression: "A >= 0.9"
+            conditions:
+              - evaluator:
+                  params:
+                    - 0.9
+                  type: gte
+                operator:
+                  type: and
+                query:
+                  params:
+                    - A
+                reducer:
+                  params: []
+                  type: last
+                type: query
+        noDataState: NoData
+        execErrState: Alerting
+        for: 2m
+        annotations:
+          description: "Database connection pool approaching limit ({{ $value | humanizePercentage }})"
+          runbook_url: "https://github.com/amau/cryptobot/blob/main/docs/PRODUCTION_RUNBOOK.md#db-connection-pool-exhausted"
+        labels:
+          severity: critical
+          team: backend
+
+      # Disk Space
+      - uid: disk_space_low
+        title: "Disk space < 10% free"
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus_uid
+            model:
+              expr: "(1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100"
+              interval: ""
+              refId: A
+          - refId: C
+            queryType: ""
+            expression: A
+            reducer: last
+            mathExpression: "A > 90"  # Less than 10% free
+            conditions:
+              - evaluator:
+                  params:
+                    - 90
+                  type: gt
+                operator:
+                  type: and
+                query:
+                  params:
+                    - A
+                reducer:
+                  params: []
+                  type: last
+                type: query
+        noDataState: NoData
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "Disk usage is {{ $value | humanizePercentage }} (critical threshold approaching)"
+          runbook_url: "https://github.com/amau/cryptobot/blob/main/docs/PRODUCTION_RUNBOOK.md#disk-full"
+        labels:
+          severity: critical
+          team: devops
+
+      # Container Memory
+      - uid: container_memory_high
+        title: "Container memory > 80% of limit"
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus_uid
+            model:
+              expr: "(container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100"
+              interval: ""
+              refId: A
+          - refId: C
+            queryType: ""
+            expression: A
+            reducer: last
+            mathExpression: "A > 80"
+            conditions:
+              - evaluator:
+                  params:
+                    - 80
+                  type: gt
+                operator:
+                  type: and
+                query:
+                  params:
+                    - A
+                reducer:
+                  params: []
+                  type: last
+                type: query
+        noDataState: NoData
+        execErrState: Alerting
+        for: 3m
+        annotations:
+          description: "{{ $labels.container_name }} memory usage at {{ $value | humanizePercentage }}"
+          runbook_url: "https://github.com/amau/cryptobot/blob/main/docs/PRODUCTION_RUNBOOK.md#high-memory-usage"
+        labels:
+          severity: warning
+          team: devops
+
+      # Certificate Expiration
+      - uid: cert_expiration_warning
+        title: "TLS certificate expires in < 30 days"
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 3600
+              to: 0
+            datasourceUid: prometheus_uid
+            model:
+              expr: "(ssl_certificate_expiration_timestamp - time()) / 86400"
+              interval: ""
+              refId: A
+          - refId: C
+            queryType: ""
+            expression: A
+            reducer: last
+            mathExpression: "A < 30"
+            conditions:
+              - evaluator:
+                  params:
+                    - 30
+                  type: lt
+                operator:
+                  type: and
+                query:
+                  params:
+                    - A
+                reducer:
+                  params: []
+                  type: last
+                type: query
+        noDataState: NoData
+        execErrState: Alerting
+        for: 1h
+        annotations:
+          description: "TLS certificate will expire in {{ $value }} days"
+          runbook_url: "https://github.com/amau/cryptobot/blob/main/docs/PRODUCTION_RUNBOOK.md#certificate-expiration"
+        labels:
+          severity: warning
+          team: devops
+
+      # Service Uptime
+      - uid: service_down
+        title: "Service health check failed"
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus_uid
+            model:
+              expr: "up{job=~\"api|frontend|timescaledb|minio\"} == 0"
+              interval: ""
+              refId: A
+          - refId: C
+            queryType: ""
+            expression: A
+            reducer: last
+            conditions:
+              - evaluator:
+                  params:
+                    - 0
+                  type: eq
+                operator:
+                  type: and
+                query:
+                  params:
+                    - A
+                reducer:
+                  params: []
+                  type: last
+                type: query
+        noDataState: NoData
+        execErrState: Alerting
+        for: 2m
+        annotations:
+          description: "Service {{ $labels.job }} is DOWN"
+          runbook_url: "https://github.com/amau/cryptobot/blob/main/docs/PRODUCTION_RUNBOOK.md#service-down"
+        labels:
+          severity: critical
+          team: devops

@@ -1,0 +1,54 @@
+# Version control
+.git
+.gitignore
+
+# Python artifacts
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/*.egg-info
+**/.eggs
+
+# Virtual environments
+.venv
+venv
+env
+
+# Test output
+.coverage
+htmlcov/
+coverage.xml
+
+# Development tooling
+.claude
+.auto-claude
+.vscode
+.idea
+
+# Documentation
+docs/
+*.md
+!src/**/requirements*.txt
+
+# Data / artifacts
+data/
+*.csv
+*.parquet
+*.h5
+*.pkl
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Infra (not needed in app images)
+infra/
+nginx/
+
+# Tests
+tests/

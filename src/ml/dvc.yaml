@@ -1,0 +1,28 @@
+stages:
+  feature_engineering:
+    cmd: python -m src.ml.models.feature_engineering
+    deps:
+      - src/ml/models/feature_engineering.py
+      - src/ml/config/indicators.yaml
+    outs:
+      - data/features/features.parquet
+
+  label_generation:
+    cmd: python -m src.ml.models.label_generator
+    deps:
+      - data/features/features.parquet
+    outs:
+      - data/labels/labels.parquet
+
+  training:
+    cmd: python -m src.ml.models.trainer
+    deps:
+      - data/features/features.parquet
+      - data/labels/labels.parquet
+      - src/ml/models/trainer.py
+      - src/ml/config/indicators.yaml
+    metrics:
+      - metrics/train_metrics.json:
+          cache: false
+    outs:
+      - models/latest/

@@ -1,0 +1,123 @@
+---
+# Deploy crypto-bot to VPS
+# Usage: ansible-playbook -i inventories/production.ini playbooks/deploy.yml
+#
+# SECURITY NOTE:
+# - Secrets (.env file) are NOT synced — already present on VPS
+# - delete: false prevents accidental deletion of production data
+# - Explicit exclude list for cache directories
+
+- name: Deploy Crypto Bot
+  hosts: vps
+  become: true
+  become_user: "{{ deploy_user }}"
+  vars_files:
+    - ../group_vars/vps.yml
+
+  tasks:
+    - name: Sync project files to VPS
+      synchronize:
+        src: "{{ playbook_dir }}/../../../"
+        dest: "{{ docker_compose_dir }}/"
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.env"
+          - "--exclude=.env.local"
+          - "--exclude=__pycache__"
+          - "--exclude=.pytest_cache"
+          - "--exclude=mlruns"
+          - "--exclude=*.pyc"
+          - "--exclude=.venv"
+          - "--exclude=venv"
+          - "--exclude=timescaledb-data"
+          - "--exclude=minio-data"
+          - "--exclude=prometheus-data"
+          - "--exclude=grafana-data"
+          - "--exclude=.coverage"
+          - "--exclude=htmlcov"
+          - "--exclude=.ruff_cache"
+        delete: false
+
+    - name: Verify .env file exists on VPS
+      stat:
+        path: "{{ docker_compose_dir }}/.env"
+      register: env_file
+
+    - name: Fail if .env missing
+      fail:
+        msg: ".env file missing on VPS at {{ docker_compose_dir }}/.env — copy .env.example and configure it with strong passwords"
+      when: not env_file.stat.exists
+
+    - name: Pull latest Docker images
+      command: docker compose pull
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      changed_when: true
+
+    - name: Build application images
+      command: docker compose build
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      changed_when: true
+
+    - name: Backup current database (before any downtime)
+      command: docker compose exec -T timescaledb pg_dump -U {{ postgres_user }} {{ postgres_db }} | gzip > /backups/pre-deploy-$(date +%s).sql.gz
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      changed_when: true
+      ignore_errors: true
+
+    - name: Stop existing services
+      command: docker compose down
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      changed_when: true
+
+    - name: Start services
+      command: docker compose up -d
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      changed_when: true
+
+    - name: Wait for services to be healthy
+      pause:
+        seconds: 15
+
+    - name: Health check — API
+      uri:
+        url: "http://localhost:8000/health"
+        method: GET
+        status_code: 200
+      retries: 5
+      delay: 5
+      register: health_result
+      until: health_result.status == 200
+
+    - name: Health check — Frontend
+      uri:
+        url: "http://localhost:8501"
+        method: GET
+        status_code: 200
+      retries: 5
+      delay: 5
+
+    - name: Health check — Database
+      command: docker compose exec -T timescaledb pg_isready -U cryptobot
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      changed_when: false
+
+    - name: Display running containers
+      command: docker compose ps
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      register: ps_output
+      changed_when: false
+
+    - name: Show status
+      debug:
+        var: ps_output.stdout_lines
+
+    - name: Notify deployment success
+      debug:
+        msg: "Deployment successful. Services running on {{ inventory_hostname }}"

@@ -1,0 +1,22 @@
+stages:
+  export_datasets:
+    cmd: python -m src.etl.jobs export_datasets
+    deps:
+      - src/etl/loaders/timescaledb.py
+      - src/etl/loaders/minio_loader.py
+    outs:
+      - data/exported/:
+          persist: true
+
+  train_model:
+    cmd: python -m src.ml.trainer
+    deps:
+      - src/ml/trainer.py
+      - src/ml/feature_engineering.py
+      - data/exported/
+    metrics:
+      - metrics/train_metrics.json:
+          cache: false
+    outs:
+      - models/:
+          persist: true

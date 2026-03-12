@@ -1,35 +1,61 @@
-# Secrets et environnement
+# Secrets
 .env
-.venv/
+.env.*
+!.env.example
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker volumes
+timescaledb-data/
+minio-data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ML
+*.pkl
+*.onnx
+*.h5
+mlruns/
+
+# DVC
+/raw/
+/datasets/
+*.dvc
+
+# Ansible
+*.retry
+infra/ansible/inventories/*.ini
+!infra/ansible/inventories/production.ini.example
+
+# Backups
+backups/
 
 # Logs
 logs/
 *.log
 
-# Sauvegardes de base de données
-data/backups/
-*.sql
-*.dump
-*.csv
-*.json
-
-# Fichiers de test et couverture
-.pytest_cache/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-
-# Rapport de couverture
-htmlcov/
-.coverage
-*.cover
-
-# IDE
-.vscode/
-.idea/
+# Auto Claude data directory
+.auto-claude/

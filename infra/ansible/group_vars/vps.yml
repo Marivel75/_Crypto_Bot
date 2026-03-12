@@ -1,0 +1,49 @@
+# Group variables for VPS servers
+---
+# System
+timezone: Europe/Paris
+swap_size: 2G
+deploy_user: deploy
+
+# Docker
+docker_compose_version: "2.24.0"
+docker_compose_dir: /opt/crypto-bot
+
+# Domain / SSL (override with --extra-vars or in inventory)
+domain_name: "example.com"
+letsencrypt_email: "admin@example.com"
+
+# Nginx
+nginx_worker_processes: auto
+nginx_worker_connections: 1024
+
+# Firewall (UFW)
+ufw_allowed_ports:
+  - "22/tcp"
+  - "80/tcp"
+  - "443/tcp"
+
+# Fail2Ban
+fail2ban_maxretry: 5
+fail2ban_bantime: 3600
+fail2ban_findtime: 600
+
+# Backups
+backup_retention_days: 30
+backup_weekly_retention: 4
+backup_bucket: backups
+backup_schedule: "0 3 * * *"  # 3 AM daily
+
+# Monitoring
+healthcheck_url: "/api/health"
+healthcheck_interval: 60
+
+# Application
+app_services:
+  - timescaledb
+  - minio
+  - mlflow
+  - api
+  - frontend
+  - etl-worker
+  - nginx
