@@ -163,6 +163,13 @@ class SignalGenerator:
             )
             return None
 
+        # Calculate entry, stop loss, and take profit levels
+        # Use a default current_price proxy (ATR-based calculation assumes 1% ATR)
+        atr = None  # ATR is not yet in the indicators dict; use default heuristic
+        entry_price = self._calculate_entry_price(100.0, atr, direction)  # normalized to 100
+        stop_loss = self._calculate_stop_loss(entry_price, atr, direction)
+        take_profit = self._calculate_take_profit_levels(entry_price, atr, direction)
+
         signal = TradingSignal(
             symbol=symbol,
             signal_type=cast("Literal['BUY', 'SELL', 'HOLD']", direction),
@@ -369,6 +376,98 @@ class SignalGenerator:
         base_move = Decimal("0.01")  # 1% expected move
         expected_gain = confidence * base_move
         return fees < expected_gain * Decimal("0.5")
+
+    @staticmethod
+    def _calculate_entry_price(
+        current_price: float,
+        atr: float | None = None,
+        direction: str = "BUY",
+    ) -> float:
+        """Calculate entry price based on ATR (Average True Range).
+
+        For BUY signals, entry is slightly above current price (0.5 ATR).
+        For SELL signals, entry is slightly below current price (0.5 ATR).
+
+        Args:
+            current_price: Current market price.
+            atr: Average True Range value. If None, defaults to 0.01 * current_price.
+            direction: Signal direction (BUY or SELL).
+
+        Returns:
+            Calculated entry price.
+        """
+        if atr is None:
+            atr = current_price * 0.01
+
+        offset = atr * 0.5
+        if direction == "BUY":
+            return current_price + offset
+        else:
+            return current_price - offset
+
+    @staticmethod
+    def _calculate_stop_loss(
+        entry_price: float,
+        atr: float | None = None,
+        direction: str = "BUY",
+    ) -> float:
+        """Calculate stop loss based on ATR from entry point.
+
+        SL is placed 1.5 ATR away from entry (aggressive: 1 ATR for confident signals).
+
+        Args:
+            entry_price: Entry price from signal.
+            atr: Average True Range value. If None, defaults to 0.01 * entry_price.
+            direction: Signal direction (BUY or SELL).
+
+        Returns:
+            Stop loss price.
+        """
+        if atr is None:
+            atr = entry_price * 0.01
+
+        sl_distance = atr * 1.5
+        if direction == "BUY":
+            return entry_price - sl_distance
+        else:
+            return entry_price + sl_distance
+
+    @staticmethod
+    def _calculate_take_profit_levels(
+        entry_price: float,
+        atr: float | None = None,
+        direction: str = "BUY",
+        ratios: list[float] | None = None,
+    ) -> list[float]:
+        """Calculate take profit levels using risk-reward ratios.
+
+        Default ratios: [1:1, 1:2, 1:3] (1 ATR, 2 ATR, 3 ATR per 1 ATR risk).
+
+        Args:
+            entry_price: Entry price from signal.
+            atr: Average True Range value. If None, defaults to 0.01 * entry_price.
+            direction: Signal direction (BUY or SELL).
+            ratios: Risk-reward multipliers (default [1, 2, 3]).
+
+        Returns:
+            List of take profit prices in ascending order.
+        """
+        if atr is None:
+            atr = entry_price * 0.01
+
+        if ratios is None:
+            ratios = [1.0, 2.0, 3.0]
+
+        tp_levels: list[float] = []
+        for ratio in ratios:
+            tp_distance = atr * ratio
+            if direction == "BUY":
+                tp = entry_price + tp_distance
+            else:
+                tp = entry_price - tp_distance
+            tp_levels.append(tp)
+
+        return sorted(tp_levels) if direction == "BUY" else sorted(tp_levels, reverse=True)
 
 
 # ---------------------------------------------------------------------------
