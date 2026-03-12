@@ -27,7 +27,7 @@ Docker Compose | Nginx | GitHub Actions
                                           → [MinIO]       → [MLflow]
 ```
 
-## Demarrage rapide
+## Demarrage rapide (Local)
 
 ```bash
 cp .env.example .env        # Configurer les variables
@@ -44,6 +44,37 @@ docker-compose up -d         # Lancer tous les services
 6. **Branches** : `equipe/feature-name` — ex: `data-eng/binance-collector`
 7. **PR obligatoire** pour merge sur `main`
 8. **Python** : ruff pour le lint, mypy pour les types, pydantic pour la validation
+
+## Documentation technique
+
+### Pour toutes les equipes
+- `docs/00-overview.md` — Vision, personas, fonctionnalites
+- `docs/06-roadmap.md` — Planning, sprints, KPIs
+- `docs/glossaire.md` — Glossaire commun
+
+### Par equipe
+- `docs/01-data-engineering.md` — Data Engineering
+- `docs/02-ml-data-science.md` — ML / Data Science
+- `docs/03-backend-api.md` — Backend / API
+- `docs/04-frontend-ui.md` — Frontend / UI
+- `docs/05-devops-infra.md` — DevOps / Infra
+
+## Deploiement en production
+
+Pour deployer en production sur un VPS : **[README_DEPLOYMENT.md](./README_DEPLOYMENT.md)**
+
+Ce document contient :
+- Quick start (5 minutes)
+- Guide detaille par phase (VPS setup, deploiement, SSL, verification)
+- Configuration GitHub Actions (CI/CD automation)
+- Reference rapide des commandes
+
+Autres ressources :
+- **INFRASTRUCTURE_READY.md** — Vue d'ensemble de l'infrastructure implemente
+- **VPS_DEPLOYMENT_GUIDE.md** — Guide complet 5-phases
+- **QUICKSTART_DEPLOYMENT.md** — Reference rapide
+- **GITHUB_ACTIONS_SETUP.md** — Configuration du pipeline CI/CD
+- **infra/README.md** — Structure et fichiers d'infrastructure
 
 ## Livraison & Audit
 
@@ -65,14 +96,3 @@ livraison-audit/
 | `specs-domaine/` | Exigences ML/analytics, frontend, infrastructure |
 | `remediation/` | Plan de remediation en 3 phases avec suivi d'avancement |
 | `sujets-techniques/` | Migrations base de donnees, variables d'environnement, rate limiting, secrets CI/CD |
-
-## Documentation technique
-
-- `docs/00-overview.md` — Vision, personas, fonctionnalites (lu par TOUTES les equipes)
-- `docs/01-data-engineering.md` — Equipe Data Engineering
-- `docs/02-ml-data-science.md` — Equipe ML / Data Science
-- `docs/03-backend-api.md` — Equipe Backend / API
-- `docs/04-frontend-ui.md` — Equipe Frontend / UI
-- `docs/05-devops-infra.md` — Equipe DevOps / Infra
-- `docs/06-roadmap.md` — Planning, sprints, KPIs (lu par TOUTES les equipes)
-- `docs/glossaire.md` — Glossaire commun
