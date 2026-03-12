@@ -1,593 +1,713 @@
-# 05 — Equipe DevOps / Infra
+# DevOps & Infrastructure — Crypto Bot
 
-> **Lisez d'abord** `docs/00-overview.md` pour le contexte global du projet.
+## Overview
 
----
+This document covers deployment, CI/CD, monitoring, and infrastructure management for the Crypto Bot project.
 
-## Votre perimetre
-
-Vous etes responsables de **tout ce qui fait tourner le projet** : Docker, CI/CD, Nginx, monitoring, backups.
-
-| Vous gerez | Vous NE gerez PAS |
-|-----------|-------------------|
-| `docker-compose.yml` et tous les Dockerfiles | Le code applicatif (chaque equipe gere le sien) |
-| Nginx (reverse proxy, HTTPS) | Les endpoints API (equipe Backend) |
-| GitHub Actions (CI/CD pipeline) | Les modeles ML (equipe ML) |
-| Monitoring et alertes systeme | Le schema BDD (equipe Data Eng) |
-| Backups | L'interface utilisateur (equipe Frontend) |
-| Configuration du VPS OVH | |
-| `.env.example` et gestion des secrets | |
-| **Ansible** (provisioning et deploiement) | |
-| **IaC** (infrastructure as code) | |
-
-**Votre code va dans** : racine du projet (`docker-compose.yml`, `infra/`, `.github/workflows/`)
-**Votre branche** : `devops/xxx`
+**Stack**: Docker Compose (local), Ansible (VPS provisioning), GitHub Actions (CI/CD), Prometheus + Grafana (monitoring), Nginx (reverse proxy), Let's Encrypt (SSL)
 
 ---
 
-## Ce que les autres equipes attendent de vous
+## Table of Contents
 
-| Equipe | Ce qu'elle attend | Interface |
-|--------|------------------|-----------|
-| **Toutes** | `docker-compose up -d` doit tout lancer sans config manuelle | `docker-compose.yml` + `.env.example` |
-| **Toutes** | CI/CD qui lint, teste et deploie automatiquement | `.github/workflows/ci.yml` |
-| **Data Eng** | TimescaleDB et MinIO accessibles dans le reseau Docker | Services `timescaledb` et `minio` |
-| **Backend** | Nginx route le trafic HTTPS vers FastAPI | Config Nginx |
-| **Frontend** | Nginx route le trafic HTTPS vers Streamlit | Config Nginx |
-| **ML** | MLflow accessible dans le reseau Docker | Service `mlflow` |
-
----
-
-## Architecture Docker
-
-### docker-compose.yml
-
-```yaml
-version: "3.8"
-
-services:
-  # ========================
-  # REVERSE PROXY
-  # ========================
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro          # Certs Let's Encrypt
-    depends_on:
-      - api
-      - frontend
-    networks:
-      - frontend-net
-    restart: unless-stopped
-
-  # ========================
-  # BACKEND API
-  # ========================
-  api:
-    build: ./src/api
-    env_file: .env
-    depends_on:
-      - timescaledb
-    networks:
-      - frontend-net
-      - backend-net
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-
-  # ========================
-  # FRONTEND
-  # ========================
-  frontend:
-    build: ./src/frontend
-    env_file: .env
-    depends_on:
-      - api
-    networks:
-      - frontend-net
-    restart: unless-stopped
-
-  # ========================
-  # BASE DE DONNEES
-  # ========================
-  timescaledb:
-    image: timescale/timescaledb:latest-pg16
-    env_file: .env
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - timescaledb-data:/var/lib/postgresql/data
-    networks:
-      - backend-net
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # ========================
-  # STOCKAGE OBJET S3
-  # ========================
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
-    env_file: .env
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    volumes:
-      - minio-data:/data
-    ports:
-      - "9001:9001"   # Console MinIO (dev only, retirer en prod)
-    networks:
-      - backend-net
-    restart: unless-stopped
-
-  # ========================
-  # MLFLOW
-  # ========================
-  mlflow:
-    image: ghcr.io/mlflow/mlflow:latest
-    command: >
-      mlflow server
-      --backend-store-uri postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@timescaledb:5432/${POSTGRES_DB}
-      --default-artifact-root s3://mlflow-artifacts/
-      --host 0.0.0.0
-    env_file: .env
-    environment:
-      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
-      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
-      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
-    depends_on:
-      - timescaledb
-      - minio
-    networks:
-      - backend-net
-    restart: unless-stopped
-
-  # ========================
-  # ETL WORKER
-  # ========================
-  etl-worker:
-    build: ./src/etl
-    env_file: .env
-    depends_on:
-      - timescaledb
-      - minio
-    networks:
-      - backend-net
-    restart: unless-stopped
-
-volumes:
-  timescaledb-data:
-  minio-data:
-
-networks:
-  frontend-net:
-    driver: bridge
-  backend-net:
-    driver: bridge
-```
-
-### Reseaux Docker
-
-| Reseau | Services | Acces |
-|--------|----------|-------|
-| `frontend-net` | nginx, api, frontend | Expose aux utilisateurs (ports 80, 443) |
-| `backend-net` | api, timescaledb, minio, mlflow, etl-worker | Interne uniquement |
-
-> **Securite** : le frontend et nginx ne sont PAS dans `backend-net`. Ils ne peuvent pas acceder directement a TimescaleDB ou MinIO. Tout passe par l'API.
+1. [Local Development Setup](#local-development-setup)
+2. [Docker Compose Architecture](#docker-compose-architecture)
+3. [CI/CD Pipeline](#cicd-pipeline)
+4. [VPS Provisioning & Deployment](#vps-provisioning--deployment)
+5. [Monitoring & Alerting](#monitoring--alerting)
+6. [SSL/HTTPS Setup](#ssltls-setup)
+7. [Backup & Disaster Recovery](#backup--disaster-recovery)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
-## Nginx
+## Local Development Setup
 
-### Configuration de base
+### Prerequisites
 
-```nginx
-# nginx/nginx.conf
-events {
-    worker_connections 1024;
-}
+- Docker Desktop (or Docker Engine + Docker Compose)
+- Python 3.11+
+- Git
+- SSH key pair (for Ansible)
 
-http {
-    # Redirect HTTP -> HTTPS
-    server {
-        listen 80;
-        server_name cryptobot.example.com;
-        return 301 https://$server_name$request_uri;
-    }
-
-    server {
-        listen 443 ssl;
-        server_name cryptobot.example.com;
-
-        ssl_certificate     /etc/nginx/ssl/fullchain.pem;
-        ssl_certificate_key /etc/nginx/ssl/privkey.pem;
-        ssl_protocols       TLSv1.2 TLSv1.3;
-
-        # Frontend (Streamlit)
-        location / {
-            proxy_pass http://frontend:8501;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        # API Backend (FastAPI)
-        location /api/ {
-            proxy_pass http://api:8000/api/;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-
-        # Healthcheck
-        location /health {
-            proxy_pass http://api:8000/health;
-        }
-    }
-}
-```
-
-### HTTPS avec Let's Encrypt
+### Quick Start
 
 ```bash
-# Sur le VPS, installer certbot et obtenir le certificat :
-sudo apt install certbot
-sudo certbot certonly --standalone -d cryptobot.example.com
-
-# Les certs vont dans /etc/letsencrypt/live/cryptobot.example.com/
-# Monter ce dossier dans le container Nginx
-
-# Renouvellement auto : cron job
-0 0 1 * * certbot renew --quiet && docker-compose restart nginx
-```
-
----
-
-## CI/CD (GitHub Actions)
-
-```yaml
-# .github/workflows/ci.yml
-name: CI/CD
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: pip install ruff mypy
-      - run: ruff check src/
-      - run: mypy src/ --ignore-missing-imports
-
-  test:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: timescale/timescaledb:latest-pg16
-        env:
-          POSTGRES_DB: test_cryptobot
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: pip install -r requirements-dev.txt
-      - run: pytest tests/ --cov=src --cov-report=xml
-      - name: Check coverage >= 80%
-        run: coverage report --fail-under=80
-
-  deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [lint, test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /opt/crypto-bot
-            git pull origin main
-            docker-compose pull
-            docker-compose up -d --build
-            sleep 10
-            curl -f http://localhost:8000/health || exit 1
-```
-
----
-
-## Configuration VPS OVH
-
-### Setup initial
-
-```bash
-# 1. Creer un user dedie (pas root)
-adduser deploy
-usermod -aG docker deploy
-
-# 2. SSH par cle uniquement
-# Copier la cle publique dans ~/.ssh/authorized_keys
-# Desactiver le login par password dans /etc/ssh/sshd_config :
-# PasswordAuthentication no
-# PermitRootLogin no
-
-# 3. Firewall
-ufw allow 22/tcp    # SSH
-ufw allow 80/tcp    # HTTP (redirect)
-ufw allow 443/tcp   # HTTPS
-ufw enable
-
-# 4. Installer Docker + Docker Compose
-curl -fsSL https://get.docker.com | sh
-apt install docker-compose-plugin
-
-# 5. Cloner le repo
-cd /opt
-git clone https://github.com/votre-org/crypto-bot.git
-cd crypto-bot
+# 1. Clone and setup
+git clone <repo> && cd roulio-mars
 cp .env.example .env
-# Editer .env avec les vrais secrets
 
-# 6. Lancer
-docker compose up -d
+# 2. Edit .env with strong passwords (minimum 16 chars, mixed case, numbers, symbols)
+nano .env
+
+# 3. Start all services
+docker-compose up -d
+
+# 4. Verify health
+./infra/scripts/healthcheck.sh
+
+# 5. Access services
+# API: http://localhost:8000
+# Frontend: http://localhost:8501
+# Grafana: http://localhost:3000 (user: admin)
+# MinIO: http://localhost:9001
+# MLflow: http://localhost:5000
 ```
 
-### Mises a jour
+### Environment Variables
 
-- Mises a jour OS : `unattended-upgrades` pour les patchs de securite
-- Docker images : rebuild au deploy via CI/CD
-
----
-
-## Backups
-
-| Donnee | Methode | Frequence | Retention |
-|--------|---------|-----------|-----------|
-| TimescaleDB | `pg_dump` compresse → stockage distant | Quotidien (3h UTC) | 30 jours |
-| MinIO | Copie `/data` → stockage distant | Hebdomadaire | 4 semaines |
-| Configuration | Git (tout est dans le repo) | A chaque commit | Indefini |
-
-### Script de backup TimescaleDB
+Required variables in `.env`:
 
 ```bash
-#!/bin/bash
-# scripts/backup-db.sh
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR=/opt/backups/timescaledb
-
-mkdir -p $BACKUP_DIR
-
-docker exec timescaledb pg_dump -U $POSTGRES_USER $POSTGRES_DB \
-  | gzip > $BACKUP_DIR/cryptobot_$DATE.sql.gz
-
-# Supprimer les backups de plus de 30 jours
-find $BACKUP_DIR -name "*.sql.gz" -mtime +30 -delete
-
-echo "Backup done: cryptobot_$DATE.sql.gz"
-```
-
-Ajouter au cron : `0 3 * * * /opt/crypto-bot/scripts/backup-db.sh`
-
----
-
-## Monitoring
-
-### V1 (simple)
-
-- **Docker logs** : `docker compose logs -f --tail=100 api`
-- **Healthchecks** : chaque service a un healthcheck dans docker-compose
-- **Uptime** : cron job qui verifie `/health` toutes les 5 min et alerte si down
-
-### V2 (si besoin)
-
-Si le monitoring basique ne suffit pas, ajouter Prometheus + Grafana comme services Docker.
-
----
-
-## Fichier .env.example
-
-```bash
-# === Base de donnees ===
-POSTGRES_DB=cryptobot
+# Database
 POSTGRES_USER=cryptobot
-POSTGRES_PASSWORD=CHANGE_ME_strong_password_here
-DATABASE_URL=postgresql://cryptobot:CHANGE_ME@timescaledb:5432/cryptobot
+POSTGRES_PASSWORD=your_strong_password_16_chars_min
+POSTGRES_DB=cryptobot
+DATABASE_URL=postgresql://cryptobot:...@timescaledb:5432/cryptobot
 
-# === MinIO (S3) ===
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=CHANGE_ME_strong_password_here
+# MinIO
+MINIO_ROOT_USER=your_minio_user
+MINIO_ROOT_PASSWORD=your_strong_password_16_chars_min
 MINIO_ENDPOINT=http://minio:9000
 
-# === API ===
-API_SECRET_KEY=CHANGE_ME_random_string_for_jwt
+# API
+API_SECRET_KEY=your_random_32_char_secret_for_jwt
 API_HOST=0.0.0.0
 API_PORT=8000
+CORS_ORIGINS=["http://localhost:8501"]
+LOG_LEVEL=INFO
 
-# === Frontend ===
-API_URL=http://api:8000
-
-# === CoinGecko ===
-COINGECKO_API_KEY=your_demo_api_key_here
-
-# === Chatbot (optionnel) ===
-OPENAI_API_KEY=sk-your-key-here
-# ou
-ANTHROPIC_API_KEY=sk-ant-your-key-here
-
-# === MLflow ===
+# MLflow
 MLFLOW_TRACKING_URI=http://mlflow:5000
-MLFLOW_S3_ENDPOINT_URL=http://minio:9000
-AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER}
-AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+AWS_ACCESS_KEY_ID=your_minio_user
+AWS_SECRET_ACCESS_KEY=your_strong_password_16_chars_min
+
+# Grafana
+GF_SECURITY_ADMIN_USER=admin
+GF_SECURITY_ADMIN_PASSWORD=your_strong_password_16_chars_min
+
+# Optional
+COINGECKO_API_KEY=
+OPENAI_API_KEY=
+ANTHROPIC_API_KEY=
 ```
+
+### Development Overrides
+
+Local development uses `docker-compose.override.yml` which:
+- Exposes all ports to localhost
+- Mounts source code for hot-reload
+- Sets `LOG_LEVEL=DEBUG`
+- Enables node-exporter and cAdvisor
+
+This file is automatically applied by Docker Compose and should not be committed.
 
 ---
 
-## Taches
+## Docker Compose Architecture
 
-### Sprint 1 (Novembre)
-- [ ] `docker-compose.yml` avec tous les services
-- [ ] Dockerfile pour chaque service (`src/api/`, `src/etl/`, `src/frontend/`)
-- [ ] `.env.example`
-- [ ] `.gitignore` (inclure `.env`, `*.pyc`, `__pycache__`, volumes Docker)
-- [ ] Config Nginx basique (HTTP d'abord)
-- [ ] GitHub Actions : lint + test
-- [ ] README avec instructions de demarrage
-
-### Sprint 2-3 (Decembre)
-- [ ] HTTPS (Let's Encrypt + Nginx)
-- [ ] Setup VPS OVH
-- [ ] Deploy automatise via GitHub Actions
-- [ ] Script de backup TimescaleDB
-- [ ] Healthchecks sur tous les services
-
-### Sprint 8-9 (Mai)
-- [ ] Monitoring (healthcheck cron + alertes)
-- [ ] Backup MinIO
-- [ ] Hardening VPS (fail2ban optionnel)
-- [ ] Documentation de deploiement (runbook)
-
----
-
-## Ansible (Infrastructure as Code)
-
-Le provisioning et le deploiement du VPS sont automatises avec **Ansible**. Tous les fichiers sont dans `infra/ansible/`.
-
-### Structure
+### Services
 
 ```
-infra/
-├── ansible/
-│   ├── ansible.cfg              # Configuration Ansible
-│   ├── inventories/
-│   │   └── production.ini       # Inventaire VPS (IP, user SSH)
-│   ├── group_vars/
-│   │   └── vps.yml              # Variables partagees (ports, retention, etc.)
-│   ├── playbooks/
-│   │   ├── provision.yml        # Setup initial VPS (Docker, UFW, fail2ban, swap)
-│   │   ├── deploy.yml           # Deployer l'application (sync, build, up, healthcheck)
-│   │   ├── backup.yml           # Backup TimescaleDB -> MinIO
-│   │   └── ssl.yml              # Setup Let's Encrypt SSL
-│   └── templates/
-│       └── jail.local.j2        # Template fail2ban
-├── docker/                      # Configs Docker additionnelles
-├── nginx/
-│   └── nginx.conf               # Config Nginx reverse proxy
-└── scripts/
-    └── healthcheck.sh           # Script de verification sante des services
+Frontend Layer:
+  - nginx (reverse proxy, SSL termination, rate limiting)
+  - frontend (Streamlit @ 8501)
+
+Application Layer:
+  - api (FastAPI @ 8000)
+  - etl-worker (APScheduler, data collectors)
+  - ml-worker (signal generation, backtesting)
+
+Infrastructure Layer:
+  - timescaledb (time-series database)
+  - minio (S3-compatible object storage)
+  - mlflow (experiment tracking)
+
+Monitoring Layer:
+  - prometheus (metrics collection)
+  - grafana (visualization)
+  - postgres-exporter (database metrics)
+  - nginx-exporter (reverse proxy metrics)
+  - node-exporter (Linux system metrics, optional)
+  - cadvisor (container metrics, optional)
 ```
 
-### Usage
+### Health Checks
+
+Every service has a health check:
+- **API**: `GET /api/v1/health` (expects 200)
+- **Frontend**: `GET /_stcore/health` (Streamlit health endpoint)
+- **Database**: `pg_isready` command
+- **MinIO**: `GET /minio/health/live` (expects 200)
+- **Nginx**: HTTP GET on internal health endpoint
+- **Prometheus**: `GET /-/healthy` (expects 200)
+- **Grafana**: `GET /api/health` (expects 200)
+
+### Resource Limits
+
+All services have memory limits to prevent OOM on resource-constrained systems:
+
+```yaml
+timescaledb:    1GB
+minio:          512MB
+mlflow:         512MB
+api:            512MB
+frontend:       512MB
+etl-worker:     1GB
+ml-worker:      1GB
+prometheus:     512MB
+grafana:        256MB
+postgres-exporter: 64MB
+nginx-exporter: 32MB
+```
+
+Adjust these in `docker-compose.yml` if running on high-memory servers.
+
+### Volumes
+
+Named volumes for persistence (never anonymous volumes):
+
+```yaml
+timescaledb-data:     PostgreSQL data
+minio-data:           S3 objects
+prometheus-data:      Time-series metrics
+grafana-data:         Dashboard configs
+nginx-logs-data:      Access/error logs
+```
+
+Volume data persists across container restarts. To reset:
 
 ```bash
-# 1. Configurer l'inventaire
-# Editer infra/ansible/inventories/production.ini avec l'IP du VPS
+docker compose down -v  # Remove all volumes
+docker compose up -d    # Fresh start
+```
 
-# 2. Provisioner un VPS vierge (une seule fois)
-cd infra/ansible
-ansible-playbook playbooks/provision.yml
+---
 
-# 3. Setup SSL
-ansible-playbook playbooks/ssl.yml
+## CI/CD Pipeline
 
-# 4. Deployer l'application
-ansible-playbook playbooks/deploy.yml
+### Workflows
 
-# 5. Backup manuel
-ansible-playbook playbooks/backup.yml
+#### 1. **tests.yml** (Lint → Type Check → Test → Build)
 
-# 6. Health check local
+Runs on:
+- Every push to `main`, `dev`, `roulio-mars`
+- Every PR to `main`, `dev`
+
+Stages:
+1. **Lint**: `ruff check` (code style, imports, security)
+2. **Typecheck**: `mypy --strict` (type safety)
+3. **Test**: `pytest --cov-fail-under=80` (unit + integration tests)
+4. **Build**: Docker image build validation (no push)
+
+Artifacts:
+- Coverage report (HTML) — uploaded as artifact
+
+Slack notification (optional): On PR failure
+
+#### 2. **deploy.yml** (Build & Push → Deploy)
+
+Runs on:
+- Push to `main` branch (after all CI checks pass)
+
+Stages:
+1. **Lint & Type Check & Test** (same as tests.yml, re-uses cache)
+2. **Build & Push**:
+   - API image → `docker.io/username/cryptobot-api:latest` + tag
+   - Frontend image → `docker.io/username/cryptobot-frontend:latest` + tag
+   - ETL image → `docker.io/username/cryptobot-etl:latest` + tag
+   - ML image → `docker.io/username/cryptobot-ml:latest` + tag
+   - MLflow image → `docker.io/username/cryptobot-mlflow:latest` + tag
+3. **Deploy via Ansible**:
+   - SSH to VPS
+   - Pull latest images
+   - Run `docker compose up -d`
+   - Health checks
+4. **Post-Deploy Health Check**: Verify API and Frontend respond
+
+Slack notifications (optional): Success + Failure
+
+### Required Secrets
+
+Configure these in GitHub repository settings: `Settings → Secrets and variables → Actions`
+
+```
+DOCKER_REGISTRY_USERNAME    Docker Hub username
+DOCKER_REGISTRY_PASSWORD    Docker Hub access token (NOT password)
+VPS_HOST                    Production VPS hostname/IP
+VPS_SSH_KEY                 Private SSH key for deploy user (OpenSSH format)
+SLACK_WEBHOOK_URL           (optional) Slack incoming webhook for notifications
+```
+
+### Docker Registry Setup
+
+1. Create Docker Hub account
+2. Generate access token: https://hub.docker.com/settings/security
+3. Add to GitHub Secrets as `DOCKER_REGISTRY_PASSWORD`
+
+**Never use your Docker password** — use an access token!
+
+### SSH Key Setup
+
+```bash
+# On your local machine
+ssh-keygen -t ed25519 -f ~/.ssh/deploy_key -N ""
+
+# Copy public key to VPS
+ssh-copy-id -i ~/.ssh/deploy_key.pub deploy@your-vps.com
+
+# Add to GitHub Secrets
+cat ~/.ssh/deploy_key | pbcopy  # macOS
+xclip -selection clipboard < ~/.ssh/deploy_key  # Linux
+
+# Create GitHub Secret VPS_SSH_KEY with the private key content
+```
+
+---
+
+## VPS Provisioning & Deployment
+
+### Prerequisites
+
+- Ubuntu 22.04 LTS (or compatible)
+- Root access (or sudo)
+- Minimum 2GB RAM, 20GB disk
+- Open ports: 22 (SSH), 80 (HTTP), 443 (HTTPS)
+
+### Step 1: Create Ansible Inventory
+
+```bash
+cp infra/ansible/inventories/production.ini.example \
+   infra/ansible/inventories/production.ini
+
+# Edit with your VPS details
+nano infra/ansible/inventories/production.ini
+```
+
+Example:
+```ini
+[vps]
+cryptobot-prod ansible_host=192.168.1.100 ansible_user=root
+
+[vps:vars]
+domain_name=crypto-bot.example.com
+letsencrypt_email=admin@example.com
+```
+
+### Step 2: Provision VPS (one-time)
+
+```bash
+# Install Ansible
+pip install ansible
+
+# Provision the VPS (installs Docker, UFW, Fail2Ban, etc.)
+ansible-playbook \
+  -i infra/ansible/inventories/production.ini \
+  infra/ansible/playbooks/provision.yml
+```
+
+What provision.yml does:
+- Updates system packages
+- Sets timezone
+- Creates swap (2GB default)
+- Creates deploy user with sudo/docker groups
+- Installs Docker + Docker Compose
+- Configures UFW firewall (allows 22, 80, 443)
+- Installs Fail2Ban (intrusion prevention)
+- Installs Nginx + Certbot
+- Creates application directory
+
+### Step 3: Setup .env on VPS
+
+```bash
+ssh deploy@your-vps.com
+
+cd /opt/crypto-bot
+cp .env.example .env
+
+# Edit with strong passwords
+nano .env
+
+# Verify permissions
+chmod 600 .env
+```
+
+### Step 4: Deploy Application
+
+**Option A: Via GitHub Actions** (automatic on push to main)
+
+```bash
+# Just push to main, GitHub Actions handles the rest
+git push origin main
+# Monitor deployment: GitHub → Actions → Build & Deploy
+```
+
+**Option B: Manual Deployment** (via Ansible)
+
+```bash
+ansible-playbook \
+  -i infra/ansible/inventories/production.ini \
+  -e "docker_username=your_dockerhub_user" \
+  -e "image_tag=v1.0.0" \
+  infra/ansible/playbooks/deploy.yml
+```
+
+### Step 5: Verify Deployment
+
+```bash
+# SSH to VPS
+ssh deploy@your-vps.com
+
+# Check services
+cd /opt/crypto-bot
+docker compose ps
+
+# Verify health
+./infra/scripts/healthcheck.sh
+
+# Check logs
+docker compose logs api
+docker compose logs frontend
+docker compose logs etl-worker
+```
+
+---
+
+## Monitoring & Alerting
+
+### Prometheus
+
+Accessible at `http://localhost:9090` (local) or `http://vps:9090` (production)
+
+Scrapes metrics from:
+- **api** (port 8000): FastAPI metrics
+- **postgres-exporter** (port 9187): Database metrics
+- **nginx-exporter** (port 9113): Nginx metrics
+- **mlflow** (port 5000): MLflow metrics (if enabled)
+- **node-exporter** (port 9100): Linux system metrics (optional)
+- **cadvisor** (port 8080): Docker container metrics (optional)
+
+Configuration: `infra/prometheus/prometheus.yml`
+
+### Grafana
+
+Accessible at `http://localhost:3000` (local) or `http://vps:3000` (production)
+
+Default credentials:
+```
+User: admin
+Password: <value of GF_SECURITY_ADMIN_PASSWORD in .env>
+```
+
+**Change the default password immediately on production!**
+
+#### Dashboards
+
+Included dashboards:
+1. **API Overview** — Request rate, latency, errors, active connections
+2. **Database Performance** — Query latency, connections, cache hit ratio
+3. **Container Resources** — CPU, memory, disk I/O per service
+4. **Business Metrics** — Signals generated, backtesting results
+
+Add custom dashboards:
+1. Grafana UI → Dashboards → New Dashboard
+2. Add panels (query Prometheus)
+3. Save and add to provisioning YAML
+
+### Alert Rules
+
+Prometheus evaluates alert rules every 30 seconds. Configured in:
+`infra/prometheus/alert_rules.yml`
+
+Alert conditions:
+- **CRITICAL**: API down, Database down, Nginx down
+- **WARNING**: High latency (>1s), High error rate (>5%), Low disk space, High connections
+- **INFO**: No recent signals (informational)
+
+View alerts: Prometheus UI → Alerts
+
+### Alertmanager (Optional)
+
+Currently disabled. To enable:
+
+1. Deploy Alertmanager container
+2. Configure `infra/prometheus/alertmanager.yml`
+3. Configure notification channels (email, Slack, PagerDuty)
+4. Update `prometheus.yml` to point to Alertmanager
+
+---
+
+## SSL/TLS Setup
+
+### Option 1: Via Let's Encrypt Certbot (Recommended for Production)
+
+Prerequisites: DNS must resolve your domain to the VPS
+
+```bash
+# On VPS
+ssh deploy@your-vps.com
+
+cd /opt/crypto-bot
+
+# Run certbot interactive setup
+sudo certbot certonly --standalone \
+  -d your-domain.com \
+  -d www.your-domain.com \
+  --email admin@example.com \
+  --agree-tos
+
+# Certs stored in: /etc/letsencrypt/live/your-domain.com/
+
+# Update nginx config with your domain
+sudo nano /etc/nginx/conf.d/default.conf
+
+# Test nginx config
+sudo nginx -t
+
+# Reload nginx
+sudo systemctl reload nginx
+
+# Auto-renewal (certbot does this automatically via cron)
+sudo systemctl status certbot.timer
+```
+
+### Option 2: Via Ansible Playbook
+
+```bash
+ansible-playbook \
+  -i infra/ansible/inventories/production.ini \
+  -e "domain_name=your-domain.com" \
+  -e "letsencrypt_email=admin@example.com" \
+  infra/ansible/playbooks/ssl.yml
+```
+
+### Nginx SSL Configuration
+
+Configured in `infra/nginx/nginx.conf`:
+- HTTPS redirect (HTTP → HTTPS)
+- TLS 1.2 + 1.3
+- Strong ciphers
+- HSTS headers (max-age=1 year)
+- Rate limiting (30 req/s API, 5 req/min auth)
+- WebSocket support (for Streamlit)
+- Security headers (CSP, X-Frame-Options, etc.)
+
+---
+
+## Backup & Disaster Recovery
+
+### Database Backups
+
+Automated daily at 3 AM (configurable in `group_vars/vps.yml`):
+
+```bash
+# Manual backup
+docker compose exec -T timescaledb pg_dump -U cryptobot cryptobot | gzip > backup.sql.gz
+
+# Restore from backup
+gunzip < backup.sql.gz | docker compose exec -T timescaledb psql -U cryptobot
+```
+
+### MinIO Backups
+
+Objects in MinIO persist in named volume `minio-data`. To backup:
+
+```bash
+# Backup MinIO data
+docker run --rm -v minio-data:/data -v /backups:/backups \
+  alpine tar czf /backups/minio-$(date +%Y%m%d).tar.gz -C /data .
+
+# Restore
+tar xzf /backups/minio-*.tar.gz -C /var/lib/docker/volumes/minio-data/_data/
+```
+
+### Full System Backup
+
+```bash
+# Backup everything (volumes, code, configs)
+tar czf system-backup-$(date +%Y%m%d).tar.gz \
+  /opt/crypto-bot \
+  /var/lib/docker/volumes/
+
+# Restore
+tar xzf system-backup-*.tar.gz -C /
+```
+
+### Disaster Recovery Checklist
+
+1. Provision new VPS with `provision.yml`
+2. Copy `.env` file
+3. Restore backups:
+   - `docker compose exec timescaledb pg_restore < backup.sql`
+   - Restore MinIO data
+4. Run `docker compose up -d`
+5. Verify health with `./infra/scripts/healthcheck.sh`
+
+---
+
+## Troubleshooting
+
+### Service Won't Start
+
+```bash
+# Check logs
+docker compose logs <service_name> -f
+
+# Verify health
+docker compose ps
+docker inspect <container_name>
+
+# Restart service
+docker compose restart <service_name>
+```
+
+### High Memory Usage
+
+Check `docker compose ps` and resource limits in `docker-compose.yml`:
+
+```bash
+# See per-container memory usage
+docker stats
+
+# Increase limit (edit docker-compose.yml)
+# deploy:
+#   resources:
+#     limits:
+#       memory: 2G  # increase from 1G
+docker compose down && docker compose up -d
+```
+
+### Database Connection Issues
+
+```bash
+# Check database is healthy
+docker compose exec timescaledb pg_isready
+
+# Check credentials in .env
+grep DATABASE_URL .env
+
+# Test connection
+docker compose exec api psql $DATABASE_URL -c "SELECT 1"
+
+# View database logs
+docker compose logs timescaledb
+```
+
+### API Returns 500 Error
+
+```bash
+# Check API logs
+docker compose logs api -f
+
+# Check database connectivity
+docker compose logs api | grep -i "database\|connection"
+
+# Verify .env variables
+docker compose exec api env | sort
+```
+
+### Nginx SSL Certificate Issues
+
+```bash
+# Check certificate
+openssl x509 -in /etc/letsencrypt/live/domain.com/fullchain.pem -text -noout
+
+# Test SSL
+curl -vI https://your-domain.com
+
+# Check nginx config
+sudo nginx -t
+sudo systemctl reload nginx
+
+# Renew certificate
+sudo certbot renew --dry-run
+```
+
+### GitHub Actions Deployment Fails
+
+Check the action logs: GitHub → Actions → Build & Deploy → failed run
+
+Common issues:
+1. **Docker Registry Auth**: Check `DOCKER_REGISTRY_PASSWORD` is an access token, not password
+2. **VPS SSH Key**: Verify `VPS_SSH_KEY` is in OpenSSH format (starts with `-----BEGIN OPENSSH PRIVATE KEY-----`)
+3. **Health Check Timeout**: VPS services may need more time to start; increase sleep duration in workflow
+4. **.env Missing**: Ensure `.env` exists on VPS before deployment
+
+---
+
+## Scripts Reference
+
+### Health Check Script
+
+```bash
 ./infra/scripts/healthcheck.sh
 ```
 
-### Playbooks
+Checks:
+- HTTP services (API, Frontend, Nginx, Prometheus, Grafana, MLflow)
+- Database connectivity
+- MinIO S3 health
+- Docker container status
 
-| Playbook | Quand l'utiliser | Ce qu'il fait |
-|----------|-----------------|---------------|
-| `provision.yml` | VPS neuf | Installe Docker, UFW, fail2ban, swap, user deploy, Nginx, certbot |
-| `deploy.yml` | A chaque release | Sync fichiers, build images, `docker compose up`, healthcheck |
-| `backup.yml` | Quotidien (cron) | pg_dump TimescaleDB, upload vers MinIO, rotation des anciens backups |
-| `ssl.yml` | Setup initial | Obtient certificat Let's Encrypt, configure renouvellement auto |
+Exit codes: 0 = all healthy, 1 = failures
 
-### Variables importantes (`group_vars/vps.yml`)
+### Backup Scripts
 
-| Variable | Valeur par defaut | Description |
-|----------|-------------------|-------------|
-| `deploy_user` | `deploy` | User systeme pour le deploiement |
-| `docker_compose_dir` | `/opt/crypto-bot` | Repertoire de l'app sur le VPS |
-| `ufw_allowed_ports` | `22, 80, 443` | Ports ouverts dans le firewall |
-| `fail2ban_maxretry` | `5` | Tentatives avant ban |
-| `backup_retention_days` | `7` | Retention des backups quotidiens |
-| `backup_schedule` | `0 3 * * *` | Cron backup (3h du matin) |
+```bash
+# Database backup
+./infra/scripts/backup-db.sh
+
+# MinIO backup
+./infra/scripts/backup-minio.sh
+
+# Full backup
+./infra/scripts/backup-all.sh
+```
+
+### Rollback Script
+
+```bash
+./infra/scripts/rollback.sh
+```
+
+Rolls back to previous Docker Compose configuration.
 
 ---
 
-## CI/CD Pipeline (GitHub Actions)
+## Best Practices
 
-Le pipeline complet est dans `.github/workflows/ci.yml` :
+### Security
 
-```
-PR ouverte ──> [Lint (ruff)] ──> [Type Check (mypy)] ──> [Tests (pytest + couverture)] ──> [Build Docker]
-                                                                                               │
-Merge sur main ──────────────────────────────────────────────────────────────────────> [Deploy via Ansible]
-```
+1. **Never commit secrets**: .env is in .gitignore
+2. **Use strong passwords**: Min 16 chars, mixed case, numbers, symbols
+3. **Rotate secrets regularly**: Change DB password, JWT key quarterly
+4. **Firewall**: UFW allows only 22, 80, 443
+5. **Fail2Ban**: Blocks brute-force SSH attacks
+6. **HTTPS only**: Nginx redirects HTTP → HTTPS
+7. **Security headers**: CSP, X-Frame-Options, HSTS configured
 
-### Secrets GitHub necessaires
+### Performance
 
-| Secret | Description |
-|--------|-------------|
-| `VPS_IP` | Adresse IP du VPS OVH |
-| `VPS_SSH_KEY` | Cle SSH privee (ed25519) pour le user `deploy` |
+1. **Resource limits**: Prevent OOM kills; monitor with `docker stats`
+2. **Database indexes**: Ensure frequently queried columns are indexed
+3. **Caching**: Enable in Prometheus, Grafana, API
+4. **Rate limiting**: Nginx limits API to 30 req/s, auth to 5 req/min
+5. **Compression**: Gzip enabled for responses >1KB
+
+### Reliability
+
+1. **Health checks**: Every service has a health endpoint
+2. **Restart policy**: `unless-stopped` (survives reboots)
+3. **Backups**: Daily database backups, 30-day retention
+4. **Monitoring**: Prometheus + Grafana for alerting
+5. **Logs**: All container logs to stdout (Docker captures)
 
 ---
 
-## Configuration du projet
+## Further Reading
 
-### `pyproject.toml`
-
-Le fichier `pyproject.toml` a la racine configure :
-- **ruff** : linting + formatting (line-length=120, Python 3.11)
-- **mypy** : type checking strict
-- **pytest** : test paths, coverage minimum 80%
-
-### `.claude/` (Configuration Claude Code)
-
-Le dossier `.claude/` contient la configuration pour les agents Claude Code :
-- `settings.json` : permissions et variables d'environnement
-- `rules/` : regles par equipe (python, data-eng, ml, backend, frontend, devops)
-- `commands/` : commandes personnalisees (deploy, lint, test, db-migrate)
-
-Les agents Claude Code utilisent `CLAUDE.md` a la racine pour comprendre le projet.
+- [Docker Compose Documentation](https://docs.docker.com/compose/)
+- [Ansible Documentation](https://docs.ansible.com/)
+- [Prometheus Documentation](https://prometheus.io/docs/)
+- [Grafana Documentation](https://grafana.com/docs/)
+- [Let's Encrypt](https://letsencrypt.org/)

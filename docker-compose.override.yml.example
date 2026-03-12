@@ -1,178 +1,109 @@
-# Docker Compose Override for Development
-#
-# This file overrides production settings for local development.
-# Copy this to docker-compose.override.yml (which is git-ignored) to enable:
-#
-#   cp docker-compose.override.yml.example docker-compose.override.yml
-#   docker-compose up
-#
-# Docker Compose automatically merges this file with docker-compose.yml,
-# allowing you to have different configurations for dev vs production.
+# Development override for local development
+# Usage: docker-compose will automatically apply this alongside docker-compose.yml
+# This exposes all services to localhost and enables hot-reload
 
 services:
-  # --- Database ---
   timescaledb:
-    # Development: expose database port for local client connections
     ports:
-      - "127.0.0.1:5432:5432"
-    # Development: faster health checks
-    healthcheck:
-      interval: 5s
-      timeout: 3s
-      start_period: 10s
-      retries: 3
-    # Development: lower memory limit
-    deploy:
-      resources:
-        limits:
-          memory: 512M
+      - "5432:5432"  # Full exposure for local development
 
-  # --- Object Storage ---
   minio:
-    # Development: faster health checks
-    healthcheck:
-      interval: 10s
-      timeout: 5s
-      start_period: 10s
-      retries: 2
-
-  # --- MLflow ---
-  mlflow:
-    # Development: faster health checks
-    healthcheck:
-      interval: 15s
-      timeout: 5s
-      retries: 2
-
-  # --- Backend API ---
-  api:
-    # Development: mount source code for hot reload
-    volumes:
-      - ./src/api:/app/src/api
-    # Development: enable debug logging
-    environment:
-      LOG_LEVEL: DEBUG
-    # Development: faster health checks
-    healthcheck:
-      interval: 10s
-      timeout: 5s
-      start_period: 10s
-      retries: 2
-    # Development: lower memory limit
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-
-  # --- Frontend ---
-  frontend:
-    # Development: mount source code for hot reload
-    volumes:
-      - ./src/frontend:/app/src/frontend
-    # Development: enable debug mode
-    environment:
-      STREAMLIT_LOGGER_LEVEL: debug
-      STREAMLIT_LOGGER_HIDE_USER_CODE: "false"
-    # Development: faster health checks
-    healthcheck:
-      interval: 10s
-      timeout: 5s
-      retries: 2
-    # Development: lower memory limit
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-
-  # --- ETL Worker ---
-  etl-worker:
-    # Development: mount source code for hot reload
-    volumes:
-      - ./src/etl:/app/src/etl
-    # Development: enable debug logging
-    environment:
-      LOG_LEVEL: DEBUG
-    # Development: faster health checks
-    healthcheck:
-      interval: 15s
-      timeout: 5s
-      start_period: 15s
-      retries: 2
-    # Development: lower memory limit
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-
-  # --- ML Worker ---
-  ml-worker:
-    # Development: mount source code for hot reload
-    volumes:
-      - ./src/ml:/app/src/ml
-    # Development: enable debug logging
-    environment:
-      LOG_LEVEL: DEBUG
-    # Development: faster health checks
-    healthcheck:
-      interval: 30s
-      timeout: 10s
-      start_period: 20s
-      retries: 2
-    # Development: lower memory limit
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-
-  # --- Reverse Proxy ---
-  nginx:
-    # Development: expose nginx status endpoint for debugging
     ports:
-      - "127.0.0.1:8080:8080"
-    # Development: lower memory limit
+      - "9000:9000"  # API endpoint
+      - "9001:9001"  # Console UI
+
+  mlflow:
+    ports:
+      - "5000:5000"
+
+  api:
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/api:/app/src/api:cached
+      - ./src/shared:/app/src/shared:cached
+    environment:
+      LOG_LEVEL: DEBUG
+
+  frontend:
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./src/frontend:/app/src/frontend:cached
+    environment:
+      STREAMLIT_SERVER_HEADLESS: "false"
+      API_URL: http://localhost:8000
+
+  etl-worker:
+    volumes:
+      - ./src/etl:/app/src/etl:cached
+      - ./src/shared:/app/src/shared:cached
+    environment:
+      LOG_LEVEL: DEBUG
+
+  ml-worker:
+    volumes:
+      - ./src/ml:/app/src/ml:cached
+      - ./src/shared:/app/src/shared:cached
+    environment:
+      LOG_LEVEL: DEBUG
+
+  prometheus:
+    ports:
+      - "9090:9090"
+
+  grafana:
+    ports:
+      - "3000:3000"
+
+  postgres-exporter:
+    ports:
+      - "9187:9187"
+
+  nginx-exporter:
+    ports:
+      - "9113:9113"
+
+  # Node exporter — Linux only for development
+  node-exporter:
+    image: prom/node-exporter:v1.8.0
+    restart: unless-stopped
+    command:
+      - "--path.rootfs=/host"
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - "9100:9100"
+    networks:
+      - backend-net
     deploy:
       resources:
         limits:
           memory: 64M
 
-  # --- Monitoring ---
-  prometheus:
-    # Development: shorter retention
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.retention.time=1d"
-      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
-      - "--web.console.templates=/usr/share/prometheus/consoles"
-    # Development: lower memory limit
+  # cAdvisor — Docker container metrics (Linux only)
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "8081:8080"
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    networks:
+      - backend-net
     deploy:
       resources:
         limits:
           memory: 256M
-
-  grafana:
-    # Development: auto-login (not recommended for production!)
-    environment:
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
-    # Development: lower memory limit
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-
-# Development: expose all internal ports for debugging
-  postgres-exporter:
-    ports:
-      - "127.0.0.1:9187:9187"
-    deploy:
-      resources:
-        limits:
-          memory: 32M
-
-  nginx-exporter:
-    ports:
-      - "127.0.0.1:8000:8000"
-    deploy:
-      resources:
-        limits:
-          memory: 16M

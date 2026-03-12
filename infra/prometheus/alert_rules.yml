@@ -1,0 +1,139 @@
+groups:
+  - name: cryptobot_alerts
+    interval: 30s
+    rules:
+      # API Alerts
+      - alert: APIDown
+        expr: up{job="api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "API service is down"
+          description: "API endpoint at {{ $labels.instance }} has been unavailable for 2 minutes"
+
+      - alert: APIHighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="api"}[5m])) > 1.0
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "API response latency is high"
+          description: "95th percentile latency: {{ $value }}s (threshold: 1.0s)"
+
+      - alert: APIHighErrorRate
+        expr: rate(http_requests_total{job="api",status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "API error rate is high"
+          description: "5xx error rate: {{ $value | humanizePercentage }} (threshold: 5%)"
+
+      # Database Alerts
+      - alert: PostgreSQLDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL service is down"
+          description: "PostgreSQL at {{ $labels.instance }} is unavailable"
+
+      - alert: PostgreSQLLowDiskSpace
+        expr: pg_database_size_bytes / 1024 / 1024 / 1024 > (node_filesystem_avail_bytes{fstype=~"ext4|xfs"} / 1024 / 1024 / 1024) * 0.9
+        for: 10m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL disk space is running low"
+          description: "Database size {{ $value }}GB is using 90% of available space"
+
+      - alert: PostgreSQLHighConnections
+        expr: pg_stat_activity_count > 50
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL connection count is high"
+          description: "Active connections: {{ $value }} (threshold: 50)"
+
+      # Nginx Alerts
+      - alert: NginxDown
+        expr: up{job="nginx"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: nginx
+        annotations:
+          summary: "Nginx service is down"
+          description: "Nginx reverse proxy at {{ $labels.instance }} is unavailable"
+
+      - alert: NginxHighErrorRate
+        expr: rate(nginx_http_requests_total{status=~"5.."}[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          component: nginx
+        annotations:
+          summary: "Nginx 5xx error rate is high"
+          description: "Error rate: {{ $value | humanizePercentage }} (threshold: 1%)"
+
+      # MLflow Alerts
+      - alert: MLflowDown
+        expr: up{job="mlflow"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          component: mlflow
+        annotations:
+          summary: "MLflow tracking server is down"
+          description: "MLflow at {{ $labels.instance }} has been unavailable for 5 minutes"
+
+      # Container Resource Alerts
+      - alert: HighMemoryUsage
+        expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          component: container
+        annotations:
+          summary: "Container {{ $labels.name }} memory usage is high"
+          description: "Memory usage: {{ $value | humanize }}% (threshold: 85%)"
+
+      - alert: HighCPUUsage
+        expr: rate(container_cpu_usage_seconds_total[5m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: container
+        annotations:
+          summary: "Container {{ $labels.name }} CPU usage is high"
+          description: "CPU usage: {{ $value | humanize }}% (threshold: 80%)"
+
+      # Data Quality Alerts
+      - alert: ETLDataStale
+        expr: time() - pg_query_time{query="SELECT MAX(timestamp) FROM ohlcv"} > 3600
+        for: 10m
+        labels:
+          severity: warning
+          component: etl
+        annotations:
+          summary: "OHLCV data is stale"
+          description: "No new data for over 1 hour (threshold: 60 minutes)"
+
+      - alert: NoRecentSignals
+        expr: time() - pg_query_time{query="SELECT MAX(timestamp) FROM signals WHERE confidence >= 0.6"} > 7200
+        for: 15m
+        labels:
+          severity: info
+          component: ml
+        annotations:
+          summary: "No recent high-confidence signals generated"
+          description: "Last signal over 2 hours ago (informational alert)"

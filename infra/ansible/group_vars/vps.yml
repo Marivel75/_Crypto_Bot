@@ -47,3 +47,15 @@ app_services:
   - frontend
   - etl-worker
   - nginx
+
+# Database (adjust to match .env)
+postgres_user: cryptobot
+postgres_db: cryptobot
+postgres_port: 5432
+
+# S3/MinIO (adjust to match .env)
+minio_port: 9000
+minio_console_port: 9001
+
+# Deployment
+image_tag: "latest"  # override with --extra-vars

@@ -1,31 +1,38 @@
 # GitHub Actions Workflow: Build & Deploy to Production
 #
+# This workflow builds Docker images and deploys to production via Ansible.
+# It runs only on push to main branch (after all CI checks pass).
+#
+# Pipeline:
+# 1. Lint — validates code style
+# 2. Type check — validates type safety
+# 3. Test — validates tests pass with 80% coverage
+# 4. Build & Push — builds and pushes to Docker registry
+# 5. Deploy — deploys to VPS via Ansible
+# 6. Post-deploy health check — verifies all services are healthy
+#
 # REQUIRED SECRETS (configure in GitHub repository settings):
-# - DOCKER_REGISTRY_USERNAME: Docker Hub (or private registry) username
-# - DOCKER_REGISTRY_PASSWORD: Docker Hub (or private registry) password/token
-# - VPS_SSH_KEY: Private SSH key for accessing production VPS (OpenSSH format)
-# - VPS_HOST: Production VPS hostname or IP address (e.g., deploy.example.com)
+# - DOCKER_REGISTRY_USERNAME: Docker Hub username
+# - DOCKER_REGISTRY_PASSWORD: Docker Hub access token (not password!)
+# - VPS_SSH_KEY: Private SSH key for VPS (OpenSSH format)
+# - VPS_HOST: Production VPS hostname or IP address
 #
 # OPTIONAL SECRETS:
-# - SLACK_WEBHOOK_URL: For Slack notifications on deployment success/failure
+# - SLACK_WEBHOOK_URL: For Slack notifications on deployment
 #
 # To configure secrets:
 # 1. Go to: https://github.com/YOUR_ORG/roulio-mars/settings/secrets/actions
 # 2. Click "New repository secret"
-# 3. Add each secret listed above:
-#    - DOCKER_REGISTRY_USERNAME: your_docker_username
-#    - DOCKER_REGISTRY_PASSWORD: your_docker_token (use access tokens, not passwords)
-#    - VPS_SSH_KEY: (paste your OpenSSH private key here)
-#    - VPS_HOST: 192.168.1.100 (or your VPS hostname)
+# 3. Add each secret listed above
 #
 # SSH Key Generation:
-# ssh-keygen -t ed25519 -f ~/.ssh/deploy_key -N ""
-# Add ~/.ssh/deploy_key.pub to ~/.ssh/authorized_keys on VPS
-# Paste the contents of ~/.ssh/deploy_key as VPS_SSH_KEY secret
+#   ssh-keygen -t ed25519 -f ~/.ssh/deploy_key -N ""
+#   Add ~/.ssh/deploy_key.pub to ~/.ssh/authorized_keys on VPS
+#   Paste contents of ~/.ssh/deploy_key as VPS_SSH_KEY secret
 #
 # Docker Registry Authentication:
-# For Docker Hub: use access token (https://hub.docker.com/settings/security)
-# For private registry: use registry-specific credentials
+#   For Docker Hub: use access token (https://hub.docker.com/settings/security)
+#   Do NOT use your Docker password — use an access token!
 
 name: Build & Deploy
 
@@ -33,98 +40,378 @@ on:
   push:
     branches: [ main ]
 
+env:
+  REGISTRY: docker.io
+  IMAGE_TAG: ${{ github.sha }}
+  PYTHON_VERSION: "3.11"
+  PIP_NO_CACHE_DIR: "1"
+
 jobs:
-  build:
-    name: Build Docker Images
+  # ========== LINT ==========
+  lint:
+    name: Lint (ruff)
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 10
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: "requirements.txt"
+
+      - name: Install linting tools
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install ruff
+
+      - name: Lint with ruff check
+        run: ruff check src/ tests/ --select=E,W,F,I,B,C4,UP,SIM,S,T20
+
+      - name: Format check with ruff format
+        run: ruff format src/ tests/ --check
+
+  # ========== TYPE CHECK ==========
+  typecheck:
+    name: Type Check (mypy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: "requirements.txt"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt mypy
+
+      - name: Type check with mypy
+        run: mypy src/ --ignore-missing-imports --show-error-codes
+
+  # ========== TESTS ==========
+  test:
+    name: Test (pytest + coverage)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: typecheck
+
+    services:
+      timescaledb:
+        image: timescale/timescaledb:2.14.2-pg16
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: "requirements.txt"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Wait for TimescaleDB to be ready
+        run: |
+          python << 'EOFPYTHON'
+          import socket
+          import time
+          import sys
+
+          sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+          for attempt in range(30):
+              try:
+                  sock.connect(('localhost', 5432))
+                  sock.close()
+                  print('TimescaleDB is ready')
+                  sys.exit(0)
+              except (socket.error, socket.timeout) as e:
+                  if attempt < 29:
+                      print(f'Attempt {attempt + 1}: waiting for TimescaleDB...')
+                      time.sleep(1)
+          print('TimescaleDB failed to start after 30 attempts')
+          sys.exit(1)
+          EOFPYTHON
+
+      - name: Run tests with pytest
+        env:
+          DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
+        run: |
+          pytest tests/ \
+            --cov=src \
+            --cov-report=term-missing \
+            --cov-report=html \
+            --cov-fail-under=80 \
+            -v \
+            --tb=short
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: htmlcov/
+          retention-days: 7
+
+  # ========== BUILD & PUSH DOCKER IMAGES ==========
+  build-and-push:
+    name: Build & Push Docker Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: test
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Login to Docker Registry
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-      
-      - name: Build API image
+
+      - name: Build and push API image
         uses: docker/build-push-action@v5
         with:
           context: .
           dockerfile: src/api/Dockerfile
-          tags: ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-api:latest
           push: true
-      
-      - name: Build Frontend image
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-api:latest
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-api:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push Frontend image
         uses: docker/build-push-action@v5
         with:
           context: .
           dockerfile: src/frontend/Dockerfile
-          tags: ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-frontend:latest
           push: true
-      
-      - name: Build ETL image
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-frontend:latest
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-frontend:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push ETL image
         uses: docker/build-push-action@v5
         with:
           context: .
           dockerfile: src/etl/Dockerfile
-          tags: ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-etl:latest
           push: true
-      
-      - name: Build ML image
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-etl:latest
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-etl:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push ML image
         uses: docker/build-push-action@v5
         with:
           context: .
           dockerfile: src/ml/Dockerfile
-          tags: ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-ml:latest
           push: true
-  
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-ml:latest
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-ml:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push MLflow image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/ml
+          dockerfile: Dockerfile.mlflow
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-mlflow:latest
+            ${{ secrets.DOCKER_REGISTRY_USERNAME }}/cryptobot-mlflow:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ========== DEPLOY TO PRODUCTION ==========
   deploy:
     name: Deploy to Production
-    needs: build
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 45
+    needs: build-and-push
+    if: ${{ secrets.VPS_HOST != '' && secrets.VPS_SSH_KEY != '' }}
+
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Deploy via Ansible
-        env:
-          DEPLOY_KEY: ${{ secrets.VPS_SSH_KEY }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+
+      - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
-          
-          # Run Ansible deployment playbook
-          ansible-playbook -i "$VPS_HOST," \
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Pre-deployment health check (SSH connectivity)
+        run: |
+          ssh -i ~/.ssh/deploy_key -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
+            deploy@${{ secrets.VPS_HOST }} \
+            "echo 'SSH connection successful' && docker --version" || exit 1
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Run Ansible deployment
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        run: |
+          ansible-playbook \
+            -i "${{ secrets.VPS_HOST }}," \
             -e "ansible_user=deploy" \
             -e "ansible_ssh_private_key_file=~/.ssh/deploy_key" \
+            -e "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ConnectTimeout=10'" \
             -e "docker_username=$DOCKER_USERNAME" \
+            -e "image_tag=$IMAGE_TAG" \
+            -v \
             infra/ansible/playbooks/deploy.yml
-      
-      - name: Notify Slack (optional)
-        if: always()
+
+      - name: Post-deployment health check
+        run: |
+          echo "Waiting for services to stabilize..."
+          sleep 10
+          
+          for attempt in {1..15}; do
+            echo "Health check attempt $attempt/15..."
+            
+            # Check API health
+            if curl -sf \
+              --max-time 5 \
+              http://${{ secrets.VPS_HOST }}/api/v1/health > /dev/null 2>&1; then
+              
+              # Check Frontend health
+              if curl -sf \
+                --max-time 5 \
+                http://${{ secrets.VPS_HOST }} > /dev/null 2>&1; then
+                echo "✓ All health checks passed"
+                exit 0
+              fi
+            fi
+            
+            if [ $attempt -lt 15 ]; then
+              echo "Services not ready yet, retrying in 5s..."
+              sleep 5
+            fi
+          done
+          
+          echo "✗ Health check failed after 15 attempts"
+          exit 1
+
+  # ========== SLACK NOTIFICATIONS ==========
+  notify-slack-success:
+    name: Notify Slack (deployment success)
+    runs-on: ubuntu-latest
+    if: success() && needs.deploy.result == 'success'
+    needs: [ deploy ]
+
+    steps:
+      - name: Notify Slack on success
+        if: secrets.SLACK_WEBHOOK_URL
         uses: slackapi/slack-github-action@v1.24.0
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
           payload: |
             {
-              "text": "Deployment ${{ job.status }}",
+              "text": "Deployment Successful",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Deployment Status*\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref }}\nStatus: ${{ job.status }}\nCommit: ${{ github.sha }}"
+                    "text": "*Deployment Status: SUCCESS*\nRepository: ${{ github.repository }}\nBranch: main\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\nImage Tag: ${{ github.sha }}"
                   }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": { "type": "plain_text", "text": "View Deployment" },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+
+  notify-slack-failure:
+    name: Notify Slack (deployment failure)
+    runs-on: ubuntu-latest
+    if: failure() && needs.deploy.result == 'failure'
+    needs: [ deploy ]
+
+    steps:
+      - name: Notify Slack on failure
+        if: secrets.SLACK_WEBHOOK_URL
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "Deployment Failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Deployment Status: FAILED*\nRepository: ${{ github.repository }}\nBranch: main\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": { "type": "plain_text", "text": "View Logs" },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
                 }
               ]
             }

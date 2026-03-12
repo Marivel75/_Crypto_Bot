@@ -1,8 +1,16 @@
+# Ansible Inventory for Production VPS
+# Usage: cp production.ini.example production.ini && edit production.ini
+# Then: ansible-playbook -i inventories/production.ini playbooks/provision.yml
+
 [vps]
-crypto-bot-vps ansible_host=YOUR_VPS_IP ansible_user=deploy ansible_ssh_private_key_file=~/.ssh/id_ed25519
+# Replace with your production VPS hostname or IP address
+cryptobot-prod ansible_host=your-vps-hostname-or-ip.com ansible_user=root
 
 [vps:vars]
-ansible_python_interpreter=/usr/bin/python3
-docker_compose_dir=/opt/crypto-bot
-# domain_name and letsencrypt_email are in group_vars/vps.yml
-# Override at deploy time: ansible-playbook -e "domain_name=crypto.example.com letsencrypt_email=ops@example.com"
+# Override group variables here if needed
+domain_name=your-domain.com
+letsencrypt_email=your-email@example.com
+deploy_user=deploy
+
+# Example with IP:
+# cryptobot-prod ansible_host=192.168.1.100 ansible_user=root
