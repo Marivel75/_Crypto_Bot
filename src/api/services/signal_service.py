@@ -1,4 +1,4 @@
-"""Signal service — active signals, detail, performance."""
+"""Signal service — active signals, detail, performance, history."""
 
 from __future__ import annotations
 
@@ -148,3 +148,44 @@ async def get_performance(db: AsyncSession) -> dict[str, object]:
         "win_rate": win_rate,
         "total_pnl": total_pnl,
     }
+
+
+async def get_history(
+    db: AsyncSession,
+    start: datetime | None = None,
+    end: datetime | None = None,
+    limit: int = 100,
+    page: int = 1,
+) -> tuple[list[TradingSignalOrm], int]:
+    """Return paginated historical signals with optional date range filtering.
+
+    Args:
+        db: Active async database session.
+        start: Optional inclusive start datetime for signal creation.
+        end: Optional inclusive end datetime for signal creation.
+        limit: Maximum number of records per page.
+        page: 1-based page number.
+
+    Returns:
+        Tuple of (list of TradingSignalOrm rows, total matching row count).
+    """
+    conditions = []
+    if start is not None:
+        conditions.append(TradingSignalOrm.created_at >= start)
+    if end is not None:
+        conditions.append(TradingSignalOrm.created_at <= end)
+
+    count_query = select(func.count()).select_from(TradingSignalOrm).where(*conditions)
+    total_result = await db.execute(count_query)
+    total = total_result.scalar() or 0
+
+    offset = (page - 1) * limit
+    query = (
+        select(TradingSignalOrm)
+        .where(*conditions)
+        .order_by(desc(TradingSignalOrm.created_at))
+        .offset(offset)
+        .limit(limit)
+    )
+    result = await db.execute(query)
+    return list(result.scalars().all()), total

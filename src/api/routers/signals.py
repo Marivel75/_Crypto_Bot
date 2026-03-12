@@ -1,7 +1,8 @@
-"""Signals router — active, by symbol, detail, performance."""
+"""Signals router — active, by symbol, detail, performance, history."""
 
 from __future__ import annotations
 
+from datetime import datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Path, Query
@@ -104,6 +105,39 @@ async def get_by_symbol(
         If symbol or timeframe format is invalid.
     """
     signals, total = await signal_service.get_by_symbol(db, symbol, timeframe, limit, page)
+    return ApiResponse(
+        data=[SignalResponse.model_validate(s) for s in signals],
+        meta=PaginationMeta(total=total, page=page, limit=limit),
+    )
+
+
+@router.get("/history", response_model=ApiResponse[list[SignalResponse]])
+async def get_history(
+    start: datetime | None = Query(None, description="Start date (ISO 8601)"),
+    end: datetime | None = Query(None, description="End date (ISO 8601)"),
+    limit: int = Query(100, ge=1, le=500, description="Max results per page"),
+    page: int = Query(1, ge=1, description="Page number"),
+    db: AsyncSession = Depends(get_db),
+) -> ApiResponse[list[SignalResponse]]:
+    """Return paginated signal history with optional date range filtering.
+
+    Parameters
+    ----------
+    start : datetime, optional
+        Inclusive lower bound for signal creation time.
+    end : datetime, optional
+        Inclusive upper bound for signal creation time.
+    limit : int
+        Pagination limit (1-500).
+    page : int
+        Page number (starting at 1).
+
+    Returns
+    -------
+    ApiResponse[list[SignalResponse]]
+        Paginated historical signals with metadata.
+    """
+    signals, total = await signal_service.get_history(db, start, end, limit, page)
     return ApiResponse(
         data=[SignalResponse.model_validate(s) for s in signals],
         meta=PaginationMeta(total=total, page=page, limit=limit),

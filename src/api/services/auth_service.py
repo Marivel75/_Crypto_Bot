@@ -189,3 +189,30 @@ async def get_user_by_id(db: AsyncSession, user_id: str) -> UserOrm | None:
     """
     result = await db.execute(select(UserOrm).where(UserOrm.id == user_id))
     return result.scalar_one_or_none()
+
+
+async def refresh_access_token(db: AsyncSession, refresh_token: str) -> UserOrm:
+    """Validate a refresh token and return the associated user.
+
+    Args:
+        db: Active async database session.
+        refresh_token: Refresh JWT string.
+
+    Returns:
+        The UserOrm instance associated with the token.
+
+    Raises:
+        AuthenticationError: If the token is invalid, expired, or the user is not found.
+    """
+    try:
+        payload = jwt.decode(refresh_token, settings.api_secret_key, algorithms=[ALGORITHM])
+        user_id: str | None = payload.get("sub")
+        if user_id is None:
+            raise AuthenticationError("Invalid refresh token: missing subject")
+    except JWTError as exc:
+        raise AuthenticationError("Invalid or expired refresh token") from exc
+
+    user = await get_user_by_id(db, user_id)
+    if user is None:
+        raise AuthenticationError("User not found for refresh token")
+    return user

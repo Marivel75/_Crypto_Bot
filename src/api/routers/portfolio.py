@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.dependencies import get_current_user, get_db
@@ -12,6 +13,8 @@ from src.api.schemas import (
     ApiResponse,
     PortfolioCreateRequest,
     PortfolioEntryResponse,
+    PortfolioHistoryResponse,
+    PortfolioSummaryResponse,
     PortfolioUpdateRequest,
 )
 from src.api.services import user_data_service
@@ -70,3 +73,31 @@ async def delete_entry(
     """Delete a portfolio position."""
     await user_data_service.delete_portfolio_entry(db, str(current_user.id), str(entry_id))
     return ApiResponse(data=None)
+
+
+@router.get("/summary", response_model=ApiResponse[PortfolioSummaryResponse])
+async def portfolio_summary(
+    db: AsyncSession = Depends(get_db),
+    current_user: UserOrm = Depends(get_current_user),
+) -> ApiResponse[PortfolioSummaryResponse]:
+    """Return aggregated portfolio statistics.
+
+    Includes total value, cost basis, unrealized P&L, and position allocation.
+    """
+    summary = await user_data_service.get_portfolio_summary(db, str(current_user.id))
+    return ApiResponse(data=PortfolioSummaryResponse(**summary))
+
+
+@router.get("/history", response_model=ApiResponse[PortfolioHistoryResponse])
+async def portfolio_history(
+    start: datetime | None = Query(None, description="Start date (ISO 8601)"),
+    end: datetime | None = Query(None, description="End date (ISO 8601)"),
+    db: AsyncSession = Depends(get_db),
+    current_user: UserOrm = Depends(get_current_user),
+) -> ApiResponse[PortfolioHistoryResponse]:
+    """Return portfolio value history over time.
+
+    Optional date range filtering. Returns daily snapshots of portfolio value.
+    """
+    history = await user_data_service.get_portfolio_history(db, str(current_user.id), start, end)
+    return ApiResponse(data=PortfolioHistoryResponse(**history))

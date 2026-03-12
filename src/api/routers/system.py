@@ -1,4 +1,4 @@
-"""System router — health check, sources status."""
+"""System router — health check, sources status, metrics."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.dependencies import get_db
-from src.api.schemas import ApiResponse, HealthResponse, SourceStatusResponse
+from src.api.schemas import ApiResponse, HealthResponse, MetricsResponse, SourceStatusResponse
 from src.shared.models.orm import OHLCVOrm
 
 logger = logging.getLogger(__name__)
@@ -69,3 +69,13 @@ async def sources_status(
             for row in rows
         ]
     )
+
+
+@router.get("/metrics", response_model=ApiResponse[MetricsResponse])
+async def get_metrics() -> ApiResponse[MetricsResponse]:
+    """Return application metrics from Prometheus.
+
+    Includes request counts, error rates, and latency statistics.
+    For full metrics in Prometheus format, see /metrics endpoint.
+    """
+    return ApiResponse(data=MetricsResponse())

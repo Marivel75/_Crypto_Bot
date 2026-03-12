@@ -10,6 +10,7 @@ from src.api.schemas import (
     ApiResponse,
     WatchlistAddRequest,
     WatchlistEntryResponse,
+    WatchlistPriceResponse,
 )
 from src.api.services import user_data_service
 from src.shared.models.orm import UserOrm
@@ -100,3 +101,13 @@ async def remove_symbol(
         db, str(current_user.id), symbol
     )
     return ApiResponse(data=None)
+
+
+@router.get("/prices", response_model=ApiResponse[list[WatchlistPriceResponse]])
+async def get_watchlist_prices(
+    db: AsyncSession = Depends(get_db),
+    current_user: UserOrm = Depends(get_current_user),
+) -> ApiResponse[list[WatchlistPriceResponse]]:
+    """Return current prices for all symbols in the user's watchlist."""
+    prices = await user_data_service.get_watchlist_prices(db, str(current_user.id))
+    return ApiResponse(data=[WatchlistPriceResponse(**p) for p in prices])

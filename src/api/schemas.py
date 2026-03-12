@@ -296,6 +296,31 @@ class PortfolioUpdateRequest(BaseModel):
     notes: str | None = None
 
 
+class PortfolioSummaryResponse(BaseModel):
+    """Portfolio summary with aggregated statistics."""
+
+    total_entries: int
+    total_value: float | None = None
+    total_cost: float | None = None
+    unrealized_pnl: float | None = None
+    allocation: dict[str, float] = Field(default_factory=dict)
+
+
+class PortfolioHistoryEntry(BaseModel):
+    """A single historical portfolio value snapshot."""
+
+    timestamp: datetime
+    total_value: float
+    entry_count: int
+
+
+class PortfolioHistoryResponse(BaseModel):
+    """Portfolio value history over time."""
+
+    symbol: str | None = None
+    history: list[PortfolioHistoryEntry] = Field(default_factory=list)
+
+
 # --- Watchlist ---
 
 
@@ -319,6 +344,14 @@ class WatchlistAddRequest(BaseModel):
     @classmethod
     def symbol_to_upper(cls, v: str) -> str:
         return v.upper()
+
+
+class WatchlistPriceResponse(BaseModel):
+    """Current price snapshot for a watchlist symbol."""
+
+    symbol: str
+    current_price: float | None = None
+    timestamp: datetime | None = None
 
 
 # --- Chat ---
@@ -358,3 +391,13 @@ class SourceStatusResponse(BaseModel):
     symbol: str | None = None
     last_ingestion: datetime | None = None
     record_count: int = 0
+
+
+class MetricsResponse(BaseModel):
+    """Prometheus-style application metrics."""
+
+    requests_total: int = 0
+    requests_success: int = 0
+    requests_error: int = 0
+    request_latency_ms: float = 0.0
+    database_connections: int = 0

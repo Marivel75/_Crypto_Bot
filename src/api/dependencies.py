@@ -19,6 +19,7 @@ from src.shared.models.orm import UserOrm
 logger = logging.getLogger(__name__)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+oauth2_refresh_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/refresh")
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -65,3 +66,22 @@ async def get_current_user(
     if user is None:
         raise AuthenticationError("User not found")
     return user
+
+
+def get_refresh_token(token: str = Depends(oauth2_refresh_scheme)) -> str:
+    """Extract and validate refresh token from Authorization header.
+
+    Args:
+        token: Bearer token from Authorization header.
+
+    Returns:
+        The token string (validation is deferred to auth_service).
+
+    Raises:
+        AuthenticationError: If token cannot be decoded.
+    """
+    try:
+        jwt.decode(token, settings.api_secret_key, algorithms=["HS256"])
+    except JWTError as exc:
+        raise AuthenticationError("Invalid or expired refresh token") from exc
+    return token
