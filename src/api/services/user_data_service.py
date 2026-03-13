@@ -309,7 +309,8 @@ async def get_watchlist_prices(
 ) -> list[dict[str, object]]:
     """Return current prices for all watchlist symbols.
 
-    Fetches the latest OHLCV price record for each symbol in the user's watchlist.
+    Fetches the latest OHLCV price record for each symbol in a single query
+    using a row_number window function to avoid N+1 queries.
 
     Args:
         db: Active async database session.
@@ -318,20 +319,41 @@ async def get_watchlist_prices(
     Returns:
         List of dicts with keys: symbol, current_price, timestamp.
     """
+    from sqlalchemy import func
+
     watchlist_entries = await get_watchlist(db, user_id)
+    if not watchlist_entries:
+        return []
+
+    symbols = [entry.symbol for entry in watchlist_entries]
+
+    # Single query: latest OHLCV per symbol using window function
+    row_num = (
+        func.row_number()
+        .over(
+            partition_by=OHLCVOrm.symbol,
+            order_by=desc(OHLCVOrm.timestamp),
+        )
+        .label("rn")
+    )
+
+    subq = (
+        select(OHLCVOrm.symbol, OHLCVOrm.price_close, OHLCVOrm.timestamp, row_num)
+        .where(OHLCVOrm.symbol.in_(symbols))
+        .subquery()
+    )
+
+    result = await db.execute(select(subq.c.symbol, subq.c.price_close, subq.c.timestamp).where(subq.c.rn == 1))
+    price_map = {row.symbol: row for row in result.all()}
 
     prices: list[dict[str, object]] = []
     for entry in watchlist_entries:
-        result = await db.execute(
-            select(OHLCVOrm).where(OHLCVOrm.symbol == entry.symbol).order_by(desc(OHLCVOrm.timestamp)).limit(1)
-        )
-        ohlcv = result.scalar_one_or_none()
-
+        row = price_map.get(entry.symbol)
         prices.append(
             {
                 "symbol": entry.symbol,
-                "current_price": float(ohlcv.price_close) if ohlcv else None,
-                "timestamp": ohlcv.timestamp if ohlcv else None,
+                "current_price": float(row.price_close) if row else None,
+                "timestamp": row.timestamp if row else None,
             }
         )
 

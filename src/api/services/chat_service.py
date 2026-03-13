@@ -98,7 +98,13 @@ async def _build_context(db: AsyncSession, user_id: str) -> str:
             result = await session.execute(select(WatchlistEntryOrm).where(WatchlistEntryOrm.user_id == user_id))
             return list(result.scalars().all())
 
-    signals, portfolio, watchlist = await asyncio.gather(_fetch_signals(), _fetch_portfolio(), _fetch_watchlist())
+    results = await asyncio.gather(_fetch_signals(), _fetch_portfolio(), _fetch_watchlist(), return_exceptions=True)
+    signals = results[0] if not isinstance(results[0], Exception) else []
+    portfolio = results[1] if not isinstance(results[1], Exception) else []
+    watchlist = results[2] if not isinstance(results[2], Exception) else []
+    for i, label in enumerate(("signals", "portfolio", "watchlist")):
+        if isinstance(results[i], Exception):
+            logger.warning("Failed to fetch %s for chat context: %s", label, results[i])
 
     parts: list[str] = []
 
