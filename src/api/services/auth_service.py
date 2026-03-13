@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import bcrypt
 from jose import JWTError, jwt
@@ -112,7 +112,7 @@ def create_access_token(user_id: str, username: str = "") -> str:
     Returns:
         Encoded JWT string.
     """
-    expire = datetime.now(tz=UTC) + timedelta(hours=settings.jwt_expiration_hours)
+    expire = datetime.now(tz=timezone.utc) + timedelta(hours=settings.jwt_expiration_hours)
     payload: dict = {"sub": user_id, "exp": expire}
     if username:
         payload["username"] = username

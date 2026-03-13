@@ -9,7 +9,7 @@ Validates that:
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timezone
 
 import numpy as np
 import pandas as pd
@@ -42,7 +42,7 @@ def _create_test_data(days: int = 300) -> pd.DataFrame:
     Returns:
         DataFrame with DatetimeIndex, feature columns, labels, and prices.
     """
-    start_date = datetime(2025, 1, 1, tzinfo=UTC)
+    start_date = datetime(2025, 1, 1, tzinfo=timezone.utc)
     dates = pd.date_range(start=start_date, periods=days, freq="D")
 
     # Create synthetic features and labels
@@ -163,12 +163,10 @@ class TestWalkForwardNoLeakage:
 
             # For daily data, 90 days should give ~90 records (allow 10% slack)
             assert n_train >= train_window * 0.9, (
-                f"Fold {int(row['fold'])}: n_train={n_train} is too low "
-                f"(expected ~{train_window})"
+                f"Fold {int(row['fold'])}: n_train={n_train} is too low (expected ~{train_window})"
             )
             assert n_test >= test_window * 0.9, (
-                f"Fold {int(row['fold'])}: n_test={n_test} is too low "
-                f"(expected ~{test_window})"
+                f"Fold {int(row['fold'])}: n_test={n_test} is too low (expected ~{test_window})"
             )
 
     def test_backtester_metrics_consistency(self) -> None:
@@ -247,7 +245,7 @@ class TestWalkForwardNoLeakage:
             {
                 "price_close": [100, 102, 104, 106, 108],
             },
-            index=pd.date_range("2025-01-01", periods=5, freq="D", tz=UTC),
+            index=pd.date_range("2025-01-01", periods=5, freq="D", tz=timezone.utc),
         )
 
         backtester = Backtester()

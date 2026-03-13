@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -20,7 +20,7 @@ from src.shared.models.crypto import OHLCVRecord
 # Helpers
 # ---------------------------------------------------------------------------
 
-BASE_TS = datetime(2024, 1, 15, 0, 0, 0, tzinfo=UTC)
+BASE_TS = datetime(2024, 1, 15, 0, 0, 0, tzinfo=timezone.utc)
 
 
 def _make_record(
@@ -153,12 +153,16 @@ class TestValidateOHLCVRelationships:
         assert any("low" in e and "open" in e for e in errors)
 
     def test_low_greater_than_close_is_error(self) -> None:
-        r = _make_record(price_open="42000", price_high="43000", price_low="43500", price_close="42500", skip_validation=True)
+        r = _make_record(
+            price_open="42000", price_high="43000", price_low="43500", price_close="42500", skip_validation=True
+        )
         errors = validate_ohlcv_relationships(r)
         assert any("low" in e and "close" in e for e in errors)
 
     def test_high_less_than_low_is_error(self) -> None:
-        r = _make_record(price_open="40000", price_high="39000", price_low="41000", price_close="40500", skip_validation=True)
+        r = _make_record(
+            price_open="40000", price_high="39000", price_low="41000", price_close="40500", skip_validation=True
+        )
         errors = validate_ohlcv_relationships(r)
         assert len(errors) > 0
 
@@ -174,7 +178,9 @@ class TestValidateOHLCVRelationships:
 
     def test_multiple_errors_reported(self) -> None:
         # high < open AND low > close
-        r = _make_record(price_open="44000", price_high="43000", price_low="43500", price_close="42500", skip_validation=True)
+        r = _make_record(
+            price_open="44000", price_high="43000", price_low="43500", price_close="42500", skip_validation=True
+        )
         errors = validate_ohlcv_relationships(r)
         assert len(errors) >= 2
 
@@ -199,7 +205,10 @@ class TestFilterValidRecords:
 
     def test_all_invalid_records(self) -> None:
         # Records with negative volume (bypass model validation)
-        records = [_make_record(volume_24h="-100", timestamp=BASE_TS + timedelta(hours=i), skip_validation=True) for i in range(3)]
+        records = [
+            _make_record(volume_24h="-100", timestamp=BASE_TS + timedelta(hours=i), skip_validation=True)
+            for i in range(3)
+        ]
         valid, invalid = filter_valid_records(records)
         assert len(valid) == 0
         assert len(invalid) == 3

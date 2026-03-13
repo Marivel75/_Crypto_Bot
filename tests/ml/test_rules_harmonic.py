@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from decimal import Decimal
-from datetime import UTC, datetime
 
 import pytest
 
 from src.shared.models.crypto import IndicatorRecord
 
 # Fixed timestamp
-_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
 class TestHarmonicPatternDetection:
@@ -232,7 +232,7 @@ class TestHarmonicMultiTimeframe:
 
     def test_strongest_pattern_selected(self) -> None:
         """When multiple patterns detected, highest confidence should be selected."""
-        indicators = {
+        {
             "1h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -341,7 +341,7 @@ class TestHarmonicEdgeCases:
 
     def test_empty_metadata_uses_baseline_confidence(self) -> None:
         """Pattern with empty metadata should use baseline (0.9 * base_conf)."""
-        indicators = {
+        {
             "4h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",

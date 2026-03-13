@@ -2,17 +2,15 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Any
-from datetime import UTC, datetime
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from src.shared.models.crypto import IndicatorRecord
-
 # Fixed timestamp
-_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
 class FakeMLPredictor:
@@ -78,11 +76,13 @@ class TestMLPredictionWithFeatures:
     def test_predictor_accepts_dataframe_features(self) -> None:
         """Predictor should accept pandas DataFrame features."""
         predictor = FakeMLPredictor()
-        features = pd.DataFrame({
-            "rsi_1h": [50, 51, 52],
-            "rsi_4h": [55, 56, 57],
-            "boll_pos_4h": [0.5, 0.6, 0.7],
-        })
+        features = pd.DataFrame(
+            {
+                "rsi_1h": [50, 51, 52],
+                "rsi_4h": [55, 56, 57],
+                "boll_pos_4h": [0.5, 0.6, 0.7],
+            }
+        )
 
         result = predictor.predict(features=features)
 
@@ -385,7 +385,7 @@ class TestMLPredictionStreamingFeatures:
         candles = list(range(100))
 
         window_v1 = candles[0:window_size]  # Candles 0-19
-        window_v2 = candles[1:window_size + 1]  # Candles 1-20
+        window_v2 = candles[1 : window_size + 1]  # Candles 1-20
         window_v3 = candles[80:100]  # Candles 80-99
 
         for window in [window_v1, window_v2, window_v3]:
@@ -430,10 +430,12 @@ class TestMLPredictionErrorHandling:
 
     def test_nan_in_features_handled(self) -> None:
         """NaN values in features should be detectable."""
-        features = pd.DataFrame({
-            "rsi": [50, np.nan, 52],
-            "volume": [1000, 1050, np.nan],
-        })
+        features = pd.DataFrame(
+            {
+                "rsi": [50, np.nan, 52],
+                "volume": [1000, 1050, np.nan],
+            }
+        )
 
         has_nan = features.isna().any().any()
         assert has_nan is True

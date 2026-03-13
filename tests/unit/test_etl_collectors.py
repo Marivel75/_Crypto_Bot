@@ -6,7 +6,7 @@ All external HTTP calls are mocked via respx. No real network traffic is made.
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from unittest.mock import AsyncMock, patch
 
@@ -27,8 +27,8 @@ logger = logging.getLogger(__name__)
 # Shared constants
 # ---------------------------------------------------------------------------
 
-# Fixed UTC timestamp used across all tests — deterministic, never datetime.now()
-FIXED_TS = datetime(2025, 6, 1, 12, 0, 0, tzinfo=UTC)
+# Fixed timezone.utc timestamp used across all tests — deterministic, never datetime.now()
+FIXED_TS = datetime(2025, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
 FIXED_TS_MS = int(FIXED_TS.timestamp() * 1000)  # millisecond epoch for Binance
 FIXED_TS_UNIX = int(FIXED_TS.timestamp())  # second epoch for Fear & Greed
 
@@ -727,14 +727,14 @@ class TestFearGreedCollector:
 
     @respx.mock
     async def test_fetch_success_timestamp_is_utc_aware(self) -> None:
-        """Returned timestamp is always timezone-aware UTC."""
+        """Returned timestamp is always timezone-aware timezone.utc."""
         respx.get("https://api.alternative.me/fng/").mock(return_value=httpx.Response(200, json=_FEAR_GREED_PAYLOAD))
 
         async with FearGreedCollector() as collector:
             result = await collector.fetch_fear_greed()
 
         assert result["timestamp"].tzinfo is not None
-        assert result["timestamp"].tzinfo == UTC
+        assert result["timestamp"].tzinfo == timezone.utc
 
     @respx.mock
     async def test_fetch_extreme_fear_classification(self) -> None:

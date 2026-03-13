@@ -14,7 +14,7 @@ monkey-patch them), so the real UUID-typed ORM would be used otherwise.
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -36,7 +36,7 @@ from src.shared.exceptions import AuthorizationError, NotFoundError
 logger = logging.getLogger(__name__)
 
 # Fixed timestamps — never datetime.now() in tests
-_TS = datetime(2025, 1, 15, 12, 0, 0, tzinfo=UTC)
+_TS = datetime(2025, 1, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 # ---------------------------------------------------------------------------
 # Helpers — ORM row builders (using test-compatible ORM from conftest)
@@ -151,7 +151,7 @@ class TestGetPrices:
     @pytest.mark.asyncio
     async def test_filters_by_timeframe(self, db_session: AsyncSession) -> None:
         db_session.add(_make_price_row(timeframe="1h"))
-        db_session.add(_make_price_row(timeframe="4h", ts=datetime(2025, 1, 15, 16, 0, tzinfo=UTC)))
+        db_session.add(_make_price_row(timeframe="4h", ts=datetime(2025, 1, 15, 16, 0, tzinfo=timezone.utc)))
         await db_session.commit()
 
         rows, total = await crypto_service.get_prices(db_session, "BTCUSDT", "4h")
@@ -171,7 +171,7 @@ class TestGetPrices:
         for i in range(5):
             db_session.add(
                 _make_price_row(
-                    ts=datetime(2025, 1, 15, i, 0, tzinfo=UTC),
+                    ts=datetime(2025, 1, 15, i, 0, tzinfo=timezone.utc),
                 )
             )
         await db_session.commit()
@@ -182,14 +182,14 @@ class TestGetPrices:
 
     @pytest.mark.asyncio
     async def test_start_filter_excludes_earlier_rows(self, db_session: AsyncSession) -> None:
-        early_ts = datetime(2025, 1, 14, 0, 0, tzinfo=UTC)
-        late_ts = datetime(2025, 1, 15, 12, 0, tzinfo=UTC)
+        early_ts = datetime(2025, 1, 14, 0, 0, tzinfo=timezone.utc)
+        late_ts = datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc)
         db_session.add(_make_price_row(ts=early_ts))
         db_session.add(_make_price_row(ts=late_ts))
         await db_session.commit()
 
         rows, total = await crypto_service.get_prices(
-            db_session, "BTCUSDT", "1h", start=datetime(2025, 1, 15, tzinfo=UTC)
+            db_session, "BTCUSDT", "1h", start=datetime(2025, 1, 15, tzinfo=timezone.utc)
         )
         assert total == 1
         # SQLite strips timezone info from DateTime columns — compare naive
@@ -197,14 +197,14 @@ class TestGetPrices:
 
     @pytest.mark.asyncio
     async def test_end_filter_excludes_later_rows(self, db_session: AsyncSession) -> None:
-        early_ts = datetime(2025, 1, 14, 0, 0, tzinfo=UTC)
-        late_ts = datetime(2025, 1, 15, 12, 0, tzinfo=UTC)
+        early_ts = datetime(2025, 1, 14, 0, 0, tzinfo=timezone.utc)
+        late_ts = datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc)
         db_session.add(_make_price_row(ts=early_ts))
         db_session.add(_make_price_row(ts=late_ts))
         await db_session.commit()
 
         rows, total = await crypto_service.get_prices(
-            db_session, "BTCUSDT", "1h", end=datetime(2025, 1, 15, tzinfo=UTC)
+            db_session, "BTCUSDT", "1h", end=datetime(2025, 1, 15, tzinfo=timezone.utc)
         )
         assert total == 1
         # SQLite strips timezone info from DateTime columns — compare naive
@@ -246,7 +246,7 @@ class TestGetIndicators:
     @pytest.mark.asyncio
     async def test_pagination_limit(self, db_session: AsyncSession) -> None:
         for i in range(4):
-            db_session.add(_make_indicator_row(ts=datetime(2025, 1, 15, i, 0, tzinfo=UTC)))
+            db_session.add(_make_indicator_row(ts=datetime(2025, 1, 15, i, 0, tzinfo=timezone.utc)))
         await db_session.commit()
 
         rows, total = await crypto_service.get_indicators(db_session, "BTCUSDT", "1h", limit=2)
@@ -269,8 +269,8 @@ class TestGetLatest:
 
     @pytest.mark.asyncio
     async def test_returns_most_recent_ohlcv(self, db_session: AsyncSession) -> None:
-        old_ts = datetime(2025, 1, 14, 0, 0, tzinfo=UTC)
-        new_ts = datetime(2025, 1, 15, 12, 0, tzinfo=UTC)
+        old_ts = datetime(2025, 1, 14, 0, 0, tzinfo=timezone.utc)
+        new_ts = datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc)
         db_session.add(_make_price_row(ts=old_ts))
         db_session.add(_make_price_row(ts=new_ts, price_close=51000.0))
         await db_session.commit()
@@ -281,8 +281,8 @@ class TestGetLatest:
 
     @pytest.mark.asyncio
     async def test_returns_most_recent_indicator(self, db_session: AsyncSession) -> None:
-        old_ts = datetime(2025, 1, 14, 0, 0, tzinfo=UTC)
-        new_ts = datetime(2025, 1, 15, 12, 0, tzinfo=UTC)
+        old_ts = datetime(2025, 1, 14, 0, 0, tzinfo=timezone.utc)
+        new_ts = datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc)
         db_session.add(_make_indicator_row(ts=old_ts, rsi=55.0))
         db_session.add(_make_indicator_row(ts=new_ts, rsi=72.0))
         await db_session.commit()
@@ -306,9 +306,9 @@ class TestGetActiveSignals:
     @pytest.mark.asyncio
     async def test_returns_recent_signals(self, db_session: AsyncSession) -> None:
         # Signal created 1 hour ago — should be active (within 24h window)
-        from datetime import timedelta
+        from datetime import timedelta, timezone
 
-        recent_ts = datetime.now(tz=UTC) - timedelta(hours=1)
+        recent_ts = datetime.now(tz=timezone.utc) - timedelta(hours=1)
         signal = _make_signal_row(ts=recent_ts)
         db_session.add(signal)
         await db_session.commit()
@@ -319,9 +319,9 @@ class TestGetActiveSignals:
 
     @pytest.mark.asyncio
     async def test_excludes_old_signals(self, db_session: AsyncSession) -> None:
-        from datetime import timedelta
+        from datetime import timedelta, timezone
 
-        old_ts = datetime.now(tz=UTC) - timedelta(hours=25)
+        old_ts = datetime.now(tz=timezone.utc) - timedelta(hours=25)
         signal = _make_signal_row(ts=old_ts)
         db_session.add(signal)
         await db_session.commit()
@@ -345,7 +345,7 @@ class TestGetBySymbol:
     @pytest.mark.asyncio
     async def test_returns_signals_for_symbol(self, db_session: AsyncSession) -> None:
         db_session.add(_make_signal_row(symbol="BTCUSDT"))
-        db_session.add(_make_signal_row(symbol="ETHUSDT", ts=datetime(2025, 1, 15, 13, 0, tzinfo=UTC)))
+        db_session.add(_make_signal_row(symbol="ETHUSDT", ts=datetime(2025, 1, 15, 13, 0, tzinfo=timezone.utc)))
         await db_session.commit()
 
         rows, total = await signal_service.get_by_symbol(db_session, "BTCUSDT")
@@ -363,7 +363,7 @@ class TestGetBySymbol:
     @pytest.mark.asyncio
     async def test_filters_by_timeframe(self, db_session: AsyncSession) -> None:
         db_session.add(_make_signal_row(timeframe="4h"))
-        db_session.add(_make_signal_row(timeframe="1h", ts=datetime(2025, 1, 15, 13, 0, tzinfo=UTC)))
+        db_session.add(_make_signal_row(timeframe="1h", ts=datetime(2025, 1, 15, 13, 0, tzinfo=timezone.utc)))
         await db_session.commit()
 
         rows, total = await signal_service.get_by_symbol(db_session, "BTCUSDT", timeframe="4h")
@@ -373,7 +373,7 @@ class TestGetBySymbol:
     @pytest.mark.asyncio
     async def test_pagination_limit(self, db_session: AsyncSession) -> None:
         for i in range(5):
-            db_session.add(_make_signal_row(ts=datetime(2025, 1, 15, i, 0, tzinfo=UTC)))
+            db_session.add(_make_signal_row(ts=datetime(2025, 1, 15, i, 0, tzinfo=timezone.utc)))
         await db_session.commit()
 
         rows, total = await signal_service.get_by_symbol(db_session, "BTCUSDT", limit=3)
@@ -442,7 +442,7 @@ class TestGetPerformance:
     @pytest.mark.asyncio
     async def test_counts_signals_correctly(self, db_session: AsyncSession) -> None:
         for i in range(3):
-            db_session.add(_make_signal_row(ts=datetime(2025, 1, 15, i, 0, tzinfo=UTC)))
+            db_session.add(_make_signal_row(ts=datetime(2025, 1, 15, i, 0, tzinfo=timezone.utc)))
         await db_session.commit()
 
         result = await signal_service.get_performance(db_session)
@@ -450,8 +450,8 @@ class TestGetPerformance:
 
     @pytest.mark.asyncio
     async def test_win_rate_computed_correctly(self, db_session: AsyncSession) -> None:
-        signal1 = _make_signal_row(ts=datetime(2025, 1, 15, 0, 0, tzinfo=UTC))
-        signal2 = _make_signal_row(ts=datetime(2025, 1, 15, 1, 0, tzinfo=UTC))
+        signal1 = _make_signal_row(ts=datetime(2025, 1, 15, 0, 0, tzinfo=timezone.utc))
+        signal2 = _make_signal_row(ts=datetime(2025, 1, 15, 1, 0, tzinfo=timezone.utc))
         db_session.add(signal1)
         db_session.add(signal2)
         await db_session.flush()

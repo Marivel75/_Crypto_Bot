@@ -9,8 +9,8 @@ import pytest
 from src.ml.backtesting.backtest_engine import (
     WalkForwardBacktester,
     _compute_max_drawdown,
-    _compute_sharpe,
     _compute_profit_factor,
+    _compute_sharpe,
     _simulate_trades,
 )
 from src.ml.exceptions import InsufficientDataError

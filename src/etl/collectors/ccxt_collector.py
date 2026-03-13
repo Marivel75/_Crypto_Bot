@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import ccxt.async_support as ccxt_async  # type: ignore[import-untyped]
@@ -37,9 +37,7 @@ class CCXTCollector:
     """
 
     def __init__(self, exchange_id: str = "binance") -> None:
-        self._exchange: ccxt_async.Exchange = getattr(ccxt_async, exchange_id)(
-            {"enableRateLimit": True}
-        )
+        self._exchange: ccxt_async.Exchange = getattr(ccxt_async, exchange_id)({"enableRateLimit": True})
 
     async def close(self) -> None:
         """Close the underlying CCXT exchange connection."""
@@ -70,9 +68,7 @@ class CCXTCollector:
         """
         ccxt_tf = _TIMEFRAME_MAP.get(timeframe)
         if ccxt_tf is None:
-            raise ValueError(
-                f"Unsupported timeframe '{timeframe}'. Valid: {list(_TIMEFRAME_MAP)}"
-            )
+            raise ValueError(f"Unsupported timeframe '{timeframe}'. Valid: {list(_TIMEFRAME_MAP)}")
 
         ccxt_symbol = self._to_ccxt_symbol(symbol)
         logger.info(
@@ -95,13 +91,9 @@ class CCXTCollector:
             try:
                 records.append(self._parse_candle(candle, symbol, timeframe))
             except (ValueError, TypeError, IndexError) as exc:
-                logger.warning(
-                    "Skipping malformed CCXT candle %d for %s: %s", i, symbol, exc
-                )
+                logger.warning("Skipping malformed CCXT candle %d for %s: %s", i, symbol, exc)
 
-        logger.info(
-            "CCXT OHLCV collected: symbol=%s records=%d", symbol, len(records)
-        )
+        logger.info("CCXT OHLCV collected: symbol=%s records=%d", symbol, len(records))
         return records
 
     @staticmethod
@@ -111,16 +103,12 @@ class CCXTCollector:
             if binance_symbol.endswith(quote):
                 base = binance_symbol[: -len(quote)]
                 return f"{base}/{quote}"
-        raise ExternalAPIError(
-            f"Cannot convert symbol '{binance_symbol}' to CCXT format"
-        )
+        raise ExternalAPIError(f"Cannot convert symbol '{binance_symbol}' to CCXT format")
 
     @staticmethod
-    def _parse_candle(
-        candle: list[float], symbol: str, timeframe: str
-    ) -> OHLCVRecord:
+    def _parse_candle(candle: list[float], symbol: str, timeframe: str) -> OHLCVRecord:
         """Parse a CCXT candle ``[timestamp, O, H, L, C, V]`` into an OHLCVRecord."""
-        timestamp = datetime.fromtimestamp(candle[0] / 1000, tz=UTC)
+        timestamp = datetime.fromtimestamp(candle[0] / 1000, tz=timezone.utc)
         return OHLCVRecord(
             symbol=symbol,
             price_open=Decimal(str(candle[1])),

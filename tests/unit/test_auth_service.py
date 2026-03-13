@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -108,7 +108,7 @@ class TestDecodeAccessToken:
             decode_access_token(tampered)
 
     def test_decode_expired_token_raises_authentication_error(self) -> None:
-        expire = datetime.now(tz=UTC) - timedelta(seconds=1)
+        expire = datetime.now(tz=timezone.utc) - timedelta(seconds=1)
         payload = {"sub": "user-expired", "exp": expire}
         expired_token = jwt.encode(payload, settings.api_secret_key, algorithm=ALGORITHM)
         with pytest.raises(AuthenticationError):
@@ -117,7 +117,7 @@ class TestDecodeAccessToken:
     def test_decode_token_with_wrong_secret_raises_authentication_error(self) -> None:
         other_secret = "another-secret-value-for-test"  # noqa: S105
         wrong_token = jwt.encode(
-            {"sub": "user-wrong", "exp": datetime.now(tz=UTC) + timedelta(hours=1)},
+            {"sub": "user-wrong", "exp": datetime.now(tz=timezone.utc) + timedelta(hours=1)},
             other_secret,
             algorithm=ALGORITHM,
         )

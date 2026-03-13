@@ -55,9 +55,7 @@ class MarketRegime(BaseModel):
         detail: Human-readable explanation.
     """
 
-    regime: Literal["trending", "ranging", "volatile"] = Field(
-        description="Market regime classification"
-    )
+    regime: Literal["trending", "ranging", "volatile"] = Field(description="Market regime classification")
     confidence: float = Field(description="Classification confidence", ge=0, le=1)
     detail: str = Field(description="Explanation of regime classification")
 
@@ -83,8 +81,7 @@ def compute_correlation_matrix(
     """
     if df.empty or len(df.columns) < 2:
         raise ValueError(
-            f"compute_correlation_matrix requires a non-empty DataFrame "
-            f"with ≥2 columns, got shape {df.shape}"
+            f"compute_correlation_matrix requires a non-empty DataFrame with ≥2 columns, got shape {df.shape}"
         )
 
     # Compute pairwise correlations
@@ -139,26 +136,19 @@ def compute_volatility(
     """
     if isinstance(df, pd.DataFrame):
         if len(df.columns) != 1:
-            raise ValueError(
-                f"compute_volatility requires a single-column DataFrame, "
-                f"got {len(df.columns)} columns"
-            )
+            raise ValueError(f"compute_volatility requires a single-column DataFrame, got {len(df.columns)} columns")
         series = df.iloc[:, 0]
     else:
         series = df
 
     if len(series) < window + 1:
-        raise ValueError(
-            f"compute_volatility requires ≥{window + 1} observations, got {len(series)}"
-        )
+        raise ValueError(f"compute_volatility requires ≥{window + 1} observations, got {len(series)}")
 
     # Compute log returns
     log_returns = np.log(series / series.shift(1)).dropna()
 
     if len(log_returns) < 2:
-        raise ValueError(
-            f"Insufficient data for volatility computation: {len(log_returns)} returns"
-        )
+        raise ValueError(f"Insufficient data for volatility computation: {len(log_returns)} returns")
 
     # Annualised volatility
     volatility = float(log_returns.std() * np.sqrt(periods_per_year))
@@ -210,18 +200,13 @@ def detect_market_regime(
     """
     if isinstance(df, pd.DataFrame):
         if len(df.columns) != 1:
-            raise ValueError(
-                f"detect_market_regime requires a single-column DataFrame, "
-                f"got {len(df.columns)} columns"
-            )
+            raise ValueError(f"detect_market_regime requires a single-column DataFrame, got {len(df.columns)} columns")
         series = df.iloc[:, 0]
     else:
         series = df
 
     if len(series) < long_window + 1:
-        raise ValueError(
-            f"detect_market_regime requires ≥{long_window + 1} observations, got {len(series)}"
-        )
+        raise ValueError(f"detect_market_regime requires ≥{long_window + 1} observations, got {len(series)}")
 
     # Compute moving averages
     ma_short = series.rolling(short_window).mean()
@@ -244,10 +229,7 @@ def detect_market_regime(
     if current_volatility > volatility_threshold:
         regime = "volatile"
         confidence = min(1.0, current_volatility / (volatility_threshold * 2))
-        detail = (
-            f"High volatility ({current_volatility:.4f} > {volatility_threshold:.4f}); "
-            f"price oscillating sharply"
-        )
+        detail = f"High volatility ({current_volatility:.4f} > {volatility_threshold:.4f}); price oscillating sharply"
     elif current_price > ma_short_val > ma_long_val:
         regime = "trending"
         confidence = min(1.0, (current_price - ma_long_val) / (ma_short_val - ma_long_val + 1e-9))

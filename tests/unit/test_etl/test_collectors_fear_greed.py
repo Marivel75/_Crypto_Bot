@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import httpx
@@ -13,7 +13,7 @@ from src.etl.collectors.fear_greed import FearGreedCollector
 from src.shared.exceptions import ExternalAPIError
 
 # Fixed epoch timestamp used across tests: 2023-11-14T22:13:20Z
-FIXED_TS = datetime(2023, 11, 14, 22, 13, 20, tzinfo=UTC)
+FIXED_TS = datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc)
 FIXED_EPOCH_STR = str(int(FIXED_TS.timestamp()))  # "1700000000"
 
 _FNG_URL = "https://api.alternative.me/fng/"
@@ -50,7 +50,7 @@ class TestFearGreedCollectorFetchFearGreed:
             result = await collector.fetch_fear_greed()
 
         assert result["timestamp"] == FIXED_TS
-        assert result["timestamp"].tzinfo is UTC
+        assert result["timestamp"].tzinfo is timezone.utc
 
     @respx.mock
     async def test_extreme_fear_classification(self) -> None:
@@ -167,7 +167,7 @@ class TestFearGreedCollectorParseResponse:
         assert isinstance(result, dict)
         assert result["value"] == 75
         assert result["value_classification"] == "Greed"
-        assert result["timestamp"].tzinfo is UTC
+        assert result["timestamp"].tzinfo is timezone.utc
 
 
 class TestFearGreedCollectorFetchAsOhlcv:

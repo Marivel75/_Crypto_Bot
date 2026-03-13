@@ -12,9 +12,6 @@ from src.shared.exceptions import NotFoundError
 from src.shared.models.orm import SignalOutcomeOrm, TradingSignalOrm
 
 
-UTC = timezone.utc
-
-
 class TestGetActive:
     """Get active signals from last 24 hours."""
 
@@ -27,32 +24,26 @@ class TestGetActive:
     @pytest.mark.asyncio
     async def test_get_active_filters_by_24h(self, db_session: AsyncSession) -> None:
         """Only signals from last 24 hours are returned."""
-        now = datetime.now(tz=UTC)
+        now = datetime.now(tz=timezone.utc)
         old_time = now - timedelta(hours=25)
         recent_time = now - timedelta(hours=12)
 
         old_signal = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
             created_at=old_time,
         )
         recent_signal = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
             created_at=recent_time,
         )
         db_session.add(old_signal)
@@ -64,11 +55,9 @@ class TestGetActive:
         assert signals[0].symbol == "ETHUSDT"
 
     @pytest.mark.asyncio
-    async def test_get_active_orders_by_created_at_desc(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_active_orders_by_created_at_desc(self, db_session: AsyncSession) -> None:
         """Active signals are ordered by creation time descending."""
-        now = datetime.now(tz=UTC)
+        now = datetime.now(tz=timezone.utc)
         time1 = now - timedelta(hours=5)
         time2 = now - timedelta(hours=10)
         time3 = now - timedelta(hours=15)
@@ -76,37 +65,28 @@ class TestGetActive:
         signal1 = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
             created_at=time1,
         )
         signal2 = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
             created_at=time2,
         )
         signal3 = TradingSignalOrm(
             symbol="SOLUSDT",
             timeframe_primary="1D",
-            direction="HOLD",
-            confidence=0.6,
-            entry_price=150.0,
-            stop_loss=140.0,
-            take_profit_list=[160.0],
+            signal_type="HOLD",
+            confidence_score=0.6,
             leverage_suggested=1,
-            indicators_used=["BB"],
+            model_version="1.0",
             created_at=time3,
         )
         db_session.add(signal1)
@@ -132,31 +112,23 @@ class TestGetBySymbol:
         assert total == 0
 
     @pytest.mark.asyncio
-    async def test_get_by_symbol_filters_by_symbol(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_by_symbol_filters_by_symbol(self, db_session: AsyncSession) -> None:
         """Only signals for specified symbol are returned."""
         signal1 = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
         )
         signal2 = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="1h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
         )
         db_session.add(signal1)
         db_session.add(signal2)
@@ -168,20 +140,15 @@ class TestGetBySymbol:
         assert signals[0].symbol == "BTCUSDT"
 
     @pytest.mark.asyncio
-    async def test_get_by_symbol_case_insensitive(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_by_symbol_case_insensitive(self, db_session: AsyncSession) -> None:
         """Symbol filtering is case-insensitive."""
         signal = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
         )
         db_session.add(signal)
         await db_session.flush()
@@ -191,39 +158,29 @@ class TestGetBySymbol:
         assert signals[0].symbol == "BTCUSDT"
 
     @pytest.mark.asyncio
-    async def test_get_by_symbol_with_timeframe_filter(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_by_symbol_with_timeframe_filter(self, db_session: AsyncSession) -> None:
         """Timeframe filter narrows results."""
         signal1 = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
         )
         signal2 = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=50500.0,
-            stop_loss=50600.0,
-            take_profit_list=[50200.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
         )
         db_session.add(signal1)
         db_session.add(signal2)
         await db_session.flush()
 
-        signals, total = await signal_service.get_by_symbol(
-            db_session, "BTCUSDT", timeframe="1h"
-        )
+        signals, total = await signal_service.get_by_symbol(db_session, "BTCUSDT", timeframe="1h")
         assert len(signals) == 1
         assert total == 1
         assert signals[0].timeframe_primary == "1h"
@@ -235,23 +192,16 @@ class TestGetBySymbol:
             signal = TradingSignalOrm(
                 symbol="BTCUSDT",
                 timeframe_primary="1h",
-                direction="BUY" if i % 2 == 0 else "SELL",
-                confidence=0.7 + (i * 0.01),
-                entry_price=50000.0 + (i * 100),
-                stop_loss=49000.0,
-                take_profit_list=[52000.0],
+                signal_type="BUY" if i % 2 == 0 else "SELL",
+                confidence_score=0.7 + (i * 0.01),
                 leverage_suggested=2,
-                indicators_used=["RSI"],
+                model_version="1.0",
             )
             db_session.add(signal)
         await db_session.flush()
 
-        page1, total = await signal_service.get_by_symbol(
-            db_session, "BTCUSDT", limit=2, page=1
-        )
-        page2, _ = await signal_service.get_by_symbol(
-            db_session, "BTCUSDT", limit=2, page=2
-        )
+        page1, total = await signal_service.get_by_symbol(db_session, "BTCUSDT", limit=2, page=1)
+        page2, _ = await signal_service.get_by_symbol(db_session, "BTCUSDT", limit=2, page=2)
         assert len(page1) == 2
         assert len(page2) == 2
         assert total == 5
@@ -272,13 +222,10 @@ class TestGetDetail:
         signal = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
         )
         db_session.add(signal)
         await db_session.flush()
@@ -293,13 +240,10 @@ class TestGetDetail:
         signal = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
         )
         db_session.add(signal)
         await db_session.flush()
@@ -307,9 +251,7 @@ class TestGetDetail:
         outcome = SignalOutcomeOrm(
             signal_id=signal.id,
             was_correct=True,
-            exit_price=52000.0,
             pnl_simulated=100.0,
-            exit_timestamp=datetime.now(tz=UTC),
         )
         db_session.add(outcome)
         await db_session.flush()
@@ -335,21 +277,16 @@ class TestGetPerformance:
         assert perf["total_pnl"] is None
 
     @pytest.mark.asyncio
-    async def test_get_performance_with_signals_no_outcomes(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_performance_with_signals_no_outcomes(self, db_session: AsyncSession) -> None:
         """Signals without outcomes count toward total but not evaluated."""
-        for i in range(3):
+        for _i in range(3):
             signal = TradingSignalOrm(
                 symbol="BTCUSDT",
                 timeframe_primary="1h",
-                direction="BUY",
-                confidence=0.7,
-                entry_price=50000.0,
-                stop_loss=49000.0,
-                take_profit_list=[52000.0],
+                signal_type="BUY",
+                confidence_score=0.7,
                 leverage_suggested=2,
-                indicators_used=["RSI"],
+                model_version="1.0",
             )
             db_session.add(signal)
         await db_session.flush()
@@ -360,42 +297,31 @@ class TestGetPerformance:
         assert perf["win_rate"] is None
 
     @pytest.mark.asyncio
-    async def test_get_performance_with_mixed_outcomes(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_performance_with_mixed_outcomes(self, db_session: AsyncSession) -> None:
         """Performance calculates correct win_rate and total_pnl."""
         signal1 = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
         )
         signal2 = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
         )
         signal3 = TradingSignalOrm(
             symbol="SOLUSDT",
             timeframe_primary="1D",
-            direction="BUY",
-            confidence=0.6,
-            entry_price=150.0,
-            stop_loss=140.0,
-            take_profit_list=[160.0],
+            signal_type="BUY",
+            confidence_score=0.6,
             leverage_suggested=1,
-            indicators_used=["BB"],
+            model_version="1.0",
         )
         db_session.add(signal1)
         db_session.add(signal2)
@@ -405,16 +331,12 @@ class TestGetPerformance:
         outcome1 = SignalOutcomeOrm(
             signal_id=signal1.id,
             was_correct=True,
-            exit_price=52000.0,
             pnl_simulated=100.0,
-            exit_timestamp=datetime.now(tz=UTC),
         )
         outcome2 = SignalOutcomeOrm(
             signal_id=signal2.id,
             was_correct=False,
-            exit_price=3050.0,
             pnl_simulated=-50.0,
-            exit_timestamp=datetime.now(tz=UTC),
         )
         db_session.add(outcome1)
         db_session.add(outcome2)
@@ -441,17 +363,14 @@ class TestGetHistory:
     @pytest.mark.asyncio
     async def test_get_history_no_filters(self, db_session: AsyncSession) -> None:
         """History without filters returns all signals."""
-        for i in range(3):
+        for _i in range(3):
             signal = TradingSignalOrm(
                 symbol="BTCUSDT",
                 timeframe_primary="1h",
-                direction="BUY",
-                confidence=0.7,
-                entry_price=50000.0,
-                stop_loss=49000.0,
-                take_profit_list=[52000.0],
+                signal_type="BUY",
+                confidence_score=0.7,
                 leverage_suggested=2,
-                indicators_used=["RSI"],
+                model_version="1.0",
             )
             db_session.add(signal)
         await db_session.flush()
@@ -461,36 +380,28 @@ class TestGetHistory:
         assert total == 3
 
     @pytest.mark.asyncio
-    async def test_get_history_filter_by_start_date(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_history_filter_by_start_date(self, db_session: AsyncSession) -> None:
         """Start date filter includes only signals created after start time."""
-        now = datetime.now(tz=UTC)
+        now = datetime.now(tz=timezone.utc)
         old_time = now - timedelta(hours=5)
         new_time = now - timedelta(hours=1)
 
         old_signal = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
             created_at=old_time,
         )
         new_signal = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
             created_at=new_time,
         )
         db_session.add(old_signal)
@@ -504,36 +415,28 @@ class TestGetHistory:
         assert signals[0].symbol == "ETHUSDT"
 
     @pytest.mark.asyncio
-    async def test_get_history_filter_by_end_date(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_history_filter_by_end_date(self, db_session: AsyncSession) -> None:
         """End date filter includes only signals created before end time."""
-        now = datetime.now(tz=UTC)
+        now = datetime.now(tz=timezone.utc)
         old_time = now - timedelta(hours=5)
         new_time = now - timedelta(hours=1)
 
         old_signal = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
             created_at=old_time,
         )
         new_signal = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
             created_at=new_time,
         )
         db_session.add(old_signal)
@@ -547,11 +450,9 @@ class TestGetHistory:
         assert signals[0].symbol == "BTCUSDT"
 
     @pytest.mark.asyncio
-    async def test_get_history_filter_by_date_range(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_history_filter_by_date_range(self, db_session: AsyncSession) -> None:
         """Date range filter includes only signals within range."""
-        now = datetime.now(tz=UTC)
+        now = datetime.now(tz=timezone.utc)
         time1 = now - timedelta(hours=10)
         time2 = now - timedelta(hours=5)
         time3 = now - timedelta(hours=1)
@@ -559,37 +460,28 @@ class TestGetHistory:
         signal1 = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
             created_at=time1,
         )
         signal2 = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
             created_at=time2,
         )
         signal3 = TradingSignalOrm(
             symbol="SOLUSDT",
             timeframe_primary="1D",
-            direction="BUY",
-            confidence=0.6,
-            entry_price=150.0,
-            stop_loss=140.0,
-            take_profit_list=[160.0],
+            signal_type="BUY",
+            confidence_score=0.6,
             leverage_suggested=1,
-            indicators_used=["BB"],
+            model_version="1.0",
             created_at=time3,
         )
         db_session.add(signal1)
@@ -599,9 +491,7 @@ class TestGetHistory:
 
         start_time = now - timedelta(hours=7)
         end_time = now - timedelta(hours=2)
-        signals, total = await signal_service.get_history(
-            db_session, start=start_time, end=end_time
-        )
+        signals, total = await signal_service.get_history(db_session, start=start_time, end=end_time)
         assert len(signals) == 1
         assert total == 1
         assert signals[0].symbol == "ETHUSDT"
@@ -613,20 +503,15 @@ class TestGetHistory:
             signal = TradingSignalOrm(
                 symbol="BTCUSDT",
                 timeframe_primary="1h",
-                direction="BUY" if i % 2 == 0 else "SELL",
-                confidence=0.7 + (i * 0.01),
-                entry_price=50000.0 + (i * 100),
-                stop_loss=49000.0,
-                take_profit_list=[52000.0],
+                signal_type="BUY" if i % 2 == 0 else "SELL",
+                confidence_score=0.7 + (i * 0.01),
                 leverage_suggested=2,
-                indicators_used=["RSI"],
+                model_version="1.0",
             )
             db_session.add(signal)
         await db_session.flush()
 
-        page1, total = await signal_service.get_history(
-            db_session, limit=2, page=1
-        )
+        page1, total = await signal_service.get_history(db_session, limit=2, page=1)
         page2, _ = await signal_service.get_history(db_session, limit=2, page=2)
         page3, _ = await signal_service.get_history(db_session, limit=2, page=3)
         assert len(page1) == 2
@@ -635,11 +520,9 @@ class TestGetHistory:
         assert total == 5
 
     @pytest.mark.asyncio
-    async def test_get_history_orders_by_created_at_desc(
-        self, db_session: AsyncSession
-    ) -> None:
+    async def test_get_history_orders_by_created_at_desc(self, db_session: AsyncSession) -> None:
         """History is ordered by creation time descending."""
-        now = datetime.now(tz=UTC)
+        now = datetime.now(tz=timezone.utc)
         time1 = now - timedelta(hours=5)
         time2 = now - timedelta(hours=10)
         time3 = now - timedelta(hours=15)
@@ -647,37 +530,28 @@ class TestGetHistory:
         signal1 = TradingSignalOrm(
             symbol="BTCUSDT",
             timeframe_primary="1h",
-            direction="BUY",
-            confidence=0.7,
-            entry_price=50000.0,
-            stop_loss=49000.0,
-            take_profit_list=[52000.0],
+            signal_type="BUY",
+            confidence_score=0.7,
             leverage_suggested=2,
-            indicators_used=["RSI"],
+            model_version="1.0",
             created_at=time1,
         )
         signal2 = TradingSignalOrm(
             symbol="ETHUSDT",
             timeframe_primary="4h",
-            direction="SELL",
-            confidence=0.8,
-            entry_price=3000.0,
-            stop_loss=3100.0,
-            take_profit_list=[2900.0],
+            signal_type="SELL",
+            confidence_score=0.8,
             leverage_suggested=1,
-            indicators_used=["MACD"],
+            model_version="1.0",
             created_at=time2,
         )
         signal3 = TradingSignalOrm(
             symbol="SOLUSDT",
             timeframe_primary="1D",
-            direction="BUY",
-            confidence=0.6,
-            entry_price=150.0,
-            stop_loss=140.0,
-            take_profit_list=[160.0],
+            signal_type="BUY",
+            confidence_score=0.6,
             leverage_suggested=1,
-            indicators_used=["BB"],
+            model_version="1.0",
             created_at=time3,
         )
         db_session.add(signal1)

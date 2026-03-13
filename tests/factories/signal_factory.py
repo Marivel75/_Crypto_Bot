@@ -10,13 +10,13 @@ with the package ``__init__.py``.
 from __future__ import annotations
 
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 from src.shared.models.signal import TradingSignal
 
 # Fixed reference timestamp aligned with crypto_factory._FIXED_TS
-_FIXED_TS = datetime(2024, 1, 15, 8, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2024, 1, 15, 8, 0, 0, tzinfo=timezone.utc)
 
 
 def make_signal(**overrides: object) -> TradingSignal:

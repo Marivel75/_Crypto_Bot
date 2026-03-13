@@ -125,10 +125,7 @@ def render_signal_card(signal: dict[str, Any]) -> None:
                 sl_str = f"${float(sl):,.2f}" if sl is not None else "—"
                 st.metric(t("signal.stop_loss"), sl_str)
             with col_tp:
-                if tp_list and len(tp_list) > 0:
-                    tp_str = ", ".join(f"${float(p):,.2f}" for p in tp_list[:2])
-                else:
-                    tp_str = "—"
+                tp_str = ", ".join(f"${float(p):,.2f}" for p in tp_list[:2]) if tp_list and len(tp_list) > 0 else "—"
                 st.metric(t("signal.take_profit"), tp_str)
 
         # Triggered rules list

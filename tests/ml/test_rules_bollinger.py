@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from decimal import Decimal
-from datetime import UTC, datetime
-
-import pytest
 
 from src.shared.models.crypto import IndicatorRecord
 
 # Fixed timestamp
-_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
 class TestBollingerSqueeze:
@@ -19,7 +17,7 @@ class TestBollingerSqueeze:
     def test_narrow_band_detected_as_squeeze(self) -> None:
         """Band width < 2% should be detected as squeeze."""
         # BB middle = 43000, width = 400 (0.93%) -> squeeze
-        indicators = {
+        {
             "4h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -42,7 +40,7 @@ class TestBollingerSqueeze:
 
     def test_wide_band_not_squeeze(self) -> None:
         """Band width > 2% should not be detected as squeeze."""
-        indicators = {
+        {
             "4h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -69,7 +67,7 @@ class TestBollingerBandWalking:
 
     def test_price_walking_upper_band_bullish(self) -> None:
         """Price near upper band should be bullish."""
-        indicators = {
+        {
             "4h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -92,7 +90,7 @@ class TestBollingerBandWalking:
 
     def test_price_walking_lower_band_bearish(self) -> None:
         """Price near lower band should be bearish."""
-        indicators = {
+        {
             "4h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -119,7 +117,7 @@ class TestBollingerBreakout:
 
     def test_price_above_upper_band_breakout_signal(self) -> None:
         """Price breaking above upper band should signal potential reversal."""
-        indicators = {
+        {
             "4h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -141,7 +139,7 @@ class TestBollingerBreakout:
 
     def test_price_below_lower_band_breakout_signal(self) -> None:
         """Price breaking below lower band should signal potential reversal."""
-        indicators = {
+        {
             "4h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -167,7 +165,7 @@ class TestBollingerMultiTimeframe:
 
     def test_squeeze_across_multiple_timeframes(self) -> None:
         """Squeeze on multiple TFs should be stronger signal."""
-        indicators = {
+        {
             "1h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",
@@ -206,7 +204,7 @@ class TestBollingerMultiTimeframe:
 
     def test_divergence_across_timeframes_mixed_signal(self) -> None:
         """Divergence across TFs should weaken signal."""
-        indicators = {
+        {
             "1h": [
                 IndicatorRecord(
                     symbol="BTCUSDT",

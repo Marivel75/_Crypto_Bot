@@ -10,9 +10,9 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from collections.abc import AsyncGenerator
 from datetime import datetime, timezone
-from decimal import Decimal
-from typing import AsyncGenerator
+from decimal import Decimal, InvalidOperation
 
 import aiohttp  # type: ignore[import-untyped]
 
@@ -184,17 +184,28 @@ class BinanceWebSocketCollector:
                 return None
 
             symbol = str(kline.get("s", "")).upper()
-            timeframe = str(kline.get("i", "")).lower()
+            timeframe = str(kline.get("i", ""))
             open_time_ms = int(float(kline.get("t", 0)))  # type: ignore[arg-type]
             timestamp = datetime.fromtimestamp(open_time_ms / 1000, tz=timezone.utc)
 
+            # Parse prices with explicit Decimal validation
+            try:
+                price_open = Decimal(str(kline.get("o", "0")))
+                price_high = Decimal(str(kline.get("h", "0")))
+                price_low = Decimal(str(kline.get("l", "0")))
+                price_close = Decimal(str(kline.get("c", "0")))
+                volume_24h = Decimal(str(kline.get("v", "0")))
+            except (ValueError, TypeError, InvalidOperation):
+                # Malformed price values
+                return None
+
             return OHLCVRecord(
                 symbol=symbol,
-                price_open=Decimal(str(kline.get("o", "0"))),
-                price_high=Decimal(str(kline.get("h", "0"))),
-                price_low=Decimal(str(kline.get("l", "0"))),
-                price_close=Decimal(str(kline.get("c", "0"))),
-                volume_24h=Decimal(str(kline.get("v", "0"))),
+                price_open=price_open,
+                price_high=price_high,
+                price_low=price_low,
+                price_close=price_close,
+                volume_24h=volume_24h,
                 market_cap=None,
                 timestamp=timestamp,
                 source="binance_ws",

@@ -12,14 +12,14 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 import bcrypt as _bcrypt
 
 from src.shared.db_models import UserOrm
 
 # Fixed creation timestamp — never datetime.now() in tests
-_FIXED_TS = datetime(2024, 1, 15, 8, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2024, 1, 15, 8, 0, 0, tzinfo=timezone.utc)
 
 # Plain-text value used only for test hashing — not a real secret.
 _TEST_PLAIN_PW = "test-only-not-a-secret"  # noqa: S105

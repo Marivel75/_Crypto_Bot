@@ -12,11 +12,10 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
 )
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 from src.api.dependencies import get_current_user, get_db
 from src.api.services.auth_service import create_access_token
-
 
 # SQLite-compatible test Base (avoids PostgreSQL-specific types in db_models)
 TestBase = declarative_base()
@@ -35,7 +34,7 @@ def _uuid() -> str:
 
 
 def _utcnow() -> datetime:
-    return datetime.now(tz=UTC)
+    return datetime.now(tz=timezone.utc)
 
 
 class UserOrm(TestBase):
@@ -208,8 +207,6 @@ import src.api.routers.chat as _chat_router  # noqa: E402
 import src.api.routers.portfolio as _portfolio_router  # noqa: E402
 import src.api.routers.watchlist as _watchlist_router  # noqa: E402
 import src.api.services.chat_service as _chat_svc  # noqa: E402
-
-UTC = timezone.utc
 
 _chat_svc.PortfolioEntryOrm = PortfolioOrm  # type: ignore[misc]
 _chat_svc.TradingSignalOrm = TradingSignalOrm  # type: ignore[misc]

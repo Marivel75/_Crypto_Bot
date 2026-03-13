@@ -18,7 +18,6 @@ from src.api.schemas import (
     SignalResponse,
 )
 from src.api.services import signal_service
-from src.shared.models import constants
 
 router = APIRouter(prefix="/signals", tags=["signals"])
 
@@ -49,11 +48,7 @@ async def get_detail(
     """Return detailed signal info with outcome."""
     data = await signal_service.get_detail(db, str(signal_id))
     signal_resp = SignalResponse.model_validate(data["signal"])
-    outcome_resp = (
-        SignalOutcomeResponse.model_validate(data["outcome"])
-        if data["outcome"]
-        else None
-    )
+    outcome_resp = SignalOutcomeResponse.model_validate(data["outcome"]) if data["outcome"] else None
     return ApiResponse(data=SignalDetailResponse(signal=signal_resp, outcome=outcome_resp))
 
 

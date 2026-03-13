@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import pydantic
@@ -27,7 +27,7 @@ from src.shared.models.crypto import IndicatorRecord, NewsArticle, OHLCVRecord
 from src.shared.models.signal import TradingSignal
 from src.shared.models.user import UserCreate
 
-_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
 # ---------------------------------------------------------------------------

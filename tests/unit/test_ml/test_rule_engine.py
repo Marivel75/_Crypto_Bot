@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
@@ -10,7 +10,7 @@ from src.ml.rules.engine import RuleEngine
 from src.ml.rules.models import RuleResult
 from src.shared.models.crypto import IndicatorRecord
 
-FIXED_TS = datetime(2025, 6, 1, 12, 0, tzinfo=UTC)
+FIXED_TS = datetime(2025, 6, 1, 12, 0, tzinfo=timezone.utc)
 CONFIG_PATH = Path(__file__).resolve().parents[3] / "src" / "ml" / "config" / "indicators.yaml"
 
 

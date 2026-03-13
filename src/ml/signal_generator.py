@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 import uuid
+from datetime import timezone
 from decimal import Decimal
 from typing import Any, Literal, Protocol, cast
 
@@ -167,8 +168,8 @@ class SignalGenerator:
         # Use a default current_price proxy (ATR-based calculation assumes 1% ATR)
         atr = None  # ATR is not yet in the indicators dict; use default heuristic
         entry_price = self._calculate_entry_price(100.0, atr, direction)  # normalized to 100
-        stop_loss = self._calculate_stop_loss(entry_price, atr, direction)
-        take_profit = self._calculate_take_profit_levels(entry_price, atr, direction)
+        self._calculate_stop_loss(entry_price, atr, direction)
+        self._calculate_take_profit_levels(entry_price, atr, direction)
 
         signal = TradingSignal(
             symbol=symbol,
@@ -461,10 +462,7 @@ class SignalGenerator:
         tp_levels: list[float] = []
         for ratio in ratios:
             tp_distance = atr * ratio
-            if direction == "BUY":
-                tp = entry_price + tp_distance
-            else:
-                tp = entry_price - tp_distance
+            tp = entry_price + tp_distance if direction == "BUY" else entry_price - tp_distance
             tp_levels.append(tp)
 
         return sorted(tp_levels) if direction == "BUY" else sorted(tp_levels, reverse=True)
@@ -500,7 +498,7 @@ async def generate_signals_for_symbols(
     Returns:
         Dict mapping ``symbol`` -> number of signals emitted (0 or 1 per symbol).
     """
-    from datetime import UTC, datetime
+    from datetime import datetime
 
     from src.ml.repositories.timescale import (
         TimescaleIndicatorRepository,
@@ -518,7 +516,7 @@ async def generate_signals_for_symbols(
     _multi_tf = ("1h", "2h", "3h", "4h", "1D", "1W", "1M")
 
     results: dict[str, int] = {}
-    started_at = datetime.now(UTC)
+    started_at = datetime.now(timezone.utc)
 
     async def _process_symbol(
         symbol: str,
@@ -558,7 +556,7 @@ async def generate_signals_for_symbols(
             await _run(sess)
             await sess.commit()
 
-    elapsed = (datetime.now(UTC) - started_at).total_seconds()
+    elapsed = (datetime.now(timezone.utc) - started_at).total_seconds()
     total_emitted = sum(results.values())
     logger.info(
         "Signal generation complete: %d/%d signals emitted in %.2fs",

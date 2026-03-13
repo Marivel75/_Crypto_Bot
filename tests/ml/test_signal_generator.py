@@ -2,18 +2,17 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from decimal import Decimal
-from datetime import UTC, datetime
 from typing import Any
 
 import pytest
 
 from src.ml.signal_generator import SignalGenerator
 from src.shared.constants import SIGNAL_CONFIDENCE_THRESHOLD
-from src.shared.models.crypto import IndicatorRecord
 
 # Fixed timestamp
-_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
 class FakeRuleEngine:

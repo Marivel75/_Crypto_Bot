@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 from src.ml.rules.models import RuleResult
@@ -13,7 +13,7 @@ from src.shared.models.crypto import IndicatorRecord
 # Fixtures / helpers
 # ---------------------------------------------------------------------------
 
-_FIXED_TS_BASE = datetime(2024, 6, 1, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS_BASE = datetime(2024, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
 
 
 def _make_rsi_config(
@@ -39,7 +39,7 @@ def _indicator(
     return IndicatorRecord(
         symbol=symbol,
         timeframe=timeframe,
-        timestamp=datetime(2024, 6, 1, 12, 0, offset_seconds, tzinfo=UTC),
+        timestamp=datetime(2024, 6, 1, 12, 0, offset_seconds, tzinfo=timezone.utc),
         rsi=rsi,
     )
 

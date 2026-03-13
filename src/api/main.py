@@ -10,7 +10,6 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.api.middleware import RateLimitHeadersMiddleware, RequestIdMiddleware
 from src.api.routers import (
@@ -75,11 +74,16 @@ app.add_middleware(
 )
 
 
-# Prometheus metrics
-Instrumentator(
-    should_group_status_codes=False,
-    excluded_handlers=["/api/v1/health", "/metrics"],
-).instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
+# Prometheus metrics (optional, requires prometheus-fastapi-instrumentator package)
+try:
+    from prometheus_fastapi_instrumentator import Instrumentator
+
+    Instrumentator(
+        should_group_status_codes=False,
+        excluded_handlers=["/api/v1/health", "/metrics"],
+    ).instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
+except ImportError:
+    logger.debug("prometheus_fastapi_instrumentator not installed; metrics endpoint disabled")
 
 
 # Exception handlers

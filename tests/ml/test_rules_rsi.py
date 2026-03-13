@@ -2,21 +2,19 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from decimal import Decimal
-from datetime import UTC, datetime
-
-import pytest
 
 from src.ml.rules.models import RuleLabel, RuleResult
 from src.ml.rules.rsi_rules import (
+    evaluate_rsi_multi_tf_convergence,
     evaluate_rsi_overbought,
     evaluate_rsi_oversold,
-    evaluate_rsi_multi_tf_convergence,
 )
 from src.shared.models.crypto import IndicatorRecord
 
 # Fixed timestamp for reproducibility
-_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
 class TestRSIOverbought:

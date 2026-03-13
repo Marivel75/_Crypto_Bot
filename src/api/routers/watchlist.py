@@ -25,9 +25,7 @@ async def get_watchlist(
 ) -> ApiResponse[list[WatchlistEntryResponse]]:
     """Return the user's watchlist."""
     entries = await user_data_service.get_watchlist(db, str(current_user.id))
-    return ApiResponse(
-        data=[WatchlistEntryResponse.model_validate(e) for e in entries]
-    )
+    return ApiResponse(data=[WatchlistEntryResponse.model_validate(e) for e in entries])
 
 
 @router.post(
@@ -58,9 +56,7 @@ async def add_symbol(
     HTTPException
         If symbol format is invalid or already exists.
     """
-    entry = await user_data_service.add_watchlist_symbol(
-        db, str(current_user.id), body.symbol
-    )
+    entry = await user_data_service.add_watchlist_symbol(db, str(current_user.id), body.symbol)
     return ApiResponse(data=WatchlistEntryResponse.model_validate(entry))
 
 
@@ -97,9 +93,7 @@ async def remove_symbol(
     HTTPException
         If symbol is invalid or not found.
     """
-    await user_data_service.remove_watchlist_symbol(
-        db, str(current_user.id), symbol
-    )
+    await user_data_service.remove_watchlist_symbol(db, str(current_user.id), symbol)
     return ApiResponse(data=None)
 
 

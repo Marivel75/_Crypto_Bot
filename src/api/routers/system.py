@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import func, select, text
@@ -36,7 +36,7 @@ async def health(
         data=HealthResponse(
             status="ok" if db_status == "ok" else "degraded",
             database=db_status,
-            timestamp=datetime.now(tz=UTC),
+            timestamp=datetime.now(tz=timezone.utc),
         )
     )
 

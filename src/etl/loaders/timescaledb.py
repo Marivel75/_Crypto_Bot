@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine
@@ -253,7 +253,7 @@ async def fetch_unevaluated_signals() -> list[dict[str, object]]:
     """
     from datetime import timedelta
 
-    cutoff = datetime.now(tz=UTC) - timedelta(hours=1)
+    cutoff = datetime.now(tz=timezone.utc) - timedelta(hours=1)
 
     async with async_session_factory() as session:
         result = await session.execute(

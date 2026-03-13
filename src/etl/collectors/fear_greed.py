@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import TypedDict
 
@@ -61,7 +61,7 @@ class FearGreedCollector:
             A ``FearGreedResult`` dict with keys:
             - ``value``: int in range [0, 100]
             - ``value_classification``: e.g. ``"Extreme Fear"``, ``"Greed"``
-            - ``timestamp``: UTC-aware ``datetime``
+            - ``timestamp``: timezone.utc-aware ``datetime``
 
         Raises:
             ExternalAPIError: On non-2xx HTTP response or network error.
@@ -138,7 +138,7 @@ class FearGreedCollector:
             raise ValueError(f"Cannot parse Fear & Greed value '{raw_value}' as int") from exc
 
         try:
-            timestamp = datetime.fromtimestamp(int(str(raw_timestamp)), tz=UTC)
+            timestamp = datetime.fromtimestamp(int(str(raw_timestamp)), tz=timezone.utc)
         except (ValueError, TypeError, OSError) as exc:
             raise ValueError(f"Cannot parse Fear & Greed timestamp '{raw_timestamp}'") from exc
 

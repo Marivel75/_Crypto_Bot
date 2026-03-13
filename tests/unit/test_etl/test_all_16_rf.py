@@ -6,7 +6,7 @@ Test naming: test_rf<N>_<what>_<condition>_<expected>
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -29,7 +29,7 @@ from src.shared.models.crypto import IndicatorRecord, OHLCVRecord
 # Test Data Factories
 # ---------------------------------------------------------------------------
 
-_BASE_TS = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
+_BASE_TS = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
 
 def _make_ohlcv_records(
@@ -85,12 +85,10 @@ class TestRF3_CoinGeckoCollector:
         from src.etl.collectors.coingecko import _SYMBOL_TO_COINGECKO_ID
 
         # Extract base symbols from tracked pairs (e.g., "BTCUSDT" -> "BTC")
-        base_symbols = {pair.rstrip("USDT") for pair in TRACKED_SYMBOLS}
+        base_symbols = {pair[:-4] if pair.endswith("USDT") else pair for pair in TRACKED_SYMBOLS}
 
         for base_sym in base_symbols:
-            assert base_sym in _SYMBOL_TO_COINGECKO_ID, (
-                f"Symbol {base_sym} has no CoinGecko mapping"
-            )
+            assert base_sym in _SYMBOL_TO_COINGECKO_ID, f"Symbol {base_sym} has no CoinGecko mapping"
 
 
 # ---------------------------------------------------------------------------
@@ -153,7 +151,7 @@ class TestRF6_FearGreedCollector:
 
         # Verify the pseudo-OHLCV format for storage in crypto_prices table
         value = 42
-        ts = datetime(2024, 1, 1, 12, 0, 0, tzinfo=UTC)
+        ts = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
 
         result = FearGreedCollector._parse_response(
             {
@@ -183,9 +181,7 @@ class TestRF7_APScheduler:
         """RF7: Priority symbols (1m) and all tracked symbols (5m) available."""
         assert len(PRIORITY_SYMBOLS) >= 10, "Need >= 10 priority symbols"
         assert len(TRACKED_SYMBOLS) >= 12, "Need >= 12 tracked symbols"
-        assert set(PRIORITY_SYMBOLS).issubset(
-            set(TRACKED_SYMBOLS)
-        ), "Priority symbols must be a subset of tracked"
+        assert set(PRIORITY_SYMBOLS).issubset(set(TRACKED_SYMBOLS)), "Priority symbols must be a subset of tracked"
 
 
 # ---------------------------------------------------------------------------
@@ -203,7 +199,7 @@ class TestRF8_Deduplication:
         deduped = deduplicate_ohlcv(records)
 
         assert len(deduped) == 5, "Should remove 1 duplicate from 6 records"
-        assert len(set((r.symbol, r.timeframe, r.timestamp) for r in deduped)) == 5
+        assert len({(r.symbol, r.timeframe, r.timestamp) for r in deduped}) == 5
 
     def test_rf8_deduplicate_preserves_first_occurrence(self) -> None:
         """RF8: Keep first occurrence when duplicates exist."""
@@ -243,7 +239,8 @@ class TestRF9_GapDetection:
 
         gaps = detect_gaps(records, timedelta(hours=1))
 
-        assert len(gaps) == 2, "Should find 2 missing candles (hours 1 and 2)"
+        assert len(gaps) == 1, "Should find 1 gap (missing 2 candles)"
+        assert gaps[0][2] == 2, "Gap should contain 2 missing candles"
 
 
 # ---------------------------------------------------------------------------
@@ -302,7 +299,7 @@ class TestRF11_DataValidation:
                 price_low=Decimal("42000"),
                 price_close=Decimal("42000"),
                 volume_24h=Decimal("1000000"),
-                timestamp=datetime.now(tz=UTC),
+                timestamp=datetime.now(tz=timezone.utc),
                 source="test",
                 timeframe="1h",
             )
@@ -317,7 +314,7 @@ class TestRF11_DataValidation:
                 price_low=Decimal("41900"),
                 price_close=Decimal("42000"),
                 volume_24h=Decimal("-1000"),  # Invalid: negative volume
-                timestamp=datetime.now(tz=UTC),
+                timestamp=datetime.now(tz=timezone.utc),
                 source="test",
                 timeframe="1h",
             )
@@ -331,19 +328,21 @@ class TestRF11_DataValidation:
             price_low=Decimal("41900"),
             price_close=Decimal("42000"),
             volume_24h=Decimal("1000000"),
-            timestamp=datetime.now(tz=UTC),
+            timestamp=datetime.now(tz=timezone.utc),
             source="test",
             timeframe="1h",
         )
 
-        invalid_record = OHLCVRecord(
+        # Use model_construct to bypass Pydantic validation and create invalid record
+        invalid_record = OHLCVRecord.model_construct(
             symbol="ETHUSDT",
             price_open=Decimal("2500"),
             price_high=Decimal("2400"),  # Invalid: high < low
             price_low=Decimal("2500"),
             price_close=Decimal("2450"),
             volume_24h=Decimal("500000"),
-            timestamp=datetime.now(tz=UTC),
+            market_cap=None,
+            timestamp=datetime.now(tz=timezone.utc),
             source="test",
             timeframe="1h",
         )

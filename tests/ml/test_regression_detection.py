@@ -9,7 +9,7 @@ This ensures code changes don't inadvertently degrade signal quality.
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -27,7 +27,7 @@ _CONFIG_PATH = Path(__file__).resolve().parents[2] / "src" / "ml" / "config" / "
 _CONFIG_MISSING = not _CONFIG_PATH.exists()
 
 # Fixed timestamp for reproducibility
-_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 # Regression detection tolerance: 5% degradation triggers alert
 _REGRESSION_THRESHOLD = 0.05
@@ -44,7 +44,7 @@ class _FixedIndicators:
         # RSI deeply oversold across all TFs (tight convergence)
         for tf in ["1h", "2h", "3h", "4h"]:
             records = []
-            for i in range(100):
+            for _i in range(100):
                 records.append(
                     IndicatorRecord(
                         symbol="BTCUSDT",
@@ -70,7 +70,7 @@ class _FixedIndicators:
 
         for tf in ["1h", "2h", "3h", "4h"]:
             records = []
-            for i in range(100):
+            for _i in range(100):
                 records.append(
                     IndicatorRecord(
                         symbol="BTCUSDT",
@@ -96,7 +96,7 @@ class _FixedIndicators:
 
         for tf in ["1h", "2h", "3h", "4h"]:
             records = []
-            for i in range(100):
+            for _i in range(100):
                 records.append(
                     IndicatorRecord(
                         symbol="BTCUSDT",
@@ -139,9 +139,7 @@ class TestRegressionDetection:
     def test_baseline_bullish_signals(self) -> None:
         """Establish baseline for bullish signals (BTC oversold)."""
         symbols = ["BTCUSDT", "ETHUSDT"]
-        generator = SignalGenerator(
-            rule_engine=_FakeRuleEngine(direction="BUY", confidence=0.75)
-        )
+        generator = SignalGenerator(rule_engine=_FakeRuleEngine(direction="BUY", confidence=0.75))
 
         signals: list[TradingSignal] = []
         for symbol in symbols:
@@ -160,9 +158,7 @@ class TestRegressionDetection:
     def test_baseline_bearish_signals(self) -> None:
         """Establish baseline for bearish signals (BTC overbought)."""
         symbols = ["BTCUSDT", "ETHUSDT"]
-        generator = SignalGenerator(
-            rule_engine=_FakeRuleEngine(direction="SELL", confidence=0.70)
-        )
+        generator = SignalGenerator(rule_engine=_FakeRuleEngine(direction="SELL", confidence=0.70))
 
         signals: list[TradingSignal] = []
         for symbol in symbols:
@@ -178,9 +174,7 @@ class TestRegressionDetection:
 
     def test_regression_signal_schema_unchanged(self) -> None:
         """Verify emitted signals still conform to expected schema."""
-        generator = SignalGenerator(
-            rule_engine=_FakeRuleEngine(direction="BUY", confidence=0.80)
-        )
+        generator = SignalGenerator(rule_engine=_FakeRuleEngine(direction="BUY", confidence=0.80))
 
         indicators = _FixedIndicators.get_bullish_indicators()
         signal = generator.generate(symbol="BTCUSDT", indicators=indicators)
@@ -196,9 +190,7 @@ class TestRegressionDetection:
 
     def test_multiple_runs_produce_identical_results(self) -> None:
         """Verify determinism: multiple runs on same data produce identical results."""
-        generator = SignalGenerator(
-            rule_engine=_FakeRuleEngine(direction="BUY", confidence=0.75)
-        )
+        generator = SignalGenerator(rule_engine=_FakeRuleEngine(direction="BUY", confidence=0.75))
 
         indicators = _FixedIndicators.get_bullish_indicators()
 
@@ -211,4 +203,3 @@ class TestRegressionDetection:
         assert signal_1.signal_type == signal_2.signal_type
 
         logger.info("Determinism verified: runs produce identical results")
-

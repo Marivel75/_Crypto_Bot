@@ -5,13 +5,13 @@ All WebSocket interactions are mocked via unittest.mock. No real network calls.
 
 from __future__ import annotations
 
-import asyncio
 import json
 import logging
 from datetime import datetime, timezone
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import aiohttp  # type: ignore[import-untyped]
 import pytest
 
 from src.etl.collectors.binance_websocket import BinanceWebSocketCollector
@@ -168,7 +168,7 @@ class TestBinanceWebSocketCollector:
 
     def test_parse_kline_message_various_timeframes(self) -> None:
         """Different timeframe intervals are parsed correctly."""
-        for tf_name in ["1m", "5m", "1h", "4h", "1D"]:
+        for tf_name in ["1m", "5m", "1h", "4h", "1d"]:
             msg = {
                 "stream": f"btcusdt@kline_{tf_name}",
                 "data": {
@@ -249,14 +249,19 @@ class TestBinanceWebSocketCollector:
     @patch("aiohttp.ClientSession.ws_connect")
     async def test_connect_success(self, mock_ws_connect: AsyncMock) -> None:
         """Successful connection establishes WebSocket."""
-        mock_ws = MagicMock()
+        mock_ws = AsyncMock()
         mock_ws_connect.return_value = mock_ws
 
         collector = BinanceWebSocketCollector(symbols=["BTCUSDT"], timeframes=["1m"])
-        await collector.connect()
+        with patch("aiohttp.ClientSession") as mock_session_class:
+            mock_session = AsyncMock()
+            mock_session.ws_connect = AsyncMock(return_value=mock_ws)
+            mock_session_class.return_value = mock_session
+            collector._session = mock_session
+            await collector.connect()
 
-        assert collector._ws is mock_ws
-        mock_ws_connect.assert_called_once()
+            assert collector._ws is mock_ws
+            mock_session.ws_connect.assert_called_once()
 
     @pytest.mark.asyncio
     @patch("aiohttp.ClientSession.ws_connect")
@@ -271,11 +276,9 @@ class TestBinanceWebSocketCollector:
     @pytest.mark.asyncio
     async def test_stream_with_closed_messages(self) -> None:
         """Stream yields records from closed kline messages."""
-        mock_ws = AsyncMock()
-
-        # Create two mock messages
+        # Create mock messages
         msg1 = MagicMock()
-        msg1.type = "text"  # Simulate aiohttp.WSMsgType.TEXT
+        msg1.type = aiohttp.WSMsgType.TEXT
         msg1.data = json.dumps(
             {
                 "stream": "btcusdt@kline_1m",
@@ -299,11 +302,23 @@ class TestBinanceWebSocketCollector:
             }
         )
 
-        # Simulate iterator that yields messages then raises StopAsyncIteration
-        async def mock_aiter() -> object:
-            yield msg1
+        # Create a mock WebSocket that supports async iteration
+        class AsyncIteratorMock:
+            def __init__(self, messages: list[object]) -> None:
+                self.messages = messages
+                self.index = 0
 
-        mock_ws.__aiter__.return_value = mock_aiter()
+            def __aiter__(self) -> object:
+                return self
+
+            async def __anext__(self) -> object:
+                if self.index < len(self.messages):
+                    msg = self.messages[self.index]
+                    self.index += 1
+                    return msg
+                raise StopAsyncIteration
+
+        mock_ws = AsyncIteratorMock([msg1])
 
         collector = BinanceWebSocketCollector()
         collector._ws = mock_ws
@@ -321,26 +336,24 @@ class TestBinanceWebSocketCollector:
     @pytest.mark.asyncio
     async def test_stream_skips_malformed_json(self) -> None:
         """Malformed JSON messages are skipped with a warning."""
-        mock_ws = AsyncMock()
-
         # Create a message with bad JSON
         msg_bad = MagicMock()
         msg_bad.type = "text"
         msg_bad.data = "{ this is not valid json"
 
-        async def mock_aiter() -> object:
+        async def async_message_generator() -> object:
             yield msg_bad
 
-        mock_ws.__aiter__.return_value = mock_aiter()
+        mock_ws = AsyncMock()
+        mock_ws.__aiter__ = lambda self: async_message_generator()
 
         collector = BinanceWebSocketCollector()
         collector._ws = mock_ws
 
         records = []
-        with pytest.warns(None) as warning_list:
-            async for record in collector.stream():
-                records.append(record)
-                break  # Exit loop after bad message
+        async for record in collector.stream():
+            records.append(record)
+            break  # Exit loop after bad message
 
         # No valid records should be yielded
         assert len(records) == 0

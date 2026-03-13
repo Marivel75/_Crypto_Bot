@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any
-
-import numpy as np
 import pandas as pd
 import pytest
 
-from src.ml.models.trainer import ModelTrainer, FEATURE_COLS
 from src.ml.models.lgbm_trainer import LightGBMTrainer
+from src.ml.models.trainer import FEATURE_COLS, ModelTrainer
 
 
 class TestTemporalSplit:

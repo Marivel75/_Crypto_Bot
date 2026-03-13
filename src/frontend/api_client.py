@@ -7,7 +7,7 @@ via ``st.error`` — the UI never crashes on API failures.
 from __future__ import annotations
 
 import logging
-from typing import Any, Generic, TypeVar
+from typing import Any, TypeVar
 
 import httpx
 import streamlit as st
@@ -173,9 +173,7 @@ class APIClient:
             return None
         return self._decode_response(data_dict, model)
 
-    def _extract_list(
-        self, response_dict: dict[str, Any] | None, item_model: type[T]
-    ) -> list[T] | None:
+    def _extract_list(self, response_dict: dict[str, Any] | None, item_model: type[T]) -> list[T] | None:
         """Extract and validate a list from the 'data' field of an ApiResponse.
 
         Parameters
@@ -351,9 +349,7 @@ class APIClient:
         resp = self.post("/api/v1/portfolio", json=position)
         return self._extract_data(resp, PortfolioEntryResponse)
 
-    def update_portfolio_position(
-        self, position_id: str | int, data: dict[str, Any]
-    ) -> PortfolioEntryResponse | None:
+    def update_portfolio_position(self, position_id: str | int, data: dict[str, Any]) -> PortfolioEntryResponse | None:
         """Update an existing portfolio position."""
         resp = self.put(f"/api/v1/portfolio/{position_id}", json=data)
         return self._extract_data(resp, PortfolioEntryResponse)

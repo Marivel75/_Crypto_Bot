@@ -6,7 +6,7 @@ required by pandas_ta 0.4.x is not available in the current environment.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -28,7 +28,7 @@ _requires_pandas_ta = pytest.mark.skipif(
     reason="pandas_ta not importable (numba missing)",
 )
 
-_BASE_TS = datetime(2024, 1, 1, tzinfo=UTC)
+_BASE_TS = datetime(2024, 1, 1, tzinfo=timezone.utc)
 _BTC_PRICE = 40_000.0
 
 

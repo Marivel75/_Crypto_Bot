@@ -204,10 +204,7 @@ async def get_market_overview(db: AsyncSession) -> dict[str, object]:
 
     # Fetch Fear & Greed value from pseudo-OHLCV record
     fg_result = await db.execute(
-        select(OHLCVOrm.price_close)
-        .where(OHLCVOrm.symbol == "FEAR_GREED")
-        .order_by(desc(OHLCVOrm.timestamp))
-        .limit(1)
+        select(OHLCVOrm.price_close).where(OHLCVOrm.symbol == "FEAR_GREED").order_by(desc(OHLCVOrm.timestamp)).limit(1)
     )
     fg_row = fg_result.scalar_one_or_none()
     fear_greed = int(fg_row) if fg_row is not None else None

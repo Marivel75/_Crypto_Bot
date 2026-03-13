@@ -47,7 +47,7 @@ async def _health_handler(_request: web.Request) -> web.Response:
 
 def build_scheduler() -> AsyncIOScheduler:
     """Construct and return the APScheduler with all ETL jobs registered."""
-    scheduler = AsyncIOScheduler(timezone="UTC")
+    scheduler = AsyncIOScheduler(timezone="timezone.utc")
 
     scheduler.add_job(
         job_collect_ohlcv_priority,

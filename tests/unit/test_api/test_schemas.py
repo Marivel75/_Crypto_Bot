@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from src.api.schemas import (
     ApiResponse,
@@ -43,7 +43,7 @@ class TestUserResponse:
             email = "test@example.com"
             persona_type = "trader"
             preferences = {}
-            created_at = datetime(2025, 1, 1, tzinfo=UTC)
+            created_at = datetime(2025, 1, 1, tzinfo=timezone.utc)
 
         user_resp = UserResponse.model_validate(FakeUser())
         assert str(user_resp.id) == "00000000-0000-0000-0000-000000000002"

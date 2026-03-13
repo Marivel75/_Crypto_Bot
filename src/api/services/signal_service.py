@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import case, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,7 +24,7 @@ async def get_active(db: AsyncSession) -> list[TradingSignalOrm]:
     Returns:
         List of TradingSignalOrm rows ordered by creation time descending.
     """
-    cutoff = datetime.now(tz=UTC) - timedelta(hours=24)
+    cutoff = datetime.now(tz=timezone.utc) - timedelta(hours=24)
     result = await db.execute(
         select(TradingSignalOrm)
         .where(TradingSignalOrm.created_at >= cutoff)

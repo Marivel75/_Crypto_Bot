@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 
 import feedparser  # type: ignore[import-untyped]
@@ -167,7 +167,7 @@ class NewsCollector:
             try:
                 published_at = parsedate_to_datetime(published_str)
                 if published_at.tzinfo is None:
-                    published_at = published_at.replace(tzinfo=UTC)
+                    published_at = published_at.replace(tzinfo=timezone.utc)
             except Exception:  # noqa: BLE001
                 logger.debug(
                     "Could not parse published date '%s' for entry '%s'",

@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import desc, func, select
+from sqlalchemy import desc, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -118,7 +118,7 @@ async def update_portfolio_entry(
         entry.entry_price = entry_price  # type: ignore[assignment]
     if notes is not None:
         entry.notes = notes  # type: ignore[assignment]
-    entry.updated_at = datetime.now(tz=UTC)  # type: ignore[assignment]
+    entry.updated_at = datetime.now(tz=timezone.utc)  # type: ignore[assignment]
 
     await db.flush()
     await db.refresh(entry)
@@ -323,17 +323,16 @@ async def get_watchlist_prices(
     prices: list[dict[str, object]] = []
     for entry in watchlist_entries:
         result = await db.execute(
-            select(OHLCVOrm)
-            .where(OHLCVOrm.symbol == entry.symbol)
-            .order_by(desc(OHLCVOrm.timestamp))
-            .limit(1)
+            select(OHLCVOrm).where(OHLCVOrm.symbol == entry.symbol).order_by(desc(OHLCVOrm.timestamp)).limit(1)
         )
         ohlcv = result.scalar_one_or_none()
 
-        prices.append({
-            "symbol": entry.symbol,
-            "current_price": float(ohlcv.price_close) if ohlcv else None,
-            "timestamp": ohlcv.timestamp if ohlcv else None,
-        })
+        prices.append(
+            {
+                "symbol": entry.symbol,
+                "current_price": float(ohlcv.price_close) if ohlcv else None,
+                "timestamp": ohlcv.timestamp if ohlcv else None,
+            }
+        )
 
     return prices

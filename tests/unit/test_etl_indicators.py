@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 from src.etl.transformers.indicators import (
@@ -23,7 +23,7 @@ from src.etl.transformers.indicators import (
 # Helpers
 # ---------------------------------------------------------------------------
 
-BASE_TS = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
+BASE_TS = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
 
 def _make_rows(

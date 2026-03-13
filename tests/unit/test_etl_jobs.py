@@ -6,7 +6,6 @@ External APIs are mocked; no real network calls are made.
 
 from __future__ import annotations
 
-import asyncio
 import logging
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -22,7 +21,7 @@ from src.etl.jobs import (
     job_collect_ohlcv_priority,
     job_compute_indicators,
 )
-from src.shared.models.crypto import OHLCVRecord, NewsArticle
+from src.shared.models.crypto import NewsArticle, OHLCVRecord
 
 logger = logging.getLogger(__name__)
 
@@ -33,16 +32,10 @@ class TestJobCollectOhlcvPriority:
     """Tests for job_collect_ohlcv_priority — 1-min collection of top 13 symbols."""
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.BinanceCollector")
-    @patch("src.etl.jobs.insert_ohlcv_batch")
-    async def test_success_collects_and_inserts(
-        self, mock_insert: AsyncMock, mock_binance: MagicMock
-    ) -> None:
+    @patch("src.etl.jobs._fetch_symbol")
+    @patch("src.etl.loaders.timescaledb.insert_ohlcv_batch")
+    async def test_success_collects_and_inserts(self, mock_insert: AsyncMock, mock_fetch_symbol: AsyncMock) -> None:
         """Job collects OHLCV from Binance and inserts valid records."""
-        # Mock collector returns one record per symbol
-        mock_collector = AsyncMock()
-        mock_binance.return_value.__aenter__.return_value = mock_collector
-
         record = OHLCVRecord(
             symbol="BTCUSDT",
             price_open=Decimal("50000.00"),
@@ -54,28 +47,23 @@ class TestJobCollectOhlcvPriority:
             source="binance",
             timeframe="1m",
         )
-        mock_collector.fetch_ohlcv.return_value = [record]
+        mock_fetch_symbol.return_value = [record]
         mock_insert.return_value = 1
 
         await job_collect_ohlcv_priority()
 
         # Verify fetch was called for multiple symbols
-        assert mock_collector.fetch_ohlcv.call_count >= 1
+        assert mock_fetch_symbol.call_count >= 1
         # Verify insert was called with deduped records
         mock_insert.assert_called()
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.BinanceCollector")
-    @patch("src.etl.jobs.insert_ohlcv_batch")
-    async def test_skips_failed_symbols(
-        self, mock_insert: AsyncMock, mock_binance: MagicMock
-    ) -> None:
+    @patch("src.etl.jobs._fetch_symbol")
+    @patch("src.etl.loaders.timescaledb.insert_ohlcv_batch")
+    async def test_skips_failed_symbols(self, mock_insert: AsyncMock, mock_fetch_symbol: AsyncMock) -> None:
         """Job logs failures for individual symbols and continues."""
-        mock_collector = AsyncMock()
-        mock_binance.return_value.__aenter__.return_value = mock_collector
-
         # First call fails, second succeeds
-        mock_collector.fetch_ohlcv.side_effect = [
+        mock_fetch_symbol.side_effect = [
             Exception("API error"),
             [
                 OHLCVRecord(
@@ -98,11 +86,9 @@ class TestJobCollectOhlcvPriority:
         mock_insert.assert_called()
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.BinanceCollector")
-    @patch("src.etl.jobs.insert_ohlcv_batch")
-    async def test_empty_results_no_insert(
-        self, mock_insert: AsyncMock, mock_binance: MagicMock
-    ) -> None:
+    @patch("src.etl.collectors.binance.BinanceCollector")
+    @patch("src.etl.loaders.timescaledb.insert_ohlcv_batch")
+    async def test_empty_results_no_insert(self, mock_insert: AsyncMock, mock_binance: MagicMock) -> None:
         """Job skips insert if all fetches return empty results."""
         mock_collector = AsyncMock()
         mock_binance.return_value.__aenter__.return_value = mock_collector
@@ -118,15 +104,10 @@ class TestJobCollectOhlcvAll:
     """Tests for job_collect_ohlcv_all — 5-min collection of all tracked symbols."""
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.BinanceCollector")
-    @patch("src.etl.jobs.insert_ohlcv_batch")
-    async def test_collects_5m_for_all_symbols(
-        self, mock_insert: AsyncMock, mock_binance: MagicMock
-    ) -> None:
+    @patch("src.etl.jobs._fetch_symbol")
+    @patch("src.etl.loaders.timescaledb.insert_ohlcv_batch")
+    async def test_collects_5m_for_all_symbols(self, mock_insert: AsyncMock, mock_fetch_symbol: AsyncMock) -> None:
         """Job collects 5-minute OHLCV for all tracked symbols."""
-        mock_collector = AsyncMock()
-        mock_binance.return_value.__aenter__.return_value = mock_collector
-
         record = OHLCVRecord(
             symbol="BTCUSDT",
             price_open=Decimal("50000.00"),
@@ -138,23 +119,23 @@ class TestJobCollectOhlcvAll:
             source="binance",
             timeframe="5m",
         )
-        mock_collector.fetch_ohlcv.return_value = [record]
+        mock_fetch_symbol.return_value = [record]
         mock_insert.return_value = 1
 
         await job_collect_ohlcv_all()
 
-        # Verify timeframe is 5m
-        calls = mock_collector.fetch_ohlcv.call_args_list
-        assert any(call.args[1] == "5m" or call.kwargs.get("timeframe") == "5m" for call in calls)
+        # Verify timeframe is 5m (check the second argument to _fetch_symbol)
+        calls = mock_fetch_symbol.call_args_list
+        assert any(call.args[2] == "5m" or call.kwargs.get("timeframe") == "5m" for call in calls)
 
 
 class TestJobCollectMarketData:
     """Tests for job_collect_market_data — CoinGecko market data collection."""
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.CoinGeckoCollector")
-    @patch("src.etl.jobs.upload_raw_json")
-    @patch("src.etl.jobs.insert_ohlcv_batch")
+    @patch("src.etl.collectors.coingecko.CoinGeckoCollector")
+    @patch("src.etl.loaders.minio_loader.upload_raw_json")
+    @patch("src.etl.loaders.timescaledb.insert_ohlcv_batch")
     async def test_collects_and_uploads(
         self, mock_insert: AsyncMock, mock_upload: AsyncMock, mock_cg: MagicMock
     ) -> None:
@@ -184,9 +165,9 @@ class TestJobCollectMarketData:
         mock_insert.assert_called()
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.CoinGeckoCollector")
-    @patch("src.etl.jobs.upload_raw_json")
-    @patch("src.etl.jobs.insert_ohlcv_batch")
+    @patch("src.etl.collectors.coingecko.CoinGeckoCollector")
+    @patch("src.etl.loaders.minio_loader.upload_raw_json")
+    @patch("src.etl.loaders.timescaledb.insert_ohlcv_batch")
     async def test_handles_empty_market_data(
         self, mock_insert: AsyncMock, mock_upload: AsyncMock, mock_cg: MagicMock
     ) -> None:
@@ -205,8 +186,8 @@ class TestJobCollectNews:
     """Tests for job_collect_news — RSS feed collection."""
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.NewsCollector")
-    @patch("src.etl.jobs.insert_news_batch")
+    @patch("src.etl.collectors.news.NewsCollector")
+    @patch("src.etl.loaders.timescaledb.insert_news_batch")
     async def test_collects_news(self, mock_insert: AsyncMock, mock_news: MagicMock) -> None:
         """Job collects news articles and inserts them."""
         mock_collector = AsyncMock()
@@ -235,8 +216,8 @@ class TestJobCollectFearGreed:
     """Tests for job_collect_fear_greed — Fear & Greed Index collection."""
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.FearGreedCollector")
-    @patch("src.etl.jobs.insert_ohlcv_batch")
+    @patch("src.etl.collectors.fear_greed.FearGreedCollector")
+    @patch("src.etl.loaders.timescaledb.insert_ohlcv_batch")
     async def test_collects_fear_greed(self, mock_insert: AsyncMock, mock_fg: MagicMock) -> None:
         """Job collects Fear & Greed index and inserts as pseudo-OHLCV."""
         mock_collector = AsyncMock()
@@ -265,14 +246,14 @@ class TestJobComputeIndicators:
     """Tests for job_compute_indicators — RSI, Bollinger bands calculation."""
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.fetch_ohlcv_for_indicators")
-    @patch("src.etl.jobs.insert_indicators_batch")
-    @patch("src.etl.jobs.compute_indicators_for_symbol")
+    @patch("src.etl.transformers.indicators.compute_indicators_for_symbol")
+    @patch("src.etl.loaders.timescaledb.insert_indicators_batch")
+    @patch("src.etl.loaders.timescaledb.fetch_ohlcv_for_indicators")
     async def test_computes_indicators(
         self,
-        mock_compute: MagicMock,
-        mock_insert: AsyncMock,
         mock_fetch: AsyncMock,
+        mock_insert: AsyncMock,
+        mock_compute: MagicMock,
     ) -> None:
         """Job fetches OHLCV, computes indicators, and inserts results."""
         # Mock fetch returns 50 rows (enough for indicator calculation)
@@ -300,11 +281,9 @@ class TestJobComputeIndicators:
         mock_insert.assert_called()
 
     @pytest.mark.asyncio
-    @patch("src.etl.jobs.fetch_ohlcv_for_indicators")
-    @patch("src.etl.jobs.insert_indicators_batch")
-    async def test_skips_insufficient_data(
-        self, mock_insert: AsyncMock, mock_fetch: AsyncMock
-    ) -> None:
+    @patch("src.etl.loaders.timescaledb.fetch_ohlcv_for_indicators")
+    @patch("src.etl.loaders.timescaledb.insert_indicators_batch")
+    async def test_skips_insufficient_data(self, mock_insert: AsyncMock, mock_fetch: AsyncMock) -> None:
         """Job skips indicator computation if fewer than 20 rows available."""
         # Mock fetch returns only 5 rows (less than required 20)
         mock_fetch.return_value = [MagicMock()] * 5

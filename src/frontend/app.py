@@ -646,7 +646,9 @@ _render_sidebar_auth()
 _PAGES_DIR = Path(__file__).resolve().parent / "pages"
 dashboard = st.Page(str(_PAGES_DIR / "1_dashboard.py"), title=t("nav.dashboard"), icon=":material/trending_up:")
 veille = st.Page(str(_PAGES_DIR / "2_veille.py"), title=t("nav.veille"), icon=":material/newspaper:")
-portfolio = st.Page(str(_PAGES_DIR / "3_portfolio.py"), title=t("nav.portfolio"), icon=":material/account_balance_wallet:")
+portfolio = st.Page(
+    str(_PAGES_DIR / "3_portfolio.py"), title=t("nav.portfolio"), icon=":material/account_balance_wallet:"
+)
 analytics = st.Page(str(_PAGES_DIR / "4_analytics.py"), title=t("nav.analytics"), icon=":material/analytics:")
 performance = st.Page(str(_PAGES_DIR / "5_performance.py"), title=t("nav.performance"), icon=":material/emoji_events:")
 

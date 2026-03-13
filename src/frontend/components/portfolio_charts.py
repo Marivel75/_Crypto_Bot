@@ -78,12 +78,11 @@ def render_portfolio_history_chart(history: list[dict[str, Any]]) -> None:
         ts = record.get("timestamp")
         val = record.get("total_value")
         if ts and val is not None:
-            dates.append(str(ts))
             try:
                 values.append(float(val))
+                dates.append(str(ts))
             except (TypeError, ValueError):
                 logger.warning("Invalid total_value in history record: %r", val)
-                continue
 
     if not dates or not values:
         st.info(t("portfolio.history_empty"))

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 import pytest
 from httpx import AsyncClient
@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 _LIST_URL = "/api/v1/crypto/list"
 _MARKET_URL = "/api/v1/crypto/market-overview"
 
-_FIXED_TS = datetime(2024, 6, 1, 12, 0, 0, tzinfo=UTC)
+_FIXED_TS = datetime(2024, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
 
 
 # ---------------------------------------------------------------------------

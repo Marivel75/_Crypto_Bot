@@ -372,7 +372,10 @@ def _render_watchlist_section(client: APIClient) -> None:
                 label_visibility="collapsed",
             )
         with col_btn:
-            if st.button(t("watchlist.add_button"), use_container_width=True, key="btn_wl_add", type="primary") and new_sym:
+            if (
+                st.button(t("watchlist.add_button"), use_container_width=True, key="btn_wl_add", type="primary")
+                and new_sym
+            ):
                 result = client.add_to_watchlist(new_sym)
                 if result is not None:
                     st.success(t("watchlist.added", symbol=new_sym), icon=":material/check_circle:")

@@ -1,10 +1,10 @@
 [project]
 name = "crypto-bot"
 version = "1.0.0"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py310"
 line-length = 120
 src = ["src"]
 
@@ -31,13 +31,14 @@ ignore = [
 "src/shared/config.py" = ["S104", "S105"]  # env vars for config
 "src/api/schemas.py" = ["S105"]  # token_type = "bearer" is not a password
 "src/frontend/pages/*" = ["E402"]  # sys.path manipulation required before imports
+"src/frontend/app.py" = ["E402"]  # sys.path manipulation required before imports
 "tests/unit/test_frontend/test_api_client.py" = ["S105"]  # test tokens are not real secrets
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true

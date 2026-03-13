@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 import pytest
 from httpx import AsyncClient
@@ -29,7 +29,7 @@ async def seed_news(db_session: AsyncSession) -> list[NewsArticleOrm]:
             content=f"Detailed content for article {i} covering BTC market movements.",
             source=sources[i],
             url=f"https://example.com/article-{i}",
-            published_at=datetime(2025, 1, 1, i, tzinfo=UTC),
+            published_at=datetime(2025, 1, 1, i, tzinfo=timezone.utc),
             sentiment_score=sentiments[i],
             keywords=["bitcoin", "crypto"],
             reliability_score=0.9,

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from src.etl.transformers.cleaner import deduplicate_ohlcv
 from src.shared.constants import PRIORITY_SYMBOLS, TRACKED_SYMBOLS
@@ -112,7 +112,7 @@ async def job_collect_market_data() -> None:
         async with CoinGeckoCollector() as collector:
             data = await collector.fetch_market_data(settings.tracked_symbols)
             if data:
-                date_str = datetime.now(tz=UTC).strftime("%Y-%m-%d")
+                date_str = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
                 await upload_raw_json(
                     data,
                     "raw",
@@ -129,13 +129,9 @@ async def job_collect_market_data() -> None:
                     if symbol_upper == "BTC" and mc is not None:
                         btc_market_cap = Decimal(str(mc))
 
-                btc_dominance = (
-                    (btc_market_cap / total_market_cap * 100)
-                    if total_market_cap > 0
-                    else Decimal("0")
-                )
+                btc_dominance = (btc_market_cap / total_market_cap * 100) if total_market_cap > 0 else Decimal("0")
 
-                now = datetime.now(tz=UTC)
+                now = datetime.now(tz=timezone.utc)
                 market_record = OHLCVRecord(
                     symbol="MARKET_DATA",
                     price_open=Decimal("0"),
@@ -243,7 +239,7 @@ async def job_export_datasets() -> None:
 
     logger.info("Starting job: export_datasets")
     try:
-        date_str = datetime.now(tz=UTC).strftime("%Y-%m-%d")
+        date_str = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
 
         async def _export_one(symbol: str) -> int:
             async with _CONCURRENCY:
@@ -266,14 +262,14 @@ async def job_export_datasets() -> None:
 
 async def job_reconciliation() -> None:
     """Detect gaps in OHLCV data and attempt backfill."""
-    from datetime import timedelta
+    from datetime import timedelta, timezone
 
     from src.etl.collectors.binance import BinanceCollector
     from src.etl.loaders.timescaledb import detect_gaps, insert_ohlcv_batch
 
     logger.info("Starting job: reconciliation")
     try:
-        since = datetime.now(tz=UTC) - timedelta(hours=24)
+        since = datetime.now(tz=timezone.utc) - timedelta(hours=24)
         timeframe = "1h"
         interval_seconds = 3600
 

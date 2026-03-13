@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 from src.ml.rules.bollinger_rules import evaluate_bollinger
@@ -14,7 +14,7 @@ from src.ml.rules.rsi_rules import evaluate_rsi
 from src.ml.rules.trend_rules import evaluate_trend
 from src.shared.models.crypto import IndicatorRecord
 
-FIXED_TS = datetime(2025, 6, 1, 12, 0, tzinfo=UTC)
+FIXED_TS = datetime(2025, 6, 1, 12, 0, tzinfo=timezone.utc)
 
 
 def _make_indicator(

@@ -6,7 +6,7 @@ orchestrator, using IndicatorRecord with realistic fixed-timestamp data.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 from unittest.mock import patch
@@ -24,10 +24,10 @@ from src.shared.models.crypto import IndicatorRecord
 # ---------------------------------------------------------------------------
 # Fixed timestamps — never datetime.now()
 # ---------------------------------------------------------------------------
-_T0 = datetime(2024, 1, 15, 12, 0, 0, tzinfo=UTC)
-_T1 = datetime(2024, 1, 15, 13, 0, 0, tzinfo=UTC)
-_T2 = datetime(2024, 1, 15, 14, 0, 0, tzinfo=UTC)
-_T3 = datetime(2024, 1, 15, 15, 0, 0, tzinfo=UTC)
+_T0 = datetime(2024, 1, 15, 12, 0, 0, tzinfo=timezone.utc)
+_T1 = datetime(2024, 1, 15, 13, 0, 0, tzinfo=timezone.utc)
+_T2 = datetime(2024, 1, 15, 14, 0, 0, tzinfo=timezone.utc)
+_T3 = datetime(2024, 1, 15, 15, 0, 0, tzinfo=timezone.utc)
 
 _CONFIG_PATH = Path(__file__).parent.parent.parent / "src" / "ml" / "config" / "indicators.yaml"
 

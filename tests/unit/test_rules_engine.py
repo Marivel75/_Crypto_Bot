@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
@@ -16,7 +16,7 @@ from src.shared.models.crypto import IndicatorRecord
 # Path to the real indicators.yaml used by the application
 _CONFIG_PATH = Path(__file__).parents[2] / "src" / "ml" / "config" / "indicators.yaml"
 
-_TS = datetime(2024, 6, 1, 12, 0, 0, tzinfo=UTC)
+_TS = datetime(2024, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
 
 
 # ---------------------------------------------------------------------------

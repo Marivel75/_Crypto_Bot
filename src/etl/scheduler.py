@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler  # type: ignore[import-untyped]
 from pydantic import BaseModel, Field
@@ -113,7 +113,7 @@ class ETLScheduleConfig(BaseModel):
                     job_id="export_datasets",
                     func=None,
                     trigger="cron",
-                    cron_expression="0 3 * * *",  # Daily at 03:00 UTC
+                    cron_expression="0 3 * * *",  # Daily at 03:00 timezone.utc
                 ),
             ]
         )
@@ -122,14 +122,14 @@ class ETLScheduleConfig(BaseModel):
 def build_scheduler_from_config(
     config: ETLScheduleConfig,
     job_functions: dict[str, Callable],
-    timezone: str = "UTC",
+    timezone: str = "timezone.utc",
 ) -> AsyncIOScheduler:
     """Build APScheduler from declarative configuration.
 
     Args:
         config: Schedule configuration.
         job_functions: Mapping of job_id → async function.
-        timezone: Timezone for scheduler (default: UTC).
+        timezone: Timezone for scheduler (default: timezone.utc).
 
     Returns:
         Initialized AsyncIOScheduler with all jobs registered.
@@ -159,13 +159,13 @@ def build_scheduler_from_config(
 # Backward-compatible factory function (matches old build_scheduler signature)
 def build_scheduler_default(
     job_functions: dict[str, Callable],
-    timezone: str = "UTC",
+    timezone: str = "timezone.utc",
 ) -> AsyncIOScheduler:
     """Build scheduler with default production schedule.
 
     Args:
         job_functions: Mapping of job_id → async function.
-        timezone: Timezone (default: UTC).
+        timezone: Timezone (default: timezone.utc).
 
     Returns:
         Initialized AsyncIOScheduler.

@@ -8,7 +8,7 @@ No database touches; all data is synthetic and in-memory.
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -27,7 +27,7 @@ _CONFIG_PATH = Path(__file__).resolve().parents[2] / "src" / "ml" / "config" / "
 _CONFIG_MISSING = not _CONFIG_PATH.exists()
 
 # Fixed base timestamp
-_TS_BASE = datetime(2025, 6, 15, 12, 0, 0, tzinfo=UTC)
+_TS_BASE = datetime(2025, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
 def _make_indicator_record(
@@ -246,11 +246,11 @@ class TestSignalGenerationPipeline:
         # Positive sentiment should increase BUY confidence
         signal_bullish = generator.generate(symbol="BTCUSDT", indicators=indicators, news_sentiment=1.0)
         signal_neutral = generator.generate(symbol="BTCUSDT", indicators=indicators, news_sentiment=0.0)
-        signal_bearish = generator.generate(symbol="BTCUSDT", indicators=indicators, news_sentiment=-1.0)
+        generator.generate(symbol="BTCUSDT", indicators=indicators, news_sentiment=-1.0)
 
         assert signal_bullish is not None
         assert signal_neutral is not None
-        assert signal_bearish is not None or True  # Might be suppressed if confidence drops too low
+        assert True  # Might be suppressed if confidence drops too low
 
         # Bullish sentiment should increase BUY confidence
         assert signal_bullish.confidence_score > signal_neutral.confidence_score
@@ -282,9 +282,7 @@ class TestSignalGenerationPipeline:
         # Create sparse indicators (only 1h timeframe)
         indicators: dict[str, list[IndicatorRecord]] = {
             "1h": [
-                _make_indicator_record(
-                    timeframe="1h", rsi=Decimal("25"), bollinger_middle=Decimal("43000")
-                ),
+                _make_indicator_record(timeframe="1h", rsi=Decimal("25"), bollinger_middle=Decimal("43000")),
             ]
         }
 
@@ -325,4 +323,3 @@ class TestSignalGenerationPipeline:
         assert signal_1.confidence_score == signal_2.confidence_score
         assert signal_1.signal_type == signal_2.signal_type
         assert signal_1.rules_triggered == signal_2.rules_triggered
-

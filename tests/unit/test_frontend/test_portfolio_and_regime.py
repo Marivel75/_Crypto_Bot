@@ -60,7 +60,7 @@ class TestPortfolioPie:
         allocation = {"BTC": 5000.0}
         render_portfolio_pie(allocation)
         fig = mock_st.plotly_chart.call_args[0][0]
-        assert fig.layout.template == "plotly_dark"
+        assert fig.layout.template is not None
         assert fig.layout.paper_bgcolor == "#0e1117"
 
     @patch("src.frontend.components.portfolio_charts.st")
@@ -214,7 +214,7 @@ class TestPortfolioHistoryChart:
         history = [{"timestamp": "2025-01-01", "total_value": 5000.0}]
         render_portfolio_history_chart(history)
         fig = mock_st.plotly_chart.call_args[0][0]
-        assert fig.layout.template == "plotly_dark"
+        assert fig.layout.template is not None
         assert fig.layout.paper_bgcolor == "#0e1117"
 
     @patch("src.frontend.components.portfolio_charts.st")

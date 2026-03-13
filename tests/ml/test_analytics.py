@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
-
 import numpy as np
 import pandas as pd
 import pytest
@@ -204,9 +202,7 @@ class TestDetectMarketRegime:
         index = pd.date_range("2025-01-01", periods=len(prices), freq="h")
         series = pd.Series(prices, index=index, name="BTCUSDT")
 
-        result = detect_market_regime(
-            series, short_window=14, long_window=50, volatility_threshold=0.01
-        )
+        result = detect_market_regime(series, short_window=14, long_window=50, volatility_threshold=0.01)
 
         # With very high volatility and low threshold, should detect volatile
         assert result.regime == "volatile"

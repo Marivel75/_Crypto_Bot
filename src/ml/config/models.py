@@ -66,18 +66,10 @@ class HarmonicConfig(BaseModel):
 
     patterns: dict[str, HarmonicPatternConfig] = Field(
         default_factory=lambda: {
-            "gartley": HarmonicPatternConfig(
-                xb=0.618, ac=[0.382, 0.886], bd=[1.272, 1.618], xd=0.786
-            ),
-            "butterfly": HarmonicPatternConfig(
-                xb=0.786, ac=[0.382, 0.886], bd=[1.618, 2.618], xd=[1.272, 1.618]
-            ),
-            "bat": HarmonicPatternConfig(
-                xb=[0.382, 0.5], ac=[0.382, 0.886], bd=[1.618, 2.618], xd=0.886
-            ),
-            "crab": HarmonicPatternConfig(
-                xb=[0.382, 0.618], ac=[0.382, 0.886], bd=[2.618, 3.618], xd=1.618
-            ),
+            "gartley": HarmonicPatternConfig(xb=0.618, ac=[0.382, 0.886], bd=[1.272, 1.618], xd=0.786),
+            "butterfly": HarmonicPatternConfig(xb=0.786, ac=[0.382, 0.886], bd=[1.618, 2.618], xd=[1.272, 1.618]),
+            "bat": HarmonicPatternConfig(xb=[0.382, 0.5], ac=[0.382, 0.886], bd=[1.618, 2.618], xd=0.886),
+            "crab": HarmonicPatternConfig(xb=[0.382, 0.618], ac=[0.382, 0.886], bd=[2.618, 3.618], xd=1.618),
         }
     )
     tolerance: float = Field(default=0.05, ge=0.0, le=0.5)

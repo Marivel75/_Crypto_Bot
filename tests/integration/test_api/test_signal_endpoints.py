@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 import pytest
 from httpx import AsyncClient
@@ -70,7 +70,7 @@ async def seed_signal_with_outcome(
         price_after_1d=3200.0,
         pnl_simulated=6.67,
         was_correct=True,
-        evaluated_at=datetime(2025, 1, 2, tzinfo=UTC),
+        evaluated_at=datetime(2025, 1, 2, tzinfo=timezone.utc),
     )
     db_session.add(outcome)
     await db_session.commit()

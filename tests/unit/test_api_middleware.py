@@ -35,6 +35,7 @@ class TestRateLimitHeadersMiddleware:
         assert 0 <= remaining <= limit
         # Reset should be in future
         import time
+
         assert reset >= int(time.time())
 
     @pytest.mark.asyncio
@@ -61,7 +62,8 @@ class TestRateLimitHeadersMiddleware:
     @pytest.mark.asyncio
     async def test_cors_headers_include_rate_limit_headers(self, client: AsyncClient) -> None:
         """CORS should expose rate limit headers to clients."""
-        resp = await client.get("/api/v1/health")
+        # Send Origin header to trigger CORS response
+        resp = await client.get("/api/v1/health", headers={"Origin": "http://localhost:3000"})
 
         # Check CORS expose headers
         expose_headers = resp.headers.get("Access-Control-Expose-Headers", "")

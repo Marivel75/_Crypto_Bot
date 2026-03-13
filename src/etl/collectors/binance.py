@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import httpx
@@ -170,7 +170,7 @@ class BinanceCollector:
         All price/volume fields are returned as strings by Binance.
         """
         open_time_ms = int(row[_IDX_OPEN_TIME])  # type: ignore[call-overload]
-        timestamp = datetime.fromtimestamp(open_time_ms / 1000, tz=UTC)
+        timestamp = datetime.fromtimestamp(open_time_ms / 1000, tz=timezone.utc)
 
         return OHLCVRecord(
             symbol=symbol,
