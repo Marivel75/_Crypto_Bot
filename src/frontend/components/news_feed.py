@@ -125,7 +125,7 @@ def render_sentiment_chart(data: list[dict[str, Any]] | None) -> go.Figure | Non
     symbols: list[str] = []
     scores: list[float] = []
     for d in data:
-        sym = d.get("symbol") or "?"
+        sym = d.get("symbol") or d.get("source") or "?"
         raw_score = d.get("sentiment_score")
         try:
             score = float(raw_score) if raw_score is not None else 0.0

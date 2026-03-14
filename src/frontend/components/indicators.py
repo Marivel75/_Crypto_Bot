@@ -106,9 +106,9 @@ def render_indicator_summary(indicator: dict[str, Any] | None) -> None:
                 delta_color = "inverse"  # high RSI -> red delta (caution)
             elif rsi <= _RSI_OVERSOLD:
                 delta_color = "normal"  # low RSI -> green delta (potential buy)
-            st.metric("RSI", f"{rsi:.1f}", delta=rsi_zone, delta_color=delta_color)
+            st.metric("RSI", f"{rsi:.1f}", delta=rsi_zone, delta_color=delta_color)  # type: ignore[arg-type]
         else:
-            st.metric("RSI", "—")
+            st.metric("RSI", "-")
 
     # --- Bollinger Bands position ---
     bb_pos = _safe_float(indicator.get("price_vs_bollinger"))
@@ -117,13 +117,13 @@ def render_indicator_summary(indicator: dict[str, Any] | None) -> None:
             label = _bb_label(bb_pos)
             st.metric("Bollinger", label, delta=f"{bb_pos:+.2f}")
         else:
-            st.metric("Bollinger", "—")
+            st.metric("Bollinger", "-")
 
     # --- Trend ---
     trend = indicator.get("trend_type")
     slope = _safe_float(indicator.get("trend_slope"))
     with col_trend:
-        trend_label = str(trend) if trend else "—"
+        trend_label = str(trend) if trend else "-"
         delta_str = f"{slope:+.4f}" if slope is not None else None
         st.metric("Trend", trend_label, delta=delta_str)
 
@@ -147,7 +147,7 @@ def render_multi_timeframe_table(tf_data: list[dict[str, Any]] | None) -> None:
     for item in tf_data:
         rsi = _safe_float(item.get("rsi"))
         bb = _safe_float(item.get("price_vs_bollinger"))
-        trend = item.get("trend_type") or "—"
+        trend = item.get("trend_type") or "-"
         slope = _safe_float(item.get("trend_slope"))
 
         # Derive directional arrow from slope magnitude
@@ -159,10 +159,10 @@ def render_multi_timeframe_table(tf_data: list[dict[str, Any]] | None) -> None:
             else:
                 arrow = "→"
         else:
-            arrow = "—"
+            arrow = "-"
 
         # Annotate RSI with zone for quick reading
-        rsi_str = "—"
+        rsi_str = "-"
         if rsi is not None:
             rsi_str = f"{rsi:.1f} ({_rsi_label(rsi)})"
 
@@ -170,7 +170,7 @@ def render_multi_timeframe_table(tf_data: list[dict[str, Any]] | None) -> None:
             {
                 "TF": item.get("timeframe", "?"),
                 "RSI": rsi_str,
-                "Bollinger": f"{bb:.2f} — {_bb_label(bb)}" if bb is not None else "—",
+                "Bollinger": f"{bb:.2f} - {_bb_label(bb)}" if bb is not None else "-",
                 "Trend": f"{trend} {arrow}",
             }
         )

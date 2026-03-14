@@ -1,5 +1,5 @@
 # --- Builder stage ---
-FROM python:3.11.8-slim AS builder
+FROM python:3.11-slim AS builder
 
 COPY src/shared/requirements.txt /tmp/shared-requirements.txt
 RUN pip install --no-cache-dir --prefix=/install -r /tmp/shared-requirements.txt
@@ -8,7 +8,7 @@ COPY src/etl/requirements.txt /tmp/etl-requirements.txt
 RUN pip install --no-cache-dir --prefix=/install -r /tmp/etl-requirements.txt
 
 # --- Runtime stage ---
-FROM python:3.11.8-slim
+FROM python:3.11-slim
 
 RUN useradd --uid 1001 --create-home appuser
 

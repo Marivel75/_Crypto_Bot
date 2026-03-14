@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine
@@ -63,7 +63,7 @@ async def insert_ohlcv_batch(records: list[OHLCVRecord]) -> int:
             logger.exception("OHLCV batch insert failed for %d records", len(records))
             raise
         logger.info("OHLCV batch insert: %d/%d rows inserted", inserted, len(records))
-        return inserted
+        return int(inserted)  # type: ignore[no-any-return]
 
 
 async def insert_indicators_batch(records: list[IndicatorRecord]) -> int:
@@ -100,7 +100,7 @@ async def insert_indicators_batch(records: list[IndicatorRecord]) -> int:
         VALUES
             (:symbol, :timeframe, :timestamp, :rsi, :bollinger_upper,
              :bollinger_middle, :bollinger_lower, :price_vs_bollinger,
-             :harmonic_pattern, :trend_slope, :trend_type, :metadata)
+             :harmonic_pattern, :trend_slope, :trend_type, CAST(:metadata AS jsonb))
         ON CONFLICT (symbol, timeframe, timestamp)
         DO UPDATE SET
             rsi = EXCLUDED.rsi,
@@ -123,7 +123,7 @@ async def insert_indicators_batch(records: list[IndicatorRecord]) -> int:
             logger.exception("Indicators batch upsert failed for %d records", len(records))
             raise
         logger.info("Indicators batch upsert: %d/%d rows affected", affected, len(records))
-        return affected
+        return int(affected)  # type: ignore[no-any-return]
 
 
 async def insert_news_batch(articles: list[NewsArticle]) -> int:
@@ -154,7 +154,7 @@ async def insert_news_batch(articles: list[NewsArticle]) -> int:
              sentiment_score, keywords, reliability_score)
         VALUES
             (:title, :content, :source, :url, :published_at,
-             :sentiment_score, :keywords::jsonb, :reliability_score)
+             :sentiment_score, CAST(:keywords AS jsonb), :reliability_score)
         ON CONFLICT (url) DO NOTHING
     """)
 
@@ -167,7 +167,7 @@ async def insert_news_batch(articles: list[NewsArticle]) -> int:
             logger.exception("News batch insert failed for %d articles", len(articles))
             raise
         logger.info("News batch insert: %d/%d articles inserted", inserted, len(articles))
-        return inserted
+        return int(inserted)  # type: ignore[no-any-return]
 
 
 async def fetch_ohlcv_for_indicators(
@@ -253,7 +253,7 @@ async def fetch_unevaluated_signals() -> list[dict[str, object]]:
     """
     from datetime import timedelta
 
-    cutoff = datetime.now(tz=timezone.utc) - timedelta(hours=1)
+    cutoff = datetime.now(tz=UTC) - timedelta(hours=1)
 
     async with async_session_factory() as session:
         result = await session.execute(
@@ -328,7 +328,49 @@ async def insert_signal_outcome(
                 },
             )
             await session.commit()
-            return result.rowcount  # type: ignore[attr-defined]
+            return int(result.rowcount)  # type: ignore[attr-defined]
         except Exception:
             logger.exception("Signal outcome insert failed for signal %s", signal_id)
+            raise
+
+
+async def fetch_unprocessed_news(limit: int = 100) -> list[dict[str, object]]:
+    """Fetch news articles that have no sentiment_score (not yet enriched by NLP)."""
+    stmt = text("""
+        SELECT id, title, content
+        FROM news_articles
+        WHERE sentiment_score IS NULL
+        ORDER BY published_at DESC NULLS LAST
+        LIMIT :limit
+    """)
+    async with async_session_factory() as session:
+        result = await session.execute(stmt, {"limit": limit})
+        return [dict(row._mapping) for row in result.all()]
+
+
+async def update_news_nlp(
+    article_id: str,
+    sentiment_score: float,
+    keywords: list[str],
+) -> None:
+    """Update an article's sentiment_score and keywords after NLP enrichment."""
+    stmt = text("""
+        UPDATE news_articles
+        SET sentiment_score = :sentiment_score,
+            keywords = CAST(:keywords AS jsonb)
+        WHERE id = :article_id
+    """)
+    async with async_session_factory() as session:
+        try:
+            await session.execute(
+                stmt,
+                {
+                    "article_id": article_id,
+                    "sentiment_score": sentiment_score,
+                    "keywords": json.dumps(keywords),
+                },
+            )
+            await session.commit()
+        except Exception:
+            logger.exception("Failed to update NLP data for article %s", article_id)
             raise

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from httpx import AsyncClient
@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 _ACTIVE_URL = "/api/v1/signals/active"
 _PERFORMANCE_URL = "/api/v1/signals/performance"
 
-_FIXED_TS = datetime(2024, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
+_FIXED_TS = datetime(2024, 6, 1, 12, 0, 0, tzinfo=UTC)
 
 
 # ---------------------------------------------------------------------------
@@ -74,9 +74,10 @@ class TestActiveSignalsEndpoint:
 
     @pytest.mark.asyncio
     async def test_active_returns_recently_seeded_signal(self, client: AsyncClient, db_session: AsyncSession) -> None:
+        from datetime import UTC
 
         # Signal created very recently (now) → should appear in active
-        recent_ts = datetime.now(tz=timezone.utc)
+        recent_ts = datetime.now(tz=UTC)
         await _seed_signal(db_session, created_at=recent_ts)
 
         response = await client.get(_ACTIVE_URL)
@@ -85,8 +86,9 @@ class TestActiveSignalsEndpoint:
 
     @pytest.mark.asyncio
     async def test_active_signal_has_required_fields(self, client: AsyncClient, db_session: AsyncSession) -> None:
+        from datetime import UTC
 
-        recent_ts = datetime.now(tz=timezone.utc)
+        recent_ts = datetime.now(tz=UTC)
         await _seed_signal(db_session, created_at=recent_ts)
 
         response = await client.get(_ACTIVE_URL)
@@ -98,8 +100,9 @@ class TestActiveSignalsEndpoint:
 
     @pytest.mark.asyncio
     async def test_active_signal_type_is_buy_or_sell(self, client: AsyncClient, db_session: AsyncSession) -> None:
+        from datetime import UTC
 
-        recent_ts = datetime.now(tz=timezone.utc)
+        recent_ts = datetime.now(tz=UTC)
         await _seed_signal(db_session, signal_type="BUY", created_at=recent_ts)
 
         response = await client.get(_ACTIVE_URL)

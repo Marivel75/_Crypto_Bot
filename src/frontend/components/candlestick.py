@@ -142,7 +142,7 @@ def render_candlestick(
         col=1,
     )
 
-    title = f"{symbol} — {timeframe}".strip(" —") if symbol or timeframe else "Candlestick"
+    title = f"{symbol} - {timeframe}".strip(" -") if symbol or timeframe else "Candlestick"
     fig.update_layout(
         title={"text": title, "font": {"size": 16, "color": "#e0e0e0"}},
         **_DARK_LAYOUT,

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 import pydantic
@@ -12,7 +12,7 @@ from src.shared.models.crypto import IndicatorRecord, NewsArticle, OHLCVRecord
 from src.shared.models.signal import SignalOutcome, TradingSignal
 from src.shared.models.user import UserCreate, UserRead
 
-TEST_TS = datetime(2025, 1, 1, tzinfo=timezone.utc)
+TEST_TS = datetime(2025, 1, 1, tzinfo=UTC)
 DUMMY_CRED = "x" * 10  # noqa: S105
 
 

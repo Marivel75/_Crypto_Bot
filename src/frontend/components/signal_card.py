@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 _DIRECTION_ICONS: dict[str, str] = {
     "BUY": "↑",
     "SELL": "↓",
-    "HOLD": "—",
+    "HOLD": "-",
 }
 
 # Background and border colors keyed by signal direction.
@@ -66,7 +66,7 @@ def render_signal_card(signal: dict[str, Any]) -> None:
     Args:
         signal: Dict with optional keys signal_type, confidence_score,
             rules_triggered, leverage_suggested, margin_safety, symbol,
-            timeframe_primary, entry_price, stop_loss, take_profit_levels.
+            timeframe_primary.
     """
     direction: str = str(signal.get("signal_type") or "HOLD").upper()
     # Normalise unknown directions to HOLD
@@ -75,15 +75,15 @@ def render_signal_card(signal: dict[str, Any]) -> None:
         direction = "HOLD"
 
     palette = _DIRECTION_COLORS[direction]
-    icon = _DIRECTION_ICONS.get(direction, "—")
+    icon = _DIRECTION_ICONS.get(direction, "-")
     symbol = signal.get("symbol") or "?"
     tf = signal.get("timeframe_primary") or ""
 
     confidence = signal.get("confidence_score")
-    conf_str = f"{float(confidence):.0%}" if confidence is not None else "—"
+    conf_str = f"{float(confidence):.0%}" if confidence is not None else "-"
 
     leverage = signal.get("leverage_suggested")
-    leverage_str = f"{leverage}x" if leverage is not None else "—"
+    leverage_str = f"{leverage}x" if leverage is not None else "-"
 
     css = _direction_css(direction)
     direction_color = palette["text"]
@@ -108,25 +108,6 @@ def render_signal_card(signal: dict[str, Any]) -> None:
             st.metric(t("signal.confidence"), conf_str)
         with col2:
             st.metric(t("signal.leverage"), leverage_str)
-
-        # Entry price, stop loss, take profit (Semaine 3)
-        entry = signal.get("entry_price")
-        sl = signal.get("stop_loss")
-        tp_list = signal.get("take_profit_levels")
-
-        if entry is not None or sl is not None or (tp_list and len(tp_list) > 0):
-            st.divider()
-            st.caption("**Price Levels**", unsafe_allow_html=True)
-            col_entry, col_sl, col_tp = st.columns(3)
-            with col_entry:
-                entry_str = f"${float(entry):,.2f}" if entry is not None else "—"
-                st.metric(t("signal.entry_price"), entry_str)
-            with col_sl:
-                sl_str = f"${float(sl):,.2f}" if sl is not None else "—"
-                st.metric(t("signal.stop_loss"), sl_str)
-            with col_tp:
-                tp_str = ", ".join(f"${float(p):,.2f}" for p in tp_list[:2]) if tp_list and len(tp_list) > 0 else "—"
-                st.metric(t("signal.take_profit"), tp_str)
 
         # Triggered rules list
         rules: list[Any] = signal.get("rules_triggered") or []

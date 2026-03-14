@@ -1,16 +1,16 @@
-"""System router — health check, sources status, metrics."""
+"""System router — health check, sources status."""
 
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.dependencies import get_db
-from src.api.schemas import ApiResponse, HealthResponse, MetricsResponse, SourceStatusResponse
+from src.api.schemas import ApiResponse, HealthResponse, SourceStatusResponse
 from src.shared.models.orm import OHLCVOrm
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,6 @@ router = APIRouter(prefix="/system", tags=["system"])
 
 
 @health_router.get("/health", response_model=ApiResponse[HealthResponse])
-# S11: health endpoint now accessible at /api/v1/health (via prefix)
 async def health(
     db: AsyncSession = Depends(get_db),
 ) -> ApiResponse[HealthResponse]:
@@ -36,7 +35,7 @@ async def health(
         data=HealthResponse(
             status="ok" if db_status == "ok" else "degraded",
             database=db_status,
-            timestamp=datetime.now(tz=timezone.utc),
+            timestamp=datetime.now(tz=UTC),
         )
     )
 
@@ -69,13 +68,3 @@ async def sources_status(
             for row in rows
         ]
     )
-
-
-@router.get("/metrics", response_model=ApiResponse[MetricsResponse])
-async def get_metrics() -> ApiResponse[MetricsResponse]:
-    """Return application metrics from Prometheus.
-
-    Includes request counts, error rates, and latency statistics.
-    For full metrics in Prometheus format, see /metrics endpoint.
-    """
-    return ApiResponse(data=MetricsResponse())

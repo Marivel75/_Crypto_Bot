@@ -50,13 +50,15 @@ mlruns/
 infra/ansible/inventories/*.ini
 !infra/ansible/inventories/production.ini.example
 
+# Claude Code (local config)
+.claude/
+
+# Playwright MCP
+.playwright-mcp/
+
 # Backups
 backups/
 
 # Logs
 logs/
 *.log
-
-# Auto Claude data directory
-.auto-claude/
-docker-compose.override.yml

@@ -1,33 +1,12 @@
 ---
 # Deploy crypto-bot to VPS
 # Usage: ansible-playbook -i inventories/production.ini playbooks/deploy.yml
-#
-# SECURITY NOTE:
-# - Secrets (.env file) are NOT synced — already present on VPS
-# - delete: false prevents accidental deletion of production data
-# - Explicit exclude list for cache directories
 
 - name: Deploy Crypto Bot
   hosts: vps
-  become: true
-  become_user: "{{ deploy_user }}"
+  become: false
   vars_files:
     - ../group_vars/vps.yml
-
-  pre_tasks:
-    - name: Check deploy user exists
-      user:
-        name: "{{ deploy_user }}"
-        state: present
-      become: true
-      become_user: root
-
-    - name: Create logs directory
-      file:
-        path: "{{ docker_compose_dir }}/logs"
-        state: directory
-        mode: "0755"
-      become: true
 
   tasks:
     - name: Sync project files to VPS
@@ -37,24 +16,15 @@
         rsync_opts:
           - "--exclude=.git"
           - "--exclude=.env"
-          - "--exclude=.env.local"
           - "--exclude=__pycache__"
           - "--exclude=.pytest_cache"
+          - "--exclude=.mypy_cache"
+          - "--exclude=.ruff_cache"
           - "--exclude=mlruns"
           - "--exclude=*.pyc"
           - "--exclude=.venv"
-          - "--exclude=venv"
-          - "--exclude=timescaledb-data"
-          - "--exclude=minio-data"
-          - "--exclude=prometheus-data"
-          - "--exclude=grafana-data"
-          - "--exclude=nginx-logs-data"
-          - "--exclude=.coverage"
-          - "--exclude=htmlcov"
-          - "--exclude=.ruff_cache"
-          - "--exclude=.mypy_cache"
-          - "--exclude=.DS_Store"
-        delete: false
+          - "--exclude=dev.db"
+        delete: true
 
     - name: Verify .env file exists on VPS
       stat:
@@ -63,154 +33,21 @@
 
     - name: Fail if .env missing
       fail:
-        msg: |
-          .env file missing on VPS at {{ docker_compose_dir }}/.env
-          Copy .env.example and configure it with strong passwords:
-          1. ssh deploy@{{ inventory_hostname }}
-          2. cd {{ docker_compose_dir }}
-          3. cp .env.example .env
-          4. nano .env  # edit with strong passwords
+        msg: ".env file missing on VPS at {{ docker_compose_dir }}/.env"
       when: not env_file.stat.exists
 
-    - name: Create backup directory
+    - name: Make deploy script executable
       file:
-        path: "{{ docker_compose_dir }}/backups"
-        state: directory
+        path: "{{ docker_compose_dir }}/scripts/deploy.sh"
         mode: "0755"
-      become: true
 
-    - name: Backup current database (before deploy)
-      shell: |
-        docker compose exec -T timescaledb pg_dump -U {{ postgres_user }} {{ postgres_db }} 2>/dev/null | \
-        gzip > backups/pre-deploy-$(date +%s).sql.gz
+    - name: Run deploy script
+      command: "{{ docker_compose_dir }}/scripts/deploy.sh"
       args:
         chdir: "{{ docker_compose_dir }}"
+      register: deploy_output
       changed_when: true
-      ignore_errors: true
-      register: backup_result
 
-    - name: Log backup status
+    - name: Show deploy output
       debug:
-        msg: "Database backup completed: {{ backup_result.stdout | default('No output') }}"
-      when: backup_result is not skipped
-
-    - name: Pull latest Docker images
-      command: docker compose pull
-      args:
-        chdir: "{{ docker_compose_dir }}"
-      changed_when: true
-      register: pull_result
-
-    - name: Build application images
-      command: docker compose build
-      args:
-        chdir: "{{ docker_compose_dir }}"
-      changed_when: true
-      register: build_result
-
-    - name: Stop existing services
-      command: docker compose down
-      args:
-        chdir: "{{ docker_compose_dir }}"
-      changed_when: true
-
-    - name: Start services
-      command: docker compose up -d
-      args:
-        chdir: "{{ docker_compose_dir }}"
-      changed_when: true
-
-    - name: Wait for services to stabilize
-      pause:
-        seconds: 15
-
-    - name: Health check — API
-      uri:
-        url: "http://localhost:8000/api/v1/health"
-        method: GET
-        status_code: 200
-      retries: 10
-      delay: 3
-      register: api_health
-      until: api_health.status == 200
-
-    - name: Health check — Frontend
-      uri:
-        url: "http://localhost:8501/_stcore/health"
-        method: GET
-        status_code: 200
-      retries: 10
-      delay: 3
-      register: frontend_health
-      until: frontend_health.status == 200
-
-    - name: Health check — Database
-      command: docker compose exec -T timescaledb pg_isready -U {{ postgres_user }}
-      args:
-        chdir: "{{ docker_compose_dir }}"
-      changed_when: false
-      register: db_health
-
-    - name: Health check — Nginx
-      uri:
-        url: "http://localhost/health"
-        method: GET
-        status_code: 200
-      retries: 5
-      delay: 2
-
-    - name: Verify all containers are healthy
-      command: docker compose ps --format "{{.Names}}\t{{.Status}}"
-      args:
-        chdir: "{{ docker_compose_dir }}"
-      register: containers_status
-      changed_when: false
-
-    - name: Display container status
-      debug:
-        var: containers_status.stdout_lines
-
-    - name: Verify no unhealthy containers
-      assert:
-        that:
-          - containers_status.stdout is not search("unhealthy")
-        fail_msg: "Some containers are unhealthy! Check logs: docker compose logs"
-
-    - name: Log deployment success
-      copy:
-        content: |
-          Deployment completed successfully at {{ ansible_date_time.iso8601 }}
-          Image tag: {{ image_tag | default('unknown') }}
-          Deployed by: {{ ansible_user_id }}
-          Hostname: {{ inventory_hostname }}
-        dest: "{{ docker_compose_dir }}/logs/last_deployment.log"
-
-    - name: Display deployment summary
-      debug:
-        msg: |
-          ✓ Deployment successful!
-          Services running on {{ inventory_hostname }}
-          API: http://{{ inventory_hostname }}/api/v1/health
-          Frontend: http://{{ inventory_hostname }}/
-          Grafana: http://{{ inventory_hostname }}:3000
-
-  handlers:
-    - name: Restart docker compose
-      command: docker compose restart
-      args:
-        chdir: "{{ docker_compose_dir }}"
-
-  post_tasks:
-    - name: Clean old backups (older than 30 days)
-      find:
-        paths: "{{ docker_compose_dir }}/backups"
-        name: "*.sql.gz"
-        age: 30d
-      register: old_backups
-
-    - name: Remove old backups
-      file:
-        path: "{{ item.path }}"
-        state: absent
-      loop: "{{ old_backups.files }}"
-      when: old_backups.matched > 0
+        var: deploy_output.stdout_lines

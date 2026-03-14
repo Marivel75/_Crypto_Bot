@@ -11,7 +11,7 @@ Covers:
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -25,8 +25,8 @@ from src.shared.models.crypto import OHLCVRecord
 from tests.conftest import CryptoPriceOrm
 
 # Fixed timestamps — never datetime.now() in tests
-_TS = datetime(2025, 3, 7, 10, 0, 0, tzinfo=timezone.utc)
-_TS2 = datetime(2025, 3, 7, 11, 0, 0, tzinfo=timezone.utc)
+_TS = datetime(2025, 3, 7, 10, 0, 0, tzinfo=UTC)
+_TS2 = datetime(2025, 3, 7, 11, 0, 0, tzinfo=UTC)
 
 
 # ---------------------------------------------------------------------------
@@ -96,9 +96,7 @@ class TestJobCollectFearGreed:
 
         with (
             patch("src.etl.collectors.fear_greed.FearGreedCollector", return_value=mock_collector),
-            patch(
-                "src.etl.loaders.timescaledb.insert_ohlcv_batch", new_callable=AsyncMock, return_value=1
-            ) as mock_insert,
+            patch("src.etl.loaders.timescaledb.insert_ohlcv_batch", new_callable=AsyncMock, return_value=1) as mock_insert,
         ):
             from src.etl.jobs import job_collect_fear_greed
 
@@ -177,9 +175,7 @@ class TestJobCollectMarketData:
         with (
             patch("src.etl.collectors.coingecko.CoinGeckoCollector", return_value=mock_collector),
             patch("src.etl.loaders.minio_loader.upload_raw_json", new_callable=AsyncMock),
-            patch(
-                "src.etl.loaders.timescaledb.insert_ohlcv_batch", new_callable=AsyncMock, return_value=1
-            ) as mock_insert,
+            patch("src.etl.loaders.timescaledb.insert_ohlcv_batch", new_callable=AsyncMock, return_value=1) as mock_insert,
         ):
             from src.etl.jobs import job_collect_market_data
 
@@ -271,9 +267,7 @@ class TestJobEvaluateSignalOutcomes:
             return price_1d
 
         with (
-            patch(
-                "src.etl.loaders.timescaledb.fetch_unevaluated_signals", new_callable=AsyncMock, return_value=[signal]
-            ),
+            patch("src.etl.loaders.timescaledb.fetch_unevaluated_signals", new_callable=AsyncMock, return_value=[signal]),
             patch("src.etl.loaders.timescaledb.fetch_price_at_time", side_effect=_fake_fetch_price),
             patch("src.etl.loaders.timescaledb.insert_signal_outcome", new_callable=AsyncMock) as mock_outcome,
         ):
@@ -308,9 +302,7 @@ class TestJobEvaluateSignalOutcomes:
             return price_1d
 
         with (
-            patch(
-                "src.etl.loaders.timescaledb.fetch_unevaluated_signals", new_callable=AsyncMock, return_value=[signal]
-            ),
+            patch("src.etl.loaders.timescaledb.fetch_unevaluated_signals", new_callable=AsyncMock, return_value=[signal]),
             patch("src.etl.loaders.timescaledb.fetch_price_at_time", side_effect=_fake_fetch_price),
             patch("src.etl.loaders.timescaledb.insert_signal_outcome", new_callable=AsyncMock) as mock_outcome,
         ):
@@ -334,9 +326,7 @@ class TestJobEvaluateSignalOutcomes:
         }
 
         with (
-            patch(
-                "src.etl.loaders.timescaledb.fetch_unevaluated_signals", new_callable=AsyncMock, return_value=[signal]
-            ),
+            patch("src.etl.loaders.timescaledb.fetch_unevaluated_signals", new_callable=AsyncMock, return_value=[signal]),
             patch("src.etl.loaders.timescaledb.fetch_price_at_time", new_callable=AsyncMock, return_value=None),
             patch("src.etl.loaders.timescaledb.insert_signal_outcome", new_callable=AsyncMock) as mock_outcome,
         ):
@@ -407,7 +397,7 @@ class TestCCXTCollectorParseCandle:
         assert result.volume_24h == Decimal("1234.56")
         assert result.market_cap is None
         # Timestamp is derived from ms epoch
-        expected_ts = datetime.fromtimestamp(ts_ms / 1000, tz=timezone.utc)
+        expected_ts = datetime.fromtimestamp(ts_ms / 1000, tz=UTC)
         assert result.timestamp == expected_ts
 
 
@@ -439,7 +429,9 @@ class TestGetMarketOverviewPseudoOHLCV:
     """Tests for the FEAR_GREED and MARKET_DATA queries in get_market_overview."""
 
     @pytest.mark.asyncio
-    async def test_returns_fear_greed_none_when_no_record_exists(self, db_session: AsyncSession) -> None:
+    async def test_returns_fear_greed_none_when_no_record_exists(
+        self, db_session: AsyncSession
+    ) -> None:
         """fear_greed must be None when no FEAR_GREED row is in the DB."""
         from src.api.services.crypto_service import get_market_overview
 
@@ -448,7 +440,9 @@ class TestGetMarketOverviewPseudoOHLCV:
         assert result["fear_greed"] is None
 
     @pytest.mark.asyncio
-    async def test_returns_fear_greed_value_when_record_exists(self, db_session: AsyncSession) -> None:
+    async def test_returns_fear_greed_value_when_record_exists(
+        self, db_session: AsyncSession
+    ) -> None:
         """fear_greed must be the integer value from the most recent FEAR_GREED row."""
         row = _make_price_row(symbol="FEAR_GREED", timeframe="1D", price_close=72.0, ts=_TS)
         db_session.add(row)
@@ -461,7 +455,9 @@ class TestGetMarketOverviewPseudoOHLCV:
         assert result["fear_greed"] == 72
 
     @pytest.mark.asyncio
-    async def test_returns_most_recent_fear_greed_when_multiple_records(self, db_session: AsyncSession) -> None:
+    async def test_returns_most_recent_fear_greed_when_multiple_records(
+        self, db_session: AsyncSession
+    ) -> None:
         """get_market_overview must return the latest FEAR_GREED value, not an older one."""
         old_row = _make_price_row(symbol="FEAR_GREED", timeframe="1D", price_close=30.0, ts=_TS)
         new_row = _make_price_row(symbol="FEAR_GREED", timeframe="1D", price_close=65.0, ts=_TS2)
@@ -476,7 +472,9 @@ class TestGetMarketOverviewPseudoOHLCV:
         assert result["fear_greed"] == 65
 
     @pytest.mark.asyncio
-    async def test_returns_market_cap_and_btc_dominance_when_record_exists(self, db_session: AsyncSession) -> None:
+    async def test_returns_market_cap_and_btc_dominance_when_record_exists(
+        self, db_session: AsyncSession
+    ) -> None:
         """total_market_cap and btc_dominance must come from the MARKET_DATA row."""
         # volume_24h encodes total_market_cap; price_close encodes btc_dominance
         row = _make_price_row(
@@ -497,7 +495,9 @@ class TestGetMarketOverviewPseudoOHLCV:
         assert result["btc_dominance"] == pytest.approx(66.67, abs=0.01)
 
     @pytest.mark.asyncio
-    async def test_returns_none_market_cap_when_no_market_data_record(self, db_session: AsyncSession) -> None:
+    async def test_returns_none_market_cap_when_no_market_data_record(
+        self, db_session: AsyncSession
+    ) -> None:
         """total_market_cap and btc_dominance must be None when no MARKET_DATA row exists."""
         from src.api.services.crypto_service import get_market_overview
 

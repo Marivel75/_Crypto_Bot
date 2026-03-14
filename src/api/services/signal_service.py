@@ -1,14 +1,15 @@
-"""Signal service — active signals, detail, performance, history."""
+"""Signal service — active signals, detail, performance."""
 
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import case, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
+from src.api.services.crypto_service import _resolve_db_symbol
 from src.shared.exceptions import NotFoundError
 from src.shared.models.orm import SignalOutcomeOrm, TradingSignalOrm
 
@@ -24,13 +25,14 @@ async def get_active(db: AsyncSession) -> list[TradingSignalOrm]:
     Returns:
         List of TradingSignalOrm rows ordered by creation time descending.
     """
-    cutoff = datetime.now(tz=timezone.utc) - timedelta(hours=24)
+    cutoff = datetime.now(tz=UTC) - timedelta(hours=24)
     result = await db.execute(
         select(TradingSignalOrm)
+        .options(joinedload(TradingSignalOrm.outcome))
         .where(TradingSignalOrm.created_at >= cutoff)
         .order_by(desc(TradingSignalOrm.created_at))
     )
-    return list(result.scalars().all())
+    return list(result.unique().scalars().all())
 
 
 async def get_by_symbol(
@@ -52,7 +54,7 @@ async def get_by_symbol(
     Returns:
         Tuple of (list of TradingSignalOrm rows, total matching row count).
     """
-    conditions = [TradingSignalOrm.symbol == symbol.upper()]
+    conditions = [TradingSignalOrm.symbol == _resolve_db_symbol(symbol)]
     if timeframe is not None:
         conditions.append(TradingSignalOrm.timeframe_primary == timeframe)
 
@@ -63,13 +65,14 @@ async def get_by_symbol(
     offset = (page - 1) * limit
     query = (
         select(TradingSignalOrm)
+        .options(joinedload(TradingSignalOrm.outcome))
         .where(*conditions)
         .order_by(desc(TradingSignalOrm.created_at))
         .offset(offset)
         .limit(limit)
     )
     result = await db.execute(query)
-    return list(result.scalars().all()), total
+    return list(result.unique().scalars().all()), total
 
 
 async def get_detail(
@@ -148,44 +151,3 @@ async def get_performance(db: AsyncSession) -> dict[str, object]:
         "win_rate": win_rate,
         "total_pnl": total_pnl,
     }
-
-
-async def get_history(
-    db: AsyncSession,
-    start: datetime | None = None,
-    end: datetime | None = None,
-    limit: int = 100,
-    page: int = 1,
-) -> tuple[list[TradingSignalOrm], int]:
-    """Return paginated historical signals with optional date range filtering.
-
-    Args:
-        db: Active async database session.
-        start: Optional inclusive start datetime for signal creation.
-        end: Optional inclusive end datetime for signal creation.
-        limit: Maximum number of records per page.
-        page: 1-based page number.
-
-    Returns:
-        Tuple of (list of TradingSignalOrm rows, total matching row count).
-    """
-    conditions = []
-    if start is not None:
-        conditions.append(TradingSignalOrm.created_at >= start)
-    if end is not None:
-        conditions.append(TradingSignalOrm.created_at <= end)
-
-    count_query = select(func.count()).select_from(TradingSignalOrm).where(*conditions)
-    total_result = await db.execute(count_query)
-    total = total_result.scalar() or 0
-
-    offset = (page - 1) * limit
-    query = (
-        select(TradingSignalOrm)
-        .where(*conditions)
-        .order_by(desc(TradingSignalOrm.created_at))
-        .offset(offset)
-        .limit(limit)
-    )
-    result = await db.execute(query)
-    return list(result.scalars().all()), total

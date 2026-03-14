@@ -10,8 +10,8 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from prometheus_fastapi_instrumentator import Instrumentator
 
-from src.api.middleware import RateLimitHeadersMiddleware, RequestIdMiddleware
 from src.api.routers import (
     auth,
     chat,
@@ -54,36 +54,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Middleware registration (order matters: last added = first executed)
-# Register rate limiting headers middleware (S12 audit fix)
-app.add_middleware(RateLimitHeadersMiddleware)
-
-# Register request ID tracking middleware
-app.add_middleware(RequestIdMiddleware)
-
-# CORS — Restrictive by default (S5 audit fix)
-# Only allow configured origins; explicitly list methods; deny Access-Control-Allow-Headers: *
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
-    expose_headers=["X-Total-Count", "X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset", "X-Request-Id"],
-    max_age=3600,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
-# Prometheus metrics (optional, requires prometheus-fastapi-instrumentator package)
-try:
-    from prometheus_fastapi_instrumentator import Instrumentator
-
-    Instrumentator(
-        should_group_status_codes=False,
-        excluded_handlers=["/api/v1/health", "/metrics"],
-    ).instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
-except ImportError:
-    logger.debug("prometheus_fastapi_instrumentator not installed; metrics endpoint disabled")
+# Prometheus metrics
+Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=["/health", "/metrics"],
+).instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
 
 
 # Exception handlers
@@ -133,8 +118,7 @@ async def unhandled_error_handler(request: Request, exc: Exception) -> JSONRespo
 
 
 # Mount routers
-# S11: All API endpoints use /api/v1 prefix for consistency
-app.include_router(system.health_router, prefix="/api/v1")
+app.include_router(system.health_router)
 app.include_router(system.router, prefix="/api/v1")
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(crypto.router, prefix="/api/v1")

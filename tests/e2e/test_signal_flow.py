@@ -7,7 +7,7 @@ The database layer is fully mocked so no live TimescaleDB connection is required
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -30,7 +30,7 @@ _CONFIG_MISSING = not _CONFIG_PATH.exists()
 # Fixed timestamps (never use datetime.now() in tests)
 # ---------------------------------------------------------------------------
 
-_TS_BASE = datetime(2024, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
+_TS_BASE = datetime(2024, 6, 1, 12, 0, 0, tzinfo=UTC)
 
 
 # ---------------------------------------------------------------------------

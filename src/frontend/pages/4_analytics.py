@@ -20,7 +20,6 @@ import streamlit as st
 
 from src.frontend.api_client import APIClient
 from src.frontend.components.candlestick import _DARK_LAYOUT
-from src.frontend.components.regime_badge import render_regime_badge
 from src.frontend.i18n import t
 
 logger = logging.getLogger(__name__)
@@ -45,12 +44,6 @@ def _fetch_market() -> dict[str, Any] | None:
 def _fetch_ohlcv_for_symbol(symbol: str) -> list[dict[str, Any]] | None:
     """Fetch 90 daily OHLCV candles for a single symbol."""
     return _get_client().fetch_ohlcv(symbol, "1D", limit=90)
-
-
-@st.cache_data(ttl=300)
-def _fetch_system_metrics() -> dict[str, Any] | None:
-    """Fetch system metrics including market regime and volatility data."""
-    return _get_client().fetch_system_metrics()
 
 
 def _fear_greed_label(value: int) -> str:
@@ -101,29 +94,29 @@ def _render_kpi_cards(market: dict[str, Any]) -> None:
             label = _fear_greed_label(fg_val)
             st.metric(t("analytics.fear_greed"), f"{fg_val}", delta=label, delta_color="off")
         else:
-            st.metric(t("analytics.fear_greed"), "—")
+            st.metric(t("analytics.fear_greed"), "-")
             st.caption(t("analytics.data_unavailable"))
 
     # Total market capitalisation
     with col2, st.container(border=True):
         raw_mcap = market.get("total_market_cap")
         try:
-            mcap_str = f"${float(raw_mcap or 0) / 1e12:.2f} T" if raw_mcap is not None else "—"
+            mcap_str = f"${float(raw_mcap or 0) / 1e12:.2f} T" if raw_mcap is not None else "-"
         except (TypeError, ValueError):
-            mcap_str = "—"
+            mcap_str = "-"
         st.metric(t("analytics.market_cap"), mcap_str)
-        if mcap_str == "—":
+        if mcap_str == "-":
             st.caption(t("analytics.data_unavailable"))
 
     # BTC dominance
     with col3, st.container(border=True):
         raw_dom = market.get("btc_dominance")
         try:
-            dom_str = f"{float(raw_dom or 0):.1f}%" if raw_dom is not None else "—"
+            dom_str = f"{float(raw_dom or 0):.1f}%" if raw_dom is not None else "-"
         except (TypeError, ValueError):
-            dom_str = "—"
+            dom_str = "-"
         st.metric(t("analytics.btc_dominance"), dom_str)
-        if dom_str == "—":
+        if dom_str == "-":
             st.caption(t("analytics.data_unavailable"))
 
 
@@ -357,37 +350,6 @@ def page() -> None:
                 "</div>",
                 unsafe_allow_html=True,
             )
-
-    st.divider()
-
-    # --- Section 6: Market regime and volatility (Semaine 3) ---
-    st.markdown(f"### {t('analytics.market_regime_title')}")
-    metrics = _fetch_system_metrics()
-    if metrics:
-        col_regime, col_vol = st.columns(2)
-        with col_regime, st.container(border=True):
-            st.markdown(f"#### {t('analytics.regime_label')}")
-            regime = metrics.get("market_regime")
-            render_regime_badge(regime)
-
-        with col_vol, st.container(border=True):
-            st.markdown(f"#### {t('analytics.volatility_label')}")
-            volatility_data = metrics.get("volatility", {})
-            if volatility_data:
-                rows = [
-                    {
-                        t("analytics.col_crypto"): sym,
-                        t("analytics.col_volatility"): f"{float(vol):.2f}%",
-                    }
-                    for sym, vol in volatility_data.items()
-                ]
-                df_vol = pd.DataFrame(rows)
-                st.dataframe(df_vol, use_container_width=True, hide_index=True)
-            else:
-                st.info(t("analytics.volatility_unavailable"))
-    else:
-        with st.container(border=True):
-            st.info(t("analytics.backend_unavailable"))
 
 
 page()

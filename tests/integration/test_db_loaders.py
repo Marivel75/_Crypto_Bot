@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -28,8 +28,8 @@ from src.shared.models.crypto import IndicatorRecord, NewsArticle, OHLCVRecord
 # ---------------------------------------------------------------------------
 # Fixed timestamps — never use datetime.now() in tests
 # ---------------------------------------------------------------------------
-_TS_BASE = datetime(2025, 1, 15, 12, 0, 0, tzinfo=timezone.utc)
-_TS_LATER = datetime(2025, 1, 15, 13, 0, 0, tzinfo=timezone.utc)
+_TS_BASE = datetime(2025, 1, 15, 12, 0, 0, tzinfo=UTC)
+_TS_LATER = datetime(2025, 1, 15, 13, 0, 0, tzinfo=UTC)
 
 logger = logging.getLogger(__name__)
 

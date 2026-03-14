@@ -3,22 +3,25 @@
 from __future__ import annotations
 
 from collections.abc import AsyncGenerator
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import JSON, String
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
+    async_sessionmaker,
     create_async_engine,
 )
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import DeclarativeBase
 
 from src.api.dependencies import get_current_user, get_db
 from src.api.services.auth_service import create_access_token
 
+
 # SQLite-compatible test Base (avoids PostgreSQL-specific types in db_models)
-TestBase = declarative_base()
+class TestBase(DeclarativeBase):
+    """Separate declarative base for test-only models."""
 
 
 # We re-define minimal ORM models with SQLite-compatible types for tests.
@@ -34,7 +37,7 @@ def _uuid() -> str:
 
 
 def _utcnow() -> datetime:
-    return datetime.now(tz=timezone.utc)
+    return datetime.now(tz=UTC)
 
 
 class UserOrm(TestBase):
@@ -218,7 +221,7 @@ _chat_router.UserOrm = UserOrm  # type: ignore[misc]
 
 # In-memory SQLite for tests
 TEST_ENGINE = create_async_engine("sqlite+aiosqlite://", echo=False)
-TestSessionFactory = sessionmaker(TEST_ENGINE, class_=AsyncSession, expire_on_commit=False)
+TestSessionFactory = async_sessionmaker(TEST_ENGINE, class_=AsyncSession, expire_on_commit=False)
 
 
 @pytest_asyncio.fixture
@@ -246,7 +249,7 @@ async def test_user(db_session: AsyncSession) -> UserOrm:
         password_hash=bcrypt.hashpw(b"testpassword123", bcrypt.gensalt()).decode("utf-8"),
         persona_type="trader",
         preferences={},
-        created_at=datetime(2025, 1, 1, tzinfo=timezone.utc),
+        created_at=datetime(2025, 1, 1, tzinfo=UTC),
     )
     db_session.add(user)
     await db_session.commit()

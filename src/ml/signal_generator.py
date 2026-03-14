@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import logging
 import uuid
-from datetime import timezone
 from decimal import Decimal
 from typing import Any, Literal, Protocol, cast
 
@@ -163,13 +162,6 @@ class SignalGenerator:
                 confidence_decimal,
             )
             return None
-
-        # Calculate entry, stop loss, and take profit levels
-        # Use a default current_price proxy (ATR-based calculation assumes 1% ATR)
-        atr = None  # ATR is not yet in the indicators dict; use default heuristic
-        entry_price = self._calculate_entry_price(100.0, atr, direction)  # normalized to 100
-        self._calculate_stop_loss(entry_price, atr, direction)
-        self._calculate_take_profit_levels(entry_price, atr, direction)
 
         signal = TradingSignal(
             symbol=symbol,
@@ -378,95 +370,6 @@ class SignalGenerator:
         expected_gain = confidence * base_move
         return fees < expected_gain * Decimal("0.5")
 
-    @staticmethod
-    def _calculate_entry_price(
-        current_price: float,
-        atr: float | None = None,
-        direction: str = "BUY",
-    ) -> float:
-        """Calculate entry price based on ATR (Average True Range).
-
-        For BUY signals, entry is slightly above current price (0.5 ATR).
-        For SELL signals, entry is slightly below current price (0.5 ATR).
-
-        Args:
-            current_price: Current market price.
-            atr: Average True Range value. If None, defaults to 0.01 * current_price.
-            direction: Signal direction (BUY or SELL).
-
-        Returns:
-            Calculated entry price.
-        """
-        if atr is None:
-            atr = current_price * 0.01
-
-        offset = atr * 0.5
-        if direction == "BUY":
-            return current_price + offset
-        else:
-            return current_price - offset
-
-    @staticmethod
-    def _calculate_stop_loss(
-        entry_price: float,
-        atr: float | None = None,
-        direction: str = "BUY",
-    ) -> float:
-        """Calculate stop loss based on ATR from entry point.
-
-        SL is placed 1.5 ATR away from entry (aggressive: 1 ATR for confident signals).
-
-        Args:
-            entry_price: Entry price from signal.
-            atr: Average True Range value. If None, defaults to 0.01 * entry_price.
-            direction: Signal direction (BUY or SELL).
-
-        Returns:
-            Stop loss price.
-        """
-        if atr is None:
-            atr = entry_price * 0.01
-
-        sl_distance = atr * 1.5
-        if direction == "BUY":
-            return entry_price - sl_distance
-        else:
-            return entry_price + sl_distance
-
-    @staticmethod
-    def _calculate_take_profit_levels(
-        entry_price: float,
-        atr: float | None = None,
-        direction: str = "BUY",
-        ratios: list[float] | None = None,
-    ) -> list[float]:
-        """Calculate take profit levels using risk-reward ratios.
-
-        Default ratios: [1:1, 1:2, 1:3] (1 ATR, 2 ATR, 3 ATR per 1 ATR risk).
-
-        Args:
-            entry_price: Entry price from signal.
-            atr: Average True Range value. If None, defaults to 0.01 * entry_price.
-            direction: Signal direction (BUY or SELL).
-            ratios: Risk-reward multipliers (default [1, 2, 3]).
-
-        Returns:
-            List of take profit prices in ascending order.
-        """
-        if atr is None:
-            atr = entry_price * 0.01
-
-        if ratios is None:
-            ratios = [1.0, 2.0, 3.0]
-
-        tp_levels: list[float] = []
-        for ratio in ratios:
-            tp_distance = atr * ratio
-            tp = entry_price + tp_distance if direction == "BUY" else entry_price - tp_distance
-            tp_levels.append(tp)
-
-        return sorted(tp_levels) if direction == "BUY" else sorted(tp_levels, reverse=True)
-
 
 # ---------------------------------------------------------------------------
 # Async batch pipeline — called by APScheduler job
@@ -498,7 +401,7 @@ async def generate_signals_for_symbols(
     Returns:
         Dict mapping ``symbol`` -> number of signals emitted (0 or 1 per symbol).
     """
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from src.ml.repositories.timescale import (
         TimescaleIndicatorRepository,
@@ -516,7 +419,7 @@ async def generate_signals_for_symbols(
     _multi_tf = ("1h", "2h", "3h", "4h", "1D", "1W", "1M")
 
     results: dict[str, int] = {}
-    started_at = datetime.now(timezone.utc)
+    started_at = datetime.now(UTC)
 
     async def _process_symbol(
         symbol: str,
@@ -524,13 +427,18 @@ async def generate_signals_for_symbols(
         sig_repo: TimescaleSignalRepository,
         sess: AsyncSession,
     ) -> int:
-        indicators = await ind_repo.get_multi_timeframe(symbol, list(_multi_tf))
-        non_none = {tf: ind for tf, ind in indicators.items() if ind is not None}
+        indicators_single = await ind_repo.get_multi_timeframe(symbol, list(_multi_tf))
+        non_none = {tf: ind for tf, ind in indicators_single.items() if ind is not None}
         if not non_none:
             logger.warning("No indicator data for %s — skipping", symbol)
             return 0
 
-        signal = generator.generate(symbol=symbol, indicators=indicators)
+        # Rule engine expects dict[str, list[IndicatorRecord]], wrap single records
+        indicators: dict[str, Any] = {tf: [ind] for tf, ind in non_none.items()}
+
+        # Use engine.evaluate() + aggregate() directly (returns TradingSignal | None)
+        rule_results = engine.evaluate(symbol, indicators)
+        signal = engine.aggregate(rule_results, symbol)
         if signal is None:
             return 0
 
@@ -556,7 +464,7 @@ async def generate_signals_for_symbols(
             await _run(sess)
             await sess.commit()
 
-    elapsed = (datetime.now(timezone.utc) - started_at).total_seconds()
+    elapsed = (datetime.now(UTC) - started_at).total_seconds()
     total_emitted = sum(results.values())
     logger.info(
         "Signal generation complete: %d/%d signals emitted in %.2fs",

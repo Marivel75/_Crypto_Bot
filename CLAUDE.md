@@ -30,27 +30,11 @@ Stack: Python 3.11+ | FastAPI | Streamlit | Plotly | TimescaleDB | MinIO | MLflo
 
 ## Python Conventions
 
-### Toolchain
-- Linter + formatter: `ruff` (replaces flake8, isort, black)
-- Type checker: `mypy --strict`
-- Validation: `pydantic` v2 for ALL data models
-- Config: `pydantic-settings` reading `.env`
-- Test runner: `pytest` with `pytest-asyncio`, `pytest-cov`
-
-### Style Rules
-- Python 3.11+ — use modern syntax (`X | Y` unions, `match`, `asyncio.timeout`)
-- Type hints on ALL function signatures (parameters + return type)
-- Use `logging` module — NEVER `print()`
-- Use `pathlib.Path` — NEVER `os.path`
-- Use `async def` / `await` for ALL I/O operations
-- 200-400 lines per file target, 800 lines max
+Python 3.11+ — modern syntax (`X | Y` unions, `match`, `asyncio.timeout`). See global `~/.claude/rules/python.md` for full style rules.
 
 ### Quality Gates (run before every commit)
 ```bash
-ruff check src/ --fix   # lint with auto-fix
-ruff format src/        # format
-mypy src/               # strict type checking
-pytest tests/ --cov=src --cov-fail-under=80  # tests + coverage
+ruff check src/ --fix && ruff format src/ && mypy src/ && pytest tests/ --cov=src --cov-fail-under=80
 ```
 
 ## File Organization
@@ -82,50 +66,19 @@ infra/          # Ansible, CI/CD
 
 ## Git Workflow
 
-### Commit Format
-```
-type(scope): description
-```
-Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
-Scopes: `etl`, `ml`, `api`, `frontend`, `infra`, `shared`
+See global `~/.claude/rules/common.md` for full git conventions.
 
-Examples:
-```
-feat(etl): add binance websocket OHLCV collector
-fix(api): handle rate limit error from coingecko
-test(ml): add walk-forward backtest validation
-```
+Scopes for this project: `etl`, `ml`, `api`, `frontend`, `infra`, `shared`
+Branch format: `team/feature-name` (e.g. `data-eng/binance-collector`, `ml/rsi-multi-tf`)
+PR required for `main`, all quality gates must pass.
 
-### Branch Naming
-```
-team/feature-name
-```
-Examples: `data-eng/binance-collector`, `ml/rsi-multi-tf`, `backend/jwt-auth`
+## Testing
 
-### PR Policy
-- PR required for all merges to `main`
-- All quality gates must pass (CI enforces this)
-- At least one team-member review required
+See global `~/.claude/rules/common.md` and `python.md` for full testing rules. Project-specific: mock with `respx`, E2E covers signal generation → API → UI.
 
-## Testing Requirements
+## Security
 
-- Minimum 80% coverage per module (enforced by CI)
-- TDD approach: write tests first
-- Unit tests: `tests/unit/` — no external I/O, fully mocked
-- Integration tests: `tests/integration/` — requires running Docker services
-- E2E tests: `tests/e2e/` — full stack critical flows (signal generation → API → UI)
-- Mock external APIs with `respx` (httpx-based)
-- Never use `datetime.now()` in tests — use fixed timestamps
-
-## Security Rules
-
-- NEVER hardcode secrets — `.env` only, NEVER committed
-- NEVER commit `.env` files (gitignored)
-- NEVER expose internal error details to API clients
-- NEVER use string interpolation in SQL — parameterized queries only
-- Validate ALL external input with Pydantic at API boundaries
-- bcrypt for passwords, JWT for session tokens
-- Signals are read-only — no trade execution path in codebase
+See global rules. Project-specific: bcrypt for passwords, JWT for sessions, signals are read-only (no trade execution).
 
 ## Data Sources (free only)
 

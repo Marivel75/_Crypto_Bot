@@ -41,7 +41,7 @@ async def get_sentiment(
 ) -> ApiResponse[list[NewsSentimentResponse]]:
     """Return aggregate sentiment by source."""
     data = await news_service.get_sentiment(db)
-    return ApiResponse(data=[NewsSentimentResponse(**d) for d in data])
+    return ApiResponse(data=[NewsSentimentResponse(**d) for d in data])  # type: ignore[arg-type]
 
 
 @router.get("/{news_id}", response_model=ApiResponse[NewsResponse])

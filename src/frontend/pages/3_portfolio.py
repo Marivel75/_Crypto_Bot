@@ -20,10 +20,6 @@ import streamlit as st
 
 from src.frontend.api_client import APIClient
 from src.frontend.components.chatbot import render_chatbot
-from src.frontend.components.portfolio_charts import (
-    render_portfolio_history_chart,
-    render_portfolio_pie,
-)
 from src.frontend.config import frontend_settings
 from src.frontend.i18n import t
 
@@ -96,39 +92,6 @@ def _render_portfolio_section(client: APIClient) -> None:
     if positions is None:
         st.error(t("portfolio.load_error"), icon=":material/block:")
         return
-
-    # --- Portfolio summary and charts (Semaine 3) ---
-    summary = client.fetch_portfolio_summary()
-    if summary:
-        with st.container(border=True):
-            st.markdown(f"#### {t('portfolio.summary_header')}")
-            col_val, col_pnl = st.columns(2)
-            with col_val:
-                total_val = summary.get("total_value", 0)
-                st.metric(
-                    t("portfolio.total_value"),
-                    f"${float(total_val):,.2f}",
-                )
-            with col_pnl:
-                pnl_pct = summary.get("pnl_pct", 0)
-                st.metric(
-                    t("portfolio.total_pnl"),
-                    f"{float(pnl_pct):+.2f}%",
-                )
-
-        # Asset allocation pie chart
-        allocation = summary.get("asset_allocation")
-        if allocation:
-            with st.container(border=True):
-                st.markdown(f"#### {t('portfolio.allocation_title')}")
-                render_portfolio_pie(allocation)
-
-        # Portfolio history line chart
-        history = client.fetch_portfolio_history()
-        if history:
-            with st.container(border=True):
-                st.markdown(f"#### {t('portfolio.value_history_title')}")
-                render_portfolio_history_chart(history)
 
     # --- Positions table or empty state ---
     with st.container(border=True):

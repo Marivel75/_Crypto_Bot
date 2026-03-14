@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from sqlalchemy import desc, select
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.shared.exceptions import AuthorizationError, ConflictError, NotFoundError
-from src.shared.models.orm import OHLCVOrm, PortfolioEntryOrm, WatchlistEntryOrm
+from src.shared.models.orm import PortfolioEntryOrm, WatchlistEntryOrm
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ async def update_portfolio_entry(
         entry.entry_price = entry_price  # type: ignore[assignment]
     if notes is not None:
         entry.notes = notes  # type: ignore[assignment]
-    entry.updated_at = datetime.now(tz=timezone.utc)  # type: ignore[assignment]
+    entry.updated_at = datetime.now(tz=UTC)  # type: ignore[assignment]
 
     await db.flush()
     await db.refresh(entry)
@@ -241,120 +241,3 @@ async def remove_watchlist_symbol(
 
     await db.delete(entry)
     await db.flush()
-
-
-async def get_portfolio_summary(
-    db: AsyncSession,
-    user_id: str,
-) -> dict[str, object]:
-    """Calculate aggregated portfolio statistics.
-
-    Returns total number of entries, total value, cost basis, unrealized P&L,
-    and percentage allocation by symbol.
-
-    Args:
-        db: Active async database session.
-        user_id: UUID string of the authenticated user.
-
-    Returns:
-        Dict with keys: total_entries, total_value, total_cost, unrealized_pnl, allocation.
-    """
-    entries = await get_portfolio(db, user_id)
-
-    total_cost = sum(float(e.quantity) * float(e.entry_price) for e in entries)
-    total_entries = len(entries)
-    allocation = {}
-
-    for entry in entries:
-        position_value = float(entry.quantity) * float(entry.entry_price)
-        if total_cost > 0:
-            allocation[entry.symbol] = round(position_value / total_cost * 100, 2)
-
-    return {
-        "total_entries": total_entries,
-        "total_value": round(total_cost, 2) if total_cost > 0 else None,
-        "total_cost": round(total_cost, 2) if total_cost > 0 else None,
-        "unrealized_pnl": None,
-        "allocation": allocation,
-    }
-
-
-async def get_portfolio_history(
-    db: AsyncSession,
-    user_id: str,
-    start: datetime | None = None,
-    end: datetime | None = None,
-) -> dict[str, object]:
-    """Return historical portfolio value snapshots.
-
-    Currently returns an empty history as historical tracking is not yet
-    implemented. When tracking tables are available, this will return
-    daily portfolio value snapshots.
-
-    Args:
-        db: Active async database session.
-        user_id: UUID string of the authenticated user.
-        start: Optional start date (ISO 8601).
-        end: Optional end date (ISO 8601).
-
-    Returns:
-        Dict with keys: symbol (None), history (list of snapshots).
-    """
-    return {"symbol": None, "history": []}
-
-
-async def get_watchlist_prices(
-    db: AsyncSession,
-    user_id: str,
-) -> list[dict[str, object]]:
-    """Return current prices for all watchlist symbols.
-
-    Fetches the latest OHLCV price record for each symbol in a single query
-    using a row_number window function to avoid N+1 queries.
-
-    Args:
-        db: Active async database session.
-        user_id: UUID string of the authenticated user.
-
-    Returns:
-        List of dicts with keys: symbol, current_price, timestamp.
-    """
-    from sqlalchemy import func
-
-    watchlist_entries = await get_watchlist(db, user_id)
-    if not watchlist_entries:
-        return []
-
-    symbols = [entry.symbol for entry in watchlist_entries]
-
-    # Single query: latest OHLCV per symbol using window function
-    row_num = (
-        func.row_number()
-        .over(
-            partition_by=OHLCVOrm.symbol,
-            order_by=desc(OHLCVOrm.timestamp),
-        )
-        .label("rn")
-    )
-
-    subq = (
-        select(OHLCVOrm.symbol, OHLCVOrm.price_close, OHLCVOrm.timestamp, row_num)
-        .where(OHLCVOrm.symbol.in_(symbols))
-        .subquery()
-    )
-
-    result = await db.execute(select(subq.c.symbol, subq.c.price_close, subq.c.timestamp).where(subq.c.rn == 1))
-    price_map = {row.symbol: row for row in result.all()}
-
-    prices: list[dict[str, object]] = []
-    for entry in watchlist_entries:
-        row = price_map.get(entry.symbol)
-        prices.append(
-            {
-                "symbol": entry.symbol,
-                "current_price": float(row.price_close) if row else None,
-                "timestamp": row.timestamp if row else None,
-            }
-        )
-
-    return prices

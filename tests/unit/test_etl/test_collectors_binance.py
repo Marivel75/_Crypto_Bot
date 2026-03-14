@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 import httpx
@@ -17,7 +17,7 @@ from src.shared.exceptions import ExternalAPIError, RateLimitError
 # Fixed test data
 # ---------------------------------------------------------------------------
 
-FIXED_TS = datetime(2023, 11, 14, 22, 13, 20, tzinfo=timezone.utc)
+FIXED_TS = datetime(2023, 11, 14, 22, 13, 20, tzinfo=UTC)
 FIXED_OPEN_TIME_MS = int(FIXED_TS.timestamp() * 1000)  # 1700000000000
 
 SAMPLE_KLINE: list[object] = [

@@ -64,27 +64,3 @@ class TestToken:
     async def test_get_user_by_id_not_found(self, db_session: AsyncSession) -> None:
         user = await auth_service.get_user_by_id(db_session, "nonexistent")
         assert user is None
-
-
-class TestRefreshToken:
-    """Refresh token operations."""
-
-    @pytest.mark.asyncio
-    async def test_refresh_access_token_with_valid_user(self, db_session: AsyncSession, test_user: UserOrm) -> None:
-        """Refresh token with valid user succeeds."""
-        token = auth_service.create_access_token(str(test_user.id))
-        result_user = await auth_service.refresh_access_token(db_session, token)
-        assert result_user.id == test_user.id
-
-    @pytest.mark.asyncio
-    async def test_refresh_access_token_invalid_token(self, db_session: AsyncSession) -> None:
-        """Refresh with invalid token raises AuthenticationError."""
-        with pytest.raises(AuthenticationError):
-            await auth_service.refresh_access_token(db_session, "invalid.token.here")
-
-    @pytest.mark.asyncio
-    async def test_refresh_access_token_user_not_found(self, db_session: AsyncSession) -> None:
-        """Refresh with token for non-existent user raises AuthenticationError."""
-        token = auth_service.create_access_token("nonexistent-user-id")
-        with pytest.raises(AuthenticationError):
-            await auth_service.refresh_access_token(db_session, token)

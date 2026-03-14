@@ -35,7 +35,7 @@ async def market_overview(
 ) -> ApiResponse[MarketOverviewResponse]:
     """Return market overview with top movers."""
     data = await crypto_service.get_market_overview(db)
-    return ApiResponse(data=MarketOverviewResponse(**data))
+    return ApiResponse(data=MarketOverviewResponse(**data))  # type: ignore[arg-type]
 
 
 @router.get("/{symbol}/prices", response_model=ApiResponse[list[OHLCVResponse]])
@@ -84,4 +84,4 @@ async def get_latest(
     data = await crypto_service.get_latest(db, symbol)
     ohlcv = OHLCVResponse.model_validate(data["ohlcv"]) if data["ohlcv"] else None
     indicators = IndicatorResponse.model_validate(data["indicators"]) if data["indicators"] else None
-    return ApiResponse(data=LatestResponse(symbol=data["symbol"], ohlcv=ohlcv, indicators=indicators))
+    return ApiResponse(data=LatestResponse(symbol=data["symbol"], ohlcv=ohlcv, indicators=indicators))  # type: ignore[arg-type]

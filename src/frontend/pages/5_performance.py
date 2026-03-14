@@ -44,30 +44,14 @@ def _fetch_signals(symbol: str | None) -> list[dict[str, Any]] | None:
     return _get_client().fetch_signals(symbol)
 
 
-@st.cache_data(ttl=30)
-def _fetch_signals_history(
-    symbol: str | None,
-    direction: str | None,
-    limit: int = 100,
-) -> dict[str, Any] | None:
-    """Return paginated signal history with optional filters."""
-    return _get_client().fetch_signals_history(symbol=symbol, direction=direction, limit=limit)
-
-
-@st.cache_data(ttl=300)
-def _fetch_system_metrics() -> dict[str, Any] | None:
-    """Return system metrics: uptime, request count, error rate, DB size."""
-    return _get_client().fetch_system_metrics()
-
-
 def _format_confidence(value: Any) -> str:
     """Format a confidence score as a percentage string, safely."""
     if value is None:
-        return "—"
+        return "-"
     try:
         return f"{float(value):.0%}"
     except (TypeError, ValueError):
-        return "—"
+        return "-"
 
 
 def _perf_is_empty(perf: dict[str, Any]) -> bool:
@@ -130,27 +114,6 @@ def page() -> None:
 
     st.divider()
 
-    # --- System metrics (Semaine 3) ---
-    metrics = _fetch_system_metrics()
-    if metrics:
-        with st.container(border=True):
-            st.subheader(t("performance.system_metrics"))
-            col1, col2, col3, col4 = st.columns(4)
-            with col1:
-                uptime = metrics.get("uptime_hours", "—")
-                st.metric(t("performance.uptime"), f"{uptime}h" if isinstance(uptime, (int, float)) else uptime)
-            with col2:
-                requests = metrics.get("request_count", "—")
-                st.metric(t("performance.request_count"), requests)
-            with col3:
-                error_rate = metrics.get("error_rate", 0.0)
-                st.metric(t("performance.error_rate"), f"{float(error_rate):.2f}%")
-            with col4:
-                db_size = metrics.get("db_size_mb", "—")
-                st.metric(t("performance.db_size"), f"{db_size}MB" if isinstance(db_size, (int, float)) else db_size)
-
-        st.divider()
-
     # --- Filterable signal history table ---
     with st.container(border=True):
         st.subheader(t("performance.signal_history"))
@@ -181,7 +144,7 @@ def _render_kpis(perf: dict[str, Any]) -> None:
                 pnl_value = 0.0
             st.metric(t("performance.simulated_pnl"), f"${pnl_value:+,.2f}")
         else:
-            st.metric(t("performance.simulated_pnl"), "—")
+            st.metric(t("performance.simulated_pnl"), "-")
 
 
 def _render_win_rate_gauge(win_rate: float) -> None:
@@ -385,19 +348,19 @@ def _render_signal_history_section() -> None:
     # Build display rows — use `or` guards so None fields fall back to display placeholders
     rows = [
         {
-            t("performance.col_date"): s.get("created_at") or s.get("timestamp") or "—",
+            t("performance.col_date"): s.get("created_at") or s.get("timestamp") or "-",
             t("performance.col_crypto"): s.get("symbol") or "?",
             t("performance.col_direction"): s.get("signal_type") or "?",
             t("performance.col_confidence"): _format_confidence(s.get("confidence_score")),
-            t("performance.col_timeframe"): s.get("timeframe_primary") or "—",
-            t("performance.col_leverage"): f"{s['leverage_suggested']}x" if s.get("leverage_suggested") else "—",
-            t("performance.col_rules"): ", ".join(s.get("rules_triggered") or []) or "—",
+            t("performance.col_timeframe"): s.get("timeframe_primary") or "-",
+            t("performance.col_leverage"): f"{s['leverage_suggested']}x" if s.get("leverage_suggested") else "-",
+            t("performance.col_rules"): ", ".join(s.get("rules_triggered") or []) or "-",
             t("performance.col_correct"): (
-                yes_label if s.get("was_correct") is True else no_label if s.get("was_correct") is False else "—"
+                yes_label if s.get("was_correct") is True else no_label if s.get("was_correct") is False else "-"
             ),
             # pnl_simulated checked explicitly to avoid formatting a None value
             t("performance.col_pnl"): (
-                f"${float(s.get('pnl_simulated') or 0):+,.2f}" if s.get("pnl_simulated") is not None else "—"
+                f"${float(s.get('pnl_simulated') or 0):+,.2f}" if s.get("pnl_simulated") is not None else "-"
             ),
         }
         for s in sorted(

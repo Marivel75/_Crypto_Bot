@@ -15,12 +15,14 @@ alembic>=1.13.0
 # API
 fastapi>=0.111.0
 uvicorn[standard]>=0.29.0
+prometheus-fastapi-instrumentator>=7.0.0
 
 # Auth
 passlib[bcrypt]>=1.7.4
 python-jose[cryptography]>=3.3.0
 
 # ETL
+ccxt>=4.0.0
 apscheduler>=3.10.0
 feedparser>=6.0.0
 beautifulsoup4>=4.12.0
@@ -28,7 +30,6 @@ minio>=7.2.0
 
 # Data / ML
 pandas>=2.2.0
-pandas-ta>=0.3.14b
 numpy>=1.26.0
 scikit-learn>=1.4.0
 xgboost>=2.0.0

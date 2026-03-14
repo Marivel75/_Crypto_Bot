@@ -10,13 +10,13 @@ for import compatibility with the package ``__init__.py``.
 from __future__ import annotations
 
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from src.shared.models.crypto import IndicatorRecord, OHLCVRecord
 
-# Fixed reference timestamp — 2024-01-15 08:00 timezone.utc (a real trading session)
-_FIXED_TS = datetime(2024, 1, 15, 8, 0, 0, tzinfo=timezone.utc)
+# Fixed reference timestamp — 2024-01-15 08:00 UTC (a real trading session)
+_FIXED_TS = datetime(2024, 1, 15, 8, 0, 0, tzinfo=UTC)
 
 
 def make_ohlcv(**overrides: object) -> OHLCVRecord:

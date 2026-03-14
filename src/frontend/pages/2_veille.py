@@ -30,7 +30,7 @@ from src.frontend.i18n import t
 logger = logging.getLogger(__name__)
 
 # Available news sources (first entry is the "all" placeholder — translated at render time)
-_SOURCES_RAW = ["Decrypt", "Cointelegraph", "PhoenixNews", "CoinDesk"]
+_SOURCES_RAW = ["Decrypt", "Cointelegraph.com News", "News - Cryptonews"]
 
 
 @st.cache_resource
@@ -59,7 +59,7 @@ def _aggregate_sentiment_from_articles(
         if score is not None:
             acc[source].append(float(score))
 
-    return [{"symbol": src, "sentiment_score": sum(scores) / len(scores)} for src, scores in acc.items() if scores]
+    return [{"source": src, "sentiment_score": sum(scores) / len(scores)} for src, scores in acc.items() if scores]
 
 
 def _aggregate_keywords(news: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -149,14 +149,15 @@ def _render_filter_bar() -> tuple[str | None, str | None, date, date]:
 
 def _render_empty_state(active_filters: bool) -> None:
     """Render a styled empty-state card when no articles match the current filters."""
+    hint = t("veille.no_article_filter_hint") if active_filters else t("veille.no_article_empty_hint")
     with st.container(border=True):
         st.markdown(
-            """
+            f"""
             <div style="text-align: center; padding: 2rem 1rem;">
-                <div style="font-size: 3rem; margin-bottom: 0.5rem;">&#128240;</div>
+                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;"><i data-lucide="newspaper" style="width:2rem;height:2rem;"></i></div>
                 <h4 style="margin: 0 0 0.5rem 0;">{t("veille.no_article_title")}</h4>
                 <p style="opacity: 0.65; margin: 0;">
-                    {t("veille.no_article_filter_hint") if active_filters else t("veille.no_article_empty_hint")}
+                    {hint}
                 </p>
             </div>
             """,
@@ -225,7 +226,7 @@ def _render_charts_column(news: list[dict[str, Any]] | None) -> None:
         with st.container(border=True):
             st.markdown(
                 "<div style='text-align:center;padding:1.5rem;opacity:0.6;'>"
-                f"&#128200; {t('veille.no_sentiment_data')}"
+                f"<i data-lucide='trending-up' style='width:1.2rem;height:1.2rem;vertical-align:middle;'></i> {t('veille.no_sentiment_data')}"
                 "</div>",
                 unsafe_allow_html=True,
             )
@@ -243,7 +244,7 @@ def _render_charts_column(news: list[dict[str, Any]] | None) -> None:
     else:
         with st.container(border=True):
             st.markdown(
-                f"<div style='text-align:center;padding:1.5rem;opacity:0.6;'>&#128196; {t('veille.no_data')}</div>",
+                f"<div style='text-align:center;padding:1.5rem;opacity:0.6;'><i data-lucide='file-text' style='width:1.2rem;height:1.2rem;vertical-align:middle;'></i> {t('veille.no_data')}</div>",
                 unsafe_allow_html=True,
             )
 
@@ -257,7 +258,10 @@ def page() -> None:
     source_filter, keyword_filter, date_from, date_to = _render_filter_bar()
 
     # Determine whether any non-default filter is active (used for empty-state copy)
-    active_filters = bool(source_filter or keyword_filter)
+    default_from = date.today() - timedelta(days=7)
+    default_to = date.today()
+    date_changed = date_from != default_from or date_to != default_to
+    active_filters = bool(source_filter or keyword_filter or date_changed)
 
     # --- Fetch and filter data ---
     news = _fetch_news(source_filter, keyword_filter)

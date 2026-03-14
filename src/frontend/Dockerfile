@@ -1,5 +1,5 @@
 # --- Builder stage ---
-FROM python:3.11.8-slim AS builder
+FROM python:3.11-slim AS builder
 
 COPY src/shared/requirements.txt /tmp/shared-requirements.txt
 RUN pip install --no-cache-dir --prefix=/install -r /tmp/shared-requirements.txt
@@ -8,7 +8,7 @@ COPY src/frontend/requirements.txt /tmp/frontend-requirements.txt
 RUN pip install --no-cache-dir --prefix=/install -r /tmp/frontend-requirements.txt
 
 # --- Runtime stage ---
-FROM python:3.11.8-slim
+FROM python:3.11-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*

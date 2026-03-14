@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import httpx
 import pytest
@@ -12,7 +12,7 @@ from src.etl.collectors.binance import BinanceCollector
 from src.etl.collectors.coingecko import CoinGeckoCollector
 from src.etl.collectors.fear_greed import FearGreedCollector
 
-FIXED_TS = datetime(2025, 6, 1, 12, 0, tzinfo=timezone.utc)
+FIXED_TS = datetime(2025, 6, 1, 12, 0, tzinfo=UTC)
 FIXED_MS = int(FIXED_TS.timestamp() * 1000)
 
 

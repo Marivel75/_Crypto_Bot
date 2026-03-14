@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 import ccxt.async_support as ccxt_async  # type: ignore[import-untyped]
@@ -108,7 +108,7 @@ class CCXTCollector:
     @staticmethod
     def _parse_candle(candle: list[float], symbol: str, timeframe: str) -> OHLCVRecord:
         """Parse a CCXT candle ``[timestamp, O, H, L, C, V]`` into an OHLCVRecord."""
-        timestamp = datetime.fromtimestamp(candle[0] / 1000, tz=timezone.utc)
+        timestamp = datetime.fromtimestamp(candle[0] / 1000, tz=UTC)
         return OHLCVRecord(
             symbol=symbol,
             price_open=Decimal(str(candle[1])),

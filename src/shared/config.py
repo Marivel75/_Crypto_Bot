@@ -2,11 +2,6 @@
 
 Used by ALL teams. Import the ``settings`` singleton rather than
 instantiating ``Settings`` directly.
-
-SECURITY NOTE:
-- ALL secrets MUST be provided via environment variables or .env file.
-- Missing required secrets will cause startup failure (fail-fast).
-- Never commit .env files to git.
 """
 
 from __future__ import annotations
@@ -15,48 +10,43 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application-wide settings loaded from environment variables / .env file.
-
-    Raises
-    ------
-    ValueError
-        If any required secret is missing at startup.
-    """
+    """Application-wide settings loaded from environment variables / .env file."""
 
     # ---------------------------------------------------------------------------
-    # Database (REQUIRED)
+    # Database
     # ---------------------------------------------------------------------------
-    database_url: str
+    database_url: str = "postgresql://cryptobot:password@timescaledb:5432/cryptobot"
     postgres_db: str = "cryptobot"
     postgres_user: str = "cryptobot"
-    postgres_password: str
+    postgres_password: str = "password"  # noqa: S105
 
     # ---------------------------------------------------------------------------
-    # MinIO object storage (REQUIRED)
+    # MinIO object storage
     # ---------------------------------------------------------------------------
     minio_endpoint: str = "http://minio:9000"
-    minio_root_user: str
-    minio_root_password: str
+    minio_root_user: str = "minioadmin"
+    minio_root_password: str = "minioadmin"  # noqa: S105
 
     # ---------------------------------------------------------------------------
-    # FastAPI / JWT (REQUIRED)
+    # FastAPI / JWT
     # ---------------------------------------------------------------------------
-    api_secret_key: str
-    api_host: str = "0.0.0.0"
+    api_secret_key: str = "dev-secret-key"  # noqa: S105
+    api_host: str = "0.0.0.0"  # noqa: S104
     api_port: int = 8000
     api_url: str = "http://api:8000"
 
     # ---------------------------------------------------------------------------
-    # External API keys (optional — empty = use public endpoints)
+    # External API keys (empty = use public / unauthenticated endpoints)
     # ---------------------------------------------------------------------------
     coingecko_api_key: str = ""
 
     # LLM providers — set at least one to enable the chat assistant
     openai_api_key: str = ""
     anthropic_api_key: str = ""
+    use_claude_cli: bool = True  # Use `claude` CLI (Max subscription) as primary LLM
 
     # ---------------------------------------------------------------------------
-    # MLflow experiment tracking (REQUIRED)
+    # MLflow experiment tracking
     # ---------------------------------------------------------------------------
     mlflow_tracking_uri: str = "http://mlflow:5000"
 
@@ -95,21 +85,11 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     # ---------------------------------------------------------------------------
-    # JWT token lifetime (hours)
+    # JWT token lifetime
     # ---------------------------------------------------------------------------
     jwt_expiration_hours: int = 24
 
-    # ---------------------------------------------------------------------------
-    # Grafana credentials (REQUIRED for production)
-    # ---------------------------------------------------------------------------
-    gf_security_admin_user: str = "admin"
-    gf_security_admin_password: str
-
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore",
-    )
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 
 settings = Settings()

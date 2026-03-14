@@ -72,7 +72,7 @@ def _orm_to_indicator(row: IndicatorOrm) -> IndicatorRecord:
         harmonic_pattern=str(row.harmonic_pattern) if row.harmonic_pattern else None,
         trend_slope=Decimal(str(row.trend_slope)) if row.trend_slope is not None else None,
         trend_type=str(row.trend_type) if row.trend_type else None,
-        metadata=dict(row.metadata) if row.metadata else {},  # type: ignore[call-overload]
+        metadata=dict(row.indicator_metadata) if row.indicator_metadata else {},
     )
 
 

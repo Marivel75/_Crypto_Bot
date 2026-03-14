@@ -16,7 +16,7 @@ from src.etl.collectors.news import NewsCollector
 from src.shared.exceptions import ExternalAPIError, RateLimitError
 from src.shared.models.crypto import NewsArticle, OHLCVRecord
 
-# Fixed open_time: 2024-01-01 00:00:00 timezone.utc in milliseconds
+# Fixed open_time: 2024-01-01 00:00:00 UTC in milliseconds
 _OPEN_TIME_MS = 1_704_067_200_000
 _FIXED_TS_ISO = "2024-01-01T00:00:00+00:00"
 

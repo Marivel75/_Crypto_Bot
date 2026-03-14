@@ -44,40 +44,12 @@ class TestSettingsDefaults:
         s = Settings()
         assert "api" in s.api_url
 
-    def test_coingecko_api_key_empty_by_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        # Test optional API key defaults to empty when env var is not set
-        monkeypatch.delenv("COINGECKO_API_KEY", raising=False)
-        # Set all required env vars to allow Settings instantiation
-        monkeypatch.setenv("DATABASE_URL", "postgresql://test")
-        monkeypatch.setenv("POSTGRES_PASSWORD", "test")
-        monkeypatch.setenv("MINIO_ROOT_USER", "test")
-        monkeypatch.setenv("MINIO_ROOT_PASSWORD", "test")
-        monkeypatch.setenv("API_SECRET_KEY", "test")
-        monkeypatch.setenv("GF_SECURITY_ADMIN_PASSWORD", "test")
-        from pydantic_settings import SettingsConfigDict
-
-        class TestSettings(Settings):
-            model_config = SettingsConfigDict(env_file=None, extra="ignore")
-
-        s = TestSettings()
+    def test_coingecko_api_key_empty_by_default(self) -> None:
+        s = Settings()
         assert s.coingecko_api_key == ""
 
-    def test_openai_api_key_empty_by_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        # Test optional API key defaults to empty when env var is not set
-        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-        # Set all required env vars to allow Settings instantiation
-        monkeypatch.setenv("DATABASE_URL", "postgresql://test")
-        monkeypatch.setenv("POSTGRES_PASSWORD", "test")
-        monkeypatch.setenv("MINIO_ROOT_USER", "test")
-        monkeypatch.setenv("MINIO_ROOT_PASSWORD", "test")
-        monkeypatch.setenv("API_SECRET_KEY", "test")
-        monkeypatch.setenv("GF_SECURITY_ADMIN_PASSWORD", "test")
-        from pydantic_settings import SettingsConfigDict
-
-        class TestSettings(Settings):
-            model_config = SettingsConfigDict(env_file=None, extra="ignore")
-
-        s = TestSettings()
+    def test_openai_api_key_empty_by_default(self) -> None:
+        s = Settings()
         assert s.openai_api_key == ""
 
     def test_anthropic_api_key_empty_by_default(self) -> None:

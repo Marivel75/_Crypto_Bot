@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from httpx import AsyncClient
@@ -18,7 +18,7 @@ async def seed_ohlcv(db_session: AsyncSession) -> None:
         record = OHLCVOrm(
             symbol="BTC",
             timeframe="1h",
-            timestamp=datetime(2025, 1, 1, i, tzinfo=timezone.utc),
+            timestamp=datetime(2025, 1, 1, i, tzinfo=UTC),
             price_open=50000.0 + i * 100,
             price_high=50500.0 + i * 100,
             price_low=49500.0 + i * 100,

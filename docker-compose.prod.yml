@@ -1,0 +1,106 @@
+services:
+  # --- Reduce memory for VPS (7.6GB shared) ---
+  timescaledb:
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+
+  minio:
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  mlflow:
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  api:
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  frontend:
+    environment:
+      API_URL: http://api:8000
+      STREAMLIT_SERVER_BASE_URL_PATH: /crypto
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/crypto/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  etl-worker:
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  ml-worker:
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # --- Disable internal nginx (host nginx handles SSL/routing) ---
+  nginx:
+    profiles:
+      - disabled
+
+  nginx-exporter:
+    profiles:
+      - disabled
+
+  prometheus:
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  grafana:
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  # --- Enable Linux-only services ---
+  node-exporter:
+    image: prom/node-exporter:v1.8.0
+    restart: unless-stopped
+    command:
+      - "--path.rootfs=/host"
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - backend-net
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    networks:
+      - backend-net
+    deploy:
+      resources:
+        limits:
+          memory: 256M

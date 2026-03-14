@@ -25,7 +25,6 @@ coverage.xml
 
 # Development tooling
 .claude
-.auto-claude
 .vscode
 .idea
 

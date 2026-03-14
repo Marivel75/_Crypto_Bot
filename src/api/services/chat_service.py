@@ -98,13 +98,7 @@ async def _build_context(db: AsyncSession, user_id: str) -> str:
             result = await session.execute(select(WatchlistEntryOrm).where(WatchlistEntryOrm.user_id == user_id))
             return list(result.scalars().all())
 
-    results = await asyncio.gather(_fetch_signals(), _fetch_portfolio(), _fetch_watchlist(), return_exceptions=True)
-    signals = results[0] if not isinstance(results[0], Exception) else []
-    portfolio = results[1] if not isinstance(results[1], Exception) else []
-    watchlist = results[2] if not isinstance(results[2], Exception) else []
-    for i, label in enumerate(("signals", "portfolio", "watchlist")):
-        if isinstance(results[i], Exception):
-            logger.warning("Failed to fetch %s for chat context: %s", label, results[i])
+    signals, portfolio, watchlist = await asyncio.gather(_fetch_signals(), _fetch_portfolio(), _fetch_watchlist())
 
     parts: list[str] = []
 
@@ -137,8 +131,7 @@ def _get_llm_client() -> httpx.AsyncClient:
 async def _call_llm(message: str, context: str) -> str:
     """Dispatch the message to the first available LLM provider.
 
-    Tries OpenAI if ``OPENAI_API_KEY`` is set, otherwise falls back to
-    Anthropic if ``ANTHROPIC_API_KEY`` is set.
+    Priority: Claude CLI (Max subscription) > OpenAI > Anthropic API.
 
     Args:
         message: User's message text.
@@ -148,9 +141,16 @@ async def _call_llm(message: str, context: str) -> str:
         LLM-generated reply string.
 
     Raises:
-        ExternalAPIError: If no API key is configured.
+        ExternalAPIError: If no LLM provider is available.
     """
     full_system = f"{SYSTEM_PROMPT}\n\nContext:\n{context}"
+
+    if settings.use_claude_cli:
+        try:
+            return await _call_claude_cli(full_system, message)
+        except (FileNotFoundError, ExternalAPIError) as exc:
+            logger.warning("Claude CLI unavailable, falling back: %s", exc)
+
     client = _get_llm_client()
 
     if settings.openai_api_key:
@@ -158,7 +158,61 @@ async def _call_llm(message: str, context: str) -> str:
     if settings.anthropic_api_key:
         return await _call_anthropic(client, full_system, message)
 
-    raise ExternalAPIError("No LLM API key configured. Set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
+    raise ExternalAPIError("No LLM provider available. Install `claude` CLI or set OPENAI_API_KEY / ANTHROPIC_API_KEY.")
+
+
+_CLAUDE_CLI_TIMEOUT = 60.0  # seconds
+
+
+async def _call_claude_cli(system: str, message: str) -> str:
+    """Call the Claude CLI in print mode using the Max subscription.
+
+    Uses ``claude -p`` (non-interactive) with stdin input. Falls back to
+    the next provider if the CLI is not installed or fails.
+
+    Args:
+        system: System prompt (includes user context).
+        message: User message to forward.
+
+    Returns:
+        Claude-generated reply string.
+
+    Raises:
+        FileNotFoundError: If ``claude`` is not in PATH.
+        ExternalAPIError: On non-zero exit or empty response.
+    """
+    prompt = f"{system}\n\n---\nUser: {message}"
+
+    proc = await asyncio.create_subprocess_exec(
+        "claude",
+        "-p",
+        "--model",
+        "haiku",
+        stdin=asyncio.subprocess.PIPE,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+
+    try:
+        stdout, stderr = await asyncio.wait_for(
+            proc.communicate(prompt.encode()),
+            timeout=_CLAUDE_CLI_TIMEOUT,
+        )
+    except TimeoutError:
+        proc.kill()
+        raise ExternalAPIError("Claude CLI timed out") from None
+
+    if proc.returncode != 0:
+        error_msg = stderr.decode().strip()
+        logger.error("Claude CLI error (code %d): %s", proc.returncode, error_msg)
+        raise ExternalAPIError(f"Claude CLI failed: {error_msg}")
+
+    result = stdout.decode().strip()
+    if not result:
+        raise ExternalAPIError("Claude CLI returned empty response")
+
+    logger.info("Claude CLI response received (%d chars)", len(result))
+    return result
 
 
 async def _call_openai(client: httpx.AsyncClient, system: str, message: str) -> str:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -20,7 +20,7 @@ from src.shared.models.crypto import OHLCVRecord
 # Helpers
 # ---------------------------------------------------------------------------
 
-_BASE_TS = datetime(2023, 11, 14, 22, 0, 0, tzinfo=timezone.utc)
+_BASE_TS = datetime(2023, 11, 14, 22, 0, 0, tzinfo=UTC)
 
 
 def _make_record(
@@ -228,9 +228,7 @@ class TestFilterValidRecords:
         assert len(invalid) == 0
 
     def test_all_invalid_returns_all_in_invalid_partition(self) -> None:
-        bad = _make_record(
-            price_open="110.00", price_high="90.00", price_low="80.00", price_close="95.00", skip_validation=True
-        )
+        bad = _make_record(price_open="110.00", price_high="90.00", price_low="80.00", price_close="95.00", skip_validation=True)
         records = [bad, bad, bad]
         valid, invalid = filter_valid_records(records)
         assert len(valid) == 0

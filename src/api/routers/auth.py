@@ -1,4 +1,4 @@
-"""Auth router — register, login, refresh, me."""
+"""Auth router — register, login, me."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import logging
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.dependencies import get_current_user, get_db, get_refresh_token
+from src.api.dependencies import get_current_user, get_db
 from src.api.schemas import ApiResponse, LoginRequest, LoginResponse, RegisterRequest, UserResponse
 from src.api.services import auth_service
 from src.shared.models.orm import UserOrm
@@ -39,24 +39,9 @@ async def login(
 ) -> ApiResponse[LoginResponse]:
     """Authenticate with email and password and return a JWT token."""
     user = await auth_service.authenticate(db, body.email, body.password)
-    token = auth_service.create_access_token(str(user.id), username=user.username)
+    token = auth_service.create_access_token(str(user.id), username=str(user.username))
     logger.info("User authenticated: %s", user.username)
     return ApiResponse(data=LoginResponse(access_token=token))
-
-
-@router.post("/refresh", response_model=ApiResponse[LoginResponse])
-async def refresh(
-    token: str = Depends(get_refresh_token),
-    db: AsyncSession = Depends(get_db),
-) -> ApiResponse[LoginResponse]:
-    """Refresh an expired access token using a valid refresh token.
-
-    The old refresh token is invalidated after use (token rotation).
-    """
-    user = await auth_service.refresh_access_token(db, token)
-    new_token = auth_service.create_access_token(str(user.id), username=user.username)
-    logger.info("Token refreshed for user: %s", user.username)
-    return ApiResponse(data=LoginResponse(access_token=new_token))
 
 
 @router.get("/me", response_model=ApiResponse[UserResponse])

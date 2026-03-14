@@ -17,7 +17,7 @@ import logging
 import os
 import random
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 import bcrypt
@@ -268,7 +268,7 @@ async def _seed_users(session: AsyncSession) -> dict[str, uuid.UUID]:
 async def _seed_crypto_prices(session: AsyncSession) -> int:
     """Generate and insert OHLCV candles using a random walk."""
     rng = random.Random(42)  # noqa: S311
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=UTC)
     start = now - timedelta(days=SEED_DAYS)
     total_candles = SEED_DAYS * CANDLES_PER_DAY
     inserted = 0
@@ -317,7 +317,7 @@ async def _seed_crypto_prices(session: AsyncSession) -> int:
 async def _seed_indicators(session: AsyncSession) -> int:
     """Compute simplified RSI + Bollinger and upsert into indicators table."""
     rng = random.Random(42)  # noqa: S311
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=UTC)
     start = now - timedelta(days=SEED_DAYS)
     total_candles = SEED_DAYS * CANDLES_PER_DAY
     affected = 0
@@ -407,7 +407,7 @@ async def _seed_indicators(session: AsyncSession) -> int:
 async def _seed_trading_signals(session: AsyncSession) -> list[uuid.UUID]:
     """Insert deterministic trading signals, returning their IDs."""
     signal_ids: list[uuid.UUID] = []
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=UTC)
 
     for idx, sig in enumerate(SEED_SIGNALS):
         sig_id = _deterministic_uuid(f"seed-signal-{idx}")
@@ -542,7 +542,7 @@ async def _seed_watchlist(session: AsyncSession, user_ids: dict[str, uuid.UUID])
 async def _seed_news_articles(session: AsyncSession) -> list[uuid.UUID]:
     """Insert seed news articles, returning their IDs."""
     article_ids: list[uuid.UUID] = []
-    now = datetime.now(tz=timezone.utc)
+    now = datetime.now(tz=UTC)
 
     for idx, article in enumerate(SEED_NEWS):
         pub_at = now - timedelta(hours=idx * 6)

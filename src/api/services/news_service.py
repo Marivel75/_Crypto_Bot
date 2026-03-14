@@ -36,8 +36,15 @@ async def get_latest(
     if source is not None:
         conditions.append(NewsArticleOrm.source == source)
     if keyword is not None:
+        from sqlalchemy import or_
+
         escaped = keyword.replace("\\", "\\\\").replace("%", r"\%").replace("_", r"\_")
-        conditions.append(NewsArticleOrm.title.ilike(f"%{escaped}%"))
+        conditions.append(
+            or_(
+                NewsArticleOrm.title.ilike(f"%{escaped}%"),
+                NewsArticleOrm.content.ilike(f"%{escaped}%"),
+            )
+        )
 
     count_query = select(func.count()).select_from(NewsArticleOrm)
     if conditions:

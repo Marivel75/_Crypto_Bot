@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from unittest.mock import patch
@@ -65,7 +65,7 @@ def _indicator(
     return IndicatorRecord(
         symbol=symbol,
         timeframe=timeframe,
-        timestamp=datetime(2024, 6, 1, 12, 0, offset_seconds, tzinfo=timezone.utc),
+        timestamp=datetime(2024, 6, 1, 12, 0, offset_seconds, tzinfo=UTC),
         rsi=rsi,
         price_vs_bollinger=price_vs_bollinger,
     )

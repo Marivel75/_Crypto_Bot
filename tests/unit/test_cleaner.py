@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -21,7 +21,7 @@ from src.shared.models.crypto import OHLCVRecord
 # Helpers
 # ---------------------------------------------------------------------------
 
-_BASE_TS = datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc)
+_BASE_TS = datetime(2024, 3, 1, 0, 0, 0, tzinfo=UTC)
 
 
 def _make_record(

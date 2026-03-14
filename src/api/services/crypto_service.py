@@ -13,6 +13,30 @@ from src.shared.models.orm import IndicatorOrm, OHLCVOrm
 
 logger = logging.getLogger(__name__)
 
+# Symbols that should NOT have "USDT" appended when resolving to DB format
+_SPECIAL_SYMBOLS: frozenset[str] = frozenset({"FEAR_GREED", "MARKET_DATA"})
+_STABLECOINS: frozenset[str] = frozenset({"USDT", "USDC", "DAI", "BUSD"})
+
+
+def _resolve_db_symbol(symbol: str) -> str:
+    """Map a short symbol (BTC) to its DB representation (BTCUSDT).
+
+    The ETL stores trading pairs with the USDT suffix (e.g. BTCUSDT),
+    but the config and frontend use short names (e.g. BTC).
+    """
+    upper = symbol.upper()
+    if upper in _SPECIAL_SYMBOLS or upper in _STABLECOINS:
+        return upper
+    # Already has a quote suffix (e.g. BTCUSDT passed directly)
+    if upper.endswith("USDT"):
+        return upper
+    return f"{upper}USDT"
+
+
+def _resolve_db_symbols(symbols: list[str]) -> list[str]:
+    """Resolve a list of short symbols to their DB representations."""
+    return [_resolve_db_symbol(s) for s in symbols]
+
 
 def list_tracked() -> list[dict[str, str]]:
     """Return the list of tracked symbols from config."""
@@ -42,15 +66,16 @@ async def get_prices(
     Returns:
         Tuple of (list of OHLCVOrm rows ordered descending by timestamp, total row count).
     """
+    db_symbol = _resolve_db_symbol(symbol)
     query = select(OHLCVOrm).where(
-        OHLCVOrm.symbol == symbol.upper(),
+        OHLCVOrm.symbol == db_symbol,
         OHLCVOrm.timeframe == timeframe,
     )
     count_query = (
         select(func.count())
         .select_from(OHLCVOrm)
         .where(
-            OHLCVOrm.symbol == symbol.upper(),
+            OHLCVOrm.symbol == db_symbol,
             OHLCVOrm.timeframe == timeframe,
         )
     )
@@ -91,8 +116,9 @@ async def get_indicators(
     Returns:
         Tuple of (list of IndicatorOrm rows ordered descending by timestamp, total row count).
     """
+    db_symbol = _resolve_db_symbol(symbol)
     base_where = [
-        IndicatorOrm.symbol == symbol.upper(),
+        IndicatorOrm.symbol == db_symbol,
         IndicatorOrm.timeframe == timeframe,
     ]
     count_query = select(func.count()).select_from(IndicatorOrm).where(*base_where)
@@ -121,10 +147,10 @@ async def get_latest(
         Dict with keys ``symbol`` (str), ``ohlcv`` (OHLCVOrm | None),
         and ``indicators`` (IndicatorOrm | None).
     """
-    upper_symbol = symbol.upper()
+    db_symbol = _resolve_db_symbol(symbol)
     ohlcv_result = await db.execute(
         select(OHLCVOrm)
-        .where(OHLCVOrm.symbol == upper_symbol, OHLCVOrm.timeframe == timeframe)
+        .where(OHLCVOrm.symbol == db_symbol, OHLCVOrm.timeframe == timeframe)
         .order_by(desc(OHLCVOrm.timestamp))
         .limit(1)
     )
@@ -132,13 +158,13 @@ async def get_latest(
 
     indicator_result = await db.execute(
         select(IndicatorOrm)
-        .where(IndicatorOrm.symbol == upper_symbol, IndicatorOrm.timeframe == timeframe)
+        .where(IndicatorOrm.symbol == db_symbol, IndicatorOrm.timeframe == timeframe)
         .order_by(desc(IndicatorOrm.timestamp))
         .limit(1)
     )
     indicator = indicator_result.scalar_one_or_none()
 
-    return {"symbol": upper_symbol, "ohlcv": ohlcv, "indicators": indicator}
+    return {"symbol": db_symbol, "ohlcv": ohlcv, "indicators": indicator}
 
 
 async def get_market_overview(db: AsyncSession) -> dict[str, object]:
@@ -156,6 +182,7 @@ async def get_market_overview(db: AsyncSession) -> dict[str, object]:
         ``top_losers``, and ``heatmap``.
     """
     symbols = settings.tracked_symbols
+    db_symbols = _resolve_db_symbols(symbols)
     gainers: list[dict] = []
     losers: list[dict] = []
 
@@ -167,7 +194,7 @@ async def get_market_overview(db: AsyncSession) -> dict[str, object]:
             OHLCVOrm.timestamp,
             func.row_number().over(partition_by=OHLCVOrm.symbol, order_by=desc(OHLCVOrm.timestamp)).label("rn"),
         )
-        .where(OHLCVOrm.symbol.in_(symbols))
+        .where(OHLCVOrm.symbol.in_(db_symbols))
         .subquery()
     )
     result = await db.execute(

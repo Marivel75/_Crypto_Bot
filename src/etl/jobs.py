@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from src.etl.transformers.cleaner import deduplicate_ohlcv
 from src.shared.constants import PRIORITY_SYMBOLS, TRACKED_SYMBOLS
@@ -38,7 +38,7 @@ async def job_collect_ohlcv_priority() -> None:
     logger.info("Starting job: collect_ohlcv_priority")
     try:
         async with BinanceCollector() as collector:
-            tasks = [_fetch_symbol(collector, symbol, "1m") for symbol in PRIORITY_SYMBOLS]
+            tasks = [_fetch_symbol(collector, symbol, tf) for symbol in PRIORITY_SYMBOLS for tf in ("1m", "1h", "4h")]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
             all_records: list[OHLCVRecord] = []
@@ -71,7 +71,9 @@ async def job_collect_ohlcv_all() -> None:
     logger.info("Starting job: collect_ohlcv_all")
     try:
         async with BinanceCollector() as collector:
-            tasks = [_fetch_symbol(collector, symbol, "5m") for symbol in TRACKED_SYMBOLS]
+            tasks = [
+                _fetch_symbol(collector, symbol, tf) for symbol in TRACKED_SYMBOLS for tf in ("5m", "1h", "4h", "1D")
+            ]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
             all_records: list[OHLCVRecord] = []
@@ -112,7 +114,7 @@ async def job_collect_market_data() -> None:
         async with CoinGeckoCollector() as collector:
             data = await collector.fetch_market_data(settings.tracked_symbols)
             if data:
-                date_str = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
+                date_str = datetime.now(tz=UTC).strftime("%Y-%m-%d")
                 await upload_raw_json(
                     data,
                     "raw",
@@ -131,7 +133,7 @@ async def job_collect_market_data() -> None:
 
                 btc_dominance = (btc_market_cap / total_market_cap * 100) if total_market_cap > 0 else Decimal("0")
 
-                now = datetime.now(tz=timezone.utc)
+                now = datetime.now(tz=UTC)
                 market_record = OHLCVRecord(
                     symbol="MARKET_DATA",
                     price_open=Decimal("0"),
@@ -239,7 +241,7 @@ async def job_export_datasets() -> None:
 
     logger.info("Starting job: export_datasets")
     try:
-        date_str = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d")
+        date_str = datetime.now(tz=UTC).strftime("%Y-%m-%d")
 
         async def _export_one(symbol: str) -> int:
             async with _CONCURRENCY:
@@ -262,14 +264,14 @@ async def job_export_datasets() -> None:
 
 async def job_reconciliation() -> None:
     """Detect gaps in OHLCV data and attempt backfill."""
-    from datetime import timedelta, timezone
+    from datetime import timedelta
 
     from src.etl.collectors.binance import BinanceCollector
     from src.etl.loaders.timescaledb import detect_gaps, insert_ohlcv_batch
 
     logger.info("Starting job: reconciliation")
     try:
-        since = datetime.now(tz=timezone.utc) - timedelta(hours=24)
+        since = datetime.now(tz=UTC) - timedelta(hours=24)
         timeframe = "1h"
         interval_seconds = 3600
 
@@ -297,6 +299,102 @@ async def job_reconciliation() -> None:
         logger.info("job_reconciliation complete")
     except Exception:
         logger.exception("job_reconciliation failed")
+
+
+async def job_enrich_news_nlp() -> None:
+    """Run sentiment analysis and keyword extraction on unprocessed news articles."""
+    from src.etl.loaders.timescaledb import fetch_unprocessed_news, update_news_nlp
+
+    logger.info("Starting job: enrich_news_nlp")
+    try:
+        articles = await fetch_unprocessed_news(limit=100)
+        if not articles:
+            logger.info("job_enrich_news_nlp: no unprocessed articles")
+            return
+
+        from src.ml.nlp.text_mining import extract_keywords
+
+        enriched = 0
+        for article in articles:
+            article_id = str(article["id"])
+            text = f"{article.get('title', '')} {article.get('content', '') or ''}"
+
+            # Extract keywords from the combined text
+            keywords = extract_keywords(text, top_n=10)
+
+            # Simple lexicon-based sentiment as fallback (no trained model needed)
+            sentiment_score = _compute_lexicon_sentiment(text)
+
+            await update_news_nlp(article_id, sentiment_score, keywords)
+            enriched += 1
+
+        logger.info("job_enrich_news_nlp complete: %d articles enriched", enriched)
+    except Exception:
+        logger.exception("job_enrich_news_nlp failed")
+
+
+def _compute_lexicon_sentiment(text: str) -> float:
+    """Compute a simple lexicon-based sentiment score in [-1.0, 1.0]."""
+    positive_words = {
+        "bullish",
+        "surge",
+        "rally",
+        "gains",
+        "soars",
+        "breakout",
+        "adoption",
+        "approval",
+        "approved",
+        "growth",
+        "record",
+        "high",
+        "optimistic",
+        "partnership",
+        "launch",
+        "upgrade",
+        "positive",
+        "profit",
+        "recovery",
+        "etf",
+        "institutional",
+        "milestone",
+        "innovation",
+        "success",
+    }
+    negative_words = {
+        "bearish",
+        "crash",
+        "plunge",
+        "dump",
+        "hack",
+        "exploit",
+        "ban",
+        "fraud",
+        "lawsuit",
+        "decline",
+        "loss",
+        "fear",
+        "risk",
+        "warning",
+        "scam",
+        "vulnerability",
+        "attack",
+        "stolen",
+        "penalty",
+        "fine",
+        "investigation",
+        "collapse",
+        "bankrupt",
+        "negative",
+        "sell-off",
+    }
+    words = text.lower().split()
+    pos_count = sum(1 for w in words if w in positive_words)
+    neg_count = sum(1 for w in words if w in negative_words)
+    total = pos_count + neg_count
+    if total == 0:
+        return 0.0
+    return round((pos_count - neg_count) / total, 4)
 
 
 async def job_evaluate_signal_outcomes() -> None:

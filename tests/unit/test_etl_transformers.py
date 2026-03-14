@@ -8,7 +8,7 @@ Covers:
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
@@ -21,9 +21,9 @@ from src.etl.transformers.indicators import compute_indicators_for_symbol
 from src.shared.models.crypto import OHLCVRecord
 
 # ---------------------------------------------------------------------------
-# Fixed reference timestamp (timezone.utc, no drift across test runs)
+# Fixed reference timestamp (UTC, no drift across test runs)
 # ---------------------------------------------------------------------------
-_T0 = datetime(2024, 1, 15, 0, 0, 0, tzinfo=timezone.utc)
+_T0 = datetime(2024, 1, 15, 0, 0, 0, tzinfo=UTC)
 
 
 # ---------------------------------------------------------------------------

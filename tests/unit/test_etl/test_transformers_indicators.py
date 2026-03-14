@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -17,7 +17,7 @@ from src.shared.models.crypto import IndicatorRecord
 # Helpers
 # ---------------------------------------------------------------------------
 
-_BASE_TS = datetime(2023, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+_BASE_TS = datetime(2023, 1, 1, 0, 0, 0, tzinfo=UTC)
 
 
 def _make_rows(

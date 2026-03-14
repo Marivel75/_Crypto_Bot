@@ -5,6 +5,7 @@ Job schedule:
     collect_ohlcv_all       — every 5 min  (all symbols)
     collect_market_data     — every 5 min  (CoinGecko)
     collect_news            — every 15 min (RSS feeds)
+    enrich_news_nlp         — every 20 min (sentiment + keywords on new articles)
     collect_fear_greed      — every 60 min (Alternative.me)
     compute_indicators      — every 5 min  (RSI, Bollinger, trend)
     reconciliation          — every 60 min (gap detection + backfill)
@@ -29,6 +30,7 @@ from src.etl.jobs import (
     job_collect_ohlcv_all,
     job_collect_ohlcv_priority,
     job_compute_indicators,
+    job_enrich_news_nlp,
     job_evaluate_signal_outcomes,
     job_export_datasets,
     job_reconciliation,
@@ -47,7 +49,7 @@ async def _health_handler(_request: web.Request) -> web.Response:
 
 def build_scheduler() -> AsyncIOScheduler:
     """Construct and return the APScheduler with all ETL jobs registered."""
-    scheduler = AsyncIOScheduler(timezone="timezone.utc")
+    scheduler = AsyncIOScheduler(timezone="UTC")
 
     scheduler.add_job(
         job_collect_ohlcv_priority,
@@ -78,6 +80,14 @@ def build_scheduler() -> AsyncIOScheduler:
         "interval",
         minutes=15,
         id="collect_news",
+        max_instances=1,
+        coalesce=True,
+    )
+    scheduler.add_job(
+        job_enrich_news_nlp,
+        "interval",
+        minutes=20,
+        id="enrich_news_nlp",
         max_instances=1,
         coalesce=True,
     )
@@ -142,7 +152,7 @@ async def _ensure_minio() -> None:
 
 async def main() -> None:
     """Start the ETL worker and block until a shutdown signal is received."""
-    setup_logging("cryptobot.etl")
+    setup_logging("src.etl")
     logger.info("ETL worker starting")
 
     await _ensure_minio()

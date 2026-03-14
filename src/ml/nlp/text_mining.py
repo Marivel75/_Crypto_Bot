@@ -12,7 +12,7 @@ import logging
 import re
 import string
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -377,7 +377,7 @@ async def save_text_mining_result(
         summary=summary,
         entities=result["entities"],
         topics=result["topics"],
-        processed_at=datetime.now(timezone.utc),
+        processed_at=datetime.now(UTC),
     )
     session.add(orm)
     await session.flush()
