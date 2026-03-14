@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoBot — Schemas Projet</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #e2e8f0;
+      --accent: #38bdf8;
+      --accent2: #a78bfa;
+      --accent3: #34d399;
+      --accent4: #fb923c;
+      --muted: #94a3b8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(56,189,248,0.08) 0%, transparent 100%);
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header p { color: var(--muted); font-size: 1.05rem; margin-top: 0.5rem; }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    nav a:hover { color: var(--accent); background: rgba(56,189,248,0.1); }
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .schema-section {
+      margin-bottom: 3rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.25rem; font-weight: 600; }
+    .section-desc {
+      padding: 0.6rem 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.15);
+      flex-wrap: wrap;
+    }
+    .toolbar button {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      padding: 0.3rem 0.7rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: background 0.2s;
+    }
+    .toolbar button:hover { background: var(--accent); color: #000; }
+    .toolbar .hint { color: var(--muted); font-size: 0.75rem; margin-left: auto; }
+    .diagram-viewport {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      cursor: grab;
+      background: radial-gradient(circle at center, rgba(56,189,248,0.03) 0%, transparent 70%);
+    }
+    .diagram-viewport.dragging { cursor: grabbing; }
+    .diagram-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+    }
+    .diagram-inner svg { display: block; max-width: none !important; }
+    .legend {
+      display: flex;
+      gap: 1rem;
+      padding: 0.7rem 1.5rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    #modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.92);
+      flex-direction: column;
+    }
+    #modal.active { display: flex; }
+    #modal-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+    #modal-toolbar button {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+    #modal-toolbar button:hover { background: var(--accent); color: #000; }
+    #modal-toolbar .spacer { flex: 1; }
+    #modal-viewport {
+      flex: 1;
+      overflow: hidden;
+      cursor: grab;
+      position: relative;
+    }
+    #modal-viewport.dragging { cursor: grabbing; }
+    #modal-inner { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+    #modal-inner svg { display: block; max-width: none !important; }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    footer strong { color: var(--accent); }
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.6rem; }
+      main { padding: 1rem 0.5rem 2rem; }
+      .section-header { padding: 1rem; }
+      .section-desc, .toolbar, .legend { padding-left: 1rem; padding-right: 1rem; }
+      .toolbar .hint { display: none; }
+      .diagram-viewport { height: 350px; }
+      nav a { font-size: 0.75rem; padding: 0.3rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CryptoBot — Schemas Projet</h1>
+  <p>Plateforme de surveillance, analytics et signaux de trading crypto — Projet scolaire DTSC</p>
+</header>
+
+<nav>
+  <a href="#s1">1. Parcours</a>
+  <a href="#s2">2. Architecture</a>
+  <a href="#s3">3. Pipeline ETL</a>
+  <a href="#s4">4. Signaux</a>
+  <a href="#s5">5. Cycle de Vie</a>
+  <a href="#s6">6. API</a>
+  <a href="#s7">7. Auth JWT</a>
+  <a href="#s8">8. Base de Donnees</a>
+  <a href="#s9">9. Docker</a>
+  <a href="#s10">10. Roadmap</a>
+</nav>
+
+<div id="modal">
+  <div id="modal-toolbar">
+    <button onclick="modalZoom(0.2)">+</button>
+    <button onclick="modalZoom(-0.2)">-</button>
+    <button onclick="modalFit()">Fit</button>
+    <button onclick="modalReset()">Reset</button>
+    <span class="spacer"></span>
+    <button onclick="closeModal()">Fermer (Esc)</button>
+  </div>
+  <div id="modal-viewport">
+    <div id="modal-inner"></div>
+  </div>
+</div>
+
+<main>
+
+  <!-- Section 1: Parcours Utilisateur -->
+  <section class="schema-section" id="s1">
+    <div class="section-header"><span class="section-num">1</span><h2>Parcours Utilisateur</h2></div>
+    <div class="section-desc">Les trois personas du projet (Trader, Analyste, Investisseur) et leurs interactions avec la plateforme.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+journey
+    title Session Utilisateur CryptoBot
+    section Trader - Noah
+      Ouvrir le Dashboard: 5: Noah
+      Choisir symbole et timeframe: 4: Noah
+      Analyser bougies et Bollinger: 5: Noah
+      Lire les signaux actifs: 5: Noah
+      Verifier convergence multi-TF: 4: Noah
+    section Analyste - Sarah
+      Ouvrir la page Veille: 5: Sarah
+      Filtrer par source et mot-cle: 4: Sarah
+      Analyser le sentiment: 5: Sarah
+      Exporter les articles CSV: 3: Sarah
+    section Investisseur - Aleksandar
+      Se connecter via JWT: 3: Aleksandar
+      Gerer le portfolio: 4: Aleksandar
+      Ajouter a la watchlist: 4: Aleksandar
+      Chatbot IA crypto: 5: Aleksandar
+    </pre></div></div>
+  </section>
+
+  <!-- Section 2: Architecture -->
+  <section class="schema-section" id="s2">
+    <div class="section-header"><span class="section-num">2</span><h2>Architecture Systeme</h2></div>
+    <div class="section-desc">Vue d'ensemble des composants : sources externes, ETL, stockage, moteur ML, API et frontend Streamlit.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+graph TB
+    subgraph EXT["Sources Externes"]
+        BIN["Binance REST API"]
+        CG["CoinGecko Demo"]
+        CCX["CCXT Fallback"]
+        RSS["RSS Feeds x3"]
+        FGI["Fear and Greed Index"]
+    end
+    subgraph ETLP["ETL Pipeline - APScheduler"]
+        COL["Collectors"]
+        TRN["Transformers"]
+        LOD["Loaders"]
+    end
+    subgraph STR["Stockage Persistant"]
+        TDB[("TimescaleDB")]
+        MIO[("MinIO S3")]
+        MLF["MLflow Tracking"]
+    end
+    subgraph MLE["Moteur de Signaux"]
+        REN["Rule Engine"]
+        SGN["Signal Generator"]
+        MLP["ML Predictor"]
+    end
+    subgraph APIL["FastAPI Backend"]
+        AUT["Auth JWT"]
+        CRY["Crypto"]
+        SIG["Signals"]
+        NEW["News"]
+        CHT["Chat LLM"]
+        PRT["Portfolio"]
+    end
+    subgraph FRONT["Streamlit Frontend"]
+        D1["Dashboard"]
+        D2["Veille"]
+        D3["Portfolio"]
+        D4["Analytics"]
+        D5["Performance"]
+    end
+    BIN --> COL
+    CG --> COL
+    CCX --> COL
+    RSS --> COL
+    FGI --> COL
+    COL --> TRN --> LOD
+    LOD --> TDB
+    LOD --> MIO
+    TDB --> REN
+    REN --> SGN
+    MLP -.-> SGN
+    SGN --> TDB
+    SGN --> MLF
+    MLF --> MIO
+    TDB --> AUT
+    TDB --> CRY
+    TDB --> SIG
+    TDB --> NEW
+    TDB --> CHT
+    TDB --> PRT
+    CRY --> D1
+    SIG --> D1
+    NEW --> D2
+    PRT --> D3
+    CHT --> D3
+    CRY --> D4
+    SIG --> D5
+    classDef src fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef proc fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef store fill:#059669,stroke:#34d399,color:#fff
+    classDef ml fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef ui fill:#059669,stroke:#34d399,color:#fff
+    class BIN,CG,CCX,RSS,FGI src
+    class COL,TRN,LOD proc
+    class TDB,MIO,MLF store
+    class REN,SGN,MLP ml
+    class AUT,CRY,SIG,NEW,CHT,PRT src
+    class D1,D2,D3,D4,D5 ui
+    </pre></div></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#1e40af"></span> Sources / API</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span> ETL / Transformation</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#059669"></span> Stockage / Frontend</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span> Moteur ML</div>
+    </div>
+  </section>
+
+  <!-- Section 3: ETL Pipeline -->
+  <section class="schema-section" id="s3">
+    <div class="section-header"><span class="section-num">3</span><h2>Pipeline ETL</h2></div>
+    <div class="section-desc">Les 10 jobs APScheduler de collecte, transformation, enrichissement NLP et export des donnees.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+flowchart LR
+    subgraph SRC["Sources"]
+        S1["Binance"]
+        S2["CoinGecko"]
+        S3["RSS x3"]
+        S4["Alternative.me"]
+    end
+    subgraph JOBS["Jobs APScheduler"]
+        J1["OHLCV Priority\nevery 1 min"]
+        J2["OHLCV All\nevery 5 min"]
+        J3["Market Data\nevery 5 min"]
+        J4["News Collect\nevery 15 min"]
+        J5["Fear Greed\nevery 1h"]
+        J6["Compute Indicators\nevery 5 min"]
+        J7["NLP Enrichment\nevery 20 min"]
+        J8["Signal Outcomes\nevery 1h"]
+        J9["Reconciliation\nevery 1h"]
+        J10["Export Parquet\ndaily 03h00"]
+    end
+    subgraph OUT["Persistence"]
+        DB[("TimescaleDB")]
+        OBJ[("MinIO S3")]
+    end
+    S1 --> J1
+    S1 --> J2
+    S2 --> J3
+    S3 --> J4
+    S4 --> J5
+    J1 --> DB
+    J2 --> DB
+    J3 --> DB
+    J4 --> DB
+    J5 --> DB
+    DB --> J6
+    J6 --> DB
+    DB --> J7
+    J7 --> DB
+    DB --> J8
+    J8 --> DB
+    DB --> J9
+    DB --> J10
+    J10 --> OBJ
+    classDef src fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef job fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef store fill:#059669,stroke:#34d399,color:#fff
+    class S1,S2,S3,S4 src
+    class J1,J2,J3,J4,J5,J6,J7,J8,J9,J10 job
+    class DB,OBJ store
+    </pre></div></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#1e40af"></span> Sources externes</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span> Jobs ETL</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#059669"></span> Stockage</div>
+    </div>
+  </section>
+
+  <!-- Section 4: Signal Generation -->
+  <section class="schema-section" id="s4">
+    <div class="section-header"><span class="section-num">4</span><h2>Generation de Signaux</h2></div>
+    <div class="section-desc">Du calcul d'indicateurs a l'emission de signaux : regles, ponderation, seuil de confiance et verification des frais.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+flowchart TD
+    A["Indicators depuis TimescaleDB"] --> B["Rule Engine"]
+    B --> C["RSI Multi-TF\nPoids 25%"]
+    B --> D["Bollinger Bands\nPoids 25%"]
+    B --> E["Harmonic Patterns\nPoids 30%"]
+    B --> F["Trend Analysis\nPoids 20%"]
+    C --> G["Aggregation Ponderee"]
+    D --> G
+    E --> G
+    F --> G
+    G --> H{"ML Disponible ?"}
+    H -->|Oui| I["Blend 60% ML + 40% Rules"]
+    H -->|Non| J["Confidence de base"]
+    I --> J
+    J --> K["Ajustement Sentiment News\n+/- 5 pp"]
+    K --> L{"Confidence >= 0.6 ?"}
+    L -->|Non| M["Signal Supprime"]
+    L -->|Oui| N{"Frais < 50% gain ?"}
+    N -->|Non| M
+    N -->|Oui| P["Suggestion Leverage\n5x / 10x / 20x"]
+    P --> Q["Emission TradingSignal"]
+    Q --> R[("Sauvegarde DB")]
+    Q --> S["Log MLflow"]
+    classDef input fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef rule fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef check fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef ok fill:#059669,stroke:#34d399,color:#fff
+    classDef fail fill:#dc2626,stroke:#f87171,color:#fff
+    class A input
+    class B,C,D,E,F,G,I,J,K rule
+    class H,L,N check
+    class P,Q,R,S ok
+    class M fail
+    </pre></div></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#1e40af"></span> Entree donnees</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span> Regles et calculs</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span> Verifications</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#059669"></span> Resultat positif</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> Signal supprime</div>
+    </div>
+  </section>
+
+  <!-- Section 5: Signal Lifecycle -->
+  <section class="schema-section" id="s5">
+    <div class="section-header"><span class="section-num">5</span><h2>Cycle de Vie d'un Signal</h2></div>
+    <div class="section-desc">Machine a etats : de l'evaluation des indicateurs a la verification post-hoc des resultats (1h, 4h, 1j).</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+stateDiagram-v2
+    [*] --> RuleEvaluation: Indicateurs prets
+    RuleEvaluation --> Aggregation: Regles declenchees
+    RuleEvaluation --> Supprime: Aucune regle
+    Aggregation --> BlendML: ML disponible
+    Aggregation --> CheckConfidence: Rules seules
+    BlendML --> CheckConfidence
+    CheckConfidence --> Supprime: Confidence inferieure a 0.6
+    CheckConfidence --> CheckFees: Confidence suffisante
+    CheckFees --> Supprime: Frais trop eleves
+    CheckFees --> Emis: Frais OK
+    Emis --> Actif: Sauve en base
+    Actif --> Evalue: Apres 1h 4h 1d
+    Evalue --> Correct: Direction confirmee
+    Evalue --> Incorrect: Direction inversee
+    Supprime --> [*]
+    Correct --> [*]
+    Incorrect --> [*]
+    </pre></div></div>
+  </section>
+
+  <!-- Section 6: API Interactions -->
+  <section class="schema-section" id="s6">
+    <div class="section-header"><span class="section-num">6</span><h2>Interactions API</h2></div>
+    <div class="section-desc">Sequence des appels entre le frontend Streamlit, le backend FastAPI, TimescaleDB et les LLM.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+sequenceDiagram
+    participant UI as Streamlit
+    participant API as FastAPI
+    participant DB as TimescaleDB
+    participant LLM as LLM Provider
+    UI->>API: GET /crypto/BTC/prices?tf=4h
+    API->>DB: SELECT FROM crypto_prices
+    DB-->>API: OHLCV records
+    API-->>UI: ApiResponse avec data
+    UI->>API: GET /signals/active
+    API->>DB: SELECT signals WHERE age < 24h
+    DB-->>API: Signals + outcomes
+    API-->>UI: Liste des signaux
+    UI->>API: POST /portfolio (Bearer JWT)
+    API->>API: Decode JWT + validate
+    API->>DB: INSERT INTO portfolio
+    DB-->>API: New entry
+    API-->>UI: PortfolioEntry
+    UI->>API: POST /chat (Bearer JWT)
+    API->>DB: Fetch user context
+    API->>LLM: System prompt + message
+    LLM-->>API: Response text
+    API-->>UI: Reply + disclaimer
+    </pre></div></div>
+  </section>
+
+  <!-- Section 7: Auth JWT -->
+  <section class="schema-section" id="s7">
+    <div class="section-header"><span class="section-num">7</span><h2>Authentification JWT</h2></div>
+    <div class="section-desc">Flux complet : connexion bcrypt, generation JWT HS256, et acces aux ressources protegees.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+sequenceDiagram
+    participant U as Utilisateur
+    participant F as Streamlit
+    participant A as FastAPI
+    participant DB as TimescaleDB
+    U->>F: Email + mot de passe
+    F->>A: POST /auth/login
+    A->>DB: SELECT user WHERE email = ?
+    DB-->>A: UserOrm
+    A->>A: bcrypt verify password
+    A->>A: JWT encode user_id + exp
+    A-->>F: access_token
+    F->>F: Stocker dans session_state
+    Note over U,DB: Requetes protegees
+    U->>F: Voir Portfolio
+    F->>A: GET /portfolio + Bearer token
+    A->>A: JWT decode + validate
+    A->>DB: SELECT portfolio WHERE user_id
+    DB-->>A: Entries
+    A-->>F: ApiResponse portfolio
+    F-->>U: Tableau des positions
+    </pre></div></div>
+  </section>
+
+  <!-- Section 8: ER Diagram -->
+  <section class="schema-section" id="s8">
+    <div class="section-header"><span class="section-num">8</span><h2>Schema Base de Donnees</h2></div>
+    <div class="section-desc">Les 9 tables TimescaleDB : crypto_prices (hypertable), indicateurs, signaux, news, users, portfolio, watchlist.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+erDiagram
+    USERS ||--o{ PORTFOLIO : possede
+    USERS ||--o{ WATCHLIST : surveille
+    TRADING_SIGNALS ||--o| SIGNAL_OUTCOMES : evalue
+    NEWS_ARTICLES ||--o| TEXT_MINING : analyse
+    USERS {
+        uuid id PK
+        string username UK
+        string email UK
+        string password_hash
+        string persona_type
+        json preferences
+        datetime created_at
+    }
+    CRYPTO_PRICES {
+        string symbol PK
+        string timeframe PK
+        datetime timestamp PK
+        decimal price_open
+        decimal price_high
+        decimal price_low
+        decimal price_close
+        decimal volume_24h
+        string source
+    }
+    INDICATORS {
+        uuid id PK
+        string symbol
+        string timeframe
+        datetime timestamp
+        decimal rsi
+        decimal bollinger_upper
+        decimal bollinger_lower
+        string harmonic_pattern
+        decimal trend_slope
+        string trend_type
+    }
+    TRADING_SIGNALS {
+        uuid id PK
+        string symbol
+        string signal_type
+        decimal confidence_score
+        string timeframe_primary
+        json rules_triggered
+        int leverage_suggested
+        string model_version
+        datetime created_at
+    }
+    SIGNAL_OUTCOMES {
+        uuid id PK
+        uuid signal_id FK
+        decimal price_at_signal
+        decimal price_after_1h
+        decimal price_after_4h
+        decimal pnl_simulated
+        boolean was_correct
+    }
+    NEWS_ARTICLES {
+        uuid id PK
+        string title
+        string source
+        string url UK
+        decimal sentiment_score
+        json keywords
+        datetime published_at
+    }
+    TEXT_MINING {
+        uuid id PK
+        uuid article_id FK
+        json word_cloud
+        text summary
+        json entities
+    }
+    PORTFOLIO {
+        uuid id PK
+        uuid user_id FK
+        string symbol
+        decimal quantity
+        decimal entry_price
+        text notes
+    }
+    WATCHLIST {
+        uuid id PK
+        uuid user_id FK
+        string symbol
+        datetime added_at
+    }
+    </pre></div></div>
+  </section>
+
+  <!-- Section 9: Docker -->
+  <section class="schema-section" id="s9">
+    <div class="section-header"><span class="section-num">9</span><h2>Infrastructure Docker</h2></div>
+    <div class="section-desc">Les 12 services Docker Compose sur 2 reseaux (frontend-net, backend-net), avec Nginx reverse proxy.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+graph LR
+    subgraph INET["Internet"]
+        USER["Navigateur"]
+    end
+    subgraph FNET["frontend-net"]
+        NGX["Nginx\n80 / 443"]
+        FE["Streamlit\n8501"]
+    end
+    subgraph BNET["backend-net"]
+        API["FastAPI\n8000"]
+        ETL["ETL Worker"]
+        MLW["ML Worker"]
+        TDB[("TimescaleDB\n5432")]
+        MIO[("MinIO\n9000")]
+        MLF["MLflow\n5000"]
+        PROM["Prometheus\n9090"]
+        GRAF["Grafana\n3000"]
+        PGE["pg-exporter"]
+        NGE["nginx-exporter"]
+    end
+    USER --> NGX
+    NGX --> FE
+    NGX --> API
+    FE --> API
+    API --> TDB
+    ETL --> TDB
+    ETL --> MIO
+    MLW --> TDB
+    MLW --> MLF
+    MLF --> MIO
+    MLF --> TDB
+    PROM --> API
+    PROM --> PGE
+    PROM --> NGE
+    PGE --> TDB
+    GRAF --> PROM
+    classDef proxy fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef app fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef worker fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef db fill:#059669,stroke:#34d399,color:#fff
+    classDef mon fill:#64748b,stroke:#94a3b8,color:#fff
+    class NGX proxy
+    class FE,API app
+    class ETL,MLW worker
+    class TDB,MIO,MLF db
+    class PROM,GRAF,PGE,NGE mon
+    </pre></div></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span> Reverse proxy</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#1e40af"></span> Applications</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span> Workers</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#059669"></span> Bases de donnees</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#64748b"></span> Monitoring</div>
+    </div>
+  </section>
+
+  <!-- Section 10: Roadmap -->
+  <section class="schema-section" id="s10">
+    <div class="section-header"><span class="section-num">10</span><h2>Roadmap du Projet</h2></div>
+    <div class="section-desc">Phase 1 (MVP livre), Phase 2 (ML supervisee en cours), Phase 3 (backlog futur).</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+flowchart TD
+    subgraph P1["Phase 1 - MVP Actuel"]
+        P1A["Rule Engine\nRSI + BB + Harmonic + Trend"]
+        P1B["ETL Pipeline\nBinance + CoinGecko + RSS"]
+        P1C["FastAPI Backend\n8 routers + JWT"]
+        P1D["Streamlit 5 pages\nDashboard + Veille + Portfolio"]
+        P1E["TimescaleDB + MinIO"]
+        P1F["Docker Compose + Nginx"]
+        P1G["Prometheus + Grafana"]
+        P1H["CI/CD GitHub Actions"]
+    end
+    subgraph P2["Phase 2 - ML Supervisee"]
+        P2A["XGBoost + LightGBM"]
+        P2B["LSTM Time Series"]
+        P2C["Walk-Forward Backtesting"]
+        P2D["DVC Dataset Versioning"]
+        P2E["MLflow Experiments"]
+        P2F["Drift Detection"]
+    end
+    subgraph P3["Phase 3 - Backlog"]
+        P3A["WebSocket Real-time"]
+        P3B["Kubernetes"]
+        P3C["NLP Avance"]
+        P3D["Sentiment Social"]
+        P3E["Multi-langue etendu"]
+    end
+    P1 --> P2
+    P2 --> P3
+    classDef done fill:#059669,stroke:#34d399,color:#fff
+    classDef wip fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef future fill:#64748b,stroke:#94a3b8,color:#fff
+    class P1A,P1B,P1C,P1D,P1E,P1F,P1G,P1H done
+    class P2A,P2B,P2C,P2D,P2E,P2F wip
+    class P3A,P3B,P3C,P3D,P3E future
+    </pre></div></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#059669"></span> Phase 1 - Livre</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span> Phase 2 - En cours</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#64748b"></span> Phase 3 - Backlog</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <strong>CryptoBot</strong> — Documentation interactive generee le 14 mars 2026 — Jules Willard / DTSC
+</footer>
+
+<script>
+  /* Mermaid init */
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#1e40af',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#3b82f6',
+      lineColor: '#64748b',
+      secondaryColor: '#7c3aed',
+      tertiaryColor: '#1e293b',
+      fontSize: '16px'
+    },
+    flowchart: { curve: 'basis', padding: 20, htmlLabels: true, useMaxWidth: false },
+    sequence: { mirrorActors: false, actorMargin: 60, useMaxWidth: false, width: 200 },
+    er: { fontSize: 14, useMaxWidth: false },
+    journey: { useMaxWidth: false },
+    state: { useMaxWidth: false }
+  });
+
+  var states = new Map();
+  var MIN_S = 0.2, MAX_S = 5, STEP = 0.2;
+
+  function gs(vp) {
+    if (!states.has(vp)) states.set(vp, {s:1, tx:0, ty:0, drag:false, sx:0, sy:0});
+    return states.get(vp);
+  }
+  function at(inner, st) {
+    inner.style.transform = 'translate('+st.tx+'px,'+st.ty+'px) scale('+st.s+')';
+  }
+  function cl(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function td(t) {
+    var dx=t[0].clientX-t[1].clientX, dy=t[0].clientY-t[1].clientY;
+    return Math.sqrt(dx*dx+dy*dy);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    mermaid.run().then(function() {
+      document.querySelectorAll('.diagram-viewport').forEach(initVP);
+    });
+  });
+
+  function initVP(vp) {
+    var inner = vp.querySelector('.diagram-inner');
+    if (!inner) return;
+    var st = gs(vp);
+
+    vp.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      var r = vp.getBoundingClientRect();
+      var mx = e.clientX - r.left, my = e.clientY - r.top;
+      var prev = st.s;
+      st.s = cl(prev + (e.deltaY > 0 ? -0.1 : 0.1), MIN_S, MAX_S);
+      var ratio = st.s / prev;
+      st.tx = mx - (mx - st.tx) * ratio;
+      st.ty = my - (my - st.ty) * ratio;
+      at(inner, st);
+    }, {passive: false});
+
+    vp.addEventListener('mousedown', function(e) {
+      if (e.button !== 0) return;
+      st.drag = true; st.sx = e.clientX - st.tx; st.sy = e.clientY - st.ty;
+      vp.classList.add('dragging');
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!st.drag) return;
+      st.tx = e.clientX - st.sx; st.ty = e.clientY - st.sy;
+      at(inner, st);
+    });
+    document.addEventListener('mouseup', function() {
+      if (!st.drag) return;
+      st.drag = false; vp.classList.remove('dragging');
+    });
+
+    vp.addEventListener('dblclick', function() { openMdl(vp); });
+
+    var ld = 0;
+    vp.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) { ld = td(e.touches); }
+      else if (e.touches.length === 1) {
+        st.drag = true; st.sx = e.touches[0].clientX - st.tx; st.sy = e.touches[0].clientY - st.ty;
+      }
+    });
+    vp.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      if (e.touches.length === 2) {
+        var d = td(e.touches), prev = st.s;
+        st.s = cl(prev * (d / ld), MIN_S, MAX_S);
+        var r = vp.getBoundingClientRect();
+        var cx = (e.touches[0].clientX + e.touches[1].clientX)/2 - r.left;
+        var cy = (e.touches[0].clientY + e.touches[1].clientY)/2 - r.top;
+        var ratio = st.s / prev;
+        st.tx = cx - (cx - st.tx) * ratio; st.ty = cy - (cy - st.ty) * ratio;
+        ld = d; at(inner, st);
+      } else if (e.touches.length === 1 && st.drag) {
+        st.tx = e.touches[0].clientX - st.sx; st.ty = e.touches[0].clientY - st.sy;
+        at(inner, st);
+      }
+    }, {passive: false});
+    vp.addEventListener('touchend', function() { st.drag = false; });
+  }
+
+  /* Toolbar */
+  function getVP(btn) { return btn.closest('.schema-section').querySelector('.diagram-viewport'); }
+  function zoomIn(btn) {
+    var vp = getVP(btn), inner = vp.querySelector('.diagram-inner'), st = gs(vp);
+    var r = vp.getBoundingClientRect(), cx = r.width/2, cy = r.height/2, prev = st.s;
+    st.s = cl(prev + STEP, MIN_S, MAX_S);
+    var ratio = st.s / prev;
+    st.tx = cx - (cx - st.tx) * ratio; st.ty = cy - (cy - st.ty) * ratio;
+    at(inner, st);
+  }
+  function zoomOut(btn) {
+    var vp = getVP(btn), inner = vp.querySelector('.diagram-inner'), st = gs(vp);
+    var r = vp.getBoundingClientRect(), cx = r.width/2, cy = r.height/2, prev = st.s;
+    st.s = cl(prev - STEP, MIN_S, MAX_S);
+    var ratio = st.s / prev;
+    st.tx = cx - (cx - st.tx) * ratio; st.ty = cy - (cy - st.ty) * ratio;
+    at(inner, st);
+  }
+  function resetZoom(btn) {
+    var vp = getVP(btn), inner = vp.querySelector('.diagram-inner'), st = gs(vp);
+    st.s = 1; st.tx = 0; st.ty = 0; at(inner, st);
+  }
+  function openFullscreen(btn) { openMdl(getVP(btn)); }
+
+  /* Modal */
+  var modal = document.getElementById('modal');
+  var mdlVP = document.getElementById('modal-viewport');
+  var mdlIn = document.getElementById('modal-inner');
+  var ms = {s:1, tx:0, ty:0, drag:false, sx:0, sy:0};
+
+  function openMdl(vp) {
+    var svg = vp.querySelector('svg');
+    if (!svg) return;
+    while (mdlIn.firstChild) mdlIn.removeChild(mdlIn.firstChild);
+    mdlIn.appendChild(svg.cloneNode(true));
+    ms.s = 1; ms.tx = 0; ms.ty = 0; at(mdlIn, ms);
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    initMdlEvts();
+  }
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+  function modalZoom(d) {
+    var r = mdlVP.getBoundingClientRect(), cx = r.width/2, cy = r.height/2, prev = ms.s;
+    ms.s = cl(prev + d, MIN_S, MAX_S);
+    var ratio = ms.s / prev;
+    ms.tx = cx - (cx - ms.tx) * ratio; ms.ty = cy - (cy - ms.ty) * ratio;
+    at(mdlIn, ms);
+  }
+  function modalReset() { ms.s = 1; ms.tx = 0; ms.ty = 0; at(mdlIn, ms); }
+  function modalFit() {
+    ms.s = 1; ms.tx = 0; ms.ty = 0; at(mdlIn, ms);
+    var svg = mdlIn.querySelector('svg');
+    if (!svg) return;
+    var cr = mdlVP.getBoundingClientRect(), sr = svg.getBoundingClientRect();
+    if (sr.width === 0 || sr.height === 0) return;
+    ms.s = Math.min(cr.width / sr.width, cr.height / sr.height) * 0.9;
+    at(mdlIn, ms);
+    sr = svg.getBoundingClientRect();
+    ms.tx = (cr.width - sr.width) / 2; ms.ty = (cr.height - sr.height) / 2;
+    at(mdlIn, ms);
+  }
+
+  function initMdlEvts() {
+    mdlVP.onwheel = function(e) {
+      e.preventDefault();
+      var r = mdlVP.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+      var prev = ms.s;
+      ms.s = cl(prev + (e.deltaY > 0 ? -0.1 : 0.1), MIN_S, MAX_S);
+      var ratio = ms.s / prev;
+      ms.tx = mx - (mx - ms.tx) * ratio; ms.ty = my - (my - ms.ty) * ratio;
+      at(mdlIn, ms);
+    };
+    mdlVP.onmousedown = function(e) {
+      if (e.button !== 0) return;
+      ms.drag = true; ms.sx = e.clientX - ms.tx; ms.sy = e.clientY - ms.ty;
+      mdlVP.classList.add('dragging');
+    };
+    var ld2 = 0;
+    mdlVP.ontouchstart = function(e) {
+      if (e.touches.length === 2) ld2 = td(e.touches);
+      else if (e.touches.length === 1) {
+        ms.drag = true; ms.sx = e.touches[0].clientX - ms.tx; ms.sy = e.touches[0].clientY - ms.ty;
+      }
+    };
+    mdlVP.ontouchmove = function(e) {
+      e.preventDefault();
+      if (e.touches.length === 2) {
+        var d = td(e.touches), prev = ms.s;
+        ms.s = cl(prev * (d / ld2), MIN_S, MAX_S);
+        var r = mdlVP.getBoundingClientRect();
+        var cx = (e.touches[0].clientX + e.touches[1].clientX)/2 - r.left;
+        var cy = (e.touches[0].clientY + e.touches[1].clientY)/2 - r.top;
+        var ratio = ms.s / prev;
+        ms.tx = cx - (cx - ms.tx) * ratio; ms.ty = cy - (cy - ms.ty) * ratio;
+        ld2 = d; at(mdlIn, ms);
+      } else if (e.touches.length === 1 && ms.drag) {
+        ms.tx = e.touches[0].clientX - ms.sx; ms.ty = e.touches[0].clientY - ms.sy;
+        at(mdlIn, ms);
+      }
+    };
+    mdlVP.ontouchend = function() { ms.drag = false; };
+  }
+  document.addEventListener('mousemove', function(e) {
+    if (!ms.drag) return;
+    ms.tx = e.clientX - ms.sx; ms.ty = e.clientY - ms.sy; at(mdlIn, ms);
+  });
+  document.addEventListener('mouseup', function() {
+    ms.drag = false; mdlVP.classList.remove('dragging');
+  });
+</script>
+
+</body>
+</html>
