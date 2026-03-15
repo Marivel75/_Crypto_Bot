@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CryptoBot — Schemas Projet</title>
+  <title>CryptoBot — Schemas &amp; Architecture (Phase 2 Complete)</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     :root {
@@ -16,6 +16,8 @@
       --accent3: #34d399;
       --accent4: #fb923c;
       --muted: #94a3b8;
+      --green: #06ffa5;
+      --red: #ff4757;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -40,6 +42,17 @@
       background-clip: text;
     }
     header p { color: var(--muted); font-size: 1.05rem; margin-top: 0.5rem; }
+    .subtitle { font-size: 0.9em; color: var(--accent); margin: 10px 0 15px 0; }
+    .completion-metrics {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 15px;
+      font-size: 0.95em;
+    }
+    .metric { color: var(--text); }
+    .metric.done { color: var(--green); }
+    .metric.todo { color: var(--accent2); }
     nav {
       position: sticky;
       top: 0;
@@ -54,6 +67,26 @@
       overflow-x: auto;
       scrollbar-width: thin;
       scrollbar-color: var(--border) transparent;
+      flex-wrap: wrap;
+    }
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 100%;
+    }
+    .nav-label {
+      font-weight: bold;
+      font-size: 0.75em;
+      color: var(--accent);
+      text-transform: uppercase;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
     }
     nav a {
       color: var(--muted);
@@ -66,6 +99,11 @@
     }
     nav a:hover { color: var(--accent); background: rgba(56,189,248,0.1); }
     main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .separator {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 30px 0;
+    }
     .schema-section {
       margin-bottom: 3rem;
       background: var(--card);
@@ -79,6 +117,7 @@
       gap: 1rem;
       padding: 1.2rem 1.5rem;
       border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
     }
     .section-num {
       display: inline-flex;
@@ -94,12 +133,46 @@
       flex-shrink: 0;
     }
     .section-header h2 { font-size: 1.25rem; font-weight: 600; }
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-exist {
+      background-color: rgba(6, 255, 165, 0.2);
+      color: var(--green);
+      border: 1px solid var(--green);
+    }
+    .badge-new {
+      background-color: rgba(167, 139, 250, 0.2);
+      color: var(--accent2);
+      border: 1px solid var(--accent2);
+    }
+    .badge-decision {
+      background-color: rgba(251, 146, 60, 0.2);
+      color: var(--accent4);
+      border: 1px solid var(--accent4);
+    }
     .section-desc {
       padding: 0.6rem 1.5rem;
       color: var(--muted);
       font-size: 0.9rem;
       border-bottom: 1px solid var(--border);
     }
+    .why-box {
+      background-color: rgba(56, 189, 248, 0.1);
+      border-left: 3px solid var(--accent);
+      padding: 12px 15px;
+      margin-top: 15px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--text);
+    }
+    .why-box strong { color: var(--accent); }
     .toolbar {
       display: flex;
       align-items: center;
@@ -136,7 +209,8 @@
       left: 0;
       transform-origin: 0 0;
     }
-    .diagram-inner svg { display: block; max-width: none !important; }
+    .diagram-inner svg { display: block; max-width: none !important; pointer-events: none; }
+    .diagram-inner { pointer-events: auto; }
     .legend {
       display: flex;
       gap: 1rem;
@@ -146,6 +220,8 @@
     }
     .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); }
     .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .why-box { padding: 0.8rem 1.5rem; border-top: 1px solid var(--border); background: rgba(0,0,0,0.2); color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+    .why-box strong { color: var(--accent4); }
     #modal {
       display: none;
       position: fixed;
@@ -183,7 +259,7 @@
     }
     #modal-viewport.dragging { cursor: grabbing; }
     #modal-inner { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
-    #modal-inner svg { display: block; max-width: none !important; }
+    #modal-inner svg { display: block; max-width: none !important; pointer-events: none; }
     footer {
       text-align: center;
       padding: 2rem 1rem;
@@ -206,21 +282,45 @@
 <body>
 
 <header>
-  <h1>CryptoBot — Schemas Projet</h1>
-  <p>Plateforme de surveillance, analytics et signaux de trading crypto — Projet scolaire DTSC</p>
+  <h1>CryptoBot — Schemas &amp; Architecture</h1>
+  <p class="subtitle">Plateforme de surveillance, analytics et signaux de trading crypto — Source de verite: <em>Crypto_bot_cadrage_V2.pdf</em></p>
+  <div class="completion-metrics">
+    <span class="metric done">✓ Phase 1 (67% complete)</span>
+    <span class="metric todo">⚡ Phase 2 (33% a developper)</span>
+  </div>
 </header>
 
 <nav>
-  <a href="#s1">1. Parcours</a>
-  <a href="#s2">2. Architecture</a>
-  <a href="#s3">3. Pipeline ETL</a>
-  <a href="#s4">4. Signaux</a>
-  <a href="#s5">5. Cycle de Vie</a>
-  <a href="#s6">6. API</a>
-  <a href="#s7">7. Auth JWT</a>
-  <a href="#s8">8. Base de Donnees</a>
-  <a href="#s9">9. Docker</a>
-  <a href="#s10">10. Roadmap</a>
+  <div class="nav-group">
+    <div class="nav-label">✓ Existant (67%)</div>
+    <div class="nav-links">
+      <a href="#s1">1. Parcours</a>
+      <a href="#s2">2. Architecture</a>
+      <a href="#s3">3. Pipeline ETL</a>
+      <a href="#s4">4. Signaux</a>
+      <a href="#s5">5. Cycle de Vie</a>
+      <a href="#s6">6. API</a>
+      <a href="#s7">7. Auth JWT</a>
+      <a href="#s8">8. BD Existante</a>
+      <a href="#s9">9. Docker</a>
+      <a href="#s10">10. Roadmap</a>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">⚡ A Developper (33%)</div>
+    <div class="nav-links">
+      <a href="#s11">11. Conformite</a>
+      <a href="#s12">12. Paper Trading</a>
+      <a href="#s13">13. ML Ensemble</a>
+      <a href="#s14">14. LSTM Multi-TF</a>
+      <a href="#s15">15. RL Pipeline</a>
+      <a href="#s16">16. On-Chain+Regul.</a>
+      <a href="#s17">17. Alertes Enrichies</a>
+      <a href="#s18">18. BD Complete</a>
+      <a href="#s19">19. Architecture 100%</a>
+      <a href="#s20">20. Decisions</a>
+    </div>
+  </div>
 </nav>
 
 <div id="modal">
@@ -771,7 +871,7 @@ graph LR
 
   <!-- Section 10: Roadmap -->
   <section class="schema-section" id="s10">
-    <div class="section-header"><span class="section-num">10</span><h2>Roadmap du Projet</h2></div>
+    <div class="section-header"><span class="section-num">10</span><h2>Roadmap du Projet</h2><span class="badge badge-exist">Existant</span></div>
     <div class="section-desc">Phase 1 (MVP livre), Phase 2 (ML supervisee en cours), Phase 3 (backlog futur).</div>
     <div class="toolbar">
       <button onclick="zoomIn(this)">+</button>
@@ -823,10 +923,422 @@ flowchart TD
     </div>
   </section>
 
+  <div class="separator"></div>
+
+  <!-- Section 11: Conformite -->
+  <section class="schema-section" id="s11">
+    <div class="section-header"><span class="section-num">11</span><h2>Matrice de Couverture Phase 2</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">Couverture fonctionnelle : 67% Phase 1 existant, 33% Phase 2 a developper.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+pie title Couverture Fonctionnelle Phase 2
+    "Existant (67%)" : 67
+    "A Developper (33%)" : 33
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Phase 1 couvre ETL, rule engine, et tracking portfolio. Phase 2 ajoute ML models, paper trading, on-chain data, et alertes avancees.</div>
+  </section>
+
+  <!-- Section 12: Paper Trading Engine -->
+  <section class="schema-section" id="s12">
+    <div class="section-header"><span class="section-num">12</span><h2>Paper Trading &amp; Position Lifecycle</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">Simulation de trading : positions virtuelles, SL/TP automation, funded rates, et lifecycle tracking.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+flowchart LR
+    A["Signal: BUY"] --> B["Create Virtual Position"]
+    B --> C["Entry Price = Live"]
+    C --> D["Add SL/TP Levels"]
+    D --> E["Monitor Ticks"]
+    E --> F{Hit SL?}
+    F -->|Yes| G["Close at SL"]
+    F -->|No| H{Hit TP?}
+    H -->|Yes| I["Partial Exit 50%"]
+    H -->|No| J["Continue Monitor"]
+    I --> K["Move SL to Entry"]
+    K --> E
+    G --> L["Log Trade Results"]
+    L --> M["Update PnL Metrics"]
+    classDef start fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef process fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef decision fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef done fill:#059669,stroke:#34d399,color:#fff
+    class A start
+    class B,C,D,E,I,K process
+    class F,H decision
+    class G,L,M done
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Paper trading valide la qualite des signaux sans capital reel ; SL/TP automation enseigne la discipline de risque.</div>
+    <div class="why-box"><strong>Decision:</strong> Positions simulees utilisent prix live Binance; leverage respecte regle 2x margin; funded rates appliquees aux positions long-term.</div>
+  </section>
+
+  <!-- Section 13: ML Ensemble -->
+  <section class="schema-section" id="s13">
+    <div class="section-header"><span class="section-num">13</span><h2>ML Ensemble Voting (30%+20%+20%+15%+15%)</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">Agregation ponderes : Rule Engine 30%, XGBoost 20%, LightGBM 20%, LSTM 15%, RL 15%.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+flowchart LR
+    A["Rule Engine: 30%"] --> B["Vote Aggregator"]
+    C["XGBoost: 20%"] --> B
+    D["LightGBM: 20%"] --> B
+    E["LSTM: 15%"] --> B
+    F["RL Agent: 15%"] --> B
+    B --> G["Weighted Voting"]
+    G --> H{Consensus >= 60%?}
+    H -->|Yes| I["Emit BUY/SELL"]
+    H -->|No| J["HOLD"]
+    I --> K["Set Confidence"]
+    K --> L["Log Votes &amp; Weights"]
+    classDef model fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef agg fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef decision fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef output fill:#059669,stroke:#34d399,color:#fff
+    class A,C,D,E,F model
+    class B,G agg
+    class H decision
+    class I,J,K,L output
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Ensemble methods reduisent overfit risk; voting empeche dominance d'un seul model; phase 1 rule engine seed training data.</div>
+    <div class="why-box"><strong>Decision:</strong> Weighted voting utilise historical backtest Sharpe comme poids; seuil a 60% consensus minimise false signals.</div>
+  </section>
+
+  <!-- Section 14: LSTM Multi-Timeframe -->
+  <section class="schema-section" id="s14">
+    <div class="section-header"><span class="section-num">14</span><h2>LSTM Multi-Timeframe Ensemble</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">3 LSTM (4h, 1d, 1w) predisent retours ; consensus multi-TF assure robustesse.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+flowchart LR
+    A["LSTM 4h<br/>5 layers"] --> B["Return<br/>Prediction"]
+    C["LSTM 1d<br/>5 layers"] --> D["Return<br/>Prediction"]
+    E["LSTM 1w<br/>5 layers"] --> F["Return<br/>Prediction"]
+    B --> G["Consensus Module"]
+    D --> G
+    F --> G
+    G --> H["Multi-Frame Check"]
+    H --> I{All 3 Agree?}
+    I -->|Yes| J["High<br/>Confidence"]
+    I -->|No| K["Reduce<br/>Confidence"]
+    J --> L["Emit Signal"]
+    K --> L
+    classDef lstm fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef predict fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef consensus fill:#0ea5e9,stroke:#06b6d4,color:#fff
+    classDef decision fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef output fill:#059669,stroke:#34d399,color:#fff
+    class A,C,E lstm
+    class B,D,F predict
+    class G,H consensus
+    class I decision
+    class J,K,L output
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Multi-timeframe LSTM capture trend strength a differentes echelles; consensus protege contre false breakouts.</div>
+    <div class="why-box"><strong>Decision:</strong> LSTM entraine sur retours (non prix); walk-forward validation 12mo training, 1mo test; dropout 0.3 anti-overfit.</div>
+  </section>
+
+  <!-- Section 15: RL Agent -->
+  <section class="schema-section" id="s15">
+    <div class="section-header"><span class="section-num">15</span><h2>RL Agent - Deep Q-Learning</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">Q-Learning adapte exit strategies ; apprentissage par renforcement sur PnL realise.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+stateDiagram-v2
+    [*] --> Observe
+    Observe --> State: Current TF Candle
+    State --> ChooseAction: Epsilon-Greedy
+    ChooseAction --> Hold: Q=0
+    ChooseAction --> Buy: Q>theta
+    ChooseAction --> Sell: Q<-theta
+    Hold --> Transition: Next Candle
+    Buy --> Transition
+    Sell --> Transition
+    Transition --> ComputeReward: Delta PnL
+    ComputeReward --> UpdateQ: Bellman Equation
+    UpdateQ --> Done: Episode End?
+    Done -->|No| Observe
+    Done -->|Yes| [*]
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> RL apprend adaptive exit strategies au-dela SL/TP fixes ; Q-Learning evite Monte Carlo / tabular Q complexity.</div>
+    <div class="why-box"><strong>Decision:</strong> DQN avec replay buffer (10k transitions); reward = realized PnL - slippage; train sur 2-year rolling windows; inference live tous les 4h.</div>
+  </section>
+
+  <!-- Section 16: On-Chain + Regulatory -->
+  <section class="schema-section" id="s16">
+    <div class="section-header"><span class="section-num">16</span><h2>On-Chain + Regulatory Data Collectors</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">Mempool.space whale detection, Etherscan smart contracts, ESMA/SEC regulatory news.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+flowchart LR
+    A["Mempool.space REST"] --> B{Available?}
+    B -->|Yes| C["Parse Transactions"]
+    B -->|No| D["Fallback:<br/>Blockchain.com"]
+    D --> C
+    C --> E["Extract Large Txns"]
+    E --> F["Whale Detection"]
+    F --> G["Etherscan<br/>Optional"]
+    G --> H["Smart Contract<br/>Events"]
+    I["ESMA RSS"] --> J["Regulatory News"]
+    K["SEC RSS"] --> J
+    L["Phoenix News<br/>Scrape"] --> J
+    J --> M["Extract Sentiment"]
+    M --> N["TimescaleDB:<br/>on_chain table"]
+    F --> N
+    H --> N
+    classDef source fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef fallback fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef process fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef output fill:#059669,stroke:#34d399,color:#fff
+    class A,I,K,L source
+    class D fallback
+    class C,E,F,G,H,J,M process
+    class N output
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Whale moves on-chain fournissent early signals; regulatory feeds contextualisent market moves; fallback chain assure resilience.</div>
+    <div class="why-box"><strong>Decision:</strong> Mempool primary (real-time), Blockchain.com fallback (historical); Etherscan pour smart contract interactions top 3 symbols only; ESMA/SEC/Phoenix agrege events regul.</div>
+  </section>
+
+  <!-- Section 17: Alert Enrichment -->
+  <section class="schema-section" id="s17">
+    <div class="section-header"><span class="section-num">17</span><h2>Alert Worker &amp; Multi-Channel Dispatch</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">Queue-based alert enrichment : ajout news, whale moves, puis dispatch Email/Telegram/In-App.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+sequenceDiagram
+    participant Signal
+    participant AlertQueue
+    participant Enricher
+    participant Dispatcher
+    participant Email
+    participant Telegram
+    participant InApp
+    Signal->>AlertQueue: Enqueue Event
+    AlertQueue->>Enricher: Fetch Context
+    Enricher->>Enricher: Add News, OnChain
+    Enricher->>Dispatcher: Enriched Alert
+    Dispatcher->>Email: Template + Send
+    Dispatcher->>Telegram: Bot Message
+    Dispatcher->>InApp: WebSocket Push
+    Email-->>Dispatcher: Sent
+    Telegram-->>Dispatcher: Sent
+    InApp-->>Dispatcher: Received
+    Dispatcher->>AlertQueue: Mark Complete
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Enrichment ajoute contexte (news, whale moves) aux signaux bruts; async dispatch empeche blocking; multi-channel assure reliabilite.</div>
+    <div class="why-box"><strong>Decision:</strong> Queue-based worker empeche message loss; templates personnalisent alertes; rate limiting (max 10/h par user) empeche spam.</div>
+  </section>
+
+  <!-- Section 18: Complete Database Schema -->
+  <section class="schema-section" id="s18">
+    <div class="section-header"><span class="section-num">18</span><h2>Complete Database Schema (15 Tables)</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">9 tables existantes + 6 nouvelles : paper_trades, on_chain, regulatory, predictions, trade_metrics, rl_states.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+erDiagram
+    USERS ||--o{ WATCHLISTS : creates
+    USERS ||--o{ ALERTS : configures
+    USERS ||--o{ PAPER_TRADES : simulates
+    SYMBOLS ||--o{ OHLCV : has
+    SYMBOLS ||--o{ SIGNALS : generates
+    OHLCV ||--o{ SIGNALS : feeds
+    SIGNALS ||--o{ PAPER_TRADES : triggers
+    SIGNALS ||--o{ ALERT_LOGS : creates
+    ALERTS ||--o{ ALERT_LOGS : routes
+    ON_CHAIN ||--o{ SIGNALS : informs
+    REGULATORY ||--o{ SIGNALS : contextualizes
+    ML_MODELS ||--o{ PREDICTIONS : produces
+    PREDICTIONS ||--o{ SIGNALS : feeds
+    PAPER_TRADES ||--o{ TRADE_METRICS : records
+    NEWS ||--o{ SIGNALS : informs
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> 9 existantes (users, symbols, ohlcv, signals, alert_logs, alerts, watchlists, news, ml_models) + 6 nouvelles couvrent paper trading, on-chain, regulatory, ML predictions.</div>
+    <div class="why-box"><strong>Decision:</strong> Toutes en TimescaleDB; ohlcv/on_chain hypertables avec compression 7 jours; retention: 2y OHLCV, 6mo signals, 1mo alerts; PK/FK constraints enforces referential integrity.</div>
+  </section>
+
+  <!-- Section 19: Architecture 100% -->
+  <section class="schema-section" id="s19">
+    <div class="section-header"><span class="section-num">19</span><h2>Complete Architecture (Phase 2 Complete)</h2><span class="badge badge-new">A Developper</span></div>
+    <div class="section-desc">Full end-to-end system : all 33% new features integrated into Phase 1 foundation.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+graph TB
+    subgraph Data["Data Sources"]
+        B["Binance REST/WS"]
+        C["CoinGecko"]
+        M["Mempool.space"]
+        E["Etherscan"]
+        R["ESMA/SEC RSS"]
+        N["PhoenixNews"]
+    end
+    subgraph ETL["ETL + Processing"]
+        SC["Collectors"]
+        VAL["Validation"]
+        ENR["Enrichment"]
+        DD["Deduplication"]
+    end
+    subgraph ML["ML Pipeline"]
+        RUL["Rule Engine"]
+        XGB["XGBoost"]
+        LGBM["LightGBM"]
+        LSTM["LSTM"]
+        RL["RL (DQN)"]
+        ENS["Ensemble Voter"]
+    end
+    subgraph Storage["Storage"]
+        TSK["TimescaleDB"]
+        MIN["MinIO"]
+        MLF["MLflow"]
+    end
+    subgraph API["Backend API"]
+        JWT["JWT Auth"]
+        SIGS["Signal Service"]
+        PF["Portfolio Service"]
+        PT["Paper Trading"]
+        ALT["Alert Service"]
+    end
+    subgraph UI["Frontend"]
+        DASH["Dashboard"]
+        VEILLE["News"]
+        PORT["Portfolio"]
+        ANA["Analytics"]
+    end
+    B --> SC
+    C --> SC
+    M --> SC
+    E --> SC
+    R --> SC
+    N --> SC
+    SC --> VAL
+    VAL --> ENR
+    ENR --> DD
+    DD --> TSK
+    DD --> RUL
+    RUL --> ENS
+    TSK --> XGB
+    TSK --> LGBM
+    TSK --> LSTM
+    TSK --> RL
+    XGB --> ENS
+    LGBM --> ENS
+    LSTM --> ENS
+    RL --> ENS
+    ENS --> TSK
+    TSK --> JWT
+    TSK --> SIGS
+    TSK --> PF
+    TSK --> PT
+    TSK --> ALT
+    JWT --> DASH
+    SIGS --> DASH
+    PF --> PORT
+    ALT --> VEILLE
+    classDef src fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef proc fill:#7c3aed,stroke:#a78bfa,color:#fff
+    classDef store fill:#059669,stroke:#34d399,color:#fff
+    classDef ml fill:#d97706,stroke:#fbbf24,color:#fff
+    classDef ui fill:#64748b,stroke:#94a3b8,color:#fff
+    class B,C,M,E,R,N src
+    class SC,VAL,ENR,DD proc
+    class TSK,MIN,MLF store
+    class RUL,XGB,LGBM,LSTM,RL,ENS ml
+    class JWT,SIGS,PF,PT,ALT,DASH,VEILLE,PORT,ANA ui
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Architecture complete connecte toutes features 33% new; ETL alimente rule engine ET supervised ML models; ensemble voting centralise signal generation.</div>
+  </section>
+
+  <!-- Section 20: Architectural Decisions -->
+  <section class="schema-section" id="s20">
+    <div class="section-header"><span class="section-num">20</span><h2>Key Architectural Decisions &amp; Trade-Offs</h2><span class="badge badge-decision">Decisions</span></div>
+    <div class="section-desc">6 decisions architecturales majeures avec trade-offs explicites et justifications.</div>
+    <div class="toolbar">
+      <button onclick="zoomIn(this)">+</button>
+      <button onclick="zoomOut(this)">-</button>
+      <button onclick="resetZoom(this)">Reset</button>
+      <span class="hint">Scroll = zoom | Drag = pan | Double-clic = plein ecran</span>
+      <button onclick="openFullscreen(this)">Plein ecran</button>
+    </div>
+    <div class="diagram-viewport"><div class="diagram-inner"><pre class="mermaid">
+graph LR
+    A["TimescaleDB<br/>vs MongoDB"] --> B["Chose TimescaleDB"]
+    B --> C["+ Hypertables,<br/>compression,<br/>time-series optimized"]
+    D["Docker Compose<br/>vs Kubernetes"] --> E["Chose Docker Compose"]
+    E --> F["+ Simplicity for V1,<br/>Ansible for scale"]
+    G["APScheduler<br/>vs Message Broker"] --> H["Chose APScheduler"]
+    H --> I["+ Idempotent jobs,<br/>cron-native"]
+    J["Rule 30% + ML 70%"] --> K["Chose Ensemble Voting"]
+    K --> L["+ Phase 1 seeds Phase 2,<br/>reduces overfit"]
+    M["Paper Trading<br/>2x Leverage"] --> N["Chose Simulated Only"]
+    N --> O["+ Validate signals risk-free<br/>before deployment"]
+    P["5 ML Models<br/>Ensemble"] --> Q["Chose Weighted Voting<br/>60% consensus"]
+    Q --> R["+ Robustness,<br/>prevents dominance"]
+    classDef choice fill:#1e40af,stroke:#3b82f6,color:#fff
+    classDef selected fill:#059669,stroke:#34d399,color:#fff
+    classDef benefit fill:#34d399,stroke:#06b6d4,color:#fff
+    class A,D,G,J,M,P choice
+    class B,E,H,K,N,Q selected
+    class C,F,I,L,O,R benefit
+    </pre></div></div>
+    <div class="why-box"><strong>Pourquoi:</strong> Chaque decision privilegia simplicity, determinism, et risk mitigation vs cutting-edge complexity.</div>
+    <div class="why-box"><strong>Trade-offs:</strong> TimescaleDB: ↑scalability, ↓NoSQL flexibility. Docker Compose: ↑ease, ↓auto-scaling. APScheduler: ↑determinism, ↓distributed resilience. Ensemble: ↑robustness, ↓interpretability. Paper trading: ↑safety, ↓real-world validation.</div>
+  </section>
+
 </main>
 
 <footer>
-  <strong>CryptoBot</strong> — Documentation interactive generee le 14 mars 2026 — Jules Willard / DTSC
+  <strong>CryptoBot</strong> — Documentation interactive enrichie (20 sections) generee le 15 mars 2026 — Phase 1 (67%) + Phase 2 specs (33%) — Jules Willard / DTSC
 </footer>
 
 <script>
@@ -857,8 +1369,8 @@ flowchart TD
     if (!states.has(vp)) states.set(vp, {s:1, tx:0, ty:0, drag:false, sx:0, sy:0});
     return states.get(vp);
   }
-  function at(inner, st) {
-    inner.style.transform = 'translate('+st.tx+'px,'+st.ty+'px) scale('+st.s+')';
+  function at(el, st) {
+    el.style.transform = 'translate('+st.tx+'px,'+st.ty+'px) scale('+st.s+')';
   }
   function cl(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function td(t) {
@@ -876,7 +1388,9 @@ flowchart TD
     var inner = vp.querySelector('.diagram-inner');
     if (!inner) return;
     var st = gs(vp);
+    var ld = 0;
 
+    /* Wheel zoom */
     vp.addEventListener('wheel', function(e) {
       e.preventDefault();
       var r = vp.getBoundingClientRect();
@@ -889,28 +1403,42 @@ flowchart TD
       at(inner, st);
     }, {passive: false});
 
+    /* Mouse drag — scoped handlers attached/removed per drag session */
     vp.addEventListener('mousedown', function(e) {
       if (e.button !== 0) return;
-      st.drag = true; st.sx = e.clientX - st.tx; st.sy = e.clientY - st.ty;
+      e.preventDefault();
+      e.stopPropagation();
+      st.drag = true;
+      st.sx = e.clientX - st.tx;
+      st.sy = e.clientY - st.ty;
       vp.classList.add('dragging');
-    });
-    document.addEventListener('mousemove', function(e) {
-      if (!st.drag) return;
-      st.tx = e.clientX - st.sx; st.ty = e.clientY - st.sy;
-      at(inner, st);
-    });
-    document.addEventListener('mouseup', function() {
-      if (!st.drag) return;
-      st.drag = false; vp.classList.remove('dragging');
+
+      function onMove(ev) {
+        if (!st.drag) return;
+        st.tx = ev.clientX - st.sx;
+        st.ty = ev.clientY - st.sy;
+        at(inner, st);
+      }
+      function onUp() {
+        st.drag = false;
+        vp.classList.remove('dragging');
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onUp);
+      }
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
     });
 
+    /* Double-click fullscreen */
     vp.addEventListener('dblclick', function() { openMdl(vp); });
 
-    var ld = 0;
+    /* Touch pan + pinch zoom */
     vp.addEventListener('touchstart', function(e) {
       if (e.touches.length === 2) { ld = td(e.touches); }
       else if (e.touches.length === 1) {
-        st.drag = true; st.sx = e.touches[0].clientX - st.tx; st.sy = e.touches[0].clientY - st.ty;
+        st.drag = true;
+        st.sx = e.touches[0].clientX - st.tx;
+        st.sy = e.touches[0].clientY - st.ty;
       }
     });
     vp.addEventListener('touchmove', function(e) {
@@ -922,10 +1450,12 @@ flowchart TD
         var cx = (e.touches[0].clientX + e.touches[1].clientX)/2 - r.left;
         var cy = (e.touches[0].clientY + e.touches[1].clientY)/2 - r.top;
         var ratio = st.s / prev;
-        st.tx = cx - (cx - st.tx) * ratio; st.ty = cy - (cy - st.ty) * ratio;
+        st.tx = cx - (cx - st.tx) * ratio;
+        st.ty = cy - (cy - st.ty) * ratio;
         ld = d; at(inner, st);
       } else if (e.touches.length === 1 && st.drag) {
-        st.tx = e.touches[0].clientX - st.sx; st.ty = e.touches[0].clientY - st.sy;
+        st.tx = e.touches[0].clientX - st.sx;
+        st.ty = e.touches[0].clientY - st.sy;
         at(inner, st);
       }
     }, {passive: false});
@@ -970,7 +1500,6 @@ flowchart TD
     ms.s = 1; ms.tx = 0; ms.ty = 0; at(mdlIn, ms);
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    initMdlEvts();
   }
   function closeModal() {
     modal.classList.remove('active');
@@ -999,52 +1528,36 @@ flowchart TD
     at(mdlIn, ms);
   }
 
-  function initMdlEvts() {
-    mdlVP.onwheel = function(e) {
-      e.preventDefault();
-      var r = mdlVP.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
-      var prev = ms.s;
-      ms.s = cl(prev + (e.deltaY > 0 ? -0.1 : 0.1), MIN_S, MAX_S);
-      var ratio = ms.s / prev;
-      ms.tx = mx - (mx - ms.tx) * ratio; ms.ty = my - (my - ms.ty) * ratio;
+  /* Modal drag — same scoped pattern */
+  mdlVP.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    var r = mdlVP.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    var prev = ms.s;
+    ms.s = cl(prev + (e.deltaY > 0 ? -0.1 : 0.1), MIN_S, MAX_S);
+    var ratio = ms.s / prev;
+    ms.tx = mx - (mx - ms.tx) * ratio; ms.ty = my - (my - ms.ty) * ratio;
+    at(mdlIn, ms);
+  }, {passive: false});
+
+  mdlVP.addEventListener('mousedown', function(e) {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    ms.drag = true; ms.sx = e.clientX - ms.tx; ms.sy = e.clientY - ms.ty;
+    mdlVP.classList.add('dragging');
+
+    function onMove(ev) {
+      if (!ms.drag) return;
+      ms.tx = ev.clientX - ms.sx; ms.ty = ev.clientY - ms.sy;
       at(mdlIn, ms);
-    };
-    mdlVP.onmousedown = function(e) {
-      if (e.button !== 0) return;
-      ms.drag = true; ms.sx = e.clientX - ms.tx; ms.sy = e.clientY - ms.ty;
-      mdlVP.classList.add('dragging');
-    };
-    var ld2 = 0;
-    mdlVP.ontouchstart = function(e) {
-      if (e.touches.length === 2) ld2 = td(e.touches);
-      else if (e.touches.length === 1) {
-        ms.drag = true; ms.sx = e.touches[0].clientX - ms.tx; ms.sy = e.touches[0].clientY - ms.ty;
-      }
-    };
-    mdlVP.ontouchmove = function(e) {
-      e.preventDefault();
-      if (e.touches.length === 2) {
-        var d = td(e.touches), prev = ms.s;
-        ms.s = cl(prev * (d / ld2), MIN_S, MAX_S);
-        var r = mdlVP.getBoundingClientRect();
-        var cx = (e.touches[0].clientX + e.touches[1].clientX)/2 - r.left;
-        var cy = (e.touches[0].clientY + e.touches[1].clientY)/2 - r.top;
-        var ratio = ms.s / prev;
-        ms.tx = cx - (cx - ms.tx) * ratio; ms.ty = cy - (cy - ms.ty) * ratio;
-        ld2 = d; at(mdlIn, ms);
-      } else if (e.touches.length === 1 && ms.drag) {
-        ms.tx = e.touches[0].clientX - ms.sx; ms.ty = e.touches[0].clientY - ms.sy;
-        at(mdlIn, ms);
-      }
-    };
-    mdlVP.ontouchend = function() { ms.drag = false; };
-  }
-  document.addEventListener('mousemove', function(e) {
-    if (!ms.drag) return;
-    ms.tx = e.clientX - ms.sx; ms.ty = e.clientY - ms.sy; at(mdlIn, ms);
-  });
-  document.addEventListener('mouseup', function() {
-    ms.drag = false; mdlVP.classList.remove('dragging');
+    }
+    function onUp() {
+      ms.drag = false;
+      mdlVP.classList.remove('dragging');
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    }
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
   });
 </script>
 

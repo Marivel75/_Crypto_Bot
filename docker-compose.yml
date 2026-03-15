@@ -53,8 +53,8 @@ services:
   # --- MLflow ---
   mlflow:
     build:
-      context: ./src/ml
-      dockerfile: Dockerfile.mlflow
+      context: .
+      dockerfile: src/ml/Dockerfile.mlflow
     restart: unless-stopped
     environment:
       MLFLOW_TRACKING_URI: http://localhost:5000

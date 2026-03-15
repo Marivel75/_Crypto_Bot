@@ -1,0 +1,20 @@
+# BMAD Method v6 - Project Configuration
+# CryptoBot - Phase 2 Cadrage Completion (33% restants)
+
+project_name: "CryptoBot"
+project_type: "web-app"
+project_level: 3  # Complex integration (8 features, ~25 stories)
+
+# Output folder (relative to project root)
+output_folder: "docs"
+
+# Module-specific settings
+bmm:
+  workflow_status_file: "docs/bmm-workflow-status.yaml"
+  sprint_status_file: "docs/sprint-status.yaml"
+
+# Path configuration
+paths:
+  docs: "docs"
+  stories: "docs/stories"
+  tests: "tests"

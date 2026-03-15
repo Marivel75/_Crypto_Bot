@@ -1,72 +1,96 @@
 # Documentation CryptoBot
 
-## Equipes
-Documentation par equipe — a lire en premier.
+Source de verite : `Crypto_bot_cadrage_V2.pdf`
+Conformite actuelle : 67% — voir `futur/analyse/01-conformite-cadrage.md`
+Schemas interactifs : `SCHEMAS.HTML` (20 diagrammes Mermaid)
 
-| Fichier | Contenu |
-|---------|---------|
-| [00-overview.md](equipes/00-overview.md) | Vue d'ensemble projet (TOUTES equipes) |
-| [01-data-engineering.md](equipes/01-data-engineering.md) | ETL, collecteurs, TimescaleDB, MinIO |
-| [02-ml-data-science.md](equipes/02-ml-data-science.md) | Rule engine, ML, backtesting, NLP |
-| [03-backend-api.md](equipes/03-backend-api.md) | FastAPI, endpoints, auth, services |
-| [04-frontend-ui.md](equipes/04-frontend-ui.md) | Streamlit, pages, composants, Plotly |
-| [05-devops-infra.md](equipes/05-devops-infra.md) | Docker, Nginx, Ansible, CI/CD |
+---
 
-## Specifications Phase 2 (33% restants)
-Tout ce qu'il faut pour developper les 8 features manquantes.
+## Existant (67% implemente)
 
-### Cahier des charges
-| Fichier | Contenu | Statut |
-|---------|---------|--------|
-| [PRD-phase2.md](specs/PRD-phase2.md) | **PRD complet 8 features** (100/100) — 17 user stories, criteres d'acceptation | VALIDE |
+Documentation de ce qui est deja construit et fonctionne.
+
+| # | Fichier | Contenu |
+|---|---------|---------|
+| 01 | [01-overview.md](existant/01-overview.md) | Vue d'ensemble projet |
+| 02 | [02-data-engineering.md](existant/02-data-engineering.md) | ETL, collecteurs, TimescaleDB |
+| 03 | [03-ml-data-science.md](existant/03-ml-data-science.md) | Rule engine, XGBoost, NLP |
+| 04 | [04-backend-api.md](existant/04-backend-api.md) | FastAPI, endpoints, auth JWT |
+| 05 | [05-frontend-ui.md](existant/05-frontend-ui.md) | Streamlit, Plotly, 5 pages |
+| 06 | [06-devops-infra.md](existant/06-devops-infra.md) | Docker, Nginx, CI/CD |
+| 07 | [07-glossaire.md](existant/07-glossaire.md) | Glossaire des termes |
+
+---
+
+## Futur (33% a developper)
+
+### Analyse
+
+| # | Fichier | Contenu |
+|---|---------|---------|
+| 01 | [01-conformite-cadrage.md](futur/analyse/01-conformite-cadrage.md) | Audit 67% vs cadrage PDF |
+| 02 | [02-analysis-ml-gaps.md](futur/analyse/02-analysis-ml-gaps.md) | Gaps ML (RL, LSTM, clustering) |
+| 03 | [03-data-sources-roadmap.md](futur/analyse/03-data-sources-roadmap.md) | Roadmap sources de donnees |
+| 04 | [04-data-sources-summary.md](futur/analyse/04-data-sources-summary.md) | Resume sources |
+| 05 | [05-observability-architecture.md](futur/analyse/05-observability-architecture.md) | Monitoring (Prometheus, Loki, traces) |
+
+### Produit
+
+| # | Fichier | Contenu |
+|---|---------|---------|
+| 01 | [01-PRD-phase2.md](futur/produit/01-PRD-phase2.md) | PRD 8 features (100/100 BMAD) |
+| 02 | [02-paper-trading-alertes.md](futur/produit/02-paper-trading-alertes.md) | Specs paper trading + alertes |
+| 03 | [03-data-sources-quickstart.md](futur/produit/03-data-sources-quickstart.md) | Guide rapide sources |
 
 ### Architecture
-| Fichier | Contenu | Statut |
-|---------|---------|--------|
-| [architecture-systeme.md](specs/architecture-systeme.md) | Architecture systeme (DB, API, services Docker) | BROUILLON |
-| [architecture-ml-pipelines.md](specs/architecture-ml-pipelines.md) | Architecture ML (RL, LSTM, clustering) | BROUILLON |
-| [architecture-scraping.md](specs/architecture-scraping.md) | Architecture scraping BeautifulSoup | BROUILLON |
-| [ADRs-phase2.md](specs/ADRs-phase2.md) | Decisions architecturales Phase 2 | BROUILLON |
 
-### Specs par feature
-| Fichier | Contenu | Features |
-|---------|---------|----------|
-| [paper-trading-alertes.md](specs/paper-trading-alertes.md) | Paper trading + alertes (schemas, endpoints, frontend) | F1, F6 |
-| [analysis-ml-gaps.md](specs/analysis-ml-gaps.md) | Analyse ML (RL, LSTM, clustering) | F2, F3, F4 |
-| [ux-design-nouvelles-features.md](specs/ux-design-nouvelles-features.md) | Wireframes et UX par persona | F1-F8 |
-| [data-sources-roadmap.md](specs/data-sources-roadmap.md) | Roadmap sources de donnees | F5, F7, F8 |
-| [data-sources-summary.md](specs/data-sources-summary.md) | Resume sources de donnees | F5, F7, F8 |
-| [data-sources-quickstart.md](specs/data-sources-quickstart.md) | Guide rapide integration sources | F5, F7, F8 |
-| [implementation-checklist.md](specs/implementation-checklist.md) | Checklist d'implementation | F1-F8 |
+| # | Fichier | Contenu |
+|---|---------|---------|
+| 01 | [01-architecture-systeme.md](futur/architecture/01-architecture-systeme.md) | Architecture systeme (brouillon) |
+| 02 | [02-architecture-ml-pipelines.md](futur/architecture/02-architecture-ml-pipelines.md) | Pipelines ML RL/LSTM/clustering |
+| 03 | [03-architecture-scraping.md](futur/architecture/03-architecture-scraping.md) | Architecture scraping BS4 |
+| 04 | [04-ADRs-phase2.md](futur/architecture/04-ADRs-phase2.md) | Decisions architecturales |
+| 05 | [05-architecture-bmad-validated.md](futur/architecture/05-architecture-bmad-validated.md) | Architecture BMAD Gate 2 |
 
-## Planning
-Roadmap, sprints et suivi.
+### UX
 
-| Fichier | Contenu |
-|---------|---------|
-| [06-roadmap.md](planning/06-roadmap.md) | Planning global et sprints |
-| [06-sprint-plan.md](planning/06-sprint-plan.md) | Plan de sprints detaille |
-| [06a-sprint-gantt-tracking.md](planning/06a-sprint-gantt-tracking.md) | Gantt et suivi |
-| [06b-risk-mitigation.md](planning/06b-risk-mitigation.md) | Risques et mitigations |
-| [06c-sprint-summary.md](planning/06c-sprint-summary.md) | Resume sprints |
+| # | Fichier | Contenu |
+|---|---------|---------|
+| 01 | [01-ux-design.md](futur/ux/01-ux-design.md) | Wireframes par persona |
 
-## Audit
-Documentation d'audit qualite (Vague 1-3).
+### Planning
+
+| # | Fichier | Contenu |
+|---|---------|---------|
+| 01 | [01-roadmap.md](futur/planning/01-roadmap.md) | Planning global |
+| 02 | [02-sprint-plan.md](futur/planning/02-sprint-plan.md) | Plan de sprints |
+| 03 | [03-sprint-gantt.md](futur/planning/03-sprint-gantt.md) | Gantt et suivi |
+| 04 | [04-risk-mitigation.md](futur/planning/04-risk-mitigation.md) | Risques et mitigations |
+| 05 | [05-sprint-summary.md](futur/planning/05-sprint-summary.md) | Resume sprints |
+| 06 | [06-backlog.csv](futur/planning/06-backlog.csv) | Backlog CSV |
+| 07 | [07-README-sprint.md](futur/planning/07-README-sprint.md) | Guide sprint |
+| 08 | [08-implementation-checklist.md](futur/planning/08-implementation-checklist.md) | Checklist implementation |
+
+---
+
+## Audit QA
 
 | Dossier | Contenu |
 |---------|---------|
-| [audit.md](audit/audit.md) | Rapport d'audit principal |
-| [CDC.md](audit/CDC.md) | Cahier des charges initial |
-| [SPECIFICATIONS_FONCTIONNELLES.md](audit/SPECIFICATIONS_FONCTIONNELLES.md) | Specs fonctionnelles |
-| [vague.md](audit/vague.md) | Suivi des vagues QA |
-| [specs-domaine/](audit/specs-domaine/) | Specs par domaine (ML, frontend, infra) |
-| [architecture/](audit/architecture/) | Architecture applicative et data |
-| [sujets-techniques/](audit/sujets-techniques/) | DB migrations, env vars, rate limiting, CI/CD |
-| [remediation/](audit/remediation/) | Plans de remediation (phases 1-3) |
+| [audit/audit.md](audit/audit.md) | Rapport principal |
+| [audit/CDC.md](audit/CDC.md) | Cahier des charges initial |
+| [audit/SPECIFICATIONS_FONCTIONNELLES.md](audit/SPECIFICATIONS_FONCTIONNELLES.md) | Specs fonctionnelles |
+| [audit/specs-domaine/](audit/specs-domaine/) | Specs ML, frontend, infra |
+| [audit/architecture/](audit/architecture/) | Architecture applicative et data |
+| [audit/sujets-techniques/](audit/sujets-techniques/) | DB, env vars, rate limiting, CI/CD |
+| [audit/remediation/](audit/remediation/) | Remediation phases 1-3 |
 
-## Reference
-| Fichier | Contenu |
-|---------|---------|
-| [glossaire.md](glossaire.md) | Glossaire des termes |
-| [../SCHEMAS.HTML](../SCHEMAS.HTML) | Diagrammes Mermaid interactifs (10 schemas) |
-| [../Crypto_bot_cadrage_V2.pdf](../Crypto_bot_cadrage_V2.pdf) | Cadrage PDF original |
+---
+
+## Fichiers speciaux
+
+| Fichier | Description |
+|---------|-------------|
+| [SCHEMAS.HTML](SCHEMAS.HTML) | 20 diagrammes Mermaid interactifs (existant + futur) |
+| [bmm-workflow-status.yaml](bmm-workflow-status.yaml) | Statut workflow BMAD |
+| [../Crypto_bot_cadrage_V2.pdf](../Crypto_bot_cadrage_V2.pdf) | Cadrage PDF (source de verite) |

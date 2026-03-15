@@ -1,11 +1,10 @@
 # --- Builder stage ---
 FROM python:3.11-slim AS builder
 
-COPY src/shared/requirements.txt /tmp/shared-requirements.txt
-RUN pip install --no-cache-dir --prefix=/install -r /tmp/shared-requirements.txt
-
-COPY src/api/requirements.txt /tmp/api-requirements.txt
-RUN pip install --no-cache-dir --prefix=/install -r /tmp/api-requirements.txt
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY pyproject.toml /tmp/
+RUN uv pip install --system --no-cache --prefix=/install \
+    -r /tmp/pyproject.toml --extra api
 
 # --- Runtime stage ---
 FROM python:3.11-slim

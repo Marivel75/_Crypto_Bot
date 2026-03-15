@@ -22,7 +22,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: pip install uv && uv pip install --system ".[all,dev]"
 
       - name: Ruff check
         run: ruff check src/
@@ -61,7 +61,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: pip install uv && uv pip install --system ".[all,dev]"
 
       - name: Run tests with coverage
         env:
