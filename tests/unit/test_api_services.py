@@ -14,7 +14,9 @@ monkey-patch them), so the real UUID-typed ORM would be used otherwise.
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest

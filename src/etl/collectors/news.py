@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from email.utils import parsedate_to_datetime
 
 import feedparser  # type: ignore[import-untyped]

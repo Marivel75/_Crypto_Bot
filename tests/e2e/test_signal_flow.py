@@ -7,7 +7,9 @@ The database layer is fully mocked so no live TimescaleDB connection is required
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from decimal import Decimal
 from pathlib import Path
 from typing import Any

@@ -6,7 +6,9 @@ required by pandas_ta 0.4.x is not available in the current environment.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+UTC = timezone.utc
 from decimal import Decimal
 
 import pytest

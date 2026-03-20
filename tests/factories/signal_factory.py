@@ -10,7 +10,9 @@ with the package ``__init__.py``.
 from __future__ import annotations
 
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from decimal import Decimal
 
 from src.shared.models.signal import TradingSignal

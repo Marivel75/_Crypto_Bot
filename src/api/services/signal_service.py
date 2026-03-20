@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timezone
+
+from datetime import timedelta
+
+UTC = timezone.utc
 
 from sqlalchemy import case, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession

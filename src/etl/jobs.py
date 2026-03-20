@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 
 from src.etl.transformers.cleaner import deduplicate_ohlcv
 from src.shared.constants import PRIORITY_SYMBOLS, TRACKED_SYMBOLS

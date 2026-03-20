@@ -11,8 +11,11 @@ from __future__ import annotations
 
 import logging
 import uuid
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any, Literal, Protocol, cast
+
+UTC = timezone.utc
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -401,7 +404,7 @@ async def generate_signals_for_symbols(
     Returns:
         Dict mapping ``symbol`` -> number of signals emitted (0 or 1 per symbol).
     """
-    from datetime import UTC, datetime
+
 
     from src.ml.repositories.timescale import (
         TimescaleIndicatorRepository,

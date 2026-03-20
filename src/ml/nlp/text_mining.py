@@ -12,7 +12,9 @@ import logging
 import re
 import string
 import uuid
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from typing import Any
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer

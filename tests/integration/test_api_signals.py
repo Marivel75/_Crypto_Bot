@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 
 import pytest
 from httpx import AsyncClient
@@ -74,8 +76,6 @@ class TestActiveSignalsEndpoint:
 
     @pytest.mark.asyncio
     async def test_active_returns_recently_seeded_signal(self, client: AsyncClient, db_session: AsyncSession) -> None:
-        from datetime import UTC
-
         # Signal created very recently (now) → should appear in active
         recent_ts = datetime.now(tz=UTC)
         await _seed_signal(db_session, created_at=recent_ts)
@@ -86,7 +86,6 @@ class TestActiveSignalsEndpoint:
 
     @pytest.mark.asyncio
     async def test_active_signal_has_required_fields(self, client: AsyncClient, db_session: AsyncSession) -> None:
-        from datetime import UTC
 
         recent_ts = datetime.now(tz=UTC)
         await _seed_signal(db_session, created_at=recent_ts)
@@ -100,7 +99,6 @@ class TestActiveSignalsEndpoint:
 
     @pytest.mark.asyncio
     async def test_active_signal_type_is_buy_or_sell(self, client: AsyncClient, db_session: AsyncSession) -> None:
-        from datetime import UTC
 
         recent_ts = datetime.now(tz=UTC)
         await _seed_signal(db_session, signal_type="BUY", created_at=recent_ts)

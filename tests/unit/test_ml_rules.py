@@ -6,7 +6,9 @@ orchestrator, using IndicatorRecord with realistic fixed-timestamp data.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from decimal import Decimal
 from pathlib import Path
 from unittest.mock import patch

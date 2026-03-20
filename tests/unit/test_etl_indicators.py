@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import math
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+UTC = timezone.utc
 from decimal import Decimal
 
 from src.etl.transformers.indicators import (
