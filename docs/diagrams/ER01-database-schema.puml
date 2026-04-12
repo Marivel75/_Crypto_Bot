@@ -1,0 +1,175 @@
+@startuml ER01-database-schema
+!include _common.puml
+
+title CryptoBot — Schema Base de Donnees TimescaleDB
+caption 9 tables | 2 hypertables | PostgreSQL 16
+
+' ============================================================
+' Tables
+' ============================================================
+
+entity "users" as users {
+  * **id** : UUID <<PK>>
+  --
+  * username : VARCHAR(100) <<UNIQUE>>
+  * email : VARCHAR(255) <<UNIQUE>>
+  * password_hash : VARCHAR(255)
+  persona_type : VARCHAR(50)
+  preferences : JSON
+  created_at : TIMESTAMP
+  ..
+  <<CHECK>> persona_type IN
+  ('trader','journalist','investor')
+}
+
+entity "crypto_prices" as prices <<hypertable>> {
+  * **symbol** : VARCHAR(20) <<PK>>
+  * **timeframe** : VARCHAR(10) <<PK>>
+  * **timestamp** : TIMESTAMP <<PK>>
+  --
+  * price_open : NUMERIC(20,8)
+  * price_high : NUMERIC(20,8)
+  * price_low : NUMERIC(20,8)
+  * price_close : NUMERIC(20,8)
+  * volume_24h : NUMERIC(20,8)
+  market_cap : NUMERIC(20,8)
+  * source : VARCHAR(50)
+  ..
+  <<INDEX>> (symbol, timeframe, timestamp)
+  <<HYPERTABLE>> retention=90d, compress=7d
+}
+
+entity "indicators" as indicators {
+  * **id** : UUID <<PK>>
+  --
+  * symbol : VARCHAR(20)
+  * timeframe : VARCHAR(10)
+  * timestamp : TIMESTAMP
+  rsi : NUMERIC(5,2)
+  bollinger_upper : NUMERIC(20,8)
+  bollinger_middle : NUMERIC(20,8)
+  bollinger_lower : NUMERIC(20,8)
+  price_vs_bollinger : NUMERIC(5,4)
+  harmonic_pattern : VARCHAR(50)
+  trend_slope : NUMERIC(10,4)
+  trend_type : VARCHAR(20)
+  metadata : JSON
+  ..
+  <<INDEX>> (symbol, timeframe, timestamp)
+  <<CHECK>> rsi BETWEEN 0 AND 100
+  <<CHECK>> price_vs_bollinger BETWEEN -1 AND 1
+}
+
+entity "trading_signals" as signals {
+  * **id** : UUID <<PK>>
+  --
+  * symbol : VARCHAR(20)
+  * signal_type : VARCHAR(10)
+  * confidence_score : NUMERIC(5,4)
+  timeframe_primary : VARCHAR(10)
+  timeframes_aligned : JSON
+  rules_triggered : JSON
+  leverage_suggested : INTEGER
+  margin_safety : NUMERIC(5,4)
+  fees_estimated : NUMERIC(10,8)
+  model_version : VARCHAR(50)
+  created_at : TIMESTAMP
+  ..
+  <<CHECK>> signal_type IN ('BUY','SELL','HOLD')
+  <<CHECK>> confidence_score BETWEEN 0 AND 1
+  <<CHECK>> leverage_suggested BETWEEN 1 AND 20
+}
+
+entity "signal_outcomes" as outcomes {
+  * **id** : UUID <<PK>>
+  --
+  * signal_id : UUID <<FK>>
+  * price_at_signal : NUMERIC(20,8)
+  price_after_1h : NUMERIC(20,8)
+  price_after_4h : NUMERIC(20,8)
+  price_after_1d : NUMERIC(20,8)
+  pnl_simulated : NUMERIC(10,4)
+  was_correct : BOOLEAN
+  evaluated_at : TIMESTAMP
+  ..
+  <<INDEX>> (signal_id, was_correct)
+}
+
+entity "portfolio" as portfolio {
+  * **id** : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * symbol : VARCHAR(20)
+  * quantity : NUMERIC(20,8)
+  * entry_price : NUMERIC(20,8)
+  * current_price : NUMERIC(20,8)
+  notes : TEXT
+  ..
+  <<INDEX>> (user_id)
+}
+
+entity "watchlist" as watchlist {
+  * **id** : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+  * symbol : VARCHAR(20)
+  added_at : TIMESTAMP
+  ..
+  <<UNIQUE>> (user_id, symbol)
+}
+
+entity "news_articles" as news {
+  * **id** : UUID <<PK>>
+  --
+  * title : VARCHAR(500)
+  content : TEXT
+  * source : VARCHAR(100)
+  url : VARCHAR(1000) <<UNIQUE>>
+  published_at : TIMESTAMP
+  sentiment_score : NUMERIC(5,4)
+  keywords : JSON
+  reliability_score : NUMERIC(5,4)
+  ..
+  <<INDEX>> (published_at, source)
+  <<CHECK>> sentiment_score BETWEEN -1 AND 1
+}
+
+entity "text_mining_results" as textmining {
+  * **id** : UUID <<PK>>
+  --
+  * article_id : UUID <<FK>>
+  word_cloud : JSON
+  * summary : TEXT
+  entities : JSON
+  topics : JSON
+  created_at : TIMESTAMP
+}
+
+' ============================================================
+' Relations
+' ============================================================
+users ||--o{ portfolio : "1 user → N entries"
+users ||--o{ watchlist : "1 user → N symbols"
+signals ||--o| outcomes : "1 signal → 0..1 outcome"
+news ||--o| textmining : "1 article → 0..1 mining"
+
+' Foreign key cascades
+portfolio }o--|| users : "ON DELETE CASCADE"
+watchlist }o--|| users : "ON DELETE CASCADE"
+outcomes }o--|| signals : "ON DELETE CASCADE"
+textmining }o--|| news : "ON DELETE CASCADE"
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom right
+  |= Annotation |= Signification |
+  | <<hypertable>> | TimescaleDB hypertable |
+  | <<PK>> | Primary Key |
+  | <<FK>> | Foreign Key (CASCADE) |
+  | <<UNIQUE>> | Contrainte unique |
+  | <<CHECK>> | Contrainte de domaine |
+  | <<INDEX>> | Index composite |
+endlegend
+
+@enduml

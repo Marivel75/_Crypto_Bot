@@ -1,0 +1,121 @@
+@startuml CL01-pydantic-models
+!include _common.puml
+
+title CryptoBot — Modeles Domaine Pydantic v2
+caption src/shared/models/ | 7 modeles
+
+' ============================================================
+' Crypto Domain
+' ============================================================
+package "crypto.py" #FEF3E8 {
+
+  class OHLCVRecord <<BaseModel>> {
+    + symbol : str
+    + price_open : Decimal
+    + price_high : Decimal
+    + price_low : Decimal
+    + price_close : Decimal
+    + volume_24h : Decimal
+    + market_cap : Decimal | None
+    + timestamp : datetime
+    + source : str
+    + timeframe : str
+    --
+    <<validator>> price_high >= price_low
+    <<validator>> volume_24h >= 0
+  }
+
+  class IndicatorRecord <<BaseModel>> {
+    + symbol : str
+    + timeframe : str
+    + timestamp : datetime
+    + rsi : Decimal | None
+    + bollinger_upper : Decimal | None
+    + bollinger_middle : Decimal | None
+    + bollinger_lower : Decimal | None
+    + price_vs_bollinger : Decimal | None
+    + harmonic_pattern : str | None
+    + trend_slope : Decimal | None
+    + trend_type : str | None
+    + metadata : dict
+  }
+
+  class NewsArticle <<BaseModel>> {
+    + title : str
+    + content : str | None
+    + source : str
+    + url : str
+    + published_at : datetime | None
+    + sentiment_score : Decimal | None
+    + keywords : list[str]
+    + reliability_score : Decimal | None
+  }
+}
+
+' ============================================================
+' Signal Domain
+' ============================================================
+package "signal.py" #F3EEFF {
+
+  class TradingSignal <<BaseModel>> {
+    + symbol : str
+    + signal_type : Literal["BUY","SELL","HOLD"]
+    + confidence_score : Decimal
+    + timeframe_primary : str
+    + timeframes_aligned : dict
+    + rules_triggered : list[str]
+    + leverage_suggested : int | None
+    + margin_safety : Decimal | None
+    + fees_estimated : Decimal | None
+    + model_version : str
+    + created_at : datetime | None
+    --
+    <<constraint>> confidence >= 0.6
+    <<constraint>> leverage 1-20
+  }
+
+  class SignalOutcome <<BaseModel>> {
+    + signal_id : str
+    + price_at_signal : Decimal
+    + price_after_1h : Decimal | None
+    + price_after_4h : Decimal | None
+    + price_after_1d : Decimal | None
+    + pnl_simulated : Decimal | None
+    + was_correct : bool | None
+    + evaluated_at : datetime
+  }
+}
+
+' ============================================================
+' User Domain
+' ============================================================
+package "user.py" #ECFDF5 {
+
+  class UserCreate <<BaseModel>> {
+    + username : str {3-100}
+    + email : EmailStr
+    + password : str {min 8}
+    + persona_type : str
+    --
+    trader | journalist | investor
+  }
+
+  class UserRead <<BaseModel>> {
+    + id : str
+    + username : str
+    + email : str
+    + persona_type : str
+    + preferences : dict
+    + created_at : datetime
+  }
+}
+
+' ============================================================
+' Relations
+' ============================================================
+TradingSignal "1" -- "0..1" SignalOutcome : evaluation
+OHLCVRecord ..> IndicatorRecord : calcule
+IndicatorRecord ..> TradingSignal : genere
+NewsArticle ..> TradingSignal : sentiment
+
+@enduml

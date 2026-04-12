@@ -1,0 +1,78 @@
+@startuml AC01-etl-pipeline
+!include _common.puml
+
+title CryptoBot — Pipeline ETL Complet
+caption 10 jobs APScheduler | retry max_attempts=5 | semaphore(5)
+
+|#FEF3E8| Scheduler |
+start
+fork
+  :collect_ohlcv_priority\n**every 1 min**\n13 priority symbols;
+fork again
+  :collect_ohlcv_all\n**every 5 min**\nall tracked symbols;
+fork again
+  :collect_market_data\n**every 5 min**\nCoinGecko markets;
+fork again
+  :collect_news\n**every 15 min**\nRSS feeds;
+fork again
+  :collect_fear_greed\n**every 1 hour**\nAlternative.me;
+end fork
+
+|#F3EEFF| Collection |
+:Acquire semaphore (max 5 concurrent);
+:Call collector.fetch_*();
+
+if (Success?) then (yes)
+  :Return raw records;
+else (no)
+  :Retry with exponential backoff;
+  if (attempts < 5?) then (yes)
+    :Wait 2^attempt seconds;
+    :Retry fetch;
+  else (no)
+    :Log CollectorError;
+    :Skip this cycle;
+    stop
+  endif
+endif
+
+|#ECFDF5| Transform |
+:deduplicate_ohlcv(records);
+:validate_ohlcv_relationships();
+:filter_valid_records();
+
+if (OHLCV data?) then (yes)
+  :compute_rsi(period=14);
+  :compute_bollinger_bands(20, 2std);
+  :compute_price_vs_bollinger();
+  :compute_trend(slope + type);
+else (news data?)
+  :extract_keywords();
+  :compute_sentiment_score();
+endif
+
+|#FEF3E8| Load |
+fork
+  :insert_ohlcv_batch()\nTimescaleDB;
+fork again
+  :insert_indicators_batch()\nTimescaleDB;
+fork again
+  :insert_news_batch()\nTimescaleDB;
+end fork
+
+|#F5F5F5| Periodic Jobs |
+fork
+  :compute_indicators\n**every 5 min**;
+fork again
+  :enrich_news_nlp\n**every 20 min**;
+fork again
+  :reconciliation\n**every 1 hour**\ndetect & backfill gaps;
+fork again
+  :evaluate_signal_outcomes\n**every 1 hour**\nP&L at 1h/4h/1d;
+fork again
+  :export_datasets\n**daily 03:00 UTC**\nParquet to MinIO;
+end fork
+
+stop
+
+@enduml

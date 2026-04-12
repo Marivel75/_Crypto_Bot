@@ -1,0 +1,97 @@
+@startuml C04-api-components
+!include _common.puml
+
+title CryptoBot — FastAPI Backend
+caption src/api/ | 8 routers, 7 services, 2 middleware
+
+' ============================================================
+' Middleware
+' ============================================================
+package "Middleware" #F5F5F5 {
+  [RateLimitHeadersMiddleware\n30 req/s default\n5 req/min auth\nX-RateLimit-* headers] as ratelimit <<middleware>>
+  [RequestIdMiddleware\nX-Request-Id header\nper-IP tracking] as reqid <<middleware>>
+  [CORS\nallow_origins from settings] as cors <<middleware>>
+}
+
+' ============================================================
+' Routers (8)
+' ============================================================
+package "Routers" #FEF3E8 {
+  [auth\n/api/v1/auth\nPOST register\nPOST login\nGET me] as r_auth <<router>>
+
+  [crypto\n/api/v1/crypto\nGET list\nGET market-overview\nGET {symbol}/prices\nGET {symbol}/indicators\nGET {symbol}/latest] as r_crypto <<router>>
+
+  [signals\n/api/v1/signals\nGET active\nGET performance\nGET {id}/detail\nGET {symbol}] as r_signals <<router>>
+
+  [news\n/api/v1/news\nGET latest\nGET sentiment\nGET {id}] as r_news <<router>>
+
+  [portfolio\n/api/v1/portfolio\nGET, POST\nPUT {id}, DELETE {id}] as r_port <<router>>
+
+  [watchlist\n/api/v1/watchlist\nGET, POST\nDELETE {symbol}] as r_watch <<router>>
+
+  [chat\n/api/v1/chat\nPOST message] as r_chat <<router>>
+
+  [system\n/health\n/api/v1/system/sources-status] as r_sys <<router>>
+}
+
+' ============================================================
+' Services (7)
+' ============================================================
+package "Services" #F3EEFF {
+  [auth_service\nhash_password (bcrypt)\nverify_password\ncreate_access_token (JWT HS256)\ndecode_access_token\nregister, authenticate] as s_auth <<service>>
+
+  [crypto_service\nlist_tracked()\nget_prices()\nget_indicators()\nget_latest()\nget_market_overview()] as s_crypto <<service>>
+
+  [signal_service\nget_active()\nget_by_symbol()\nget_detail()\nget_performance()] as s_signal <<service>>
+
+  [news_service\nget_latest()\nget_by_id()\nget_sentiment()] as s_news <<service>>
+
+  [user_data_service\nget/add/update/delete\nportfolio + watchlist] as s_user <<service>>
+
+  [chat_service\nLLM integration] as s_chat <<service>>
+}
+
+' ============================================================
+' Dependencies
+' ============================================================
+package "Dependencies" #ECFDF5 {
+  [get_db()\nAsyncSession yield] as dep_db
+  [get_current_user()\nJWT decode + fetch user] as dep_user
+}
+
+' ============================================================
+' Storage
+' ============================================================
+database "TimescaleDB" as tsdb #ECFDF5
+
+' ============================================================
+' Relations
+' ============================================================
+' Middleware chain
+ratelimit --> reqid
+reqid --> cors
+
+' Router -> Service
+r_auth --> s_auth
+r_crypto --> s_crypto
+r_signals --> s_signal
+r_news --> s_news
+r_port --> s_user
+r_watch --> s_user
+r_chat --> s_chat
+r_sys --> dep_db
+
+' Auth dependency
+r_auth --> dep_user
+r_port --> dep_user
+r_watch --> dep_user
+
+' Service -> DB
+s_auth --> dep_db
+s_crypto --> dep_db
+s_signal --> dep_db
+s_news --> dep_db
+s_user --> dep_db
+dep_db --> tsdb
+
+@enduml

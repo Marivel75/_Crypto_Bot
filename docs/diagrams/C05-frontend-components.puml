@@ -1,0 +1,77 @@
+@startuml C05-frontend-components
+!include _common.puml
+
+title CryptoBot — Frontend Streamlit
+caption src/frontend/ | 5 pages, 5 composants, i18n FR/EN
+
+' ============================================================
+' Personas
+' ============================================================
+actor "Noah\nTrader" as noah
+actor "Sarah\nJournaliste" as sarah
+actor "Aleksandar\nDebutant" as aleksandar
+
+' ============================================================
+' Pages
+' ============================================================
+package "Pages" #FEF3E8 {
+  [Dashboard\nCandlestick multi-TF\nIndicateurs, signaux\nAlertes temps reel] as p_dash <<page>>
+  [Veille\nNews feed\nSentiment analysis\nAlertes reglementaires] as p_veille <<page>>
+  [Portfolio\nPosition tracking\nP&L calcul\nChatbot IA] as p_portfolio <<page>>
+  [Analytics\nHeatmaps correlations\nMarket microstructure\nVolume analysis] as p_analytics <<page>>
+  [Performance\nHistorique signaux\nWin rate, Sharpe\nRendement simule] as p_perf <<page>>
+}
+
+' ============================================================
+' Components
+' ============================================================
+package "Composants Plotly" #F3EEFF {
+  [CandlestickChart\nmulti-timeframe\nindicators overlay] as c_candle <<component>>
+  [SignalCard\ndirection, confidence\nleverage, fees] as c_signal <<component>>
+  [NewsFeed\nsource, sentiment\nkeywords highlight] as c_news <<component>>
+  [IndicatorPanel\nRSI, Bollinger\ntrend, harmonics] as c_indic <<component>>
+  [ChatbotWidget\nmessage input\nLLM response\ndisclaimer] as c_chat <<component>>
+}
+
+' ============================================================
+' API Client
+' ============================================================
+package "Infra" #ECFDF5 {
+  [APIClient\nbase_url: /api/v1\nget/post/put/delete\nerror handling] as api_client
+  [i18n\nFR / EN\nlabels, messages] as i18n
+}
+
+' ============================================================
+' Backend
+' ============================================================
+node "FastAPI\n/api/v1/*" as fastapi #F5F5F5
+
+' ============================================================
+' Relations — Personas -> Pages
+' ============================================================
+noah --> p_dash : signaux, charts
+noah --> p_analytics : correlations
+sarah --> p_veille : news, regulatory
+sarah --> p_analytics : heatmaps
+aleksandar --> p_portfolio : chatbot, P&L
+aleksandar --> p_perf : historique
+
+' Pages -> Components
+p_dash --> c_candle
+p_dash --> c_signal
+p_dash --> c_indic
+p_veille --> c_news
+p_portfolio --> c_chat
+p_perf --> c_signal
+
+' Components -> APIClient
+c_candle --> api_client
+c_signal --> api_client
+c_news --> api_client
+c_chat --> api_client
+c_indic --> api_client
+
+' APIClient -> Backend
+api_client --> fastapi : REST HTTP
+
+@enduml

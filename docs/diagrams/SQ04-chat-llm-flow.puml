@@ -1,0 +1,45 @@
+@startuml SQ04-chat-llm-flow
+!include _common.puml
+
+title CryptoBot — Flux Chatbot LLM
+caption Streamlit -> FastAPI -> ChatService -> LLM
+
+actor "Aleksandar\n(debutant)" as user
+participant "Streamlit\nPortfolio page" as st #FEF3E8
+participant "ChatbotWidget" as widget #F3EEFF
+participant "APIClient" as client #F3EEFF
+participant "FastAPI\nchat router" as api #FEF3E8
+participant "ChatService" as svc #F3EEFF
+participant "LLM\n(Claude / OpenAI)" as llm #F5F5F5
+database "TimescaleDB" as db #ECFDF5
+
+user -> st : Ouvre page Portfolio
+st -> widget : Affiche chatbot
+
+user -> widget : "Quel est le meilleur\nmoment pour acheter BTC?"
+widget -> client : post_chat(message)
+client -> api : POST /api/v1/chat\n{message: "..."}
+
+api -> svc : process(message)
+
+svc -> db : Fetch context\n(portfolio, signals, prices)
+db --> svc : user context
+
+svc -> llm : Prompt + context\n+ system instructions
+note right of llm
+  System: "Tu es un assistant
+  crypto informatif.
+  Ne jamais recommander
+  d'acheter ou vendre."
+end note
+
+llm --> svc : response text
+
+svc -> svc : Add disclaimer\n"Ceci n'est pas un\nconseil financier"
+
+svc --> api : ChatResponse
+api --> client : 200 {response: "..."}
+client --> widget : display response
+widget --> user : Reponse + disclaimer
+
+@enduml

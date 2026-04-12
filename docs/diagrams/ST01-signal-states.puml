@@ -1,0 +1,66 @@
+@startuml ST01-signal-states
+!include _common.puml
+
+title CryptoBot — Machine a Etats d'un Signal
+caption TradingSignal lifecycle
+
+[*] --> Computing : APScheduler trigger
+
+state "Computing" as Computing #FEF3E8 {
+  state "Evaluating Rules" as eval
+  state "Aggregating" as agg
+  state "ML Blend" as blend
+  state "Validation" as valid
+
+  eval --> agg : RuleResult[]
+  agg --> blend : confidence
+  blend --> valid : final score
+}
+
+Computing --> Discarded : confidence < 0.6\nor gate failed
+
+state "Active" as Active #ECFDF5 {
+  Active : symbol, signal_type
+  Active : confidence >= 0.6
+  Active : leverage, fees
+  Active : model_version
+}
+
+Computing --> Active : All gates pass\nPersist to DB
+
+state "Evaluation Windows" as EvalWindows #F3EEFF {
+  state "After 1h" as ev1h
+  state "After 4h" as ev4h
+  state "After 1d" as ev1d
+
+  ev1h --> ev4h
+  ev4h --> ev1d
+}
+
+Active --> EvalWindows : evaluate_signal_outcomes\n(every 1 hour)
+
+state "Evaluated" as Evaluated #ECFDF5 {
+  Evaluated : price_after_1h/4h/1d
+  Evaluated : pnl_simulated
+  Evaluated : was_correct (bool)
+}
+
+EvalWindows --> Evaluated : All windows checked
+
+state "Discarded" as Discarded #F5F5F5 {
+  Discarded : Below threshold
+  Discarded : or gate failure
+}
+
+Evaluated --> [*]
+Discarded --> [*]
+
+legend bottom right
+  |= Etat |= Signification |
+  | <#FEF3E8> | Calcul en cours |
+  | <#ECFDF5> | Signal actif / evalue |
+  | <#F3EEFF> | Fenetres d'evaluation |
+  | <#F5F5F5> | Rejete |
+endlegend
+
+@enduml

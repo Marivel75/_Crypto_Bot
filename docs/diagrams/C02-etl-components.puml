@@ -1,0 +1,88 @@
+@startuml C02-etl-components
+!include _common.puml
+
+title CryptoBot — Sous-systeme ETL
+caption src/etl/ | 5 collectors, 2 transformers, 2 loaders, 10 jobs
+
+' ============================================================
+' Collectors
+' ============================================================
+package "Collectors" as coll #FEF3E8 {
+  [BinanceCollector\nREST + WebSocket\nfetch_ohlcv(symbols, tf, limit)] as binance <<collector>>
+  [CoinGeckoCollector\nDemo API\nfetch_market_data(symbols)] as coingecko <<collector>>
+  [CCXTCollector\nMulti-exchange\nfetch_ohlcv(symbol, tf)] as ccxt <<collector>>
+  [NewsCollector\nRSS: Decrypt, Cointelegraph\nfetch_news(sources, keywords)] as news <<collector>>
+  [FearGreedCollector\nAlternative.me\nfetch_fear_greed()] as fng <<collector>>
+}
+
+' ============================================================
+' Transformers
+' ============================================================
+package "Transformers" as trans #F3EEFF {
+  [cleaner.py\ndeduplicate_ohlcv()\nvalidate_ohlcv_relationships()\nfilter_valid_records()\ndetect_gaps()] as cleaner <<transformer>>
+  [indicators.py\ncompute_rsi(period=14)\ncompute_bollinger_bands(20, 2std)\ncompute_price_vs_bollinger()\ncompute_trend(slope + type)] as indicators <<transformer>>
+}
+
+' ============================================================
+' Loaders
+' ============================================================
+package "Loaders" as load #ECFDF5 {
+  [timescaledb.py\ninsert_ohlcv_batch()\ninsert_indicators_batch()\ninsert_news_batch()\nfetch_ohlcv_for_indicators()\ndetect_gaps()] as tsloader <<loader>>
+  [minio_loader.py\nupload_ohlcv_parquet()\nupload_dataset_parquet()\nupload_raw_json()\ndownload_dataframe()] as minloader <<loader>>
+}
+
+' ============================================================
+' Scheduler
+' ============================================================
+package "APScheduler (10 jobs)" as sched #F5F5F5 {
+  [collect_ohlcv_priority\n1 min | 13 symbols] as j1 <<scheduler>>
+  [collect_ohlcv_all\n5 min | all symbols] as j2 <<scheduler>>
+  [collect_market_data\n5 min | CoinGecko] as j3 <<scheduler>>
+  [collect_news\n15 min | RSS feeds] as j4 <<scheduler>>
+  [enrich_news_nlp\n20 min | sentiment] as j5 <<scheduler>>
+  [collect_fear_greed\n1 hour] as j6 <<scheduler>>
+  [compute_indicators\n5 min | RSI, BB, trend] as j7 <<scheduler>>
+  [export_datasets\ndaily 03:00 UTC] as j8 <<scheduler>>
+  [reconciliation\n1 hour | gap detection] as j9 <<scheduler>>
+  [evaluate_signal_outcomes\n1 hour | P&L check] as j10 <<scheduler>>
+}
+
+' ============================================================
+' Storage
+' ============================================================
+database "TimescaleDB" as tsdb #ECFDF5
+database "MinIO" as minio #ECFDF5
+
+' ============================================================
+' Relations
+' ============================================================
+' Scheduler triggers collectors
+j1 --> binance
+j2 --> binance
+j2 --> ccxt
+j3 --> coingecko
+j4 --> news
+j6 --> fng
+
+' Collectors to transformers
+binance --> cleaner : raw OHLCV
+ccxt --> cleaner : raw OHLCV
+coingecko --> cleaner : market data
+news --> cleaner : articles
+
+' Transformers to loaders
+cleaner --> tsloader : clean records
+cleaner --> indicators : valid OHLCV
+j7 --> indicators
+indicators --> tsloader : IndicatorRecord
+
+' Loaders to storage
+tsloader --> tsdb
+minloader --> minio
+j8 --> minloader : daily export
+
+' Reconciliation
+j9 --> tsloader : gap backfill
+j10 --> tsloader : signal evaluation
+
+@enduml

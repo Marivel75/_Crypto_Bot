@@ -1,0 +1,142 @@
+@startuml C01-architecture-macro
+!include _common.puml
+
+title CryptoBot — Architecture Systeme Globale
+caption Phase 1 (actuelle) + Phase 2 (planifiee)
+
+' ============================================================
+' Data Sources (external)
+' ============================================================
+cloud "Sources de Donnees" as sources #F5F5F5 {
+  [Binance\nREST + WebSocket] as binance <<collector>>
+  [CoinGecko\nDemo API] as coingecko <<collector>>
+  [CCXT\nMulti-exchange] as ccxt <<collector>>
+  [News RSS\nDecrypt, Cointelegraph\nPhoenixNews] as rss <<collector>>
+  [Alternative.me\nFear & Greed Index] as fng <<collector>>
+  [ESMA / SEC\nRegulatory] as regulatory <<collector>>
+}
+
+' ============================================================
+' ETL Pipeline
+' ============================================================
+package "ETL Pipeline" as etl #FEF3E8 {
+  [Collectors\n6 sources] as collectors <<scheduler>>
+  [Transformers\nIndicateurs techniques\nNettoyage] as transformers <<transformer>>
+  [Loaders\nTimescaleDB + MinIO] as loaders <<loader>>
+  [APScheduler\n10 jobs recurrents] as scheduler <<scheduler>>
+}
+
+' ============================================================
+' Storage Layer
+' ============================================================
+package "Stockage" as storage #ECFDF5 {
+  database "TimescaleDB\nHypertables OHLCV\nIndicateurs, Signaux\nNews, Users" as tsdb <<hypertable>>
+  database "MinIO\nS3-compatible\nDatasets, Modeles\nArtifacts MLflow" as minio
+}
+
+' ============================================================
+' ML Engine
+' ============================================================
+package "ML Engine" as ml #F3EEFF {
+  [Rule Engine\nRSI, Bollinger\nHarmonics, Trends\nConvergence multi-TF] as rules <<rule>>
+  [Signal Generator\nAggregation ponderee\nML blend 60/40\nValidation seuils] as siggen
+  [NLP / Sentiment\nTF-IDF, NLTK\nScoring articles] as nlp <<model>>
+
+  package "Phase 2" <<phase2>> #white {
+    [Supervised ML\nXGBoost, LightGBM\nLSTM] as supml <<phase2>>
+    [MLflow\nExperiment tracking\nModel registry] as mlflow <<phase2>>
+    [DVC\nDataset versioning] as dvc <<phase2>>
+    [RL Agents\nPaper Trading] as rl <<phase2>>
+  }
+}
+
+' ============================================================
+' Backend API
+' ============================================================
+package "Backend API" as api #FEF3E8 {
+  [FastAPI\n/api/v1/*\n8 routers] as fastapi <<router>>
+  [Auth Service\nJWT HS256\nbcrypt] as auth <<service>>
+  [Middleware\nRate Limiting\nRequest ID\nCORS] as middleware <<middleware>>
+}
+
+' ============================================================
+' Frontend
+' ============================================================
+package "Frontend" as frontend #F3EEFF {
+  [Streamlit\n5 pages] as streamlit <<page>>
+  [Plotly\nCandlestick, Heatmaps\nCorrelations] as plotly <<component>>
+  [Chatbot IA\nAssistant integre] as chatbot <<component>>
+  [i18n\nFR / EN] as i18n <<component>>
+}
+
+' ============================================================
+' Infrastructure
+' ============================================================
+package "Infrastructure" as infra #F5F5F5 {
+  [Nginx\nReverse proxy\nSSL Let's Encrypt] as nginx
+  [Docker Compose\n12 services] as docker
+  [GitHub Actions\nCI/CD] as ci
+  [Grafana + Prometheus\nMonitoring] as monitoring
+}
+
+' ============================================================
+' Personas
+' ============================================================
+actor "Noah\nTrader" as noah
+actor "Sarah\nJournaliste" as sarah
+actor "Aleksandar\nDebutant" as aleksandar
+
+' ============================================================
+' Relations — Data Flow
+' ============================================================
+sources -down-> collectors : donnees brutes
+collectors -right-> transformers : donnees collectees
+transformers -right-> loaders : donnees transformees
+scheduler .down.> collectors : declenche
+loaders -down-> tsdb : OHLCV, indicateurs
+loaders -down-> minio : parquet, artifacts
+
+' ML reads from storage
+tsdb -right-> rules : indicateurs
+tsdb -right-> nlp : articles
+rules -down-> siggen : scores par regle
+nlp -down-> siggen : sentiment
+supml -up-> siggen : predictions ML
+siggen -left-> tsdb : signaux persistes
+
+' MLflow/DVC
+minio <.right.> mlflow : artifacts
+minio <.right.> dvc : datasets
+
+' API reads from storage + ML
+tsdb -down-> fastapi : donnees + signaux
+fastapi -left-> auth : authentification
+fastapi -left-> middleware : filtrage
+
+' Frontend calls API
+streamlit -up-> fastapi : REST /api/v1/*
+plotly -[hidden]up-> streamlit
+chatbot -[hidden]up-> streamlit
+
+' Infra
+nginx -down-> streamlit : port 8501
+nginx -down-> fastapi : port 8000
+docker ..> infra : orchestre tout
+
+' Personas access
+noah -down-> nginx : HTTPS
+sarah -down-> nginx : HTTPS
+aleksandar -down-> nginx : HTTPS
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom right
+  |= Couleur |= Signification |
+  | <#FEF3E8> | Pipeline / API |
+  | <#ECFDF5> | Stockage |
+  | <#F3EEFF> | ML / Frontend |
+  | <#white> | Phase 2 (planifie) |
+endlegend
+
+@enduml

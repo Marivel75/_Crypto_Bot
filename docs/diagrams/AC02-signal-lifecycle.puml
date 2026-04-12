@@ -1,0 +1,86 @@
+@startuml AC02-signal-lifecycle
+!include _common.puml
+
+title CryptoBot — Cycle de Vie d'un Signal
+caption De l'indicateur a l'evaluation post-hoc
+
+|#FEF3E8| Indicateurs |
+start
+:Recuperer OHLCV\nmulti-timeframe\n(1h, 2h, 3h, 4h);
+:Calculer RSI, Bollinger\nHarmonics, Trend;
+
+|#F3EEFF| Rule Engine |
+:RuleEngine.evaluate();
+fork
+  :RSI evaluator\n(poids 0.25);
+fork again
+  :Bollinger evaluator\n(poids 0.25);
+fork again
+  :Harmonic evaluator\n(poids 0.30);
+fork again
+  :Trend evaluator\n(poids 0.20);
+end fork
+
+:Convergence checks\n(RSI+BB, Trend+RSI\nmulti-TF, supermajority);
+
+:RuleEngine.aggregate()\nweighted average\nopposition penalty;
+
+if (rule_confidence >= 0.6?) then (yes)
+  :Produce RuleResult[];
+else (no)
+  :Discard — below threshold;
+  stop
+endif
+
+|#ECFDF5| ML Blend |
+if (Predictor available?) then (yes)
+  :ML predict(features);
+  if (Same direction?) then (yes)
+    :confidence = 0.6*ML + 0.4*rules;
+  else (conflict)
+    :confidence = 0.4 * min(ML, rules);
+  endif
+else (rules only)
+  :confidence = rule_confidence;
+endif
+
+:Sentiment adjustment\n+/- 5 percentage points;
+:Clamp [0.0, 0.95];
+
+if (final confidence >= 0.6?) then (yes)
+  :Build TradingSignal;
+else (no)
+  :Discard;
+  stop
+endif
+
+|#FEF3E8| Validation |
+:Suggest leverage (1-20);
+:Estimate fees;
+:Verify 2x margin safety;
+:Check fee/confidence ratio;
+
+if (All gates pass?) then (yes)
+  :Persist to trading_signals;
+else (no)
+  :Discard;
+  stop
+endif
+
+|#F5F5F5| Post-Hoc Evaluation |
+:Wait evaluation windows;
+fork
+  :Check price_after_1h;
+fork again
+  :Check price_after_4h;
+fork again
+  :Check price_after_1d;
+end fork
+
+:Compute pnl_simulated;
+:Set was_correct (bool);
+:Persist SignalOutcome;
+
+stop
+
+@enduml

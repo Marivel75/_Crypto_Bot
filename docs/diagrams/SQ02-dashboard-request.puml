@@ -1,0 +1,55 @@
+@startuml SQ02-dashboard-request
+!include _common.puml
+
+title CryptoBot — Chargement Page Dashboard
+caption Streamlit -> APIClient -> FastAPI multi-endpoint
+
+actor "Noah" as user
+participant "Streamlit\nDashboard" as st #FEF3E8
+participant "APIClient" as client #F3EEFF
+participant "FastAPI" as api #FEF3E8
+participant "crypto_service" as csvc #F3EEFF
+participant "signal_service" as ssvc #F3EEFF
+database "TimescaleDB" as db #ECFDF5
+
+user -> st : Ouvre Dashboard
+st -> st : st.set_page_config()
+
+== Chargement parallele ==
+st -> client : get_crypto_list()
+client -> api : GET /api/v1/crypto/list
+api -> csvc : list_tracked()
+csvc --> api : list[CryptoListItem]
+api --> client : 200
+
+st -> client : get_prices(symbol, "4h")
+client -> api : GET /api/v1/crypto/{symbol}/prices?timeframe=4h
+api -> csvc : get_prices(symbol, "4h")
+csvc -> db : SELECT crypto_prices
+db --> csvc : rows
+csvc --> api : list[OHLCVResponse]
+api --> client : 200
+
+st -> client : get_indicators(symbol, "4h")
+client -> api : GET /api/v1/crypto/{symbol}/indicators
+api -> csvc : get_indicators()
+csvc -> db : SELECT indicators
+db --> csvc : rows
+csvc --> api : list[IndicatorResponse]
+api --> client : 200
+
+st -> client : get_active_signals()
+client -> api : GET /api/v1/signals/active
+api -> ssvc : get_active()
+ssvc -> db : SELECT signals last 24h
+db --> ssvc : rows
+ssvc --> api : list[SignalResponse]
+api --> client : 200
+
+== Rendu ==
+st -> st : CandlestickChart(prices, indicators)
+st -> st : SignalCard(signals)
+st -> st : IndicatorPanel(indicators)
+st --> user : Dashboard complet
+
+@enduml

@@ -1,0 +1,87 @@
+@startuml C06-phase2-ml-pipeline
+!include _common.puml
+
+title CryptoBot — Architecture ML Phase 2
+caption Supervised ML + LSTM + Walk-Forward Backtesting
+
+' ============================================================
+' Data Sources
+' ============================================================
+package "Data Layer" #ECFDF5 {
+  database "TimescaleDB\nOHLCV + Indicators" as tsdb
+  database "MinIO\nDatasets (DVC)\nModel artifacts" as minio
+}
+
+' ============================================================
+' Feature Engineering
+' ============================================================
+package "Feature Engineering" #FEF3E8 {
+  [FeatureBuilder\nRSI by timeframe\nBB position, squeeze width\ntrend slope, volume\nFear & Greed index\nsentiment score] as features
+}
+
+' ============================================================
+' Models
+' ============================================================
+package "Supervised Models" #F3EEFF {
+  [XGBoost\ngradient boosting\nfeature importance] as xgb
+  [LightGBM\nfast training\ncategorical support] as lgbm
+  [LSTM\nsequence prediction\nmulti-step forecast] as lstm
+}
+
+' ============================================================
+' Training Pipeline
+' ============================================================
+package "Training Pipeline" #FEF3E8 {
+  [Trainer\ntrain(features, labels)\nhyperparameter tuning\ncross-validation] as trainer
+  [Walk-Forward Backtester\n6-month train window\n1-month test window\ntemporal-only splits\npurge + embargo] as backtester
+  [Drift Detector\nfeature distribution\nmodel performance\nalert on degradation] as drift
+}
+
+' ============================================================
+' MLOps
+' ============================================================
+package "MLOps" #F5F5F5 {
+  [MLflow\nExperiment tracking\nModel registry\nStaging -> Production] as mlflow
+  [DVC\nDataset versioning\nReproducible pipelines\nMinIO backend] as dvc
+}
+
+' ============================================================
+' Inference
+' ============================================================
+package "Inference" #ECFDF5 {
+  [Predictor\nload model from registry\npredict(features)\nreturn {direction, confidence}] as predictor
+  [SignalGenerator\nML blend 60/40\nintegration Phase 1 rules] as siggen
+}
+
+' ============================================================
+' Relations
+' ============================================================
+tsdb --> features : raw data
+features --> trainer : feature matrix
+features --> predictor : live features
+
+trainer --> xgb : train
+trainer --> lgbm : train
+trainer --> lstm : train
+
+trainer --> mlflow : log metrics, params
+trainer --> backtester : validate
+backtester --> mlflow : log results
+
+mlflow --> minio : store artifacts
+dvc --> minio : version datasets
+mlflow --> predictor : load production model
+
+predictor --> siggen : ML predictions
+drift --> mlflow : monitor performance
+drift --> trainer : retrain trigger
+
+legend bottom right
+  |= Couleur |= Phase |
+  | <#FEF3E8> | Pipeline training |
+  | <#F3EEFF> | Modeles |
+  | <#ECFDF5> | Data + Inference |
+  | <#F5F5F5> | MLOps |
+endlegend
+
+@enduml

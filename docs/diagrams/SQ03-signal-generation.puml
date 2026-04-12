@@ -1,0 +1,66 @@
+@startuml SQ03-signal-generation
+!include _common.puml
+
+title CryptoBot — Pipeline Generation de Signaux
+caption APScheduler -> RuleEngine -> SignalGenerator -> DB
+
+participant "APScheduler" as sched #F5F5F5
+participant "SignalGenerator" as gen #FEF3E8
+participant "RuleEngine" as engine #F3EEFF
+participant "Evaluators\n(RSI, BB, Harm, Trend)" as eval #F3EEFF
+participant "Predictor\n(Phase 2)" as ml #FEF3E8
+participant "NLP\nSentiment" as nlp #F3EEFF
+database "TimescaleDB" as db #ECFDF5
+
+sched -> gen : generate_signals_for_symbols(symbols)
+
+loop for each symbol
+  gen -> db : fetch indicators\nmulti-timeframe
+  db --> gen : indicators dict
+
+  gen -> engine : evaluate(symbol, indicators)
+  engine -> eval : evaluate_rsi()
+  eval --> engine : RuleResult | None
+  engine -> eval : evaluate_bollinger()
+  eval --> engine : RuleResult | None
+  engine -> eval : evaluate_harmonic()
+  eval --> engine : RuleResult | None
+  engine -> eval : evaluate_trend()
+  eval --> engine : RuleResult | None
+  engine -> eval : convergence checks
+  eval --> engine : list[RuleResult]
+
+  engine -> engine : aggregate()\nweighted: RSI=0.25\nBB=0.25, Harm=0.30\nTrend=0.20
+
+  alt confidence >= 0.6
+    engine --> gen : RuleResult[]
+
+    opt Predictor available (Phase 2)
+      gen -> ml : predict(features)
+      ml --> gen : {direction, confidence}
+      gen -> gen : blend_confidences()\nsame dir: 60% ML + 40% rules\nconflict: 40% * min
+    end
+
+    opt News sentiment available
+      gen -> nlp : get_sentiment(symbol)
+      nlp --> gen : score [-1, 1]
+      gen -> gen : adjust +/- 5pp
+    end
+
+    gen -> gen : suggest_leverage(1-20)
+    gen -> gen : estimate_fees()
+    gen -> gen : verify_margin_safety()
+
+    alt All gates pass
+      gen -> db : INSERT trading_signal
+      db --> gen : TradingSignalOrm
+    else Gate failed
+      gen -> gen : discard
+    end
+
+  else confidence < 0.6
+    engine --> gen : None (below threshold)
+  end
+end
+
+@enduml

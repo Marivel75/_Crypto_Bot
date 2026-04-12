@@ -1,0 +1,216 @@
+@startuml CL03-api-schemas
+!include _common.puml
+
+title CryptoBot — Schemas API Request/Response
+caption src/api/schemas.py | 30+ schemas Pydantic v2
+
+' ============================================================
+' Generic Envelope
+' ============================================================
+package "Envelope" #F5F5F5 {
+  class "ApiResponse<T>" as ApiResponse <<Generic>> {
+    + data : T | None
+    + error : ErrorDetail | None
+    + meta : PaginationMeta | None
+  }
+
+  class ErrorDetail {
+    + code : str
+    + message : str
+  }
+
+  class PaginationMeta {
+    + total : int
+    + page : int
+    + limit : int
+  }
+}
+
+' ============================================================
+' Auth
+' ============================================================
+package "Auth" #FEF3E8 {
+  class RegisterRequest {
+    + username : str {3-100}
+    + email : EmailStr
+    + password : str {8+, upper+digit+special}
+    + persona_type : Literal[trader|journalist|investor]
+  }
+
+  class LoginRequest {
+    + email : EmailStr
+    + password : str {8+}
+  }
+
+  class LoginResponse {
+    + access_token : str
+    + token_type : str = "bearer"
+  }
+
+  class UserResponse {
+    + id : UUID
+    + username : str
+    + email : str
+    + persona_type : str
+    + preferences : dict
+    + created_at : datetime
+  }
+}
+
+' ============================================================
+' Crypto
+' ============================================================
+package "Crypto" #ECFDF5 {
+  class CryptoListItem {
+    + symbol : str
+    + name : str | None
+  }
+
+  class OHLCVResponse {
+    + symbol : str
+    + timeframe : str
+    + timestamp : datetime
+    + price_open..close : float
+    + volume_24h : float
+    + market_cap : float | None
+    + source : str
+  }
+
+  class IndicatorResponse {
+    + symbol, timeframe, timestamp
+    + rsi : float | None
+    + bollinger_upper/middle/lower
+    + price_vs_bollinger
+    + harmonic_pattern : str | None
+    + trend_slope, trend_type
+  }
+
+  class LatestResponse {
+    + symbol : str
+    + ohlcv : OHLCVResponse | None
+    + indicators : IndicatorResponse | None
+  }
+
+  class MarketOverviewResponse {
+    + top_movers
+    + gainers
+    + losers
+  }
+}
+
+' ============================================================
+' Signals
+' ============================================================
+package "Signals" #F3EEFF {
+  class SignalResponse {
+    + symbol, signal_type
+    + confidence_score
+    + timeframe_primary
+    + timeframes_aligned : JSON
+    + rules_triggered : JSON
+    + leverage_suggested
+    + margin_safety, fees_estimated
+    + model_version
+    + created_at
+    + pnl_simulated : float | None
+    + was_correct : bool | None
+  }
+
+  class SignalDetailResponse {
+    + signal : SignalResponse
+    + outcome : SignalOutcomeResponse | None
+  }
+
+  class SignalOutcomeResponse {
+    + signal_id : UUID
+    + price_at_signal : Decimal
+    + price_after_1h/4h/1d
+    + pnl_simulated
+    + was_correct : bool | None
+    + evaluated_at
+  }
+
+  class PerformanceResponse {
+    + total_signals : int
+    + evaluated_signals : int
+    + correct_signals : int
+    + win_rate : float
+    + total_pnl : float
+  }
+}
+
+' ============================================================
+' News
+' ============================================================
+package "News" #FEF3E8 {
+  class NewsResponse {
+    + title, content, source, url
+    + published_at
+    + sentiment_score
+    + keywords : list[str]
+    + reliability_score
+  }
+
+  class NewsSentimentResponse {
+    + source aggregates
+  }
+}
+
+' ============================================================
+' User Data
+' ============================================================
+package "Portfolio / Watchlist" #ECFDF5 {
+  class PortfolioCreateRequest {
+    + symbol : str <<uppercase>>
+    + quantity : Decimal
+    + entry_price : Decimal
+    + notes : str | None
+  }
+
+  class PortfolioEntryResponse {
+    + id, user_id, symbol
+    + quantity, entry_price
+    + current_price, notes
+    + created_at, updated_at
+  }
+
+  class WatchlistAddRequest {
+    + symbol : str <<uppercase>>
+  }
+
+  class WatchlistEntryResponse {
+    + id, user_id, symbol
+    + added_at
+  }
+}
+
+' ============================================================
+' System
+' ============================================================
+package "System / Chat" #F5F5F5 {
+  class HealthResponse {
+    + status : str
+    + database : str
+    + timestamp : datetime
+  }
+
+  class ChatRequest {
+    + message : str
+  }
+
+  class ChatResponse {
+    + response : str
+  }
+}
+
+' ============================================================
+' Relations
+' ============================================================
+ApiResponse *-- ErrorDetail
+ApiResponse *-- PaginationMeta
+SignalDetailResponse *-- SignalResponse
+SignalDetailResponse *-- SignalOutcomeResponse
+LatestResponse *-- OHLCVResponse
+LatestResponse *-- IndicatorResponse
+
+@enduml

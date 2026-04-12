@@ -1,0 +1,71 @@
+@startuml UC01-personas
+!include _common.puml
+
+title CryptoBot — Cas d'Utilisation par Persona
+caption 3 personas | 5 pages Streamlit
+
+left to right direction
+
+' ============================================================
+' Personas
+' ============================================================
+actor "Noah\n(Trader independant)" as noah #FEF3E8
+actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
+actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
+
+' ============================================================
+' Use Cases
+' ============================================================
+rectangle "CryptoBot" #F5F5F5 {
+
+  package "Dashboard" #FEF3E8 {
+    usecase "Consulter charts\nmulti-timeframe" as uc_charts
+    usecase "Voir signaux\nBUY/SELL actifs" as uc_signals
+    usecase "Analyser indicateurs\nRSI, Bollinger, Trend" as uc_indic
+  }
+
+  package "Veille" #F3EEFF {
+    usecase "Suivre actualites\ncrypto en temps reel" as uc_news
+    usecase "Recevoir alertes\nreglementaires" as uc_reg
+    usecase "Voir sentiment\npar source" as uc_sentiment
+  }
+
+  package "Portfolio" #ECFDF5 {
+    usecase "Gerer positions\n(CRUD)" as uc_portfolio
+    usecase "Calculer P&L\nsimule" as uc_pnl
+    usecase "Utiliser chatbot\nassistant IA" as uc_chat
+  }
+
+  package "Analytics" #FEF3E8 {
+    usecase "Voir heatmaps\ncorrelations" as uc_heatmap
+    usecase "Analyser volumes\net microstructure" as uc_volume
+  }
+
+  package "Performance" #F3EEFF {
+    usecase "Consulter historique\nsignaux" as uc_history
+    usecase "Voir win rate\net Sharpe ratio" as uc_perf
+  }
+}
+
+' ============================================================
+' Relations
+' ============================================================
+noah --> uc_charts
+noah --> uc_signals
+noah --> uc_indic
+noah --> uc_heatmap
+noah --> uc_history
+noah --> uc_perf
+
+sarah --> uc_news
+sarah --> uc_reg
+sarah --> uc_sentiment
+sarah --> uc_heatmap
+
+aleksandar --> uc_portfolio
+aleksandar --> uc_pnl
+aleksandar --> uc_chat
+aleksandar --> uc_signals
+aleksandar --> uc_history
+
+@enduml

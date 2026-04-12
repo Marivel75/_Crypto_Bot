@@ -1,0 +1,126 @@
+@startuml CL04-ml-rules-models
+!include _common.puml
+
+title CryptoBot — Hierarchie ML Rules Engine
+caption src/ml/rules/ + src/ml/signal_generator.py
+
+' ============================================================
+' Rule Engine Core
+' ============================================================
+package "rules/engine.py" #F3EEFF {
+
+  class RuleEngine {
+    - config_path : Path
+    - _RULE_WEIGHTS : dict
+    --
+    + {static} from_default() : RuleEngine
+    + evaluate(symbol, timeframe, indicators, prices) : list[RuleResult]
+    + aggregate(symbol, timeframe, results) : dict
+    - _infer_rule_key(name) : str
+    - _infer_primary_timeframe(results) : str
+  }
+
+  class RuleResult <<dataclass>> {
+    + rule_name : str
+    + direction : str
+    + confidence : float
+    + timeframe : str
+    + details : dict
+  }
+
+  note right of RuleEngine
+    Poids :
+    RSI = 0.25
+    Bollinger = 0.25
+    Harmonic = 0.30
+    Trend = 0.20
+  end note
+}
+
+' ============================================================
+' Evaluators
+' ============================================================
+package "rules/evaluators/" #FEF3E8 {
+
+  class "evaluate_rsi()" as rsi <<function>> {
+    overbought / oversold
+    multi-TF convergence
+  }
+
+  class "evaluate_bollinger()" as boll <<function>> {
+    squeeze detection
+    band reversal
+  }
+
+  class "evaluate_harmonic()" as harm <<function>> {
+    Gartley, Butterfly
+    Crab, XAB=CD
+  }
+
+  class "evaluate_trend()" as trend <<function>> {
+    slope + type
+    weekly/monthly
+  }
+
+  class "evaluate_rsi_bollinger\n_convergence()" as conv1 <<function>>
+  class "evaluate_trend_rsi\n_convergence()" as conv2 <<function>>
+  class "evaluate_multi_tf\n_alignment()" as mtf <<function>>
+  class "evaluate_supermajority\n_tf_alignment()" as smtf <<function>>
+}
+
+' ============================================================
+' Signal Generator
+' ============================================================
+package "signal_generator.py" #ECFDF5 {
+
+  class SignalGenerator {
+    - rule_engine : RuleEngine
+    - predictor : Predictor | None
+    --
+    + generate(symbol, tf, indicators, prices, sentiment) : TradingSignal | None
+    + save_signal(db, signal) : TradingSignalOrm
+    + generate_signals_for_symbols(symbols, ...) : list
+    --
+    - _evaluate_rules() : dict
+    - _ml_predict() : dict | None
+    - _blend_confidences(ml, rules) : float
+    - _adjust_confidence_by_sentiment(conf, score) : float
+    - _suggest_leverage(confidence) : int | None
+    - _estimate_fees() : Decimal
+  }
+
+  note right of SignalGenerator
+    ML Blend :
+    Same dir: 60% ML + 40% rules
+    Conflict: 40% * min(ml, rules)
+
+    Sentiment: +/- 5pp
+    Threshold: >= 0.6
+  end note
+
+  interface Predictor <<Protocol>> {
+    + predict(features) : list[dict]
+  }
+}
+
+' ============================================================
+' Relations
+' ============================================================
+RuleEngine --> RuleResult : produces
+RuleEngine ..> rsi : calls
+RuleEngine ..> boll : calls
+RuleEngine ..> harm : calls
+RuleEngine ..> trend : calls
+RuleEngine ..> conv1 : calls
+RuleEngine ..> conv2 : calls
+RuleEngine ..> mtf : calls
+RuleEngine ..> smtf : calls
+
+SignalGenerator --> RuleEngine : uses
+SignalGenerator --> Predictor : optional
+rsi --> RuleResult : returns
+boll --> RuleResult : returns
+harm --> RuleResult : returns
+trend --> RuleResult : returns
+
+@enduml

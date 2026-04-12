@@ -1,0 +1,51 @@
+@startuml SQ01-auth-jwt-flow
+!include _common.puml
+
+title CryptoBot — Authentification JWT
+caption POST /api/v1/auth/register + login + me
+
+actor "Client" as client
+participant "Nginx" as nginx #F5F5F5
+participant "FastAPI\nauth router" as api #FEF3E8
+participant "auth_service" as svc #F3EEFF
+database "TimescaleDB\nusers" as db #ECFDF5
+
+== Register ==
+client -> nginx : POST /api/v1/auth/register
+nginx -> api : proxy
+api -> svc : register_user(UserCreate)
+svc -> svc : hash_password(bcrypt)
+svc -> db : INSERT users
+db --> svc : UserOrm
+svc --> api : UserOrm
+api --> client : 201 UserResponse
+
+== Login ==
+client -> nginx : POST /api/v1/auth/login
+nginx -> api : proxy
+api -> svc : authenticate_user(email, password)
+svc -> db : SELECT user BY email
+db --> svc : UserOrm
+svc -> svc : verify_password(bcrypt)
+alt Password valid
+  svc -> svc : create_access_token(JWT HS256)
+  svc --> api : access_token
+  api --> client : 200 LoginResponse\n{access_token, token_type: "bearer"}
+else Password invalid
+  svc --> api : AuthenticationError
+  api --> client : 401 Unauthorized
+end
+
+== Authenticated Request ==
+client -> nginx : GET /api/v1/auth/me\nAuthorization: Bearer <token>
+nginx -> api : proxy
+api -> api : get_current_user()\ndecode JWT
+alt Token valid
+  api -> db : SELECT user BY id
+  db --> api : UserOrm
+  api --> client : 200 UserResponse
+else Token expired/invalid
+  api --> client : 401 AuthenticationError
+end
+
+@enduml

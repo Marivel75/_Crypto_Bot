@@ -1,0 +1,163 @@
+@startuml CL02-orm-models
+!include _common.puml
+
+title CryptoBot — Classes SQLAlchemy ORM
+caption src/shared/db_models.py | 9 classes | TimescaleDB
+
+' ============================================================
+' User Domain
+' ============================================================
+class UserOrm <<users>> {
+  + id : UUID <<PK>>
+  + username : String(100) <<UNIQUE>>
+  + email : String(255) <<UNIQUE>>
+  + password_hash : String(255)
+  + persona_type : String(20)
+  + preferences : JSONB
+  + created_at : DateTime
+  --
+  <<CHECK>> persona_type IN
+  (trader, journalist, investor)
+  <<rel>> portfolio_entries : 1:N
+  <<rel>> watchlist_entries : 1:N
+}
+
+' ============================================================
+' Market Data
+' ============================================================
+class CryptoPriceOrm <<crypto_prices>> {
+  + symbol : String(20) <<PK>>
+  + timeframe : String(10) <<PK>>
+  + timestamp : DateTime(tz) <<PK>>
+  + price_open : Numeric(20,8)
+  + price_high : Numeric(20,8)
+  + price_low : Numeric(20,8)
+  + price_close : Numeric(20,8)
+  + volume_24h : Numeric(20,8)
+  + market_cap : Numeric(20,2)
+  + source : String(50)
+  --
+  <<HYPERTABLE>> retain=90d compress=7d
+  <<INDEX>> (symbol, timeframe, timestamp)
+}
+
+class IndicatorOrm <<indicators>> {
+  + id : UUID <<PK>>
+  + symbol : String(20)
+  + timeframe : String(10)
+  + timestamp : DateTime(tz)
+  + rsi : Numeric(10,4)
+  + bollinger_upper : Numeric(20,8)
+  + bollinger_middle : Numeric(20,8)
+  + bollinger_lower : Numeric(20,8)
+  + price_vs_bollinger : Numeric(10,6)
+  + harmonic_pattern : String(50)
+  + trend_slope : Numeric(10,6)
+  + trend_type : String(20)
+  + metadata : JSONB
+  --
+  <<UNIQUE>> (symbol, timeframe, timestamp)
+}
+
+' ============================================================
+' Signals
+' ============================================================
+class TradingSignalOrm <<trading_signals>> {
+  + id : UUID <<PK>>
+  + symbol : String(20)
+  + signal_type : String(10)
+  + confidence_score : Numeric(5,4)
+  + timeframe_primary : String(10)
+  + timeframes_aligned : JSONB
+  + rules_triggered : JSONB
+  + leverage_suggested : Integer
+  + margin_safety : Numeric(10,4)
+  + fees_estimated : Numeric(10,6)
+  + model_version : String(50)
+  + created_at : DateTime
+  --
+  <<CHECK>> signal_type IN (BUY,SELL,HOLD)
+  <<INDEX>> (symbol, created_at)
+  <<rel>> outcome : 0..1
+}
+
+class SignalOutcomeOrm <<signal_outcomes>> {
+  + id : UUID <<PK>>
+  + signal_id : UUID <<FK>>
+  + price_at_signal : Numeric(20,8)
+  + price_after_1h : Numeric(20,8)
+  + price_after_4h : Numeric(20,8)
+  + price_after_1d : Numeric(20,8)
+  + pnl_simulated : Numeric(10,4)
+  + was_correct : Boolean
+  + evaluated_at : DateTime
+  --
+  <<INDEX>> (signal_id)
+  <<INDEX>> (was_correct)
+}
+
+' ============================================================
+' User Data
+' ============================================================
+class PortfolioOrm <<portfolio_entries>> {
+  + id : UUID <<PK>>
+  + user_id : UUID <<FK>>
+  + symbol : String(20)
+  + quantity : Numeric(20,8)
+  + entry_price : Numeric(20,8)
+  + current_price : Numeric(20,8)
+  + notes : Text
+  + created_at : DateTime
+  + updated_at : DateTime
+  --
+  <<INDEX>> (user_id)
+}
+
+class WatchlistOrm <<watchlist_entries>> {
+  + id : UUID <<PK>>
+  + user_id : UUID <<FK>>
+  + symbol : String(20)
+  + added_at : DateTime
+  --
+  <<UNIQUE>> (user_id, symbol)
+}
+
+' ============================================================
+' News / NLP
+' ============================================================
+class NewsArticleOrm <<news_articles>> {
+  + id : UUID <<PK>>
+  + title : String(500)
+  + content : Text
+  + source : String(100)
+  + url : String(1000) <<UNIQUE>>
+  + published_at : DateTime(tz)
+  + sentiment_score : Numeric(5,4)
+  + keywords : JSONB
+  + reliability_score : Numeric(5,4)
+  + collected_at : DateTime
+  --
+  <<INDEX>> (published_at)
+  <<INDEX>> (source)
+  <<rel>> text_mining_result : 0..1
+}
+
+class TextMiningResultOrm <<text_mining_results>> {
+  + id : UUID <<PK>>
+  + article_id : UUID <<FK>>
+  + word_cloud : JSONB
+  + summary : Text
+  + entities : JSONB
+  + topics : JSONB
+  + processed_at : DateTime
+}
+
+' ============================================================
+' Relations
+' ============================================================
+UserOrm "1" ||--o{ "N" PortfolioOrm : CASCADE
+UserOrm "1" ||--o{ "N" WatchlistOrm : CASCADE
+TradingSignalOrm "1" ||--o| "0..1" SignalOutcomeOrm : CASCADE
+NewsArticleOrm "1" ||--o| "0..1" TextMiningResultOrm : CASCADE
+
+@enduml

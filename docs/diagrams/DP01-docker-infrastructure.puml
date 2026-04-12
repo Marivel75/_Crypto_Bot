@@ -1,0 +1,113 @@
+@startuml DP01-docker-infrastructure
+!include _common.puml
+
+title CryptoBot — Infrastructure Docker Compose
+caption 12 services | 2 networks | 4 volumes
+
+' ============================================================
+' External
+' ============================================================
+actor "Users" as users
+cloud "Internet\nCloudflare DNS" as internet #F5F5F5
+
+' ============================================================
+' frontend-net
+' ============================================================
+package "frontend-net" as fnet #F3EEFF {
+  node "nginx\nnginx:alpine\n:80 :443" as nginx
+  node "frontend\nStreamlit\n:8501 | 512M" as fe
+  node "nginx-exporter\n32M" as ngexp
+}
+
+' ============================================================
+' backend-net
+' ============================================================
+package "backend-net" as bnet #FEF3E8 {
+  node "api\nFastAPI\n:8000 | 512M" as api
+
+  database "timescaledb\nPG16 | :5433\n1G" as tsdb #ECFDF5
+  database "minio\nS3 | :9000 :9001\n512M" as minio #ECFDF5
+
+  node "mlflow\n:5000 | 512M" as mlflow
+  node "etl-worker\n1G | no port" as etl
+  node "ml-worker\n1G | no port" as mlw
+
+  node "prometheus\nv2.52.0 | :9090\n512M" as prom
+  node "grafana\nv10.4.2 | :3000\n256M" as graf
+  node "postgres-exporter\n64M" as pgexp
+}
+
+' ============================================================
+' Volumes
+' ============================================================
+database "timescaledb-data" as vol_tsdb #ECFDF5
+database "minio-data" as vol_minio #ECFDF5
+database "prometheus-data" as vol_prom #FEF3E8
+database "grafana-data" as vol_graf #FEF3E8
+
+' ============================================================
+' Relations — Access
+' ============================================================
+users --> internet
+internet --> nginx : HTTPS
+
+' Nginx routing
+nginx --> api : /api/*
+nginx --> fe : /crypto/*
+
+' API in both networks
+note on link : frontend-net\n+ backend-net
+
+' ============================================================
+' Relations — Data
+' ============================================================
+api --> tsdb : SQL queries
+api --> minio : S3 objects
+
+etl --> tsdb : insert batches
+etl --> minio : export parquet
+
+mlw --> tsdb : read indicators
+mlw --> minio : model artifacts
+mlw --> mlflow : experiment tracking
+
+mlflow --> tsdb : metadata store
+mlflow --> minio : artifact store
+
+' ============================================================
+' Relations — Monitoring
+' ============================================================
+prom --> api : scrape /metrics
+pgexp --> tsdb : pg metrics
+ngexp --> nginx : stub_status
+graf --> prom : datasource
+
+' ============================================================
+' Relations — Volumes
+' ============================================================
+tsdb --> vol_tsdb
+minio --> vol_minio
+prom --> vol_prom
+graf --> vol_graf
+
+' ============================================================
+' Health checks (notes)
+' ============================================================
+note right of tsdb : pg_isready\n10s interval, 5 retries
+note right of api : curl /health\n30s interval, 15s start
+note right of fe : curl /_stcore/health
+note right of etl : import src.etl\n30s start_period
+note right of mlw : import src.ml\n30s start_period, depends mlflow
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom left
+  |= Couleur |= Usage |
+  | <#F3EEFF> | frontend-net |
+  | <#FEF3E8> | backend-net |
+  | <#ECFDF5> | Stockage persistant |
+  |= Memoire totale |= ~5.8 GB |
+endlegend
+
+@enduml

@@ -62,3 +62,7 @@ backups/
 # Logs
 logs/
 *.log
+
+# Generated diagrams
+docs/diagrams/svg/
+docs/diagrams/png/

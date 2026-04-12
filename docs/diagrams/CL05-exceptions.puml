@@ -1,0 +1,98 @@
+@startuml CL05-exceptions
+!include _common.puml
+
+title CryptoBot — Arbre d'Exceptions
+caption src/shared/exceptions.py | 13 classes
+
+' ============================================================
+' Base
+' ============================================================
+class CryptoBotError #FEF3E8 {
+  + status_code : int = 500
+  + message : str
+  + detail : Any = None
+}
+
+' ============================================================
+' Application Exceptions
+' ============================================================
+class NotFoundError #F3EEFF {
+  + status_code = 404
+}
+
+class AuthenticationError #F3EEFF {
+  + status_code = 401
+}
+
+class AuthorizationError #F3EEFF {
+  + status_code = 403
+}
+
+class ValidationError #F3EEFF {
+  + status_code = 422
+}
+
+class ConflictError #F3EEFF {
+  + status_code = 409
+}
+
+class ConfigurationError #F3EEFF {
+  + status_code = 500
+}
+
+class ExternalAPIError #FEF3E8 {
+  + status_code = 502
+}
+
+class RateLimitError #FEF3E8 {
+  + status_code = 429
+}
+
+' ============================================================
+' ETL Exceptions
+' ============================================================
+class ETLError #ECFDF5 {
+  + status_code = 500
+}
+
+class CollectorError #ECFDF5 {
+}
+
+class DataSourceUnavailable #ECFDF5 {
+}
+
+class LoaderError #ECFDF5 {
+}
+
+class TransformError #ECFDF5 {
+}
+
+' ============================================================
+' Hierarchy
+' ============================================================
+CryptoBotError <|-- NotFoundError
+CryptoBotError <|-- AuthenticationError
+CryptoBotError <|-- AuthorizationError
+CryptoBotError <|-- ValidationError
+CryptoBotError <|-- ConflictError
+CryptoBotError <|-- ConfigurationError
+CryptoBotError <|-- ExternalAPIError
+ExternalAPIError <|-- RateLimitError
+
+CryptoBotError <|-- ETLError
+ETLError <|-- CollectorError
+ETLError <|-- LoaderError
+ETLError <|-- TransformError
+CollectorError <|-- DataSourceUnavailable
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom right
+  |= Couleur |= Categorie |
+  | <#FEF3E8> | Base + External |
+  | <#F3EEFF> | Application (4xx/5xx) |
+  | <#ECFDF5> | ETL specifique |
+endlegend
+
+@enduml

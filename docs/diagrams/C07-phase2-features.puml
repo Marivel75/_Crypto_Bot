@@ -1,0 +1,68 @@
+@startuml C07-phase2-features
+!include _common.puml
+
+title CryptoBot — Roadmap Features Phase 2
+caption 8 features | 62 story points | Sprints 11-16
+
+' ============================================================
+' Existing Phase 1
+' ============================================================
+package "Phase 1 (existant)" #F5F5F5 {
+  [ETL Pipeline\n5 collectors\n10 jobs] as etl
+  [Rule Engine\nRSI, BB, Harmonics\nTrend, Convergence] as rules
+  [FastAPI\n8 routers\n22 endpoints] as api
+  [Streamlit\n5 pages\n3 personas] as frontend
+}
+
+' ============================================================
+' P0 — Quick Wins (8 pts, Sprint 11)
+' ============================================================
+package "P0 — Quick Wins (8 pts)" #ECFDF5 {
+  [F1 Regulatory Scraping\nESMA, SEC\nBeautifulSoup\n3 pts] as f1
+  [F2 RSS ESMA/SEC\nFeed integration\n2 pts] as f2
+  [F3 K-Means Clustering\nMarket regimes\n3 pts] as f3
+}
+
+' ============================================================
+' P1 — Medium (15 pts, Sprint 12-13)
+' ============================================================
+package "P1 — Medium (15 pts)" #FEF3E8 {
+  [F4 Alerts System\nPrice, signal, news\nWebSocket push\n5 pts] as f4
+  [F5 On-Chain Data\nPublic APIs\nWhale tracking\n5 pts] as f5
+  [F6 LSTM Deep Learning\nSequence prediction\nMulti-step forecast\n5 pts] as f6
+}
+
+' ============================================================
+' P2 — High Effort (34 pts, Sprint 13-16)
+' ============================================================
+package "P2 — High Effort (34 pts)" #F3EEFF {
+  [F7 Paper Trading\nSimulated execution\nP&L tracking\nPortfolio management\n13 pts] as f7
+  [F8 RL Agents\nReinforcement Learning\nPolicy optimization\n21 pts] as f8
+}
+
+' ============================================================
+' Integration Points
+' ============================================================
+f1 --> etl : nouveau collector
+f2 --> etl : nouveau collector
+f3 --> rules : nouveau evaluator
+f4 --> api : WebSocket endpoint
+f4 --> frontend : notification UI
+f5 --> etl : nouveau collector
+f6 --> rules : ML model
+f7 --> api : trading endpoints
+f7 --> frontend : paper trading UI
+f8 --> f7 : depends on paper trading
+
+' Critical path
+f7 -[#E8943A,bold]-> f8 : **bloque**
+
+legend bottom right
+  |= Priorite |= Story Points |= Risque |
+  | P0 Quick Wins | 8 pts | Bas |
+  | P1 Medium | 15 pts | Bas-Moyen |
+  | P2 High Effort | 34 pts | Moyen-Haut |
+  | **Total** | **62 pts** | |
+endlegend
+
+@enduml

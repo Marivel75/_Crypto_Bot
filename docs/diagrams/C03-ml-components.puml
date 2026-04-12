@@ -1,0 +1,87 @@
+@startuml C03-ml-components
+!include _common.puml
+
+title CryptoBot — Sous-systeme ML
+caption src/ml/ | Phase 1 (rules) + Phase 2 (supervised)
+
+' ============================================================
+' Phase 1 — Rule Engine
+' ============================================================
+package "Phase 1 — Rule Engine" as p1 #F3EEFF {
+
+  package "rules/" #white {
+    [RuleEngine\nfrom_yaml(config)\nevaluate(symbol, indicators)\naggregate(results)] as engine <<rule>>
+    [RSI Evaluator\noverbought/oversold\nmulti-TF convergence] as rsi <<rule>>
+    [Bollinger Evaluator\nsqueeze detection\nband reversal] as boll <<rule>>
+    [Harmonic Evaluator\nGartley, Butterfly\nCrab, XAB=CD] as harm <<rule>>
+    [Trend Evaluator\nslope + type\nweekly/monthly] as trend <<rule>>
+    [Convergence Evaluators\nRSI+BB, Trend+RSI\nmulti-TF alignment\nsupermajority] as conv <<rule>>
+  }
+
+  [SignalGenerator\nML blend 60/40\nsentiment +/-5pp\nthreshold >= 0.6] as siggen
+
+  [NLP / Sentiment\nTF-IDF, NLTK\nkeyword extraction\nsentiment scoring] as nlp <<model>>
+}
+
+' ============================================================
+' Phase 2 — Supervised ML
+' ============================================================
+package "Phase 2 — Supervised ML" <<phase2>> #FEF3E8 {
+  [Trainer\nXGBoost, LightGBM\nwalk-forward CV\npurge + embargo] as trainer <<phase2>>
+  [FeatureBuilder\nRSI by TF, BB position\nsqueeze width, trend slope\nvolume, Fear&Greed] as features <<phase2>>
+  [Predictor\npredict(features)\nmodel_version] as predictor <<phase2>>
+  [LSTM\ndeep learning\nsequence prediction] as lstm <<phase2>>
+  [Backtester\n6-month train\n1-month test\ntemporal splits] as backtester <<phase2>>
+}
+
+' ============================================================
+' MLOps
+' ============================================================
+package "MLOps" #ECFDF5 {
+  [MLflow\nexperiment tracking\nmodel registry\nStaging -> Production] as mlflow
+  [DVC\ndataset versioning\nMinIO backend] as dvc
+}
+
+' ============================================================
+' Config
+' ============================================================
+artifact "indicators.yaml\nperiods, thresholds\ntimeframes" as config #F5F5F5
+
+' ============================================================
+' Storage
+' ============================================================
+database "TimescaleDB" as tsdb #ECFDF5
+database "MinIO" as minio #ECFDF5
+
+' ============================================================
+' Relations
+' ============================================================
+' Rule engine flow
+config --> engine
+engine --> rsi
+engine --> boll
+engine --> harm
+engine --> trend
+engine --> conv
+engine --> siggen : RuleResult[]
+
+' NLP
+nlp --> siggen : sentiment score
+
+' Signal generator
+siggen --> tsdb : persist signals
+
+' Phase 2 flow
+features --> trainer : feature matrix
+trainer --> mlflow : log experiments
+trainer --> predictor : trained model
+predictor --> siggen : ML predictions
+lstm --> trainer : DL model
+backtester --> trainer : validation
+
+' MLOps
+mlflow --> minio : artifacts
+dvc --> minio : datasets
+tsdb --> features : raw data
+
+@enduml
