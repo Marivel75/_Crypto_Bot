@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1349px" preserveAspectRatio="none" style="width:2204px;height:1349px;background:#FFFFFF;" version="1.1" viewBox="0 0 2204 1349" width="2204px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="349" x="920.5" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="339" x="925.5" y="22.9951">CryptoBot — Architecture Systeme Globale</text><!--MD5=[82f0574ca935a4409687812a512a178b]
+cluster sources--><g id="cluster_sources"><path d="M1144.0663,73.2415 C1157.1181,51.401 1173.9961,47.8091 1189.3142,70.9624 C1200.8813,55.0731 1211.9565,53.16 1223.6008,70.8837 C1234.7595,49.4694 1248.4639,47.737 1264.0624,66.4015 C1276.1138,47.2172 1296.3281,47.3091 1304.292,70.3004 C1313.8076,47.705 1334.5405,48.2088 1346.1248,68.2716 C1357.0435,46.7887 1376.2498,45.8349 1387.577,67.8826 C1396.2651,49.2827 1412.8504,44.8514 1426.4274,62.6666 C1440.8021,47.2922 1454.7655,49.7003 1465.1436,67.3519 C1475.4597,48.3171 1487.9465,51.698 1499.3135,66.2838 C1511.5559,43.2969 1533.5986,47.3245 1544.7813,67.4027 C1559.7332,49.8027 1572.8052,50.8329 1584.608,70.746 C1593.4266,51.5796 1608.8892,52.881 1618.9359,69.5703 C1632.5924,49.6986 1648.9409,50.7918 1662.3935,69.7981 C1676.5686,53.4125 1692.8106,53.4197 1703,74.1577 C1705.1786,71.6513 1707.1594,72.2637 1708.4238,75.0878 C1733.1021,91.6239 1729.6306,109.656 1705.2341,122.9195 C1729.057,138.1974 1725.9649,157.5256 1705.5616,173.0923 C1727.2102,185.9273 1730.5341,206.6511 1709.3963,222.7877 C1731.8831,237.8089 1729.0197,255.4197 1706.1073,267.0689 C1730.6061,281.7471 1732.4572,298.5536 1708.0299,315.1866 C1731.5492,336.2142 1723.9324,356.5164 1696,365.1577 C1700.3603,366.6657 1700.4849,369.1122 1697.8485,372.4049 C1685.3266,386.7268 1673.1176,387.024 1662.3214,370.4222 C1646.0118,394.3075 1631.8279,391.9406 1617.2408,368.772 C1610.8953,390.6391 1591.481,391.5116 1578.0668,376.2251 C1567.4843,389.6525 1552.4692,390.0519 1543.4937,374.3198 C1530.9782,394.2678 1518.3355,395.7602 1502.6333,377.7503 C1491.1908,394.2784 1477.0583,395.1461 1465.893,377.4527 C1454.7018,398.6544 1442.1655,400.0897 1426.0772,382.476 C1411.1605,402.3447 1391.9483,398.4101 1383.552,375.9287 C1374.7971,395.9496 1357.2221,396.2269 1344.9877,379.5892 C1332.8335,396.4728 1316.9574,398.6568 1306.3588,377.989 C1292.1505,394.6197 1271.369,392.1386 1262.59,371.5963 C1249.8762,387.0711 1236.4857,388.5022 1225.5881,369.6391 C1214.2325,386.2513 1202.9558,386.6864 1190.2957,371.0675 C1166.932,391.6891 1148.6138,386.0431 1137,358.1577 C1140.3687,360.1655 1140.533,362.7489 1137.4114,365.1392 C1112.969,347.8509 1115.477,326.2601 1141.8633,313.3403 C1120.0742,300.5895 1118.4505,284.5385 1140.8362,270.7231 C1113.9657,259.6654 1112.4341,241.2769 1133.2692,222.7019 C1108.0563,202.5213 1114.2581,183.5558 1141.4628,171.8153 C1116.6177,155.2796 1116.2443,140.7404 1142.1813,124.9839 C1118.5998,105.0795 1119.2289,85.5413 1144,67.1577 C1147.0524,69.0191 1146.6663,71.3185 1144.0663,73.2415 " fill="#F5F5F5" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="146" x="1347" y="83.2963">Sources de Donnees</text></g><!--MD5=[a97480163d8570385cb0f45903ef16f0]
+cluster etl--><g id="cluster_etl"><path d="M259,67.1577 L344,67.1577 A4.5,4.5 0 0 1 347,70.1577 L354,87.1264 L1094,87.1264 A3,3 0 0 1 1097,90.1264 L1097,362.1577 A3,3 0 0 1 1094,365.1577 L259,365.1577 A3,3 0 0 1 256,362.1577 L256,70.1577 A3,3 0 0 1 259,67.1577 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="256" x2="354" y1="87.1264" y2="87.1264"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="85" x="260" y="80.2963">ETL Pipeline</text></g><!--MD5=[dec65acb061c0ad7eb693bd0c7daa717]
+cluster storage--><g id="cluster_storage"><path d="M828,430.6577 L894,430.6577 A4.5,4.5 0 0 1 897,433.6577 L904,450.6264 L1174,450.6264 A3,3 0 0 1 1177,453.6264 L1177,590.6577 A3,3 0 0 1 1174,593.6577 L828,593.6577 A3,3 0 0 1 825,590.6577 L825,433.6577 A3,3 0 0 1 828,430.6577 " fill="#ECFDF5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="825" x2="904" y1="450.6264" y2="450.6264"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="66" x="829" y="443.7963">Stockage</text></g><!--MD5=[f67f38bab7725d5d65f66523f8dc33f3]
+cluster ml--><g id="cluster_ml"><path d="M9,430.1577 L81,430.1577 A4.5,4.5 0 0 1 84,433.1577 L91,450.1264 L798,450.1264 A3,3 0 0 1 801,453.1264 L801,1050.6577 A3,3 0 0 1 798,1053.6577 L9,1053.6577 A3,3 0 0 1 6,1050.6577 L6,433.1577 A3,3 0 0 1 9,430.1577 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="6" x2="91" y1="450.1264" y2="450.1264"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="72" x="10" y="443.2963">ML Engine</text></g><!--MD5=[45d389283c8c11b63af84e8c91f9eb16]
+cluster Phase 2--><g id="cluster_Phase 2"><path d="M33,851.6577 L89,851.6577 A4.5,4.5 0 0 1 92,854.6577 L99,871.6264 L774,871.6264 A3,3 0 0 1 777,874.6264 L777,1026.6577 A3,3 0 0 1 774,1029.6577 L33,1029.6577 A3,3 0 0 1 30,1026.6577 L30,854.6577 A3,3 0 0 1 33,851.6577 " fill="#FFFFFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="30" x2="99" y1="871.6264" y2="871.6264"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="56" x="34" y="864.7963">Phase 2</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="377.5" y="884.7651">«phase2»</text></g><!--MD5=[7442f3b126ee602ae02566c1a49e158a]
+cluster api--><g id="cluster_api"><path d="M862,640.6577 L948,640.6577 A4.5,4.5 0 0 1 951,643.6577 L958,660.6264 L1401,660.6264 A3,3 0 0 1 1404,663.6264 L1404,801.6577 A3,3 0 0 1 1401,804.6577 L862,804.6577 A3,3 0 0 1 859,801.6577 L859,643.6577 A3,3 0 0 1 862,640.6577 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="859" x2="958" y1="660.6264" y2="660.6264"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="86" x="863" y="653.7963">Backend API</text></g><!--MD5=[23cbaadc18b1780d966e07254adaec4d]
+cluster frontend--><g id="cluster_frontend"><path d="M1310,886.6577 L1375,886.6577 A4.5,4.5 0 0 1 1378,889.6577 L1385,906.6264 L1703,906.6264 A3,3 0 0 1 1706,909.6264 L1706,1199.6577 A3,3 0 0 1 1703,1202.6577 L1310,1202.6577 A3,3 0 0 1 1307,1199.6577 L1307,889.6577 A3,3 0 0 1 1310,886.6577 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="1307" x2="1385" y1="906.6264" y2="906.6264"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="65" x="1311" y="899.7963">Frontend</text></g><!--MD5=[b96263a6e3ccc8d9646ad6160c88315b]
+cluster infra--><g id="cluster_infra"><path d="M1439,436.1577 L1538,436.1577 A4.5,4.5 0 0 1 1541,439.1577 L1548,456.1264 L2194,456.1264 A3,3 0 0 1 2197,459.1264 L2197,744.0177 A3,3 0 0 1 2194,747.0177 L1439,747.0177 A3,3 0 0 1 1436,744.0177 L1436,439.1577 A3,3 0 0 1 1439,436.1577 " fill="#F5F5F5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="1436" x2="1548" y1="456.1264" y2="456.1264"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="99" x="1440" y="449.2963">Infrastructure</text></g><!--MD5=[e380683512546a6677ea4ec86d90290f]
+entity binance--><g id="elem_binance"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="159" x="1173.5" y="115.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1312.5" y="120.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1310.5" y="122.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1310.5" y="126.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="68" x="1214" y="146.2963">«collector»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="50" x="1188.5" y="160.2651">Binance</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1188.5" y="174.2338">REST + WebSocket</text></g><!--MD5=[8f13d3a1898e66204cce81684be9fe50]
+entity coingecko--><g id="elem_coingecko"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="108" x="1368" y="115.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1456" y="120.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1454" y="122.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1454" y="126.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="68" x="1383" y="146.2963">«collector»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="1384" y="160.2651">CoinGecko</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="59" x="1384" y="174.2338">Demo API</text></g><!--MD5=[b606024bbfe7bb2a72f23d5885a85ac0]
+entity ccxt--><g id="elem_ccxt"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="134" x="1511" y="115.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1625" y="120.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1623" y="122.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1623" y="126.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="68" x="1539" y="146.2963">«collector»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="30" x="1526" y="160.2651">CCXT</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="1526" y="174.2338">Multi-exchange</text></g><!--MD5=[54e0b95ce0ae51e2c6c45ee15bee6e0d]
+entity rss--><g id="elem_rss"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="184" x="1161" y="263.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1325" y="268.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1323" y="270.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1323" y="274.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="68" x="1214" y="294.2963">«collector»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="61" x="1176" y="308.2651">News RSS</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="1176" y="322.2338">Decrypt, Cointelegraph</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="1176" y="336.2026">PhoenixNews</text></g><!--MD5=[3dc85b8472d06b3be94ffc4f03a53d72]
+entity fng--><g id="elem_fng"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="161" x="1380.5" y="270.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1521.5" y="275.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1519.5" y="277.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1519.5" y="281.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="68" x="1422" y="301.2963">«collector»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="90" x="1395.5" y="315.2651">Alternative.me</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="121" x="1395.5" y="329.2338">Fear &amp; Greed Index</text></g><!--MD5=[35b8d8cc4a6e3073d93d2184c817f75c]
+entity regulatory--><g id="elem_regulatory"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="110" x="1577" y="270.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1667" y="275.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1665" y="277.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1665" y="281.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="68" x="1593" y="301.2963">«collector»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="1592" y="315.2651">ESMA / SEC</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="67" x="1592" y="329.2338">Regulatory</text></g><!--MD5=[2ec85851807f7127eb3912622b09cb2e]
+entity collectors--><g id="elem_collectors"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="115" x="272.5" y="270.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="367.5" y="275.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="365.5" y="277.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="365.5" y="281.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="75" x="287.5" y="301.2963">«scheduler»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="294" y="315.2651">Collectors</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="294" y="329.2338">6 sources</text></g><!--MD5=[e79225cb1e3c660848e896b430e11be4]
+entity transformers--><g id="elem_transformers"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="184" x="547" y="263.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="711" y="268.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="709" y="270.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="709" y="274.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="87" x="590.5" y="294.2963">«transformer»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="83" x="562" y="308.2651">Transformers</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="562" y="322.2338">Indicateurs techniques</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="65" x="562" y="336.2026">Nettoyage</text></g><!--MD5=[b0352ac3cb2babe975aa0d0183cfa0ce]
+entity loaders--><g id="elem_loaders"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="170" x="911" y="270.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1061" y="275.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1059" y="277.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1059" y="281.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="54" x="964" y="301.2963">«loader»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="50" x="926" y="315.2651">Loaders</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="926" y="329.2338">TimescaleDB + MinIO</text></g><!--MD5=[637ad760a824b4f188254bdb9f14c9f0]
+entity scheduler--><g id="elem_scheduler"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="156" x="272" y="115.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="408" y="120.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="406" y="122.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="406" y="126.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="75" x="307.5" y="146.2963">«scheduler»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="287" y="160.2651">APScheduler</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="287" y="174.2338">10 jobs recurrents</text></g><!--MD5=[5f5753442e7fadb4fd16694c78ce39f0]
+entity tsdb--><g id="elem_tsdb"><path d="M1013.5,488.6577 C1013.5,478.6577 1087,478.6577 1087,478.6577 C1087,478.6577 1160.5,478.6577 1160.5,488.6577 L1160.5,567.5014 C1160.5,577.5014 1087,577.5014 1087,577.5014 C1087,577.5014 1013.5,577.5014 1013.5,567.5014 L1013.5,488.6577 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M1013.5,488.6577 C1013.5,498.6577 1087,498.6577 1087,498.6577 C1087,498.6577 1160.5,498.6577 1160.5,488.6577 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="82" x="1046" y="513.7963">«hypertable»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="1023.5" y="527.7651">TimescaleDB</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1023.5" y="541.7338">Hypertables OHLCV</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="1023.5" y="555.7026">Indicateurs, Signaux</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="77" x="1023.5" y="569.6713">News, Users</text></g><!--MD5=[dd69d516781b0f0936e849bb07507e10]
+entity minio--><g id="elem_minio"><path d="M841.5,495.6577 C841.5,485.6577 910,485.6577 910,485.6577 C910,485.6577 978.5,485.6577 978.5,495.6577 L978.5,560.5327 C978.5,570.5327 910,570.5327 910,570.5327 C910,570.5327 841.5,570.5327 841.5,560.5327 L841.5,495.6577 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M841.5,495.6577 C841.5,505.6577 910,505.6577 910,505.6577 C910,505.6577 978.5,505.6577 978.5,495.6577 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="851.5" y="520.7963">MinIO</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="851.5" y="534.7651">S3-compatible</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="851.5" y="548.7338">Datasets, Modeles</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="851.5" y="562.7026">Artifacts MLflow</text></g><!--MD5=[52f38f83105e4d01312faed08f8fa76c]
+entity rules--><g id="elem_rules"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="174" x="603" y="478.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="757" y="483.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="755" y="485.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="755" y="489.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="666" y="509.2963">«rule»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="618" y="523.2651">Rule Engine</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="618" y="537.2338">RSI, Bollinger</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="618" y="551.2026">Harmonics, Trends</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="134" x="618" y="565.1713">Convergence multi-TF</text></g><!--MD5=[25d507d6edd5f10178a33a1ffd573b92]
+entity siggen--><g id="elem_siggen"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="182" x="370" y="695.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="532" y="700.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="530" y="702.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="530" y="706.6577"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="106" x="385" y="726.7963">Signal Generator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="142" x="385" y="740.7651">Aggregation ponderee</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="95" x="385" y="754.7338">ML blend 60/40</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="102" x="385" y="768.7026">Validation seuils</text></g><!--MD5=[b43fd3e8bde7a46f1d275b41c2bae67a]
+entity nlp--><g id="elem_nlp"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="139" x="428.5" y="485.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="547.5" y="490.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="545.5" y="492.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="545.5" y="496.1577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="52" x="467" y="516.2963">«model»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="99" x="443.5" y="530.2651">NLP / Sentiment</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="443.5" y="544.2338">TF-IDF, NLTK</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="443.5" y="558.2026">Scoring articles</text></g><!--MD5=[5cb6d89ff6e6f85e5562b44720700c86]
+entity supml--><g id="elem_supml"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="157" x="209.5" y="927.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="346.5" y="932.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="344.5" y="934.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="344.5" y="938.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="253" y="958.7963">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="224.5" y="972.7651">Supervised ML</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="224.5" y="986.7338">XGBoost, LightGBM</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="31" x="224.5" y="1000.7026">LSTM</text></g><!--MD5=[e3a56af7e226478f972bb17db43d1d10]
+entity mlflow--><g id="elem_mlflow"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="165" x="595.5" y="927.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="740.5" y="932.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="738.5" y="934.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="738.5" y="938.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="643" y="958.7963">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="40" x="610.5" y="972.7651">MLflow</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="610.5" y="986.7338">Experiment tracking</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="610.5" y="1000.7026">Model registry</text></g><!--MD5=[5ca40706a446a5f6ff4ec6c3ab4bd468]
+entity dvc--><g id="elem_dvc"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="158" x="402" y="934.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="540" y="939.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="538" y="941.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="538" y="945.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="446" y="965.7963">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="25" x="417" y="979.7651">DVC</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="417" y="993.7338">Dataset versioning</text></g><!--MD5=[fae2b9ee5f7b32fe01be46ac9f3e869b]
+entity rl--><g id="elem_rl"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="128" x="46" y="934.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="154" y="939.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="152" y="941.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="152" y="945.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="75" y="965.7963">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="61" y="979.7651">RL Agents</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="61" y="993.7338">Paper Trading</text></g><!--MD5=[ba155371d613af479bc593bce0f39b7f]
+entity fastapi--><g id="elem_fastapi"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="98" x="1290" y="695.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1368" y="700.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1366" y="702.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1366" y="706.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="1307.5" y="726.7963">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="1305" y="740.7651">FastAPI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="51" x="1305" y="754.7338">/api/v1/*</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="58" x="1305" y="768.7026">8 routers</text></g><!--MD5=[e29493a8775effcafa538aa0485107d1]
+entity auth--><g id="elem_auth"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="118" x="1036" y="695.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1134" y="700.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1132" y="702.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1132" y="706.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="1061.5" y="726.7963">«service»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="78" x="1051" y="740.7651">Auth Service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="1051" y="754.7338">JWT HS256</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="39" x="1051" y="768.7026">bcrypt</text></g><!--MD5=[b1c5af98f3b6d9175a9c05a4105e8234]
+entity middleware--><g id="elem_middleware"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="126" x="875" y="688.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="981" y="693.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="979" y="695.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="979" y="699.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="86" x="890" y="719.7963">«middleware»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="893" y="733.7651">Middleware</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="80" x="893" y="747.7338">Rate Limiting</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="68" x="893" y="761.7026">Request ID</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="893" y="775.6713">CORS</text></g><!--MD5=[a6075fad774b7a970e22ba62d1e832cd]
+entity streamlit--><g id="elem_streamlit"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="96" x="1547" y="934.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1623" y="939.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1621" y="941.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1621" y="945.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="46" x="1567" y="965.7963">«page»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="56" x="1562" y="979.7651">Streamlit</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="51" x="1562" y="993.7338">5 pages</text></g><!--MD5=[85d9b41f74e2e839ed472c7d9b98d096]
+entity plotly--><g id="elem_plotly"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="184" x="1323" y="1100.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1487" y="1105.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1485" y="1107.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1485" y="1111.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="1367.5" y="1131.7963">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="1338" y="1145.7651">Plotly</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="1338" y="1159.7338">Candlestick, Heatmaps</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="1338" y="1173.7026">Correlations</text></g><!--MD5=[180a7bba31ba715abf94f11315ac270a]
+entity chatbot--><g id="elem_chatbot"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="147" x="1542.5" y="1107.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1669.5" y="1112.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1667.5" y="1114.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1667.5" y="1118.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="1568.5" y="1138.7963">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="65" x="1557.5" y="1152.7651">Chatbot IA</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="1557.5" y="1166.7338">Assistant integre</text></g><!--MD5=[0a2143692dbdd87ed03cfb87084d491e]
+entity i18n--><g id="elem_i18n"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="125" x="1365.5" y="934.6577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1470.5" y="939.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1468.5" y="941.6577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1468.5" y="945.6577"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="1380.5" y="965.7963">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="27" x="1401" y="979.7651">i18n</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="1401" y="993.7338">FR / EN</text></g><!--MD5=[8824c66cba45be527cf3dd56bcd70cd2]
+entity nginx--><g id="elem_nginx"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="146" x="1846" y="492.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1972" y="497.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1970" y="499.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1970" y="503.1577"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="34" x="1861" y="523.2963">Nginx</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="1861" y="537.2651">Reverse proxy</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="106" x="1861" y="551.2338">SSL Let's Encrypt</text></g><!--MD5=[7c0f197cad09c4d86c8b8989e1030b9e]
+entity docker--><g id="elem_docker"><rect fill="#F3EEFF" height="57.9375" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="146" x="2027" y="499.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="2153" y="504.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="2151" y="506.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="2151" y="510.1577"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="106" x="2042" y="530.2963">Docker Compose</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="71" x="2042" y="544.2651">12 services</text></g><!--MD5=[25f719494bd62b57f2de0576f80f7d6b]
+entity ci--><g id="elem_ci"><rect fill="#F3EEFF" height="57.9375" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="132" x="1679" y="499.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1791" y="504.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1789" y="506.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1789" y="510.1577"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="92" x="1694" y="530.2963">GitHub Actions</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="1694" y="544.2651">CI/CD</text></g><!--MD5=[0899a72d608834086b56170fb6645824]
+entity monitoring--><g id="elem_monitoring"><rect fill="#F3EEFF" height="57.9375" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="184" x="1460" y="499.1577"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1624" y="504.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1622" y="506.1577"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1622" y="510.1577"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="1475" y="530.2963">Grafana + Prometheus</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="1475" y="544.2651">Monitoring</text></g><!--MD5=[ef570840cc7279c530a711c2b23bef77]
+entity noah--><g id="elem_noah"><ellipse cx="2010" cy="270.6577" fill="#F1F1F1" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M2010,278.6577 L2010,305.6577 M1997,286.6577 L2023,286.6577 M2010,305.6577 L1997,320.6577 M2010,305.6577 L2023,320.6577 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="1989.5" y="333.2963">Noah</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="41" x="1989.5" y="347.2651">Trader</text></g><!--MD5=[a8a1a187114bf8996be097019e338e96]
+entity sarah--><g id="elem_sarah"><ellipse cx="1816" cy="270.6577" fill="#F1F1F1" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M1816,278.6577 L1816,305.6577 M1803,286.6577 L1829,286.6577 M1816,305.6577 L1803,320.6577 M1816,305.6577 L1829,320.6577 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="37" x="1783" y="333.2963">Sarah</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="1783" y="347.2651">Journaliste</text></g><!--MD5=[4bc09776e4f113d7c85cfd7329fd7e38]
+entity aleksandar--><g id="elem_aleksandar"><ellipse cx="1919" cy="270.6577" fill="#F1F1F1" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M1919,278.6577 L1919,305.6577 M1906,286.6577 L1932,286.6577 M1919,305.6577 L1906,320.6577 M1919,305.6577 L1932,320.6577 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="1884" y="333.2963">Aleksandar</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="59" x="1884" y="347.2651">Debutant</text></g><!--MD5=[e36aea679490fbad10d7ebdfd63d393c]
+link sources to collectors--><g id="link_sources_collectors"><path d="M1128.8998,161.9116 C1128.8526,161.9638 1128.8053,162.0161 1128.7578,162.0685 C1128.5679,162.2782 1128.3751,162.4898 1128.1796,162.7033 C1127.7886,163.1302 1127.3867,163.5644 1126.9744,164.0047 C1126.1496,164.8854 1125.2828,165.7906 1124.3775,166.7114 C1117.135,174.0777 1107.425,182.4377 1097,187.1577 C865.44,292.0077 780.46,218.7377 530,262.1577 C483.78,270.1677 432.02,281.3577 392.74,290.3177 " fill="none" id="sources-to-collectors" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="387.52,291.5077,397.1853,293.4001,392.3941,290.3928,395.4015,285.6016,387.52,291.5077" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="1020" y="229.2963">donnees brutes</text></g><!--MD5=[40551e7fecffb567c391ccc0a61f5447]
+link collectors to transformers--><g id="link_collectors_transformers"><path d="M387.76,306.1577 C430.99,306.1577 491.14,306.1577 541.74,306.1577 " fill="none" id="collectors-to-transformers" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="546.92,306.1577,537.92,302.1577,541.92,306.1577,537.92,310.1577,546.92,306.1577" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="123" x="405.75" y="300.2963">donnees collectees</text></g><!--MD5=[7c118fbc2334b89d1953b8c43eac79f4]
+link transformers to loaders--><g id="link_transformers_loaders"><path d="M731.4,306.1577 C785.04,306.1577 852.32,306.1577 905.61,306.1577 " fill="none" id="transformers-to-loaders" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="910.72,306.1577,901.72,302.1577,905.72,306.1577,901.72,310.1577,910.72,306.1577" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="143" x="749.5" y="300.2963">donnees transformees</text></g><!--MD5=[cb861e993f1edd650b76128c72a736cf]
+link scheduler to collectors--><g id="link_scheduler_collectors"><path d="M345.41,187.2577 C342.39,210.4077 338.41,240.7877 335.26,264.9077 " fill="none" id="scheduler-to-collectors" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#4A6FA5" points="334.6,269.9577,339.7449,261.5595,335.2552,265.0008,331.8139,260.5111,334.6,269.9577" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="65" x="342" y="229.2963">declenche</text></g><!--MD5=[5c7f5f3ac386f3d8b1cb93d3883621f3]
+link loaders to tsdb--><g id="link_loaders_tsdb"><path d="M1023.07,342.3377 C1034.31,358.3477 1046.64,377.9777 1055,397.1577 C1065.53,421.3277 1073.01,449.6077 1078.08,473.5977 " fill="none" id="loaders-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1079.12,478.6477,1081.2071,469.0225,1078.1037,473.7521,1073.3741,470.6486,1079.12,478.6477" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="1061" y="409.2963">OHLCV, indicateurs</text></g><!--MD5=[4fdc57001b32a40d7bae5d6331a96d7b]
+link loaders to minio--><g id="link_loaders_minio"><path d="M969.7,342.3777 C958.81,358.3977 946.91,378.0177 939,397.1577 C927.98,423.8077 920.82,455.3277 916.37,480.6677 " fill="none" id="loaders-to-minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="915.51,485.6477,920.9699,477.4507,916.3528,480.7192,913.0843,476.1022,915.51,485.6477" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="940" y="409.2963">parquet, artifacts</text></g><!--MD5=[80ae6b38c5e7d50b8ad78be39e221e4f]
+link tsdb to rules--><g id="link_tsdb_rules"><path d="M1057.76,478.4477 C1042.34,457.2377 1021.34,434.7277 996,423.1577 C926.87,391.5877 896.89,398.4977 825,423.1577 C794.34,433.6777 765.27,454.3277 742.02,474.5477 " fill="none" id="tsdb-to-rules" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="738.04,478.0477,747.4417,475.1137,741.7967,474.7481,742.1624,469.103,738.04,478.0477" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="778" y="409.2963">indicateurs</text></g><!--MD5=[eb7bf3411d885d20362deac585a8096e]
+link tsdb to nlp--><g id="link_tsdb_nlp"><path d="M1057.76,478.4477 C1042.34,457.2377 1021.34,434.7277 996,423.1577 C954.56,404.2377 627.28,403.8977 586,423.1577 C560.24,435.1777 539.35,458.8677 524.4,480.7077 " fill="none" id="tsdb-to-nlp" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="521.49,485.0477,529.8313,479.8111,524.28,480.8985,523.1926,475.3471,521.49,485.0477" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="855" y="409.2963">articles</text></g><!--MD5=[7dc8fd511dd3eea017c505e0dd3855cb]
+link rules to siggen--><g id="link_rules_siggen"><path d="M629.13,578.1677 C615.29,587.2677 600.18,595.7577 585,601.6577 C560.75,611.0877 548.24,594.6277 527,609.6577 C499.89,628.8377 483.15,662.5777 473.31,690.5977 " fill="none" id="rules-to-siggen" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="471.67,695.3977,478.3632,688.1727,473.2854,690.6658,470.7922,685.588,471.67,695.3977" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="103" x="528" y="621.7963">scores par regle</text></g><!--MD5=[fce9fb90f1e75ec330dd829fd70383d4]
+link nlp to siggen--><g id="link_nlp_siggen"><path d="M446.9,571.5877 C436.76,582.8077 427.54,595.7277 422,609.6577 C411.5,636.0777 419.95,666.4877 431.63,691.0377 " fill="none" id="nlp-to-siggen" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="433.85,695.5577,433.4783,685.7158,431.6483,691.0685,426.2956,689.2385,433.85,695.5577" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="63" x="423" y="621.7963">sentiment</text></g><!--MD5=[fa3ce5952ead0053775e0a1a41c6ea39]
+reverse link siggen to supml--><g id="link_siggen_supml"><path d="M426.12,786.0377 C395.04,827.3577 349.94,887.3177 319.82,927.3477 " fill="none" id="siggen-backto-supml" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="429.27,781.8477,420.67,786.6477,426.27,785.8477,427.07,791.4477,429.27,781.8477" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="90" x="396" y="832.7963">predictions ML</text></g><!--MD5=[4afab5154df7667ba887065a0aef21b9]
+reverse link tsdb to siggen--><g id="link_tsdb_siggen"><path d="M1076.97,583.0177 C1071.22,599.0577 1062.19,614.9277 1048,624.6577 C1028.15,638.2577 637.92,625.3577 615,632.6577 C575.07,645.3777 536.13,672.0977 507.4,695.3977 " fill="none" id="tsdb-backto-siggen" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1078.65,578.0477,1071.983,585.2969,1077.0517,582.7853,1079.5633,587.8541,1078.65,578.0477" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="1062" y="621.7963">signaux persistes</text></g><!--MD5=[aa2152a76d46b0e8f9002a253cc8c9ad]
+link minio to mlflow--><g id="link_minio_mlflow"><path d="M855.3,574.4577 C837.47,591.3077 818.75,611.5077 805,632.6577 C772.86,682.0877 719.14,841.6077 693.09,922.1677 " fill="none" id="minio-mlflow" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#4A6FA5" points="691.41,927.3577,697.9715,920.0128,692.9396,922.5974,690.355,917.5655,691.41,927.3577" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="859.33,570.6877,850.028,573.9238,855.6819,574.1069,855.4987,579.7608,859.33,570.6877" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="52" x="806" y="743.2963">artifacts</text></g><!--MD5=[243b59e3f624671eca74e35d3dd615b4]
+link minio to dvc--><g id="link_minio_dvc"><path d="M851.54,573.6677 C835.78,584.0677 818.28,594.2577 801,601.6577 C743.62,626.2377 706.22,586.6677 664,632.6577 C602.41,699.7477 700.4,771.2577 636,835.6577 C617.6,854.0577 600.51,830.5977 578,843.6577 C543.55,863.6477 517.12,901.1277 500.61,930.0377 " fill="none" id="minio-dvc" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#4A6FA5" points="498.05,934.5977,505.9468,928.7121,500.5,930.239,498.973,924.7922,498.05,934.5977" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="855.94,570.7277,846.2327,572.3918,851.7797,573.5012,850.6703,579.0482,855.94,570.7277" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="56" x="665" y="743.2963">datasets</text></g><!--MD5=[a82f930fbbf1b8c28b5f5b4b99ed3069]
+link tsdb to fastapi--><g id="link_tsdb_fastapi"><path d="M1160.52,575.4377 C1176.24,586.1677 1192.47,597.8977 1207,609.6577 C1238.34,635.0177 1270.88,666.5077 1295.81,691.9077 " fill="none" id="tsdb-to-fastapi" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1299.43,695.6077,1296.0064,686.373,1295.9377,692.0295,1290.2812,691.9608,1299.43,695.6077" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="121" x="1223" y="621.7963">donnees + signaux</text></g><!--MD5=[92e4404d8570c74ebbbf921c2eb84231]
+reverse link auth to fastapi--><g id="link_auth_fastapi"><path d="M1159.5,738.6577 C1200.37,738.6577 1252.41,738.6577 1289.92,738.6577 " fill="none" id="auth-backto-fastapi" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1154.07,738.6577,1163.07,742.6577,1159.07,738.6577,1163.07,734.6577,1154.07,738.6577" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="99" x="1172.5" y="732.7963">authentification</text></g><!--MD5=[90e3d791af897d7da3f5e441def40815]
+reverse link middleware to fastapi--><g id="link_middleware_fastapi"><path d="M966.57,684.0877 C979.73,664.7877 997.3,645.2577 1019,634.6577 C1080.1,604.7977 1106.62,615.9677 1172,634.6577 C1215.35,647.0477 1258.39,674.3177 1289.92,697.8177 " fill="none" id="middleware-backto-fastapi" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="963.66,688.4577,971.9722,683.1749,966.4269,684.293,965.3087,678.7478,963.66,688.4577" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="1002" y="621.7963">filtrage</text></g><!--MD5=[6feeb3b3ad6eb104ed2c701420c0a6d8]
+reverse link fastapi to streamlit--><g id="link_fastapi_streamlit"><path d="M1392.89,765.3777 C1428.18,783.9277 1473.92,811.3177 1508,843.6577 C1536.16,870.3677 1560.49,907.5977 1576.21,934.6577 " fill="none" id="fastapi-backto-streamlit" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1388.2,762.9377,1394.3435,770.6356,1392.6373,765.2422,1398.0307,763.536,1388.2,762.9377" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="1497" y="832.7963">REST /api/v1/*</text></g><!--MD5=[fae1b4bcc621af282e6ad6fbcdf08dbf]
+reverse link streamlit to plotly--><!--MD5=[0a9d911d13b7db84cf5aaaeac1d30b3e]
+reverse link streamlit to chatbot--><!--MD5=[18fc751ea2f942487660ee9b50dd8e50]
+link nginx to streamlit--><g id="link_nginx_streamlit"><path d="M1885.39,564.1877 C1869.67,578.3277 1849.84,593.2477 1829,601.6577 C1791.76,616.6777 1778.29,601.3377 1739,609.6577 C1718.79,613.9377 1714.82,618.8177 1695,624.6577 C1680.94,628.8077 1673.13,622.0577 1663,632.6577 C1622.66,674.8877 1604.26,849.4977 1597.83,929.4077 " fill="none" id="nginx-to-streamlit" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1597.42,934.5277,1602.1269,925.8764,1597.8199,929.5437,1594.1526,925.2366,1597.42,934.5277" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="1664" y="743.2963">port 8501</text></g><!--MD5=[df929b5bc40a4439ac04f7bfd3f0b20c]
+link nginx to fastapi--><g id="link_nginx_fastapi"><path d="M1886,564.2977 C1870.25,578.6377 1850.23,593.6977 1829,601.6577 C1786.94,617.4377 1670.75,599.4677 1627,609.6577 C1541.09,629.6777 1449.17,675.2477 1392.87,706.2477 " fill="none" id="nginx-to-fastapi" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1388.21,708.8177,1398.0233,707.9816,1392.5902,706.4064,1394.1653,700.9733,1388.21,708.8177" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="1628" y="621.7963">port 8000</text></g><!--MD5=[b542ee60e8f7b573e05f7739cfb80655]
+link docker to infra--><g id="link_docker_infra"><path d="M2099.46,557.2777 C2098.39,613.2977 2096.07,733.8177 2096,737.5677 " fill="none" id="docker-to-infra" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#4A6FA5" points="2096,737.5677,2100.1673,728.6439,2096.0933,732.5685,2092.1687,728.4946,2096,737.5677" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="2099" y="621.7963">orchestre tout</text></g><!--MD5=[5aa4d4b6d2279bb0cc8354e9a509dec9]
+link noah to nginx--><g id="link_noah_nginx"><path d="M1993.05,350.1577 C1985.48,369.1977 1976.39,391.8377 1968,412.1577 C1957.64,437.2477 1945.7,465.2777 1936.2,487.3877 " fill="none" id="noah-to-nginx" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1934.22,492.0077,1941.4419,485.311,1936.1896,487.4119,1934.0887,482.1597,1934.22,492.0077" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="39" x="1974" y="409.2963">HTTPS</text></g><!--MD5=[ac444d2e2e0409ff747436f8b9cb2166]
+link sarah to nginx--><g id="link_sarah_nginx"><path d="M1836.23,350.3577 C1854.86,390.1577 1882.29,448.7477 1900.39,487.4077 " fill="none" id="sarah-to-nginx" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1902.55,492.0277,1902.3671,482.1805,1900.4348,487.4971,1895.1182,485.5648,1902.55,492.0277" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="39" x="1865" y="409.2963">HTTPS</text></g><!--MD5=[ed399d5673da002f4a450393c21a3ffb]
+link aleksandar to nginx--><g id="link_aleksandar_nginx"><path d="M1919,350.3577 C1919,389.9977 1919,448.2677 1919,486.9377 " fill="none" id="aleksandar-to-nginx" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1919,492.0277,1923,483.0277,1919,487.0277,1915,483.0277,1919,492.0277" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="39" x="1920" y="409.2963">HTTPS</text></g><rect fill="#F5F5F5" height="97.4844" rx="3" ry="3" style="stroke:#CCCCCC;stroke-width:1.0;" width="210" x="1972" y="1216.6577"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="62" x="1983" y="1237.6528">Couleur</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="96" x="2055" y="1237.6528">Signification</text><rect fill="#FEF3E8" height="16.2969" style="stroke:none;stroke-width:1.0;" width="72" x="1978" y="1240.9545"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1978" y="1253.9497"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="88" x="2054" y="1253.9497">Pipeline / API</text><rect fill="#ECFDF5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="72" x="1978" y="1257.2514"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1978" y="1270.2465"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="65" x="2054" y="1270.2465">Stockage</text><rect fill="#F3EEFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="72" x="1978" y="1273.5483"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1978" y="1286.5434"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="95" x="2054" y="1286.5434">ML / Frontend</text><rect fill="#FFFFFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="72" x="1978" y="1289.8452"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1978" y="1302.8403"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="118" x="2054" y="1302.8403">Phase 2 (planifie)</text><line style="stroke:#333333;stroke-width:1.0;" x1="1978" x2="2176" y1="1224.6577" y2="1224.6577"/><line style="stroke:#333333;stroke-width:1.0;" x1="1978" x2="2176" y1="1240.9545" y2="1240.9545"/><line style="stroke:#333333;stroke-width:1.0;" x1="1978" x2="2176" y1="1257.2514" y2="1257.2514"/><line style="stroke:#333333;stroke-width:1.0;" x1="1978" x2="2176" y1="1273.5483" y2="1273.5483"/><line style="stroke:#333333;stroke-width:1.0;" x1="1978" x2="2176" y1="1289.8452" y2="1289.8452"/><line style="stroke:#333333;stroke-width:1.0;" x1="1978" x2="2176" y1="1306.142" y2="1306.142"/><line style="stroke:#333333;stroke-width:1.0;" x1="1978" x2="1978" y1="1224.6577" y2="1306.142"/><line style="stroke:#333333;stroke-width:1.0;" x1="2050" x2="2050" y1="1224.6577" y2="1306.142"/><line style="stroke:#333333;stroke-width:1.0;" x1="2176" x2="2176" y1="1224.6577" y2="1306.142"/><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="271" x="959.5" y="1324.142"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="271" x="959.5" y="1337.1372">Phase 1 (actuelle) + Phase 2 (planifiee)</text><!--MD5=[5130c4f40719654e0b2d8e0ad1b4fa19]
+@startuml C01-architecture-macro
+!include _common.puml
+
+title CryptoBot — Architecture Systeme Globale
+caption Phase 1 (actuelle) + Phase 2 (planifiee)
+
+' ============================================================
+' Data Sources (external)
+' ============================================================
+cloud "Sources de Donnees" as sources #F5F5F5 {
+  [Binance\nREST + WebSocket] as binance <<collector>>
+  [CoinGecko\nDemo API] as coingecko <<collector>>
+  [CCXT\nMulti-exchange] as ccxt <<collector>>
+  [News RSS\nDecrypt, Cointelegraph\nPhoenixNews] as rss <<collector>>
+  [Alternative.me\nFear & Greed Index] as fng <<collector>>
+  [ESMA / SEC\nRegulatory] as regulatory <<collector>>
+}
+
+' ============================================================
+' ETL Pipeline
+' ============================================================
+package "ETL Pipeline" as etl #FEF3E8 {
+  [Collectors\n6 sources] as collectors <<scheduler>>
+  [Transformers\nIndicateurs techniques\nNettoyage] as transformers <<transformer>>
+  [Loaders\nTimescaleDB + MinIO] as loaders <<loader>>
+  [APScheduler\n10 jobs recurrents] as scheduler <<scheduler>>
+}
+
+' ============================================================
+' Storage Layer
+' ============================================================
+package "Stockage" as storage #ECFDF5 {
+  database "TimescaleDB\nHypertables OHLCV\nIndicateurs, Signaux\nNews, Users" as tsdb <<hypertable>>
+  database "MinIO\nS3-compatible\nDatasets, Modeles\nArtifacts MLflow" as minio
+}
+
+' ============================================================
+' ML Engine
+' ============================================================
+package "ML Engine" as ml #F3EEFF {
+  [Rule Engine\nRSI, Bollinger\nHarmonics, Trends\nConvergence multi-TF] as rules <<rule>>
+  [Signal Generator\nAggregation ponderee\nML blend 60/40\nValidation seuils] as siggen
+  [NLP / Sentiment\nTF-IDF, NLTK\nScoring articles] as nlp <<model>>
+
+  package "Phase 2" <<phase2>> #white {
+    [Supervised ML\nXGBoost, LightGBM\nLSTM] as supml <<phase2>>
+    [MLflow\nExperiment tracking\nModel registry] as mlflow <<phase2>>
+    [DVC\nDataset versioning] as dvc <<phase2>>
+    [RL Agents\nPaper Trading] as rl <<phase2>>
+  }
+}
+
+' ============================================================
+' Backend API
+' ============================================================
+package "Backend API" as api #FEF3E8 {
+  [FastAPI\n/api/v1/*\n8 routers] as fastapi <<router>>
+  [Auth Service\nJWT HS256\nbcrypt] as auth <<service>>
+  [Middleware\nRate Limiting\nRequest ID\nCORS] as middleware <<middleware>>
+}
+
+' ============================================================
+' Frontend
+' ============================================================
+package "Frontend" as frontend #F3EEFF {
+  [Streamlit\n5 pages] as streamlit <<page>>
+  [Plotly\nCandlestick, Heatmaps\nCorrelations] as plotly <<component>>
+  [Chatbot IA\nAssistant integre] as chatbot <<component>>
+  [i18n\nFR / EN] as i18n <<component>>
+}
+
+' ============================================================
+' Infrastructure
+' ============================================================
+package "Infrastructure" as infra #F5F5F5 {
+  [Nginx\nReverse proxy\nSSL Let's Encrypt] as nginx
+  [Docker Compose\n12 services] as docker
+  [GitHub Actions\nCI/CD] as ci
+  [Grafana + Prometheus\nMonitoring] as monitoring
+}
+
+' ============================================================
+' Personas
+' ============================================================
+actor "Noah\nTrader" as noah
+actor "Sarah\nJournaliste" as sarah
+actor "Aleksandar\nDebutant" as aleksandar
+
+' ============================================================
+' Relations — Data Flow
+' ============================================================
+sources -down-> collectors : donnees brutes
+collectors -right-> transformers : donnees collectees
+transformers -right-> loaders : donnees transformees
+scheduler .down.> collectors : declenche
+loaders -down-> tsdb : OHLCV, indicateurs
+loaders -down-> minio : parquet, artifacts
+
+' ML reads from storage
+tsdb -right-> rules : indicateurs
+tsdb -right-> nlp : articles
+rules -down-> siggen : scores par regle
+nlp -down-> siggen : sentiment
+supml -up-> siggen : predictions ML
+siggen -left-> tsdb : signaux persistes
+
+' MLflow/DVC
+minio <.right.> mlflow : artifacts
+minio <.right.> dvc : datasets
+
+' API reads from storage + ML
+tsdb -down-> fastapi : donnees + signaux
+fastapi -left-> auth : authentification
+fastapi -left-> middleware : filtrage
+
+' Frontend calls API
+streamlit -up-> fastapi : REST /api/v1/*
+plotly -[hidden]up-> streamlit
+chatbot -[hidden]up-> streamlit
+
+' Infra
+nginx -down-> streamlit : port 8501
+nginx -down-> fastapi : port 8000
+docker ..> infra : orchestre tout
+
+' Personas access
+noah -down-> nginx : HTTPS
+sarah -down-> nginx : HTTPS
+aleksandar -down-> nginx : HTTPS
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom right
+  |= Couleur |= Signification |
+  | <#FEF3E8> | Pipeline / API |
+  | <#ECFDF5> | Stockage |
+  | <#F3EEFF> | ML / Frontend |
+  | <#white> | Phase 2 (planifie) |
+endlegend
+
+@enduml
+
+@startuml C01-architecture-macro
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Architecture Systeme Globale
+caption Phase 1 (actuelle) + Phase 2 (planifiee)
+
+cloud "Sources de Donnees" as sources #F5F5F5 {
+  [Binance\nREST + WebSocket] as binance <<collector>>
+  [CoinGecko\nDemo API] as coingecko <<collector>>
+  [CCXT\nMulti-exchange] as ccxt <<collector>>
+  [News RSS\nDecrypt, Cointelegraph\nPhoenixNews] as rss <<collector>>
+  [Alternative.me\nFear & Greed Index] as fng <<collector>>
+  [ESMA / SEC\nRegulatory] as regulatory <<collector>>
+}
+
+package "ETL Pipeline" as etl #FEF3E8 {
+  [Collectors\n6 sources] as collectors <<scheduler>>
+  [Transformers\nIndicateurs techniques\nNettoyage] as transformers <<transformer>>
+  [Loaders\nTimescaleDB + MinIO] as loaders <<loader>>
+  [APScheduler\n10 jobs recurrents] as scheduler <<scheduler>>
+}
+
+package "Stockage" as storage #ECFDF5 {
+  database "TimescaleDB\nHypertables OHLCV\nIndicateurs, Signaux\nNews, Users" as tsdb <<hypertable>>
+  database "MinIO\nS3-compatible\nDatasets, Modeles\nArtifacts MLflow" as minio
+}
+
+package "ML Engine" as ml #F3EEFF {
+  [Rule Engine\nRSI, Bollinger\nHarmonics, Trends\nConvergence multi-TF] as rules <<rule>>
+  [Signal Generator\nAggregation ponderee\nML blend 60/40\nValidation seuils] as siggen
+  [NLP / Sentiment\nTF-IDF, NLTK\nScoring articles] as nlp <<model>>
+
+  package "Phase 2" <<phase2>> #white {
+    [Supervised ML\nXGBoost, LightGBM\nLSTM] as supml <<phase2>>
+    [MLflow\nExperiment tracking\nModel registry] as mlflow <<phase2>>
+    [DVC\nDataset versioning] as dvc <<phase2>>
+    [RL Agents\nPaper Trading] as rl <<phase2>>
+  }
+}
+
+package "Backend API" as api #FEF3E8 {
+  [FastAPI\n/api/v1/*\n8 routers] as fastapi <<router>>
+  [Auth Service\nJWT HS256\nbcrypt] as auth <<service>>
+  [Middleware\nRate Limiting\nRequest ID\nCORS] as middleware <<middleware>>
+}
+
+package "Frontend" as frontend #F3EEFF {
+  [Streamlit\n5 pages] as streamlit <<page>>
+  [Plotly\nCandlestick, Heatmaps\nCorrelations] as plotly <<component>>
+  [Chatbot IA\nAssistant integre] as chatbot <<component>>
+  [i18n\nFR / EN] as i18n <<component>>
+}
+
+package "Infrastructure" as infra #F5F5F5 {
+  [Nginx\nReverse proxy\nSSL Let's Encrypt] as nginx
+  [Docker Compose\n12 services] as docker
+  [GitHub Actions\nCI/CD] as ci
+  [Grafana + Prometheus\nMonitoring] as monitoring
+}
+
+actor "Noah\nTrader" as noah
+actor "Sarah\nJournaliste" as sarah
+actor "Aleksandar\nDebutant" as aleksandar
+
+sources -down-> collectors : donnees brutes
+collectors -right-> transformers : donnees collectees
+transformers -right-> loaders : donnees transformees
+scheduler .down.> collectors : declenche
+loaders -down-> tsdb : OHLCV, indicateurs
+loaders -down-> minio : parquet, artifacts
+
+tsdb -right-> rules : indicateurs
+tsdb -right-> nlp : articles
+rules -down-> siggen : scores par regle
+nlp -down-> siggen : sentiment
+supml -up-> siggen : predictions ML
+siggen -left-> tsdb : signaux persistes
+
+minio <.right.> mlflow : artifacts
+minio <.right.> dvc : datasets
+
+tsdb -down-> fastapi : donnees + signaux
+fastapi -left-> auth : authentification
+fastapi -left-> middleware : filtrage
+
+streamlit -up-> fastapi : REST /api/v1/*
+plotly -[hidden]up-> streamlit
+chatbot -[hidden]up-> streamlit
+
+nginx -down-> streamlit : port 8501
+nginx -down-> fastapi : port 8000
+docker ..> infra : orchestre tout
+
+noah -down-> nginx : HTTPS
+sarah -down-> nginx : HTTPS
+aleksandar -down-> nginx : HTTPS
+
+legend bottom right
+  |= Couleur |= Signification |
+  | <#FEF3E8> | Pipeline / API |
+  | <#ECFDF5> | Stockage |
+  | <#F3EEFF> | ML / Frontend |
+  | <#white> | Phase 2 (planifie) |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

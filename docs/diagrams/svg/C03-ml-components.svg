@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="958px" preserveAspectRatio="none" style="width:2400px;height:958px;background:#FFFFFF;" version="1.1" viewBox="0 0 2400 958" width="2400px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="252" x="1067" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="242" x="1072" y="22.9951">CryptoBot — Sous-systeme ML</text><!--MD5=[fedee1b5a49a422abb3fa93dface23fd]
+cluster p1--><g id="cluster_p1"><path d="M9,425.2969 L168,425.2969 A4.5,4.5 0 0 1 171,428.2969 L178,445.2656 L1214,445.2656 A3,3 0 0 1 1217,448.2656 L1217,809.2969 A3,3 0 0 1 1214,812.2969 L9,812.2969 A3,3 0 0 1 6,809.2969 L6,428.2969 A3,3 0 0 1 9,425.2969 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="6" x2="178" y1="445.2656" y2="445.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="159" x="10" y="438.4355">Phase 1 — Rule Engine</text></g><!--MD5=[53515af6e8e9fe68929b74bac59be4c7]
+cluster rules/--><g id="cluster_rules/"><path d="M33,465.2969 L73,465.2969 A4.5,4.5 0 0 1 76,468.2969 L83,485.2656 L1024,485.2656 A3,3 0 0 1 1027,488.2656 L1027,785.2969 A3,3 0 0 1 1024,788.2969 L33,788.2969 A3,3 0 0 1 30,785.2969 L30,468.2969 A3,3 0 0 1 33,465.2969 " fill="#FFFFFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="30" x2="83" y1="485.2656" y2="485.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="40" x="34" y="478.4355">rules/</text></g><!--MD5=[001ff0f913767acd48580f07b4cdaff6]
+cluster Phase 2 — Supervised ML--><g id="cluster_Phase 2 — Supervised ML"><path d="M1244,43.2969 L1423,43.2969 A4.5,4.5 0 0 1 1426,46.2969 L1433,63.2656 L1852,63.2656 A3,3 0 0 1 1855,66.2656 L1855,603.2969 A3,3 0 0 1 1852,606.2969 L1244,606.2969 A3,3 0 0 1 1241,603.2969 L1241,46.2969 A3,3 0 0 1 1244,43.2969 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="1241" x2="1433" y1="63.2656" y2="63.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="179" x="1245" y="56.4355">Phase 2 — Supervised ML</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="1522" y="76.4043">«phase2»</text></g><!--MD5=[208a4a50a01bce150acb8e79a631cc50]
+cluster MLOps--><g id="cluster_MLOps"><path d="M1882,472.2969 L1930,472.2969 A4.5,4.5 0 0 1 1933,475.2969 L1940,492.2656 L2279,492.2656 A3,3 0 0 1 2282,495.2656 L2282,603.2969 A3,3 0 0 1 2279,606.2969 L1882,606.2969 A3,3 0 0 1 1879,603.2969 L1879,475.2969 A3,3 0 0 1 1882,472.2969 " fill="#ECFDF5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="1879" x2="1940" y1="492.2656" y2="492.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="48" x="1883" y="485.4355">MLOps</text></g><!--MD5=[25d507d6edd5f10178a33a1ffd573b92]
+entity siggen--><g id="elem_siggen"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="149" x="1049.5" y="679.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1178.5" y="684.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1176.5" y="686.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1176.5" y="690.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="102" x="1064.5" y="710.4355">SignalGenerator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="95" x="1064.5" y="724.4043">ML blend 60/40</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="1064.5" y="738.373">sentiment +/-5pp</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="108" x="1064.5" y="752.3418">threshold &gt;= 0.6</text></g><!--MD5=[b43fd3e8bde7a46f1d275b41c2bae67a]
+entity nlp--><g id="elem_nlp"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="158" x="1043" y="497.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1181" y="502.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1179" y="504.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1179" y="508.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="52" x="1091" y="528.4355">«model»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="99" x="1058" y="542.4043">NLP / Sentiment</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="1058" y="556.373">TF-IDF, NLTK</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="1058" y="570.3418">keyword extraction</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="113" x="1058" y="584.3105">sentiment scoring</text></g><!--MD5=[cb028c5091c687ec367cd0cbfd70389f]
+entity engine--><g id="elem_engine"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="217" x="508.5" y="497.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="705.5" y="502.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="703.5" y="504.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="703.5" y="508.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="593" y="528.4355">«rule»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="523.5" y="542.4043">RuleEngine</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="523.5" y="556.373">from_yaml(config)</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="177" x="523.5" y="570.3418">evaluate(symbol, indicators)</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="523.5" y="584.3105">aggregate(results)</text></g><!--MD5=[93a2267d7ccc3d351a16bf057cca6620]
+entity rsi--><g id="elem_rsi"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="173" x="46.5" y="679.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="199.5" y="684.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="197.5" y="686.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="197.5" y="690.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="109" y="710.4355">«rule»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="61.5" y="724.4043">RSI Evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="129" x="61.5" y="738.373">overbought/oversold</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="133" x="61.5" y="752.3418">multi-TF convergence</text></g><!--MD5=[c987144dbc720ee91b198a720bea559e]
+entity boll--><g id="elem_boll"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="157" x="254.5" y="679.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="391.5" y="684.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="389.5" y="686.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="389.5" y="690.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="309" y="710.4355">«rule»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="269.5" y="724.4043">Bollinger Evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="269.5" y="738.373">squeeze detection</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="269.5" y="752.3418">band reversal</text></g><!--MD5=[7f281b998063c833b8a3376f9928e7a9]
+entity harm--><g id="elem_harm"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="162" x="447" y="679.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="589" y="684.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="587" y="686.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="587" y="690.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="504" y="710.4355">«rule»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="122" x="462" y="724.4043">Harmonic Evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="462" y="738.373">Gartley, Butterfly</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="462" y="752.3418">Crab, XAB=CD</text></g><!--MD5=[4888f9aa0507bb34776328e94b8c81d1]
+entity trend--><g id="elem_trend"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="139" x="644.5" y="679.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="763.5" y="684.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="761.5" y="686.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="761.5" y="690.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="690" y="710.4355">«rule»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="99" x="659.5" y="724.4043">Trend Evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="659.5" y="738.373">slope + type</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="659.5" y="752.3418">weekly/monthly</text></g><!--MD5=[cd3823f5cf3e42da4ac48109940ef88b]
+entity conv--><g id="elem_conv"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="192" x="819" y="672.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="991" y="677.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="989" y="679.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="989" y="683.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="891" y="703.4355">«rule»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="152" x="834" y="717.4043">Convergence Evaluators</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="834" y="731.373">RSI+BB, Trend+RSI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="114" x="834" y="745.3418">multi-TF alignment</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="85" x="834" y="759.3105">supermajority</text></g><!--MD5=[39eb939827a913479fb02a80328eaa5e]
+entity trainer--><g id="elem_trainer"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="157" x="1431.5" y="264.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1568.5" y="269.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1566.5" y="271.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1566.5" y="275.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="1475" y="295.4355">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="1446.5" y="309.4043">Trainer</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="1446.5" y="323.373">XGBoost, LightGBM</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="98" x="1446.5" y="337.3418">walk-forward CV</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="111" x="1446.5" y="351.3105">purge + embargo</text></g><!--MD5=[5f45c85834fcf117d4b10d7627790616]
+entity features--><g id="elem_features"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="209" x="1629.5" y="89.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1818.5" y="94.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1816.5" y="96.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1816.5" y="100.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="1699" y="120.4355">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="92" x="1644.5" y="134.4043">FeatureBuilder</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="133" x="1644.5" y="148.373">RSI by TF, BB position</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="169" x="1644.5" y="162.3418">squeeze width, trend slope</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="128" x="1644.5" y="176.3105">volume, Fear&amp;Greed</text></g><!--MD5=[bb7629110e618a553659f96f5c10270c]
+entity predictor--><g id="elem_predictor"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="147" x="1346.5" y="504.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1473.5" y="509.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1471.5" y="511.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1471.5" y="515.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="1385" y="535.4355">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="57" x="1361.5" y="549.4043">Predictor</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="1361.5" y="563.373">predict(features)</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="1361.5" y="577.3418">model_version</text></g><!--MD5=[d0f179655e3d4b626c6d0246590d1958]
+entity lstm--><g id="elem_lstm"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="169" x="1425.5" y="96.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1574.5" y="101.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1572.5" y="103.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1572.5" y="107.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="1475" y="127.4355">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="31" x="1440.5" y="141.4043">LSTM</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="1440.5" y="155.373">deep learning</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="129" x="1440.5" y="169.3418">sequence prediction</text></g><!--MD5=[9d134707e8993718a6ca7a2de35c42a0]
+entity backtester--><g id="elem_backtester"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="133" x="1257.5" y="89.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1370.5" y="94.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1368.5" y="96.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1368.5" y="100.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="1289" y="120.4355">«phase2»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="68" x="1272.5" y="134.4043">Backtester</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="85" x="1272.5" y="148.373">6-month train</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="1272.5" y="162.3418">1-month test</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="1272.5" y="176.3105">temporal splits</text></g><!--MD5=[e3a56af7e226478f972bb17db43d1d10]
+entity mlflow--><g id="elem_mlflow"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="178" x="1895" y="504.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="2053" y="509.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="2051" y="511.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="2051" y="515.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="40" x="1910" y="535.4355">MLflow</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="1910" y="549.4043">experiment tracking</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="1910" y="563.373">model registry</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="1910" y="577.3418">Staging -&gt; Production</text></g><!--MD5=[5ca40706a446a5f6ff4ec6c3ab4bd468]
+entity dvc--><g id="elem_dvc"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="157" x="2108.5" y="511.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="2245.5" y="516.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="2243.5" y="518.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="2243.5" y="522.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="25" x="2123.5" y="542.4355">DVC</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="2123.5" y="556.4043">dataset versioning</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="2123.5" y="570.373">MinIO backend</text></g><!--MD5=[caf660ac2a54b55a5c31b5515889e628]
+entity config--><g id="elem_config"><rect fill="#F5F5F5" height="64.9063" rx="3" ry="3" style="stroke:#181818;stroke-width:0.5;" width="152" x="541" y="281.7969"/><polygon fill="#F5F5F5" points="676,286.7969,676,300.7969,688,300.7969,688,292.7969,682,286.7969,676,286.7969" style="stroke:#181818;stroke-width:0.5;"/><line style="stroke:#181818;stroke-width:0.5;" x1="682" x2="682" y1="286.7969" y2="292.7969"/><line style="stroke:#181818;stroke-width:0.5;" x1="688" x2="682" y1="292.7969" y2="292.7969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="551" y="305.9355">indicators.yaml</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="122" x="551" y="319.9043">periods, thresholds</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="551" y="333.873">timeframes</text></g><!--MD5=[5f5753442e7fadb4fd16694c78ce39f0]
+entity tsdb--><g id="elem_tsdb"><path d="M1680.5,883.2969 C1680.5,873.2969 1730,873.2969 1730,873.2969 C1730,873.2969 1779.5,873.2969 1779.5,883.2969 L1779.5,906.2656 C1779.5,916.2656 1730,916.2656 1730,916.2656 C1730,916.2656 1680.5,916.2656 1680.5,906.2656 L1680.5,883.2969 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M1680.5,883.2969 C1680.5,893.2969 1730,893.2969 1730,893.2969 C1730,893.2969 1779.5,893.2969 1779.5,883.2969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="1690.5" y="908.4355">TimescaleDB</text></g><!--MD5=[dd69d516781b0f0936e849bb07507e10]
+entity minio--><g id="elem_minio"><path d="M2045.5,710.7969 C2045.5,700.7969 2072,700.7969 2072,700.7969 C2072,700.7969 2098.5,700.7969 2098.5,710.7969 L2098.5,733.7656 C2098.5,743.7656 2072,743.7656 2072,743.7656 C2072,743.7656 2045.5,743.7656 2045.5,733.7656 L2045.5,710.7969 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M2045.5,710.7969 C2045.5,720.7969 2072,720.7969 2072,720.7969 C2072,720.7969 2098.5,720.7969 2098.5,710.7969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="2055.5" y="735.9355">MinIO</text></g><!--MD5=[0645aeb14cf75b0fb36cef58ca3deac7]
+link config to engine--><g id="link_config_engine"><path d="M617,346.9369 C617,384.1769 617,446.6469 617,491.7469 " fill="none" id="config-to-engine" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="617,496.8869,621,487.8869,617,491.8869,613,487.8869,617,496.8869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[0205e381f32fb43f7d6037959f5c85f0]
+link engine to rsi--><g id="link_engine_rsi"><path d="M508.44,579.7769 C431.73,602.9669 326.98,636.5769 237,672.2969 C232.84,673.9469 228.62,675.6869 224.37,677.4769 " fill="none" id="engine-to-rsi" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="219.75,679.4469,229.5976,679.604,224.3509,677.4894,226.4656,672.2426,219.75,679.4469" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[f4a45a61d2009585b5c7ab7195118abd]
+link engine to boll--><g id="link_engine_boll"><path d="M536.38,597.4069 C495.55,622.2769 446.35,652.2469 406.57,676.4869 " fill="none" id="engine-to-boll" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="402.26,679.1069,412.0257,677.8296,406.5271,676.5008,407.8559,671.0022,402.26,679.1069" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[c410bbb16e67eeb88222c5c88804bd5b]
+link engine to harm--><g id="link_engine_harm"><path d="M591.73,597.4069 C579.3,621.5669 564.39,650.5569 552.12,674.4069 " fill="none" id="engine-to-harm" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="549.7,679.1069,557.3898,672.9533,551.9987,674.6666,550.2854,669.2754,549.7,679.1069" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[daebdf70db44604da249af4ba9d8e8ab]
+link engine to trend--><g id="link_engine_trend"><path d="M644.54,597.4069 C658.14,621.6669 674.47,650.7969 687.88,674.7069 " fill="none" id="engine-to-trend" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="690.34,679.1069,689.417,669.3014,687.89,674.7482,682.4432,673.2213,690.34,679.1069" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[2c8b2a42bcbed24ed8faa3ebac60caa5]
+link engine to conv--><g id="link_engine_conv"><path d="M700.12,597.4069 C709.85,603.1169 719.64,608.8469 729,614.2969 C760.15,632.4269 794.31,652.1369 824.77,669.6469 " fill="none" id="engine-to-conv" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="829.24,672.2069,823.416,664.2645,824.9005,669.7231,819.442,671.2077,829.24,672.2069" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[57dcc2590d836775deea4845f9624e9e]
+link engine to siggen--><g id="link_engine_siggen"><path d="M692.39,597.3369 C704.32,603.7269 716.76,609.6569 729,614.2969 C792.08,638.2169 963.18,650.4369 1027,672.2969 C1032.79,674.2769 1038.66,676.5469 1044.52,678.9869 " fill="none" id="engine-to-siggen" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1049.42,681.0869,1042.7044,673.8826,1044.8191,679.1294,1039.5724,681.244,1049.42,681.0869" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="865" y="639.4355">RuleResult[]</text></g><!--MD5=[fce9fb90f1e75ec330dd829fd70383d4]
+link nlp to siggen--><g id="link_nlp_siggen"><path d="M1122.57,597.4069 C1122.84,621.3669 1123.18,650.0669 1123.45,673.8069 " fill="none" id="nlp-to-siggen" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1123.51,679.1069,1127.4069,670.0618,1123.4529,674.1072,1119.4074,670.1532,1123.51,679.1069" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="102" x="1125" y="639.4355">sentiment score</text></g><!--MD5=[b5337c0a16627d0977b765a94dab7b07]
+link siggen to tsdb--><g id="link_siggen_tsdb"><path d="M1198.61,744.2869 C1322.09,779.0269 1566.11,847.6869 1675.14,878.3569 " fill="none" id="siggen-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1680.23,879.7969,1672.6529,873.505,1675.4176,878.4403,1670.4823,881.2049,1680.23,879.7969" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="1534" y="840.4355">persist signals</text></g><!--MD5=[e12340b874c3ac767701db14136cccbb]
+link features to trainer--><g id="link_features_trainer"><path d="M1670.41,189.4069 C1641.56,211.6869 1607.41,238.0669 1578.05,260.7469 " fill="none" id="features-to-trainer" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1573.75,264.0669,1583.3176,261.73,1577.7067,261.01,1578.4267,255.3992,1573.75,264.0669" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="1629" y="231.4355">feature matrix</text></g><!--MD5=[d87dff193be3a313ed8355d29d7bfa50]
+link trainer to mlflow--><g id="link_trainer_mlflow"><path d="M1588.81,327.0969 C1661.81,340.6069 1771.38,367.5769 1855,417.2969 C1891.07,438.7469 1924.35,472.5369 1948.08,500.1569 " fill="none" id="trainer-to-mlflow" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1951.51,504.1869,1948.7279,494.7391,1948.2713,500.3775,1942.6329,499.921,1951.51,504.1869" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="1839" y="406.4355">log experiments</text></g><!--MD5=[2474109d32481f4ed3a1eaf414adea94]
+link trainer to predictor--><g id="link_trainer_predictor"><path d="M1490.8,364.5669 C1475.28,404.4269 1453.56,460.1669 1438.28,499.3769 " fill="none" id="trainer-to-predictor" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1436.45,504.0769,1443.437,497.1355,1438.2602,499.416,1435.9796,494.2393,1436.45,504.0769" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="1479" y="406.4355">trained model</text></g><!--MD5=[2869a98cf9b9d95cf08c287cef4fab7a]
+link predictor to siggen--><g id="link_predictor_siggen"><path d="M1347.97,590.3969 C1303.29,616.5069 1245.94,650.0269 1200.46,676.6069 " fill="none" id="predictor-to-siggen" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1196.1,679.1569,1205.8873,678.057,1200.4137,676.6286,1201.8421,671.1551,1196.1,679.1569" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="90" x="1281" y="639.4355">ML predictions</text></g><!--MD5=[c01c078d451226ae12ccd3499affccd9]
+link lstm to trainer--><g id="link_lstm_trainer"><path d="M1510,182.6169 C1510,205.5869 1510,234.2469 1510,258.8669 " fill="none" id="lstm-to-trainer" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1510,264.0569,1514,255.0569,1510,259.0569,1506,255.0569,1510,264.0569" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="57" x="1511" y="231.4355">DL model</text></g><!--MD5=[9356bc44d8c3d542fbb6026dc7b1366f]
+link backtester to trainer--><g id="link_backtester_trainer"><path d="M1376.8,189.4069 C1400.66,211.5969 1428.88,237.8469 1453.2,260.4669 " fill="none" id="backtester-to-trainer" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1457.07,264.0669,1453.221,255.0013,1453.4152,260.6548,1447.7617,260.8489,1457.07,264.0669" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="60" x="1423" y="231.4355">validation</text></g><!--MD5=[31fea2dce605cb0ba37f583f40b2f428]
+link mlflow to minio--><g id="link_mlflow_minio"><path d="M2005.53,590.6169 C2022.27,623.5269 2044.94,668.0969 2059.01,695.7569 " fill="none" id="mlflow-to-minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="2061.36,700.3769,2060.8374,690.5419,2059.0897,695.922,2053.7096,694.1743,2061.36,700.3769" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="52" x="2031" y="639.4355">artifacts</text></g><!--MD5=[f516a61f350f31b29f63123f5cb7f422]
+link dvc to minio--><g id="link_dvc_minio"><path d="M2163.73,583.3069 C2141.46,616.8069 2108.42,666.5069 2088.67,696.2269 " fill="none" id="dvc-to-minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="2085.85,700.4569,2094.1622,695.1741,2088.6169,696.2922,2087.4987,690.747,2085.85,700.4569" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="56" x="2133" y="639.4355">datasets</text></g><!--MD5=[a594fa7f13d0ec14fd1f89c76adaef04]
+link tsdb to features--><g id="link_tsdb_features"><path d="M1779.59,890.5369 C1924.32,879.6569 2336,838.5969 2336,723.2969 C2336,313.2969 2336,313.2969 2336,313.2969 C2336,212.0069 2017.22,166.5269 1843.61,149.2669 " fill="none" id="tsdb-to-features" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1838.52,148.7569,1847.0897,153.6107,1843.4964,149.2417,1847.8654,145.6484,1838.52,148.7569" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="55" x="2337" y="551.9355">raw data</text></g><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="330" x="1028" y="933.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="330" x="1028" y="946.2607">src/ml/ | Phase 1 (rules) + Phase 2 (supervised)</text><!--MD5=[3670b65a5b9f3b129a080fcf99e6749e]
+@startuml C03-ml-components
+!include _common.puml
+
+title CryptoBot — Sous-systeme ML
+caption src/ml/ | Phase 1 (rules) + Phase 2 (supervised)
+
+' ============================================================
+' Phase 1 — Rule Engine
+' ============================================================
+package "Phase 1 — Rule Engine" as p1 #F3EEFF {
+
+  package "rules/" #white {
+    [RuleEngine\nfrom_yaml(config)\nevaluate(symbol, indicators)\naggregate(results)] as engine <<rule>>
+    [RSI Evaluator\noverbought/oversold\nmulti-TF convergence] as rsi <<rule>>
+    [Bollinger Evaluator\nsqueeze detection\nband reversal] as boll <<rule>>
+    [Harmonic Evaluator\nGartley, Butterfly\nCrab, XAB=CD] as harm <<rule>>
+    [Trend Evaluator\nslope + type\nweekly/monthly] as trend <<rule>>
+    [Convergence Evaluators\nRSI+BB, Trend+RSI\nmulti-TF alignment\nsupermajority] as conv <<rule>>
+  }
+
+  [SignalGenerator\nML blend 60/40\nsentiment +/-5pp\nthreshold >= 0.6] as siggen
+
+  [NLP / Sentiment\nTF-IDF, NLTK\nkeyword extraction\nsentiment scoring] as nlp <<model>>
+}
+
+' ============================================================
+' Phase 2 — Supervised ML
+' ============================================================
+package "Phase 2 — Supervised ML" <<phase2>> #FEF3E8 {
+  [Trainer\nXGBoost, LightGBM\nwalk-forward CV\npurge + embargo] as trainer <<phase2>>
+  [FeatureBuilder\nRSI by TF, BB position\nsqueeze width, trend slope\nvolume, Fear&Greed] as features <<phase2>>
+  [Predictor\npredict(features)\nmodel_version] as predictor <<phase2>>
+  [LSTM\ndeep learning\nsequence prediction] as lstm <<phase2>>
+  [Backtester\n6-month train\n1-month test\ntemporal splits] as backtester <<phase2>>
+}
+
+' ============================================================
+' MLOps
+' ============================================================
+package "MLOps" #ECFDF5 {
+  [MLflow\nexperiment tracking\nmodel registry\nStaging -> Production] as mlflow
+  [DVC\ndataset versioning\nMinIO backend] as dvc
+}
+
+' ============================================================
+' Config
+' ============================================================
+artifact "indicators.yaml\nperiods, thresholds\ntimeframes" as config #F5F5F5
+
+' ============================================================
+' Storage
+' ============================================================
+database "TimescaleDB" as tsdb #ECFDF5
+database "MinIO" as minio #ECFDF5
+
+' ============================================================
+' Relations
+' ============================================================
+' Rule engine flow
+config - -> engine
+engine - -> rsi
+engine - -> boll
+engine - -> harm
+engine - -> trend
+engine - -> conv
+engine - -> siggen : RuleResult[]
+
+' NLP
+nlp - -> siggen : sentiment score
+
+' Signal generator
+siggen - -> tsdb : persist signals
+
+' Phase 2 flow
+features - -> trainer : feature matrix
+trainer - -> mlflow : log experiments
+trainer - -> predictor : trained model
+predictor - -> siggen : ML predictions
+lstm - -> trainer : DL model
+backtester - -> trainer : validation
+
+' MLOps
+mlflow - -> minio : artifacts
+dvc - -> minio : datasets
+tsdb - -> features : raw data
+
+@enduml
+
+@startuml C03-ml-components
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Sous-systeme ML
+caption src/ml/ | Phase 1 (rules) + Phase 2 (supervised)
+
+package "Phase 1 — Rule Engine" as p1 #F3EEFF {
+
+  package "rules/" #white {
+    [RuleEngine\nfrom_yaml(config)\nevaluate(symbol, indicators)\naggregate(results)] as engine <<rule>>
+    [RSI Evaluator\noverbought/oversold\nmulti-TF convergence] as rsi <<rule>>
+    [Bollinger Evaluator\nsqueeze detection\nband reversal] as boll <<rule>>
+    [Harmonic Evaluator\nGartley, Butterfly\nCrab, XAB=CD] as harm <<rule>>
+    [Trend Evaluator\nslope + type\nweekly/monthly] as trend <<rule>>
+    [Convergence Evaluators\nRSI+BB, Trend+RSI\nmulti-TF alignment\nsupermajority] as conv <<rule>>
+  }
+
+  [SignalGenerator\nML blend 60/40\nsentiment +/-5pp\nthreshold >= 0.6] as siggen
+
+  [NLP / Sentiment\nTF-IDF, NLTK\nkeyword extraction\nsentiment scoring] as nlp <<model>>
+}
+
+package "Phase 2 — Supervised ML" <<phase2>> #FEF3E8 {
+  [Trainer\nXGBoost, LightGBM\nwalk-forward CV\npurge + embargo] as trainer <<phase2>>
+  [FeatureBuilder\nRSI by TF, BB position\nsqueeze width, trend slope\nvolume, Fear&Greed] as features <<phase2>>
+  [Predictor\npredict(features)\nmodel_version] as predictor <<phase2>>
+  [LSTM\ndeep learning\nsequence prediction] as lstm <<phase2>>
+  [Backtester\n6-month train\n1-month test\ntemporal splits] as backtester <<phase2>>
+}
+
+package "MLOps" #ECFDF5 {
+  [MLflow\nexperiment tracking\nmodel registry\nStaging -> Production] as mlflow
+  [DVC\ndataset versioning\nMinIO backend] as dvc
+}
+
+artifact "indicators.yaml\nperiods, thresholds\ntimeframes" as config #F5F5F5
+
+database "TimescaleDB" as tsdb #ECFDF5
+database "MinIO" as minio #ECFDF5
+
+config - -> engine
+engine - -> rsi
+engine - -> boll
+engine - -> harm
+engine - -> trend
+engine - -> conv
+engine - -> siggen : RuleResult[]
+
+nlp - -> siggen : sentiment score
+
+siggen - -> tsdb : persist signals
+
+features - -> trainer : feature matrix
+trainer - -> mlflow : log experiments
+trainer - -> predictor : trained model
+predictor - -> siggen : ML predictions
+lstm - -> trainer : DL model
+backtester - -> trainer : validation
+
+mlflow - -> minio : artifacts
+dvc - -> minio : datasets
+tsdb - -> features : raw data
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

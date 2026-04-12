@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="622px" preserveAspectRatio="none" style="width:1521px;height:622px;background:#FFFFFF;" version="1.1" viewBox="0 0 1521 622" width="1521px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="317" x="595.25" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="307" x="600.25" y="22.9951">CryptoBot — Classes SQLAlchemy ORM</text><!--MD5=[e5c546a56aaf53d49c1598a4fd6aae44]
+class UserOrm--><g id="elem_UserOrm"><rect codeLine="9" fill="#ECFDF5" height="207.5938" id="UserOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="236" x="108.5" y="71.7969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="236" x="108.5" y="71.7969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="236" x="108.5" y="106.7344"/><rect codeLine="9" fill="none" height="207.5938" id="UserOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="236" x="108.5" y="71.7969"/><ellipse cx="195.5" cy="90.7656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M197.3281,95.0156 Q196.9219,95.2188 196.4688,95.3281 Q196.0156,95.4375 195.5313,95.4375 Q193.75,95.4375 192.8125,94.2813 Q191.8906,93.1094 191.8906,90.9063 Q191.8906,88.6875 192.8125,87.5313 Q193.75,86.3594 195.5313,86.3594 Q196.0156,86.3594 196.4688,86.4688 Q196.9375,86.5625 197.3281,86.7813 L197.3281,88.7031 Q196.8906,88.2969 196.4688,88.1094 Q196.0469,87.9063 195.6094,87.9063 Q194.6563,87.9063 194.1719,88.6719 Q193.6875,89.4219 193.6875,90.9063 Q193.6875,92.375 194.1719,93.125 Q194.6563,93.875 195.6094,93.875 Q196.0469,93.875 196.4688,93.6875 Q196.8906,93.5 197.3281,93.0938 L197.3281,95.0156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="47" x="218" y="87.9355">«users»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="54" x="214.5" y="101.9043">UserOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="109.5" x2="343.5" y1="109.7344" y2="109.7344"/><ellipse cx="119.5" cy="120.7344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="127.5" y="124.873">id : UUID «PK»</text><ellipse cx="119.5" cy="134.7031" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="211" x="127.5" y="138.8418">username : String(100) «UNIQUE»</text><ellipse cx="119.5" cy="148.6719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="181" x="127.5" y="152.8105">email : String(255) «UNIQUE»</text><ellipse cx="119.5" cy="162.6406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="180" x="127.5" y="166.7793">password_hash : String(255)</text><ellipse cx="119.5" cy="176.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="160" x="127.5" y="180.748">persona_type : String(20)</text><ellipse cx="119.5" cy="190.5781" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="127.5" y="194.7168">preferences : JSONB</text><ellipse cx="119.5" cy="204.5469" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="127.5" y="208.6855">created_at : DateTime</text><line style="stroke:#34A853;stroke-width:1.0;" x1="109.5" x2="343.5" y1="215.5156" y2="215.5156"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="159" x="114.5" y="230.6543">«CHECK» persona_type IN</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="173" x="114.5" y="244.623">(trader, journalist, investor)</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="169" x="114.5" y="258.5918">«rel» portfolio_entries : 1:N</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="172" x="114.5" y="272.5605">«rel» watchlist_entries : 1:N</text></g><!--MD5=[87279866378d5632b478e9dd19ffad75]
+class CryptoPriceOrm--><g id="elem_CryptoPriceOrm"><rect codeLine="27" fill="#ECFDF5" height="221.5625" id="CryptoPriceOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="269" x="380" y="64.7969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="269" x="380" y="64.7969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="269" x="380" y="99.7344"/><rect codeLine="27" fill="none" height="221.5625" id="CryptoPriceOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="269" x="380" y="64.7969"/><ellipse cx="462.5" cy="83.7656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M464.3281,88.0156 Q463.9219,88.2188 463.4688,88.3281 Q463.0156,88.4375 462.5313,88.4375 Q460.75,88.4375 459.8125,87.2813 Q458.8906,86.1094 458.8906,83.9063 Q458.8906,81.6875 459.8125,80.5313 Q460.75,79.3594 462.5313,79.3594 Q463.0156,79.3594 463.4688,79.4688 Q463.9375,79.5625 464.3281,79.7813 L464.3281,81.7031 Q463.8906,81.2969 463.4688,81.1094 Q463.0469,80.9063 462.6094,80.9063 Q461.6563,80.9063 461.1719,81.6719 Q460.6875,82.4219 460.6875,83.9063 Q460.6875,85.375 461.1719,86.125 Q461.6563,86.875 462.6094,86.875 Q463.0469,86.875 463.4688,86.6875 Q463.8906,86.5 464.3281,86.0938 L464.3281,88.0156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="97" x="481" y="80.9355">«crypto_prices»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="481.5" y="94.9043">CryptoPriceOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="381" x2="648" y1="102.7344" y2="102.7344"/><ellipse cx="391" cy="113.7344" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="151" x="399" y="117.873">symbol : String(20) «PK»</text><ellipse cx="391" cy="127.7031" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="171" x="399" y="131.8418">timeframe : String(10) «PK»</text><ellipse cx="391" cy="141.6719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="190" x="399" y="145.8105">timestamp : DateTime(tz) «PK»</text><ellipse cx="391" cy="155.6406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="170" x="399" y="159.7793">price_open : Numeric(20,8)</text><ellipse cx="391" cy="169.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="165" x="399" y="173.748">price_high : Numeric(20,8)</text><ellipse cx="391" cy="183.5781" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="158" x="399" y="187.7168">price_low : Numeric(20,8)</text><ellipse cx="391" cy="197.5469" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="171" x="399" y="201.6855">price_close : Numeric(20,8)</text><ellipse cx="391" cy="211.5156" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="175" x="399" y="215.6543">volume_24h : Numeric(20,8)</text><ellipse cx="391" cy="225.4844" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="174" x="399" y="229.623">market_cap : Numeric(20,2)</text><ellipse cx="391" cy="239.4531" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="399" y="243.5918">source : String(50)</text><line style="stroke:#34A853;stroke-width:1.0;" x1="381" x2="648" y1="250.4219" y2="250.4219"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="257" x="386" y="265.5605">«HYPERTABLE» retain=90d compress=7d</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="252" x="386" y="279.5293">«INDEX» (symbol, timeframe, timestamp)</text></g><!--MD5=[a62e923251c4a07032bc3973b1b0eff1]
+class IndicatorOrm--><g id="elem_IndicatorOrm"><rect codeLine="43" fill="#ECFDF5" height="249.5" id="IndicatorOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="275" x="684" y="50.7969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="275" x="684" y="50.7969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="275" x="684" y="85.7344"/><rect codeLine="43" fill="none" height="249.5" id="IndicatorOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="275" x="684" y="50.7969"/><ellipse cx="777.5" cy="69.7656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M779.3281,74.0156 Q778.9219,74.2188 778.4688,74.3281 Q778.0156,74.4375 777.5313,74.4375 Q775.75,74.4375 774.8125,73.2813 Q773.8906,72.1094 773.8906,69.9063 Q773.8906,67.6875 774.8125,66.5313 Q775.75,65.3594 777.5313,65.3594 Q778.0156,65.3594 778.4688,65.4688 Q778.9375,65.5625 779.3281,65.7813 L779.3281,67.7031 Q778.8906,67.2969 778.4688,67.1094 Q778.0469,66.9063 777.6094,66.9063 Q776.6563,66.9063 776.1719,67.6719 Q775.6875,68.4219 775.6875,69.9063 Q775.6875,71.375 776.1719,72.125 Q776.6563,72.875 777.6094,72.875 Q778.0469,72.875 778.4688,72.6875 Q778.8906,72.5 779.3281,72.0938 L779.3281,74.0156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="75" x="799" y="66.9355">«indicators»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="80" x="796.5" y="80.9043">IndicatorOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="685" x2="958" y1="88.7344" y2="88.7344"/><ellipse cx="695" cy="99.7344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="703" y="103.873">id : UUID «PK»</text><ellipse cx="695" cy="113.7031" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="703" y="117.8418">symbol : String(20)</text><ellipse cx="695" cy="127.6719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="703" y="131.8105">timeframe : String(10)</text><ellipse cx="695" cy="141.6406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="157" x="703" y="145.7793">timestamp : DateTime(tz)</text><ellipse cx="695" cy="155.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="703" y="159.748">rsi : Numeric(10,4)</text><ellipse cx="695" cy="169.5781" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="198" x="703" y="173.7168">bollinger_upper : Numeric(20,8)</text><ellipse cx="695" cy="183.5469" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="202" x="703" y="187.6855">bollinger_middle : Numeric(20,8)</text><ellipse cx="695" cy="197.5156" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="194" x="703" y="201.6543">bollinger_lower : Numeric(20,8)</text><ellipse cx="695" cy="211.4844" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="211" x="703" y="215.623">price_vs_bollinger : Numeric(10,6)</text><ellipse cx="695" cy="225.4531" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="186" x="703" y="229.5918">harmonic_pattern : String(50)</text><ellipse cx="695" cy="239.4219" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="175" x="703" y="243.5605">trend_slope : Numeric(10,6)</text><ellipse cx="695" cy="253.3906" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="142" x="703" y="257.5293">trend_type : String(20)</text><ellipse cx="695" cy="267.3594" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="703" y="271.498">metadata : JSONB</text><line style="stroke:#34A853;stroke-width:1.0;" x1="685" x2="958" y1="278.3281" y2="278.3281"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="263" x="690" y="293.4668">«UNIQUE» (symbol, timeframe, timestamp)</text></g><!--MD5=[1784900fb2797a371477989a76ddafed]
+class TradingSignalOrm--><g id="elem_TradingSignalOrm"><rect codeLine="64" fill="#ECFDF5" height="263.4688" id="TradingSignalOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="263" x="994" y="44.2969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="263" x="994" y="44.2969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="263" x="994" y="79.2344"/><rect codeLine="64" fill="none" height="263.4688" id="TradingSignalOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="263" x="994" y="44.2969"/><ellipse cx="1066.5" cy="63.2656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1068.3281,67.5156 Q1067.9219,67.7188 1067.4688,67.8281 Q1067.0156,67.9375 1066.5313,67.9375 Q1064.75,67.9375 1063.8125,66.7813 Q1062.8906,65.6094 1062.8906,63.4063 Q1062.8906,61.1875 1063.8125,60.0313 Q1064.75,58.8594 1066.5313,58.8594 Q1067.0156,58.8594 1067.4688,58.9688 Q1067.9375,59.0625 1068.3281,59.2813 L1068.3281,61.2031 Q1067.8906,60.7969 1067.4688,60.6094 Q1067.0469,60.4063 1066.6094,60.4063 Q1065.6563,60.4063 1065.1719,61.1719 Q1064.6875,61.9219 1064.6875,63.4063 Q1064.6875,64.875 1065.1719,65.625 Q1065.6563,66.375 1066.6094,66.375 Q1067.0469,66.375 1067.4688,66.1875 Q1067.8906,66 1068.3281,65.5938 L1068.3281,67.5156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="107" x="1087" y="60.4355">«trading_signals»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="1085.5" y="74.4043">TradingSignalOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="995" x2="1256" y1="82.2344" y2="82.2344"/><ellipse cx="1005" cy="93.2344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="1013" y="97.373">id : UUID «PK»</text><ellipse cx="1005" cy="107.2031" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="1013" y="111.3418">symbol : String(20)</text><ellipse cx="1005" cy="121.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="145" x="1013" y="125.3105">signal_type : String(10)</text><ellipse cx="1005" cy="135.1406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="203" x="1013" y="139.2793">confidence_score : Numeric(5,4)</text><ellipse cx="1005" cy="149.1094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="190" x="1013" y="153.248">timeframe_primary : String(10)</text><ellipse cx="1005" cy="163.0781" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="171" x="1013" y="167.2168">timeframes_aligned : JSONB</text><ellipse cx="1005" cy="177.0469" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="1013" y="181.1855">rules_triggered : JSONB</text><ellipse cx="1005" cy="191.0156" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="184" x="1013" y="195.1543">leverage_suggested : Integer</text><ellipse cx="1005" cy="204.9844" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="188" x="1013" y="209.123">margin_safety : Numeric(10,4)</text><ellipse cx="1005" cy="218.9531" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="197" x="1013" y="223.0918">fees_estimated : Numeric(10,6)</text><ellipse cx="1005" cy="232.9219" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="164" x="1013" y="237.0605">model_version : String(50)</text><ellipse cx="1005" cy="246.8906" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="1013" y="251.0293">created_at : DateTime</text><line style="stroke:#34A853;stroke-width:1.0;" x1="995" x2="1256" y1="257.8594" y2="257.8594"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="251" x="1000" y="272.998">«CHECK» signal_type IN (BUY,SELL,HOLD)</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="183" x="1000" y="286.9668">«INDEX» (symbol, created_at)</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="1000" y="300.9355">«rel» outcome : 0..1</text></g><!--MD5=[c40ee815d1eac364bb40691a928f1faa]
+class SignalOutcomeOrm--><g id="elem_SignalOutcomeOrm"><rect codeLine="83" fill="#ECFDF5" height="207.5938" id="SignalOutcomeOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="219" x="1016" y="382.2969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="219" x="1016" y="382.2969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="219" x="1016" y="417.2344"/><rect codeLine="83" fill="none" height="207.5938" id="SignalOutcomeOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="219" x="1016" y="382.2969"/><ellipse cx="1062" cy="401.2656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1063.8281,405.5156 Q1063.4219,405.7188 1062.9688,405.8281 Q1062.5156,405.9375 1062.0313,405.9375 Q1060.25,405.9375 1059.3125,404.7813 Q1058.3906,403.6094 1058.3906,401.4063 Q1058.3906,399.1875 1059.3125,398.0313 Q1060.25,396.8594 1062.0313,396.8594 Q1062.5156,396.8594 1062.9688,396.9688 Q1063.4375,397.0625 1063.8281,397.2813 L1063.8281,399.2031 Q1063.3906,398.7969 1062.9688,398.6094 Q1062.5469,398.4063 1062.1094,398.4063 Q1061.1563,398.4063 1060.6719,399.1719 Q1060.1875,399.9219 1060.1875,401.4063 Q1060.1875,402.875 1060.6719,403.625 Q1061.1563,404.375 1062.1094,404.375 Q1062.5469,404.375 1062.9688,404.1875 Q1063.3906,404 1063.8281,403.5938 L1063.8281,405.5156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="117" x="1082" y="398.4355">«signal_outcomes»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1081" y="412.4043">SignalOutcomeOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1017" x2="1234" y1="420.2344" y2="420.2344"/><ellipse cx="1027" cy="431.2344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="1035" y="435.373">id : UUID «PK»</text><ellipse cx="1027" cy="445.2031" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="128" x="1035" y="449.3418">signal_id : UUID «FK»</text><ellipse cx="1027" cy="459.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="194" x="1035" y="463.3105">price_at_signal : Numeric(20,8)</text><ellipse cx="1027" cy="473.1406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="190" x="1035" y="477.2793">price_after_1h : Numeric(20,8)</text><ellipse cx="1027" cy="487.1094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="190" x="1035" y="491.248">price_after_4h : Numeric(20,8)</text><ellipse cx="1027" cy="501.0781" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="190" x="1035" y="505.2168">price_after_1d : Numeric(20,8)</text><ellipse cx="1027" cy="515.0469" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="187" x="1035" y="519.1855">pnl_simulated : Numeric(10,4)</text><ellipse cx="1027" cy="529.0156" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="1035" y="533.1543">was_correct : Boolean</text><ellipse cx="1027" cy="542.9844" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="152" x="1035" y="547.123">evaluated_at : DateTime</text><line style="stroke:#34A853;stroke-width:1.0;" x1="1017" x2="1234" y1="553.9531" y2="553.9531"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="1022" y="569.0918">«INDEX» (signal_id)</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="1022" y="583.0605">«INDEX» (was_correct)</text></g><!--MD5=[047273430b6f9c2832baa689d7c730dd]
+class PortfolioOrm--><g id="elem_PortfolioOrm"><rect codeLine="101" fill="#ECFDF5" height="193.625" id="PortfolioOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="209" x="7" y="389.2969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="209" x="7" y="389.2969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="209" x="7" y="424.2344"/><rect codeLine="101" fill="none" height="193.625" id="PortfolioOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="209" x="7" y="389.2969"/><ellipse cx="52" cy="408.2656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M53.8281,412.5156 Q53.4219,412.7188 52.9688,412.8281 Q52.5156,412.9375 52.0313,412.9375 Q50.25,412.9375 49.3125,411.7813 Q48.3906,410.6094 48.3906,408.4063 Q48.3906,406.1875 49.3125,405.0313 Q50.25,403.8594 52.0313,403.8594 Q52.5156,403.8594 52.9688,403.9688 Q53.4375,404.0625 53.8281,404.2813 L53.8281,406.2031 Q53.3906,405.7969 52.9688,405.6094 Q52.5469,405.4063 52.1094,405.4063 Q51.1563,405.4063 50.6719,406.1719 Q50.1875,406.9219 50.1875,408.4063 Q50.1875,409.875 50.6719,410.625 Q51.1563,411.375 52.1094,411.375 Q52.5469,411.375 52.9688,411.1875 Q53.3906,411 53.8281,410.5938 L53.8281,412.5156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="115" x="69" y="405.4355">«portfolio_entries»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="77" x="88" y="419.4043">PortfolioOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="8" x2="215" y1="427.2344" y2="427.2344"/><ellipse cx="18" cy="438.2344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="26" y="442.373">id : UUID «PK»</text><ellipse cx="18" cy="452.2031" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="26" y="456.3418">user_id : UUID «FK»</text><ellipse cx="18" cy="466.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="26" y="470.3105">symbol : String(20)</text><ellipse cx="18" cy="480.1406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="152" x="26" y="484.2793">quantity : Numeric(20,8)</text><ellipse cx="18" cy="494.1094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="170" x="26" y="498.248">entry_price : Numeric(20,8)</text><ellipse cx="18" cy="508.0781" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="184" x="26" y="512.2168">current_price : Numeric(20,8)</text><ellipse cx="18" cy="522.0469" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="26" y="526.1855">notes : Text</text><ellipse cx="18" cy="536.0156" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="26" y="540.1543">created_at : DateTime</text><ellipse cx="18" cy="549.9844" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="143" x="26" y="554.123">updated_at : DateTime</text><line style="stroke:#34A853;stroke-width:1.0;" x1="8" x2="215" y1="560.9531" y2="560.9531"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="13" y="576.0918">«INDEX» (user_id)</text></g><!--MD5=[bb69e01254f51097cc73579d81e927c0]
+class WatchlistOrm--><g id="elem_WatchlistOrm"><rect codeLine="115" fill="#ECFDF5" height="123.7813" id="WatchlistOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="183" x="251" y="424.2969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="183" x="251" y="424.2969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="183" x="251" y="459.2344"/><rect codeLine="115" fill="none" height="123.7813" id="WatchlistOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="183" x="251" y="424.2969"/><ellipse cx="282.55" cy="443.2656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M284.3781,447.5156 Q283.9719,447.7188 283.5188,447.8281 Q283.0656,447.9375 282.5813,447.9375 Q280.8,447.9375 279.8625,446.7813 Q278.9406,445.6094 278.9406,443.4063 Q278.9406,441.1875 279.8625,440.0313 Q280.8,438.8594 282.5813,438.8594 Q283.0656,438.8594 283.5188,438.9688 Q283.9875,439.0625 284.3781,439.2813 L284.3781,441.2031 Q283.9406,440.7969 283.5188,440.6094 Q283.0969,440.4063 282.6594,440.4063 Q281.7063,440.4063 281.2219,441.1719 Q280.7375,441.9219 280.7375,443.4063 Q280.7375,444.875 281.2219,445.625 Q281.7063,446.375 282.6594,446.375 Q283.0969,446.375 283.5188,446.1875 Q283.9406,446 284.3781,445.5938 L284.3781,447.5156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="118" x="297.45" y="440.4355">«watchlist_entries»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="315.45" y="454.4043">WatchlistOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="252" x2="433" y1="462.2344" y2="462.2344"/><ellipse cx="262" cy="473.2344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="270" y="477.373">id : UUID «PK»</text><ellipse cx="262" cy="487.2031" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="270" y="491.3418">user_id : UUID «FK»</text><ellipse cx="262" cy="501.1719" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="270" y="505.3105">symbol : String(20)</text><ellipse cx="262" cy="515.1406" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="270" y="519.2793">added_at : DateTime</text><line style="stroke:#34A853;stroke-width:1.0;" x1="252" x2="433" y1="526.1094" y2="526.1094"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="171" x="257" y="541.248">«UNIQUE» (user_id, symbol)</text></g><!--MD5=[d5c7bd40f98aaf57a8367befa0079a6a]
+class NewsArticleOrm--><g id="elem_NewsArticleOrm"><rect codeLine="127" fill="#ECFDF5" height="235.5313" id="NewsArticleOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="222" x="1292.5" y="57.7969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="222" x="1292.5" y="57.7969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="222" x="1292.5" y="92.7344"/><rect codeLine="127" fill="none" height="235.5313" id="NewsArticleOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="222" x="1292.5" y="57.7969"/><ellipse cx="1351" cy="76.7656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1352.8281,81.0156 Q1352.4219,81.2188 1351.9688,81.3281 Q1351.5156,81.4375 1351.0313,81.4375 Q1349.25,81.4375 1348.3125,80.2813 Q1347.3906,79.1094 1347.3906,76.9063 Q1347.3906,74.6875 1348.3125,73.5313 Q1349.25,72.3594 1351.0313,72.3594 Q1351.5156,72.3594 1351.9688,72.4688 Q1352.4375,72.5625 1352.8281,72.7813 L1352.8281,74.7031 Q1352.3906,74.2969 1351.9688,74.1094 Q1351.5469,73.9063 1351.1094,73.9063 Q1350.1563,73.9063 1349.6719,74.6719 Q1349.1875,75.4219 1349.1875,76.9063 Q1349.1875,78.375 1349.6719,79.125 Q1350.1563,79.875 1351.1094,79.875 Q1351.5469,79.875 1351.9688,79.6875 Q1352.3906,79.5 1352.8281,79.0938 L1352.8281,81.0156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="97" x="1370" y="73.9355">«news_articles»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="1370" y="87.9043">NewsArticleOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1293.5" x2="1513.5" y1="95.7344" y2="95.7344"/><ellipse cx="1303.5" cy="106.7344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="1311.5" y="110.873">id : UUID «PK»</text><ellipse cx="1303.5" cy="120.7031" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="1311.5" y="124.8418">title : String(500)</text><ellipse cx="1303.5" cy="134.6719" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="1311.5" y="138.8105">content : Text</text><ellipse cx="1303.5" cy="148.6406" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="126" x="1311.5" y="152.7793">source : String(100)</text><ellipse cx="1303.5" cy="162.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="172" x="1311.5" y="166.748">url : String(1000) «UNIQUE»</text><ellipse cx="1303.5" cy="176.5781" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="171" x="1311.5" y="180.7168">published_at : DateTime(tz)</text><ellipse cx="1303.5" cy="190.5469" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="197" x="1311.5" y="194.6855">sentiment_score : Numeric(5,4)</text><ellipse cx="1303.5" cy="204.5156" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="1311.5" y="208.6543">keywords : JSONB</text><ellipse cx="1303.5" cy="218.4844" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="189" x="1311.5" y="222.623">reliability_score : Numeric(5,4)</text><ellipse cx="1303.5" cy="232.4531" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="147" x="1311.5" y="236.5918">collected_at : DateTime</text><line style="stroke:#34A853;stroke-width:1.0;" x1="1293.5" x2="1513.5" y1="243.4219" y2="243.4219"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="1298.5" y="258.5605">«INDEX» (published_at)</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="1298.5" y="272.5293">«INDEX» (source)</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="183" x="1298.5" y="286.498">«rel» text_mining_result : 0..1</text></g><!--MD5=[8cc7a4ab0e64bc48a3e771fe87a70a6a]
+class TextMiningResultOrm--><g id="elem_TextMiningResultOrm"><rect codeLine="144" fill="#ECFDF5" height="151.7188" id="TextMiningResultOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="181" x="1313" y="410.2969"/><rect fill="#34A853" height="37.9375" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="181" x="1313" y="410.2969"/><rect fill="#34A853" height="3" style="stroke:#34A853;stroke-width:0.5;" width="181" x="1313" y="445.2344"/><rect codeLine="144" fill="none" height="151.7188" id="TextMiningResultOrm" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="181" x="1313" y="410.2969"/><ellipse cx="1336.45" cy="429.2656" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1338.2781,433.5156 Q1337.8719,433.7188 1337.4188,433.8281 Q1336.9656,433.9375 1336.4813,433.9375 Q1334.7,433.9375 1333.7625,432.7813 Q1332.8406,431.6094 1332.8406,429.4063 Q1332.8406,427.1875 1333.7625,426.0313 Q1334.7,424.8594 1336.4813,424.8594 Q1336.9656,424.8594 1337.4188,424.9688 Q1337.8875,425.0625 1338.2781,425.2813 L1338.2781,427.2031 Q1337.8406,426.7969 1337.4188,426.6094 Q1336.9969,426.4063 1336.5594,426.4063 Q1335.6063,426.4063 1335.1219,427.1719 Q1334.6375,427.9219 1334.6375,429.4063 Q1334.6375,430.875 1335.1219,431.625 Q1335.6063,432.375 1336.5594,432.375 Q1336.9969,432.375 1337.4188,432.1875 Q1337.8406,432 1338.2781,431.5938 L1338.2781,433.5156 Z " fill="#333333"/><text fill="#7C5CFC" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="133" x="1350.05" y="426.4355">«text_mining_results»</text><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="1351.55" y="440.4043">TextMiningResultOrm</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1314" x2="1493" y1="448.2344" y2="448.2344"/><ellipse cx="1324" cy="459.2344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="1332" y="463.373">id : UUID «PK»</text><ellipse cx="1324" cy="473.2031" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="1332" y="477.3418">article_id : UUID «FK»</text><ellipse cx="1324" cy="487.1719" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1332" y="491.3105">word_cloud : JSONB</text><ellipse cx="1324" cy="501.1406" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="1332" y="505.2793">summary : Text</text><ellipse cx="1324" cy="515.1094" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="1332" y="519.248">entities : JSONB</text><ellipse cx="1324" cy="529.0781" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="1332" y="533.2168">topics : JSONB</text><ellipse cx="1324" cy="543.0469" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="156" x="1332" y="547.1855">processed_at : DateTime</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1314" x2="1493" y1="554.0156" y2="554.0156"/></g><!--MD5=[b5836a6fdeaf08a80f8408edd13c7f42]
+link UserOrm to PortfolioOrm--><g id="link_UserOrm_PortfolioOrm"><path codeLine="157" d="M185.25,287.4569 C173.81,318.1569 161.43,351.3569 150.14,381.6469 " fill="none" id="UserOrm-PortfolioOrm" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="150.0927" x2="152.9097" y1="381.7839" y2="391.3789"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="150.0927" x2="141.6703" y1="381.7839" y2="387.1748"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="150.0927" x2="147.29" y1="381.7839" y2="389.2769"/><ellipse cx="152.1948" cy="376.1642" fill="none" rx="4" ry="4" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="182.9036" x2="190.3983" y1="282.2952" y2="285.0933"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="181.8544" x2="189.3491" y1="285.1057" y2="287.9038"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="185.252" x2="188.05" y1="287.4416" y2="279.9469"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="57" x="167.5" y="349.4355">CASCADE</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="8" x="177.1979" y="298.566">1</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="9" x="140.979" y="378.577">N</text></g><!--MD5=[0e74c01813993d37ea7b9e197ef542be]
+link UserOrm to WatchlistOrm--><g id="link_UserOrm_WatchlistOrm"><path codeLine="158" d="M268.15,287.5769 C284.29,330.4969 302.27,378.3169 316.51,416.1769 " fill="none" id="UserOrm-WatchlistOrm" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="316.6747" x2="325.1062" y1="416.6086" y2="421.9854"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="316.6747" x2="313.8738" y1="416.6086" y2="426.2083"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="316.6747" x2="319.49" y1="416.6086" y2="424.0969"/><ellipse cx="314.5633" cy="410.9924" fill="none" rx="4" ry="4" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="262.9535" x2="270.4418" y1="285.0986" y2="282.2834"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="264.0092" x2="271.4975" y1="287.9067" y2="285.0915"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="268.1053" x2="265.29" y1="287.4352" y2="279.9469"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="57" x="292.5" y="349.4355">CASCADE</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="8" x="259.6275" y="298.566">1</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="9" x="306.9653" y="413.5094">N</text></g><!--MD5=[a55d2d9692ab0896d5e9be1511fdc9a8]
+link TradingSignalOrm to SignalOutcomeOrm--><g id="link_TradingSignalOrm_SignalOutcomeOrm"><path codeLine="159" d="M1125.5,315.7869 C1125.5,335.2369 1125.5,354.9969 1125.5,373.8469 " fill="none" id="TradingSignalOrm-SignalOutcomeOrm" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1125.5" x2="1125.5" y1="370.8569" y2="381.8569"/><ellipse cx="1125.5" cy="370.8569" fill="none" rx="4" ry="4" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1129.5" x2="1121.5" y1="377.8569" y2="377.8569"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1121.5" x2="1129.5" y1="311.6269" y2="311.6269"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1121.5" x2="1129.5" y1="314.6269" y2="314.6269"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1125.5" x2="1125.5" y1="315.6269" y2="307.6269"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="57" x="1126.5" y="349.4355">CASCADE</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="8" x="1117.2688" y="326.7772">1</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="24" x="1100.5813" y="371.5543">0..1</text></g><!--MD5=[61951e8d487ffd8ed9d1b81942d58e1c]
+link NewsArticleOrm to TextMiningResultOrm--><g id="link_NewsArticleOrm_TextMiningResultOrm"><path codeLine="160" d="M1403.5,302.1469 C1403.5,335.8169 1403.5,371.3969 1403.5,402.1469 " fill="none" id="NewsArticleOrm-TextMiningResultOrm" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1403.5" x2="1403.5" y1="399.2769" y2="410.2769"/><ellipse cx="1403.5" cy="399.2769" fill="none" rx="4" ry="4" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1407.5" x2="1399.5" y1="406.2769" y2="406.2769"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1399.5" x2="1407.5" y1="297.8669" y2="297.8669"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1399.5" x2="1407.5" y1="300.8669" y2="300.8669"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1403.5" x2="1403.5" y1="301.8669" y2="293.8669"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="57" x="1404.5" y="349.4355">CASCADE</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="8" x="1395.2563" y="312.6403">1</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="24" x="1378.1875" y="399.4583">0..1</text></g><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="357" x="575.25" y="596.8906"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="357" x="575.25" y="609.8857">src/shared/db_models.py | 9 classes | TimescaleDB</text><!--MD5=[d9ec4407f754adf28c8e2664a12dbd1f]
+@startuml CL02-orm-models
+!include _common.puml
+
+title CryptoBot — Classes SQLAlchemy ORM
+caption src/shared/db_models.py | 9 classes | TimescaleDB
+
+' ============================================================
+' User Domain
+' ============================================================
+class UserOrm <<users>> {
+  + id : UUID <<PK>>
+  + username : String(100) <<UNIQUE>>
+  + email : String(255) <<UNIQUE>>
+  + password_hash : String(255)
+  + persona_type : String(20)
+  + preferences : JSONB
+  + created_at : DateTime
+  - -
+  <<CHECK>> persona_type IN
+  (trader, journalist, investor)
+  <<rel>> portfolio_entries : 1:N
+  <<rel>> watchlist_entries : 1:N
+}
+
+' ============================================================
+' Market Data
+' ============================================================
+class CryptoPriceOrm <<crypto_prices>> {
+  + symbol : String(20) <<PK>>
+  + timeframe : String(10) <<PK>>
+  + timestamp : DateTime(tz) <<PK>>
+  + price_open : Numeric(20,8)
+  + price_high : Numeric(20,8)
+  + price_low : Numeric(20,8)
+  + price_close : Numeric(20,8)
+  + volume_24h : Numeric(20,8)
+  + market_cap : Numeric(20,2)
+  + source : String(50)
+  - -
+  <<HYPERTABLE>> retain=90d compress=7d
+  <<INDEX>> (symbol, timeframe, timestamp)
+}
+
+class IndicatorOrm <<indicators>> {
+  + id : UUID <<PK>>
+  + symbol : String(20)
+  + timeframe : String(10)
+  + timestamp : DateTime(tz)
+  + rsi : Numeric(10,4)
+  + bollinger_upper : Numeric(20,8)
+  + bollinger_middle : Numeric(20,8)
+  + bollinger_lower : Numeric(20,8)
+  + price_vs_bollinger : Numeric(10,6)
+  + harmonic_pattern : String(50)
+  + trend_slope : Numeric(10,6)
+  + trend_type : String(20)
+  + metadata : JSONB
+  - -
+  <<UNIQUE>> (symbol, timeframe, timestamp)
+}
+
+' ============================================================
+' Signals
+' ============================================================
+class TradingSignalOrm <<trading_signals>> {
+  + id : UUID <<PK>>
+  + symbol : String(20)
+  + signal_type : String(10)
+  + confidence_score : Numeric(5,4)
+  + timeframe_primary : String(10)
+  + timeframes_aligned : JSONB
+  + rules_triggered : JSONB
+  + leverage_suggested : Integer
+  + margin_safety : Numeric(10,4)
+  + fees_estimated : Numeric(10,6)
+  + model_version : String(50)
+  + created_at : DateTime
+  - -
+  <<CHECK>> signal_type IN (BUY,SELL,HOLD)
+  <<INDEX>> (symbol, created_at)
+  <<rel>> outcome : 0..1
+}
+
+class SignalOutcomeOrm <<signal_outcomes>> {
+  + id : UUID <<PK>>
+  + signal_id : UUID <<FK>>
+  + price_at_signal : Numeric(20,8)
+  + price_after_1h : Numeric(20,8)
+  + price_after_4h : Numeric(20,8)
+  + price_after_1d : Numeric(20,8)
+  + pnl_simulated : Numeric(10,4)
+  + was_correct : Boolean
+  + evaluated_at : DateTime
+  - -
+  <<INDEX>> (signal_id)
+  <<INDEX>> (was_correct)
+}
+
+' ============================================================
+' User Data
+' ============================================================
+class PortfolioOrm <<portfolio_entries>> {
+  + id : UUID <<PK>>
+  + user_id : UUID <<FK>>
+  + symbol : String(20)
+  + quantity : Numeric(20,8)
+  + entry_price : Numeric(20,8)
+  + current_price : Numeric(20,8)
+  + notes : Text
+  + created_at : DateTime
+  + updated_at : DateTime
+  - -
+  <<INDEX>> (user_id)
+}
+
+class WatchlistOrm <<watchlist_entries>> {
+  + id : UUID <<PK>>
+  + user_id : UUID <<FK>>
+  + symbol : String(20)
+  + added_at : DateTime
+  - -
+  <<UNIQUE>> (user_id, symbol)
+}
+
+' ============================================================
+' News / NLP
+' ============================================================
+class NewsArticleOrm <<news_articles>> {
+  + id : UUID <<PK>>
+  + title : String(500)
+  + content : Text
+  + source : String(100)
+  + url : String(1000) <<UNIQUE>>
+  + published_at : DateTime(tz)
+  + sentiment_score : Numeric(5,4)
+  + keywords : JSONB
+  + reliability_score : Numeric(5,4)
+  + collected_at : DateTime
+  - -
+  <<INDEX>> (published_at)
+  <<INDEX>> (source)
+  <<rel>> text_mining_result : 0..1
+}
+
+class TextMiningResultOrm <<text_mining_results>> {
+  + id : UUID <<PK>>
+  + article_id : UUID <<FK>>
+  + word_cloud : JSONB
+  + summary : Text
+  + entities : JSONB
+  + topics : JSONB
+  + processed_at : DateTime
+}
+
+' ============================================================
+' Relations
+' ============================================================
+UserOrm "1" ||- -o{ "N" PortfolioOrm : CASCADE
+UserOrm "1" ||- -o{ "N" WatchlistOrm : CASCADE
+TradingSignalOrm "1" ||- -o| "0..1" SignalOutcomeOrm : CASCADE
+NewsArticleOrm "1" ||- -o| "0..1" TextMiningResultOrm : CASCADE
+
+@enduml
+
+@startuml CL02-orm-models
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Classes SQLAlchemy ORM
+caption src/shared/db_models.py | 9 classes | TimescaleDB
+
+class UserOrm <<users>> {
+  + id : UUID <<PK>>
+  + username : String(100) <<UNIQUE>>
+  + email : String(255) <<UNIQUE>>
+  + password_hash : String(255)
+  + persona_type : String(20)
+  + preferences : JSONB
+  + created_at : DateTime
+  - -
+  <<CHECK>> persona_type IN
+  (trader, journalist, investor)
+  <<rel>> portfolio_entries : 1:N
+  <<rel>> watchlist_entries : 1:N
+}
+
+class CryptoPriceOrm <<crypto_prices>> {
+  + symbol : String(20) <<PK>>
+  + timeframe : String(10) <<PK>>
+  + timestamp : DateTime(tz) <<PK>>
+  + price_open : Numeric(20,8)
+  + price_high : Numeric(20,8)
+  + price_low : Numeric(20,8)
+  + price_close : Numeric(20,8)
+  + volume_24h : Numeric(20,8)
+  + market_cap : Numeric(20,2)
+  + source : String(50)
+  - -
+  <<HYPERTABLE>> retain=90d compress=7d
+  <<INDEX>> (symbol, timeframe, timestamp)
+}
+
+class IndicatorOrm <<indicators>> {
+  + id : UUID <<PK>>
+  + symbol : String(20)
+  + timeframe : String(10)
+  + timestamp : DateTime(tz)
+  + rsi : Numeric(10,4)
+  + bollinger_upper : Numeric(20,8)
+  + bollinger_middle : Numeric(20,8)
+  + bollinger_lower : Numeric(20,8)
+  + price_vs_bollinger : Numeric(10,6)
+  + harmonic_pattern : String(50)
+  + trend_slope : Numeric(10,6)
+  + trend_type : String(20)
+  + metadata : JSONB
+  - -
+  <<UNIQUE>> (symbol, timeframe, timestamp)
+}
+
+class TradingSignalOrm <<trading_signals>> {
+  + id : UUID <<PK>>
+  + symbol : String(20)
+  + signal_type : String(10)
+  + confidence_score : Numeric(5,4)
+  + timeframe_primary : String(10)
+  + timeframes_aligned : JSONB
+  + rules_triggered : JSONB
+  + leverage_suggested : Integer
+  + margin_safety : Numeric(10,4)
+  + fees_estimated : Numeric(10,6)
+  + model_version : String(50)
+  + created_at : DateTime
+  - -
+  <<CHECK>> signal_type IN (BUY,SELL,HOLD)
+  <<INDEX>> (symbol, created_at)
+  <<rel>> outcome : 0..1
+}
+
+class SignalOutcomeOrm <<signal_outcomes>> {
+  + id : UUID <<PK>>
+  + signal_id : UUID <<FK>>
+  + price_at_signal : Numeric(20,8)
+  + price_after_1h : Numeric(20,8)
+  + price_after_4h : Numeric(20,8)
+  + price_after_1d : Numeric(20,8)
+  + pnl_simulated : Numeric(10,4)
+  + was_correct : Boolean
+  + evaluated_at : DateTime
+  - -
+  <<INDEX>> (signal_id)
+  <<INDEX>> (was_correct)
+}
+
+class PortfolioOrm <<portfolio_entries>> {
+  + id : UUID <<PK>>
+  + user_id : UUID <<FK>>
+  + symbol : String(20)
+  + quantity : Numeric(20,8)
+  + entry_price : Numeric(20,8)
+  + current_price : Numeric(20,8)
+  + notes : Text
+  + created_at : DateTime
+  + updated_at : DateTime
+  - -
+  <<INDEX>> (user_id)
+}
+
+class WatchlistOrm <<watchlist_entries>> {
+  + id : UUID <<PK>>
+  + user_id : UUID <<FK>>
+  + symbol : String(20)
+  + added_at : DateTime
+  - -
+  <<UNIQUE>> (user_id, symbol)
+}
+
+class NewsArticleOrm <<news_articles>> {
+  + id : UUID <<PK>>
+  + title : String(500)
+  + content : Text
+  + source : String(100)
+  + url : String(1000) <<UNIQUE>>
+  + published_at : DateTime(tz)
+  + sentiment_score : Numeric(5,4)
+  + keywords : JSONB
+  + reliability_score : Numeric(5,4)
+  + collected_at : DateTime
+  - -
+  <<INDEX>> (published_at)
+  <<INDEX>> (source)
+  <<rel>> text_mining_result : 0..1
+}
+
+class TextMiningResultOrm <<text_mining_results>> {
+  + id : UUID <<PK>>
+  + article_id : UUID <<FK>>
+  + word_cloud : JSONB
+  + summary : Text
+  + entities : JSONB
+  + topics : JSONB
+  + processed_at : DateTime
+}
+
+UserOrm "1" ||- -o{ "N" PortfolioOrm : CASCADE
+UserOrm "1" ||- -o{ "N" WatchlistOrm : CASCADE
+TradingSignalOrm "1" ||- -o| "0..1" SignalOutcomeOrm : CASCADE
+NewsArticleOrm "1" ||- -o| "0..1" TextMiningResultOrm : CASCADE
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

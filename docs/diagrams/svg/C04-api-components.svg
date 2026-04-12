@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="699px" preserveAspectRatio="none" style="width:1885px;height:699px;background:#FFFFFF;" version="1.1" viewBox="0 0 1885 699" width="1885px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="243" x="814" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="233" x="819" y="22.9951">CryptoBot — FastAPI Backend</text><!--MD5=[4e1a3510868d06a507f098bb08f0dae0]
+cluster Middleware--><g id="cluster_Middleware"><path d="M1629,64.2969 L1712,64.2969 A4.5,4.5 0 0 1 1715,67.2969 L1722,84.2656 L1875,84.2656 A3,3 0 0 1 1878,87.2656 L1878,567.2969 A3,3 0 0 1 1875,570.2969 L1629,570.2969 A3,3 0 0 1 1626,567.2969 L1626,67.2969 A3,3 0 0 1 1629,64.2969 " fill="#F5F5F5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="1626" x2="1722" y1="84.2656" y2="84.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="83" x="1630" y="77.4355">Middleware</text></g><!--MD5=[425c44983ec08eecf52b22b2a74f6cdd]
+cluster Routers--><g id="cluster_Routers"><path d="M41,43.2969 L97,43.2969 A4.5,4.5 0 0 1 100,46.2969 L107,63.2656 L1599,63.2656 A3,3 0 0 1 1602,66.2656 L1602,230.2969 A3,3 0 0 1 1599,233.2969 L41,233.2969 A3,3 0 0 1 38,230.2969 L38,46.2969 A3,3 0 0 1 41,43.2969 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="38" x2="107" y1="63.2656" y2="63.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="56" x="42" y="56.4355">Routers</text></g><!--MD5=[cdfd548b3455e70392372b1f27091970]
+cluster Services--><g id="cluster_Services"><path d="M9,257.2969 L68,257.2969 A4.5,4.5 0 0 1 71,260.2969 L78,277.2656 L1259,277.2656 A3,3 0 0 1 1262,280.2656 L1262,430.2969 A3,3 0 0 1 1259,433.2969 L9,433.2969 A3,3 0 0 1 6,430.2969 L6,260.2969 A3,3 0 0 1 9,257.2969 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="6" x2="78" y1="277.2656" y2="277.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="59" x="10" y="270.4355">Services</text></g><!--MD5=[a6f11bb19cee6b13000111f5ad685e8b]
+cluster Dependencies--><g id="cluster_Dependencies"><path d="M996,457.2969 L1097,457.2969 A4.5,4.5 0 0 1 1100,460.2969 L1107,477.2656 L1409,477.2656 A3,3 0 0 1 1412,480.2656 L1412,560.2969 A3,3 0 0 1 1409,563.2969 L996,563.2969 A3,3 0 0 1 993,560.2969 L993,460.2969 A3,3 0 0 1 996,457.2969 " fill="#ECFDF5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="993" x2="1107" y1="477.2656" y2="477.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="101" x="997" y="470.4355">Dependencies</text></g><!--MD5=[b54eb9e56800c60bcd4f62dae8d9c1c4]
+entity ratelimit--><g id="elem_ratelimit"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="220" x="1642" y="96.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1842" y="101.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1840" y="103.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1840" y="107.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="86" x="1704" y="127.4355">«middleware»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="180" x="1657" y="141.4043">RateLimitHeadersMiddleware</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="1657" y="155.373">30 req/s default</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="92" x="1657" y="169.3418">5 req/min auth</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="134" x="1657" y="183.3105">X-RateLimit-* headers</text></g><!--MD5=[960d0261185a850f6acfe079a33c70e0]
+entity reqid--><g id="elem_reqid"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="173" x="1665.5" y="310.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1818.5" y="315.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1816.5" y="317.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1816.5" y="321.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="86" x="1704" y="341.4355">«middleware»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="133" x="1680.5" y="355.4043">RequestIdMiddleware</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="1680.5" y="369.373">X-Request-Id header</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="1680.5" y="383.3418">per-IP tracking</text></g><!--MD5=[564a394d57ce3e0a92ac6699042b9ef1]
+entity cors--><g id="elem_cors"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="206" x="1649" y="482.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1835" y="487.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1833" y="489.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1833" y="493.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="86" x="1704" y="513.4355">«middleware»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="1664" y="527.4043">CORS</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="166" x="1664" y="541.373">allow_origins from settings</text></g><!--MD5=[48b5a01d745d6ff7ad54d76112f55360]
+entity r_auth--><g id="elem_r_auth"><rect fill="#F3EEFF" height="113.8125" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="125" x="799.5" y="89.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="904.5" y="94.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="902.5" y="96.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="902.5" y="100.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="830.5" y="120.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="29" x="814.5" y="134.4043">auth</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="814.5" y="148.373">/api/v1/auth</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="85" x="814.5" y="162.3418">POST register</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="814.5" y="176.3105">POST login</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="47" x="814.5" y="190.2793">GET me</text></g><!--MD5=[f52845b8053731c5e5869a839934ca54]
+entity r_crypto--><g id="elem_r_crypto"><rect fill="#F3EEFF" height="141.75" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="193" x="237.5" y="75.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="410.5" y="80.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="408.5" y="82.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="408.5" y="86.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="302.5" y="106.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="39" x="252.5" y="120.4043">crypto</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="84" x="252.5" y="134.373">/api/v1/crypto</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="252.5" y="148.3418">GET list</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="129" x="252.5" y="162.3105">GET market-overview</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="129" x="252.5" y="176.2793">GET {symbol}/prices</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="153" x="252.5" y="190.248">GET {symbol}/indicators</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="252.5" y="204.2168">GET {symbol}/latest</text></g><!--MD5=[9f1be5177324c934889dad3abf1fc50c]
+entity r_signals--><g id="elem_r_signals"><rect fill="#F3EEFF" height="127.7813" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="148" x="54" y="82.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="182" y="87.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="180" y="89.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="180" y="93.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="96.5" y="113.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="69" y="127.4043">signals</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="69" y="141.373">/api/v1/signals</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="65" x="69" y="155.3418">GET active</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="108" x="69" y="169.3105">GET performance</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="69" y="183.2793">GET {id}/detail</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="69" y="197.248">GET {symbol}</text></g><!--MD5=[f8ebe38e48654b96faf06d6069376224]
+entity r_news--><g id="elem_r_news"><rect fill="#F3EEFF" height="113.8125" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="131" x="465.5" y="89.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="576.5" y="94.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="574.5" y="96.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="574.5" y="100.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="499.5" y="120.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="480.5" y="134.4043">news</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="77" x="480.5" y="148.373">/api/v1/news</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="64" x="480.5" y="162.3418">GET latest</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="480.5" y="176.3105">GET sentiment</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="55" x="480.5" y="190.2793">GET {id}</text></g><!--MD5=[858778ce52dafea0c7ed57b58fb67d3d]
+entity r_port--><g id="elem_r_port"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="180" x="960" y="96.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1120" y="101.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1118" y="103.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1118" y="107.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="1018.5" y="127.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="52" x="975" y="141.4043">portfolio</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="975" y="155.373">/api/v1/portfolio</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="64" x="975" y="169.3418">GET, POST</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="140" x="975" y="183.3105">PUT {id}, DELETE {id}</text></g><!--MD5=[b3267430d61ccb0dae7f564c2c9ad42f]
+entity r_watch--><g id="elem_r_watch"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="149" x="1437.5" y="96.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1566.5" y="101.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1564.5" y="103.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1564.5" y="107.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="1480.5" y="127.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="55" x="1452.5" y="141.4043">watchlist</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="1452.5" y="155.373">/api/v1/watchlist</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="64" x="1452.5" y="169.3418">GET, POST</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="1452.5" y="183.3105">DELETE {symbol}</text></g><!--MD5=[00b94656dd1ff375f42bbcef9f410765]
+entity r_chat--><g id="elem_r_chat"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="133" x="631.5" y="103.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="744.5" y="108.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="742.5" y="110.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="742.5" y="114.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="666.5" y="134.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="28" x="646.5" y="148.4043">chat</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="73" x="646.5" y="162.373">/api/v1/chat</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="646.5" y="176.3418">POST message</text></g><!--MD5=[d1054d2af49a31ccf26327bc98a3bac9]
+entity r_sys--><g id="elem_r_sys"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="227" x="1175.5" y="103.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1382.5" y="108.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1380.5" y="110.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1380.5" y="114.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="53" x="1257.5" y="134.4355">«router»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="1190.5" y="148.4043">system</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="1190.5" y="162.373">/health</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="187" x="1190.5" y="176.3418">/api/v1/system/sources-status</text></g><!--MD5=[01523a90a31a480fe37f7f410bb58db8]
+entity s_auth--><g id="elem_s_auth"><rect fill="#F3EEFF" height="127.7813" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="253" x="775.5" y="289.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1008.5" y="294.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1006.5" y="296.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1006.5" y="300.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="868.5" y="320.4355">«service»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="790.5" y="334.4043">auth_service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="150" x="790.5" y="348.373">hash_password (bcrypt)</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="98" x="790.5" y="362.3418">verify_password</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="213" x="790.5" y="376.3105">create_access_token (JWT HS256)</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="790.5" y="390.2793">decode_access_token</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="790.5" y="404.248">register, authenticate</text></g><!--MD5=[3c482781dec06f437186d7455349f13d]
+entity s_crypto--><g id="elem_s_crypto"><rect fill="#F3EEFF" height="127.7813" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="180" x="215" y="289.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="375" y="294.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="373" y="296.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="373" y="300.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="271.5" y="320.4355">«service»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="230" y="334.4043">crypto_service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="230" y="348.373">list_tracked()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="75" x="230" y="362.3418">get_prices()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="99" x="230" y="376.3105">get_indicators()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="73" x="230" y="390.2793">get_latest()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="140" x="230" y="404.248">get_market_overview()</text></g><!--MD5=[d61dfe26419b96906b52e98eadc36a88]
+entity s_signal--><g id="elem_s_signal"><rect fill="#F3EEFF" height="113.8125" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="157" x="22.5" y="296.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="159.5" y="301.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="157.5" y="303.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="157.5" y="307.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="67.5" y="327.4355">«service»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="37.5" y="341.4043">signal_service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="37.5" y="355.373">get_active()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="37.5" y="369.3418">get_by_symbol()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="72" x="37.5" y="383.3105">get_detail()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="37.5" y="397.2793">get_performance()</text></g><!--MD5=[2b265cf85d4d642cbdd6b895b62aae09]
+entity s_news--><g id="elem_s_news"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="140" x="430" y="303.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="550" y="308.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="548" y="310.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="548" y="314.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="466.5" y="334.4355">«service»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="445" y="348.4043">news_service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="73" x="445" y="362.373">get_latest()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="68" x="445" y="376.3418">get_by_id()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="445" y="390.3105">get_sentiment()</text></g><!--MD5=[311001ad3e647b983d132f4b47de0e30]
+entity s_user--><g id="elem_s_user"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="182" x="1064" y="310.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1226" y="315.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1224" y="317.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1224" y="321.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="1121.5" y="341.4355">«service»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="113" x="1079" y="355.4043">user_data_service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="142" x="1079" y="369.373">get/add/update/delete</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="1079" y="383.3418">portfolio + watchlist</text></g><!--MD5=[d66b2743d7b61618f74e7f725697793e]
+entity s_chat--><g id="elem_s_chat"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="135" x="605.5" y="317.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="720.5" y="322.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="718.5" y="324.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="718.5" y="328.2969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="639.5" y="348.4355">«service»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="78" x="620.5" y="362.4043">chat_service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="95" x="620.5" y="376.373">LLM integration</text></g><!--MD5=[ff4210de936cae88158452ce9e1a6a69]
+entity dep_db--><g id="elem_dep_db"><rect fill="#F3EEFF" height="57.9375" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="157" x="1009.5" y="489.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1146.5" y="494.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1144.5" y="496.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1144.5" y="500.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="53" x="1024.5" y="520.4355">get_db()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="1024.5" y="534.4043">AsyncSession yield</text></g><!--MD5=[e6a677d0928ae3b5e3cb482aa8ae133b]
+entity dep_user--><g id="elem_dep_user"><rect fill="#F3EEFF" height="57.9375" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="194" x="1202" y="489.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1376" y="494.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1374" y="496.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1374" y="500.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="1217" y="520.4355">get_current_user()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="154" x="1217" y="534.4043">JWT decode + fetch user</text></g><!--MD5=[5f5753442e7fadb4fd16694c78ce39f0]
+entity tsdb--><g id="elem_tsdb"><path d="M1038.5,624.2969 C1038.5,614.2969 1088,614.2969 1088,614.2969 C1088,614.2969 1137.5,614.2969 1137.5,624.2969 L1137.5,647.2656 C1137.5,657.2656 1088,657.2656 1088,657.2656 C1088,657.2656 1038.5,657.2656 1038.5,647.2656 L1038.5,624.2969 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M1038.5,624.2969 C1038.5,634.2969 1088,634.2969 1088,634.2969 C1088,634.2969 1137.5,634.2969 1137.5,624.2969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="1048.5" y="649.4355">TimescaleDB</text></g><!--MD5=[d24d74b4c4258e8be3101ae0bd64399c]
+link ratelimit to reqid--><g id="link_ratelimit_reqid"><path d="M1752,196.3969 C1752,229.3469 1752,272.4969 1752,305.0469 " fill="none" id="ratelimit-to-reqid" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1752,310.1769,1756,301.1769,1752,305.1769,1748,301.1769,1752,310.1769" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[d9073163e3b8ebc69c69b810610c9736]
+link reqid to cors--><g id="link_reqid_cors"><path d="M1752,396.6969 C1752,421.5269 1752,452.7169 1752,477.1469 " fill="none" id="reqid-to-cors" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1752,482.2569,1756,473.2569,1752,477.2569,1748,473.2569,1752,482.2569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[4308e34273bf41d6a8cc144b236ec6a9]
+link r_auth to s_auth--><g id="link_r_auth_s_auth"><path d="M872.93,203.3169 C877.79,228.2069 883.55,257.7469 888.66,283.9269 " fill="none" id="r_auth-to-s_auth" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="889.67,289.1169,891.8704,279.517,888.7114,284.2096,884.0188,281.0507,889.67,289.1169" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[91fa98b4b88fc842193d96c9ba0ab459]
+link r_crypto to s_crypto--><g id="link_r_crypto_s_crypto"><path d="M324.06,217.5569 C321.02,239.0169 317.69,262.5769 314.67,283.9169 " fill="none" id="r_crypto-to-s_crypto" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="313.95,288.9969,319.1691,280.6446,314.6491,284.046,311.2477,279.526,313.95,288.9969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[de65acc672861e449a209d5a1d1c65ba]
+link r_signals to s_signal--><g id="link_r_signals_s_signal"><path d="M119.68,210.4769 C116.29,236.1769 112.4,265.7569 109.04,291.2369 " fill="none" id="r_signals-to-s_signal" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="108.38,296.2769,113.528,287.8806,109.0371,291.3202,105.5974,286.8293,108.38,296.2769" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[948eb9a5915ce19bc85075516614a5dc]
+link r_news to s_news--><g id="link_r_news_s_news"><path d="M522.53,203.3169 C518.07,232.7869 512.63,268.7669 508.21,297.9869 " fill="none" id="r_news-to-s_news" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="507.46,302.9869,512.7496,294.6791,508.201,298.0421,504.838,293.4935,507.46,302.9869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[6ba63ec28b8be06c0c1def23f9dd54ac]
+link r_port to s_user--><g id="link_r_port_s_user"><path d="M1075.15,196.3969 C1092.09,229.4769 1114.31,272.8569 1131.01,305.4469 " fill="none" id="r_port-to-s_user" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1133.43,310.1769,1132.8824,300.3433,1131.1484,305.7278,1125.7639,303.9938,1133.43,310.1769" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[65874a890d172f99ef68c0aeb51054f3]
+link r_watch to s_user--><g id="link_r_watch_s_user"><path d="M1470.82,196.6369 C1455.97,212.3469 1438.33,228.8569 1420,241.2969 C1368.12,276.5169 1303.3,303.9069 1250.75,322.6769 " fill="none" id="r_watch-to-s_user" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1246.02,324.3469,1255.8393,325.1095,1250.7326,322.6761,1253.166,317.5693,1246.02,324.3469" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[5b159fbb694517d1e64d778832f9c28e]
+link r_chat to s_chat--><g id="link_r_chat_s_chat"><path d="M692.82,189.7769 C688.44,225.6569 682.22,276.6869 677.92,311.9469 " fill="none" id="r_chat-to-s_chat" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="677.3,317.0369,682.3764,308.5971,677.9149,312.0748,674.4372,307.6133,677.3,317.0369" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[24bb123f85e5d3cb8a95a7e018aea73f]
+link r_sys to dep_db--><g id="link_r_sys_dep_db"><path d="M1299.8,189.3669 C1313.44,253.3469 1327.84,374.6669 1262,441.2969 C1249.91,453.5369 1201.12,443.2769 1185,449.2969 C1162.8,457.5869 1140.93,472.1969 1123.59,485.7469 " fill="none" id="r_sys-to-dep_db" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1119.29,489.1669,1128.8233,486.6936,1123.2027,486.0539,1123.8424,480.4333,1119.29,489.1669" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[63db722cbbd62c9a32485f7bfbd0a088]
+link r_auth to dep_user--><g id="link_r_auth_dep_user"><path d="M897.49,203.6469 C909.93,218.6069 925.28,232.9069 943,241.2969 C959.02,248.8869 1248.78,237.4869 1262,249.2969 C1328.29,308.5469 1316.78,426.6969 1306.28,484.2569 " fill="none" id="r_auth-to-dep_user" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1305.33,489.2969,1310.9315,481.196,1306.2583,484.3838,1303.0706,479.7107,1305.33,489.2969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[590baa8e30ca9542c4fe1a9e65ac005b]
+link r_port to dep_user--><g id="link_r_port_dep_user"><path d="M1092.86,196.4269 C1111.05,213.8369 1133.67,231.5169 1158,241.2969 C1175.24,248.2269 1312.18,235.8469 1325,249.2969 C1385.71,312.9769 1343.1,427.8769 1316.27,484.2669 " fill="none" id="r_port-to-dep_user" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1314.05,488.8869,1321.5638,482.5196,1316.2229,484.3837,1314.3588,479.0429,1314.05,488.8869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[c073fdab1ba2192ba02dc67424192625]
+link r_watch to dep_user--><g id="link_r_watch_dep_user"><path d="M1517.82,196.4369 C1522.57,259.6169 1521.3,369.7169 1467,441.2969 C1450.34,463.2669 1425.87,479.0569 1400.73,490.3369 " fill="none" id="r_watch-to-dep_user" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1396.03,492.3969,1405.8786,492.4654,1400.6131,490.398,1402.6805,485.1325,1396.03,492.3969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[89d5cd3148dd80ddab02251c03e456e2]
+link s_auth to dep_db--><g id="link_s_auth_dep_db"><path d="M973.91,417.3169 C1000.58,440.6869 1029.7,466.2069 1051.84,485.6069 " fill="none" id="s_auth-to-dep_db" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1055.61,488.9169,1051.4516,479.9889,1051.84,485.6324,1046.1965,486.0209,1055.61,488.9169" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[b5d04a35ae60e4fdb445c9f95e9fc116]
+link s_crypto to dep_db--><g id="link_s_crypto_dep_db"><path d="M371.83,417.4769 C384.7,426.8269 398.67,435.3169 413,441.2969 C517.98,485.0769 848.02,506.0369 1004.33,513.6969 " fill="none" id="s_crypto-to-dep_db" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1009.36,513.9469,1000.5653,509.5137,1004.3659,513.7036,1000.176,517.5043,1009.36,513.9469" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[5144e56f093312f8f47de89939b26563]
+link s_signal to dep_db--><g id="link_s_signal_dep_db"><path d="M151.43,410.4869 C165.3,422.6469 181.18,434.0269 198,441.2969 C341.56,503.3769 811.44,514.8069 1004.27,516.8669 " fill="none" id="s_signal-to-dep_db" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1009.33,516.9169,1000.3646,512.8399,1004.3302,516.874,1000.296,520.8396,1009.33,516.9169" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[f22b31cc11a784c1098305fed053bf0a]
+link s_news to dep_db--><g id="link_s_news_dep_db"><path d="M539,403.3769 C552.94,417.7969 569.76,432.1369 588,441.2969 C659.3,477.0969 881.34,500.3669 1004.17,510.8569 " fill="none" id="s_news-to-dep_db" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1009.22,511.2869,1000.5956,506.5308,1004.2384,510.8587,999.9105,514.5014,1009.22,511.2869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[c9b22f106a7a746c08a7dcf6a5faf16e]
+link s_user to dep_db--><g id="link_s_user_dep_db"><path d="M1137.57,396.6969 C1126.38,423.9369 1112.04,458.8069 1101.67,484.0369 " fill="none" id="s_user-to-dep_db" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1099.65,488.9569,1106.7681,482.15,1101.5487,484.3314,1099.3673,479.1121,1099.65,488.9569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[922917aff8edd8bf0ec42def8213bbce]
+link dep_db to tsdb--><g id="link_dep_db_tsdb"><path d="M1088,547.5469 C1088,566.1969 1088,590.4369 1088,608.6369 " fill="none" id="dep_db-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1088,614.0769,1092,605.0769,1088,609.0769,1084,605.0769,1088,614.0769" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="305" x="783" y="674.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="305" x="783" y="687.2607">src/api/ | 8 routers, 7 services, 2 middleware</text><!--MD5=[a348d079bbe93f84c401066dcbacba5a]
+@startuml C04-api-components
+!include _common.puml
+
+title CryptoBot — FastAPI Backend
+caption src/api/ | 8 routers, 7 services, 2 middleware
+
+' ============================================================
+' Middleware
+' ============================================================
+package "Middleware" #F5F5F5 {
+  [RateLimitHeadersMiddleware\n30 req/s default\n5 req/min auth\nX-RateLimit-* headers] as ratelimit <<middleware>>
+  [RequestIdMiddleware\nX-Request-Id header\nper-IP tracking] as reqid <<middleware>>
+  [CORS\nallow_origins from settings] as cors <<middleware>>
+}
+
+' ============================================================
+' Routers (8)
+' ============================================================
+package "Routers" #FEF3E8 {
+  [auth\n/api/v1/auth\nPOST register\nPOST login\nGET me] as r_auth <<router>>
+
+  [crypto\n/api/v1/crypto\nGET list\nGET market-overview\nGET {symbol}/prices\nGET {symbol}/indicators\nGET {symbol}/latest] as r_crypto <<router>>
+
+  [signals\n/api/v1/signals\nGET active\nGET performance\nGET {id}/detail\nGET {symbol}] as r_signals <<router>>
+
+  [news\n/api/v1/news\nGET latest\nGET sentiment\nGET {id}] as r_news <<router>>
+
+  [portfolio\n/api/v1/portfolio\nGET, POST\nPUT {id}, DELETE {id}] as r_port <<router>>
+
+  [watchlist\n/api/v1/watchlist\nGET, POST\nDELETE {symbol}] as r_watch <<router>>
+
+  [chat\n/api/v1/chat\nPOST message] as r_chat <<router>>
+
+  [system\n/health\n/api/v1/system/sources-status] as r_sys <<router>>
+}
+
+' ============================================================
+' Services (7)
+' ============================================================
+package "Services" #F3EEFF {
+  [auth_service\nhash_password (bcrypt)\nverify_password\ncreate_access_token (JWT HS256)\ndecode_access_token\nregister, authenticate] as s_auth <<service>>
+
+  [crypto_service\nlist_tracked()\nget_prices()\nget_indicators()\nget_latest()\nget_market_overview()] as s_crypto <<service>>
+
+  [signal_service\nget_active()\nget_by_symbol()\nget_detail()\nget_performance()] as s_signal <<service>>
+
+  [news_service\nget_latest()\nget_by_id()\nget_sentiment()] as s_news <<service>>
+
+  [user_data_service\nget/add/update/delete\nportfolio + watchlist] as s_user <<service>>
+
+  [chat_service\nLLM integration] as s_chat <<service>>
+}
+
+' ============================================================
+' Dependencies
+' ============================================================
+package "Dependencies" #ECFDF5 {
+  [get_db()\nAsyncSession yield] as dep_db
+  [get_current_user()\nJWT decode + fetch user] as dep_user
+}
+
+' ============================================================
+' Storage
+' ============================================================
+database "TimescaleDB" as tsdb #ECFDF5
+
+' ============================================================
+' Relations
+' ============================================================
+' Middleware chain
+ratelimit - -> reqid
+reqid - -> cors
+
+' Router -> Service
+r_auth - -> s_auth
+r_crypto - -> s_crypto
+r_signals - -> s_signal
+r_news - -> s_news
+r_port - -> s_user
+r_watch - -> s_user
+r_chat - -> s_chat
+r_sys - -> dep_db
+
+' Auth dependency
+r_auth - -> dep_user
+r_port - -> dep_user
+r_watch - -> dep_user
+
+' Service -> DB
+s_auth - -> dep_db
+s_crypto - -> dep_db
+s_signal - -> dep_db
+s_news - -> dep_db
+s_user - -> dep_db
+dep_db - -> tsdb
+
+@enduml
+
+@startuml C04-api-components
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — FastAPI Backend
+caption src/api/ | 8 routers, 7 services, 2 middleware
+
+package "Middleware" #F5F5F5 {
+  [RateLimitHeadersMiddleware\n30 req/s default\n5 req/min auth\nX-RateLimit-* headers] as ratelimit <<middleware>>
+  [RequestIdMiddleware\nX-Request-Id header\nper-IP tracking] as reqid <<middleware>>
+  [CORS\nallow_origins from settings] as cors <<middleware>>
+}
+
+package "Routers" #FEF3E8 {
+  [auth\n/api/v1/auth\nPOST register\nPOST login\nGET me] as r_auth <<router>>
+
+  [crypto\n/api/v1/crypto\nGET list\nGET market-overview\nGET {symbol}/prices\nGET {symbol}/indicators\nGET {symbol}/latest] as r_crypto <<router>>
+
+  [signals\n/api/v1/signals\nGET active\nGET performance\nGET {id}/detail\nGET {symbol}] as r_signals <<router>>
+
+  [news\n/api/v1/news\nGET latest\nGET sentiment\nGET {id}] as r_news <<router>>
+
+  [portfolio\n/api/v1/portfolio\nGET, POST\nPUT {id}, DELETE {id}] as r_port <<router>>
+
+  [watchlist\n/api/v1/watchlist\nGET, POST\nDELETE {symbol}] as r_watch <<router>>
+
+  [chat\n/api/v1/chat\nPOST message] as r_chat <<router>>
+
+  [system\n/health\n/api/v1/system/sources-status] as r_sys <<router>>
+}
+
+package "Services" #F3EEFF {
+  [auth_service\nhash_password (bcrypt)\nverify_password\ncreate_access_token (JWT HS256)\ndecode_access_token\nregister, authenticate] as s_auth <<service>>
+
+  [crypto_service\nlist_tracked()\nget_prices()\nget_indicators()\nget_latest()\nget_market_overview()] as s_crypto <<service>>
+
+  [signal_service\nget_active()\nget_by_symbol()\nget_detail()\nget_performance()] as s_signal <<service>>
+
+  [news_service\nget_latest()\nget_by_id()\nget_sentiment()] as s_news <<service>>
+
+  [user_data_service\nget/add/update/delete\nportfolio + watchlist] as s_user <<service>>
+
+  [chat_service\nLLM integration] as s_chat <<service>>
+}
+
+package "Dependencies" #ECFDF5 {
+  [get_db()\nAsyncSession yield] as dep_db
+  [get_current_user()\nJWT decode + fetch user] as dep_user
+}
+
+database "TimescaleDB" as tsdb #ECFDF5
+
+ratelimit - -> reqid
+reqid - -> cors
+
+r_auth - -> s_auth
+r_crypto - -> s_crypto
+r_signals - -> s_signal
+r_news - -> s_news
+r_port - -> s_user
+r_watch - -> s_user
+r_chat - -> s_chat
+r_sys - -> dep_db
+
+r_auth - -> dep_user
+r_port - -> dep_user
+r_watch - -> dep_user
+
+s_auth - -> dep_db
+s_crypto - -> dep_db
+s_signal - -> dep_db
+s_news - -> dep_db
+s_user - -> dep_db
+dep_db - -> tsdb
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

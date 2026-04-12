@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="849px" preserveAspectRatio="none" style="width:1019px;height:849px;background:#FFFFFF;" version="1.1" viewBox="0 0 1019 849" width="1019px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="260" x="372.5" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="250" x="377.5" y="22.9951">CryptoBot — Frontend Streamlit</text><!--MD5=[18aa53e380567176bdb7d8f55004763e]
+cluster Pages--><g id="cluster_Pages"><path d="M9,191.7969 L53,191.7969 A4.5,4.5 0 0 1 56,194.7969 L63,211.7656 L1009,211.7656 A3,3 0 0 1 1012,214.7656 L1012,336.7969 A3,3 0 0 1 1009,339.7969 L9,339.7969 A3,3 0 0 1 6,336.7969 L6,194.7969 A3,3 0 0 1 9,191.7969 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="6" x2="63" y1="211.7656" y2="211.7656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="44" x="10" y="204.9355">Pages</text></g><!--MD5=[cb2d8cf3f33d542ccaf55cb4e9040270]
+cluster Composants Plotly--><g id="cluster_Composants Plotly"><path d="M11,372.7969 L143,372.7969 A4.5,4.5 0 0 1 146,375.7969 L153,392.7656 L937,392.7656 A3,3 0 0 1 940,395.7656 L940,517.7969 A3,3 0 0 1 937,520.7969 L11,520.7969 A3,3 0 0 1 8,517.7969 L8,375.7969 A3,3 0 0 1 11,372.7969 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="8" x2="153" y1="392.7656" y2="392.7656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="132" x="12" y="385.9355">Composants Plotly</text></g><!--MD5=[fe136eabe4a7fd8dd15eb01473fe8855]
+cluster Infra--><g id="cluster_Infra"><path d="M192,553.7969 L225,553.7969 A4.5,4.5 0 0 1 228,556.7969 L235,573.7656 L564,573.7656 A3,3 0 0 1 567,576.7656 L567,684.7969 A3,3 0 0 1 564,687.7969 L192,687.7969 A3,3 0 0 1 189,684.7969 L189,556.7969 A3,3 0 0 1 192,553.7969 " fill="#ECFDF5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="189" x2="235" y1="573.7656" y2="573.7656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="33" x="193" y="566.9355">Infra</text></g><!--MD5=[81595cedaf05dbbe9c107bb89e279e6c]
+entity p_dash--><g id="elem_p_dash"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="166" x="22" y="223.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="168" y="228.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="166" y="230.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="166" y="234.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="46" x="77" y="254.9355">«page»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="69" x="37" y="268.9043">Dashboard</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="124" x="37" y="282.873">Candlestick multi-TF</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="126" x="37" y="296.8418">Indicateurs, signaux</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="115" x="37" y="310.8105">Alertes temps reel</text></g><!--MD5=[ec37d7aae60006cc852a4fb78ac86b94]
+entity p_veille--><g id="elem_p_veille"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="183" x="441.5" y="223.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="604.5" y="228.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="602.5" y="230.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="602.5" y="234.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="46" x="505" y="254.9355">«page»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="456.5" y="268.9043">Veille</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="65" x="456.5" y="282.873">News feed</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="118" x="456.5" y="296.8418">Sentiment analysis</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="143" x="456.5" y="310.8105">Alertes reglementaires</text></g><!--MD5=[167e03d177d5fd685c34b4404340603a]
+entity p_portfolio--><g id="elem_p_portfolio"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="145" x="659.5" y="223.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="784.5" y="228.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="782.5" y="230.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="782.5" y="234.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="46" x="704" y="254.9355">«page»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="52" x="674.5" y="268.9043">Portfolio</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="105" x="674.5" y="282.873">Position tracking</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="64" x="674.5" y="296.8418">P&amp;L calcul</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="65" x="674.5" y="310.8105">Chatbot IA</text></g><!--MD5=[ad00a87b50958c927d8ead024e3e115c]
+entity p_analytics--><g id="elem_p_analytics"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="183" x="223.5" y="223.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="386.5" y="228.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="384.5" y="230.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="384.5" y="234.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="46" x="287" y="254.9355">«page»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="55" x="238.5" y="268.9043">Analytics</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="143" x="238.5" y="282.873">Heatmaps correlations</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="238.5" y="296.8418">Market microstructure</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="238.5" y="310.8105">Volume analysis</text></g><!--MD5=[178a23412b7e751309150e5f2566b04e]
+entity p_perf--><g id="elem_p_perf"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="156" x="840" y="223.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="976" y="228.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="974" y="230.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="974" y="234.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="46" x="890" y="254.9355">«page»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="80" x="855" y="268.9043">Performance</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="855" y="282.873">Historique signaux</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="105" x="855" y="296.8418">Win rate, Sharpe</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="855" y="310.8105">Rendement simule</text></g><!--MD5=[fec4a878c843f9b9e74f4152e7ab8bd4]
+entity c_candle--><g id="elem_c_candle"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="150" x="24" y="411.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="154" y="416.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="152" y="418.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="152" y="422.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="51.5" y="442.9355">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="106" x="39" y="456.9043">CandlestickChart</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="39" y="470.873">multi-timeframe</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="39" y="484.8418">indicators overlay</text></g><!--MD5=[03e7f5b7d2bc02674ff2f453d046db28]
+entity c_signal--><g id="elem_c_signal"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="172" x="583" y="411.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="735" y="416.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="733" y="418.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="733" y="422.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="621.5" y="442.9355">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="67" x="598" y="456.9043">SignalCard</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="132" x="598" y="470.873">direction, confidence</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="598" y="484.8418">leverage, fees</text></g><!--MD5=[b36481f98d84a8d0a667f51fb2fb4307]
+entity c_news--><g id="elem_c_news"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="156" x="392" y="411.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="528" y="416.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="526" y="418.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="526" y="422.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="422.5" y="442.9355">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="64" x="407" y="456.9043">NewsFeed</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="114" x="407" y="470.873">source, sentiment</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="407" y="484.8418">keywords highlight</text></g><!--MD5=[f17c1036b72ef483f8af8e421f0e1757]
+entity c_indic--><g id="elem_c_indic"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="147" x="209.5" y="411.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="336.5" y="416.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="334.5" y="418.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="334.5" y="422.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="235.5" y="442.9355">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="90" x="224.5" y="456.9043">IndicatorPanel</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="224.5" y="470.873">RSI, Bollinger</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="224.5" y="484.8418">trend, harmonics</text></g><!--MD5=[d03811fdcc60ce19825d86a6322f6141]
+entity c_chat--><g id="elem_c_chat"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="133" x="790.5" y="404.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="903.5" y="409.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="901.5" y="411.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="901.5" y="415.7969"/><text fill="#7C5CFC" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="809.5" y="435.9355">«component»</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="805.5" y="449.9043">ChatbotWidget</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="805.5" y="463.873">message input</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="85" x="805.5" y="477.8418">LLM response</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="63" x="805.5" y="491.8105">disclaimer</text></g><!--MD5=[6be96040792a0cd556c535244c12ec70]
+entity api_client--><g id="elem_api_client"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="162" x="389" y="585.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="531" y="590.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="529" y="592.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="529" y="596.7969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="54" x="404" y="616.9355">APIClient</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="102" x="404" y="630.9043">base_url: /api/v1</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="122" x="404" y="644.873">get/post/put/delete</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="404" y="658.8418">error handling</text></g><!--MD5=[0a2143692dbdd87ed03cfb87084d491e]
+entity i18n--><g id="elem_i18n"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="149" x="204.5" y="592.7969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="333.5" y="597.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="331.5" y="599.7969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="331.5" y="603.7969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="27" x="219.5" y="623.9355">i18n</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="219.5" y="637.9043">FR / EN</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="219.5" y="651.873">labels, messages</text></g><!--MD5=[ef570840cc7279c530a711c2b23bef77]
+entity noah--><g id="elem_noah"><ellipse cx="196" cy="51.2969" fill="#F1F1F1" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M196,59.2969 L196,86.2969 M183,67.2969 L209,67.2969 M196,86.2969 L183,101.2969 M196,86.2969 L209,101.2969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="175.5" y="113.9355">Noah</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="41" x="175.5" y="127.9043">Trader</text></g><!--MD5=[a8a1a187114bf8996be097019e338e96]
+entity sarah--><g id="elem_sarah"><ellipse cx="444" cy="51.2969" fill="#F1F1F1" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M444,59.2969 L444,86.2969 M431,67.2969 L457,67.2969 M444,86.2969 L431,101.2969 M444,86.2969 L457,101.2969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="37" x="411" y="113.9355">Sarah</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="411" y="127.9043">Journaliste</text></g><!--MD5=[4bc09776e4f113d7c85cfd7329fd7e38]
+entity aleksandar--><g id="elem_aleksandar"><ellipse cx="825" cy="51.2969" fill="#F1F1F1" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M825,59.2969 L825,86.2969 M812,67.2969 L838,67.2969 M825,86.2969 L812,101.2969 M825,86.2969 L838,101.2969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="790" y="113.9355">Aleksandar</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="59" x="790" y="127.9043">Debutant</text></g><!--MD5=[ba155371d613af479bc593bce0f39b7f]
+entity fastapi--><g id="elem_fastapi"><polygon fill="#F5F5F5" points="424.5,758.7969,434.5,748.7969,515.5,748.7969,515.5,796.7344,505.5,806.7344,424.5,806.7344,424.5,758.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="505.5" x2="515.5" y1="758.7969" y2="748.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="424.5" x2="505.5" y1="758.7969" y2="758.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="505.5" x2="505.5" y1="758.7969" y2="806.7344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="439.5" y="779.9355">FastAPI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="51" x="439.5" y="793.9043">/api/v1/*</text></g><!--MD5=[b0429128c94c08153bd153ff1983246f]
+link noah to p_dash--><g id="link_noah_p_dash"><path d="M175.45,102.7569 C158.8,116.0569 136.17,137.0269 124,160.7969 C115,178.3669 110.14,199.3169 107.55,218.3269 " fill="none" id="noah-to-p_dash" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="106.87,223.6269,111.9704,215.2015,107.499,218.6666,104.0339,214.1952,106.87,223.6269" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="125" y="172.9355">signaux, charts</text></g><!--MD5=[210639c70823ac2e9a92eeb34da72920]
+link noah to p_analytics--><g id="link_noah_p_analytics"><path d="M216.73,120.0169 C234.32,147.3669 259.91,187.1569 280.57,219.2769 " fill="none" id="noah-to-p_analytics" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="283.33,223.5569,281.8279,213.8232,280.6262,219.351,275.0985,218.1493,283.33,223.5569" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="75" x="253" y="172.9355">correlations</text></g><!--MD5=[e220004d7615cb9b40f60016c9fe468d]
+link sarah to p_veille--><g id="link_sarah_p_veille"><path d="M464.87,131.1669 C477.45,157.3169 493.57,190.8469 506.98,218.7169 " fill="none" id="sarah-to-p_veille" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="509.28,223.4869,508.9712,213.6429,507.1071,218.9837,501.7662,217.1196,509.28,223.4869" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="487" y="172.9355">news, regulatory</text></g><!--MD5=[e99dffd3282cb512768ff7a25259a0ee]
+link sarah to p_analytics--><g id="link_sarah_p_analytics"><path d="M413.76,131.1669 C395.45,157.4269 371.95,191.1269 352.47,219.0569 " fill="none" id="sarah-to-p_analytics" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="349.38,223.4869,357.8074,218.3899,352.2387,219.3847,351.2439,213.816,349.38,223.4869" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="63" x="393" y="172.9355">heatmaps</text></g><!--MD5=[8f0630936e32c2306a9a0dc6c274f916]
+link aleksandar to p_portfolio--><g id="link_aleksandar_p_portfolio"><path d="M793.87,130.8569 C787.55,140.4769 781.24,150.7969 776,160.7969 C766.39,179.1369 757.63,200.0569 750.49,218.8169 " fill="none" id="aleksandar-to-p_portfolio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="748.72,223.5369,755.6254,216.5144,750.4756,218.8552,748.1348,213.7054,748.72,223.5369" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="777" y="172.9355">chatbot, P&amp;L</text></g><!--MD5=[bf1bed7aed2e94730c31df8c139ecf78]
+link aleksandar to p_perf--><g id="link_aleksandar_p_perf"><path d="M847.67,130.9469 C852.76,140.7369 858.1,151.1069 863,160.7969 C872.55,179.6869 882.83,200.4769 891.88,218.9569 " fill="none" id="aleksandar-to-p_perf" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="894.15,223.6069,893.7906,213.7646,891.9539,219.115,886.6036,217.2783,894.15,223.6069" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="63" x="870" y="172.9355">historique</text></g><!--MD5=[a145df7111e7599b1c93eac471c83caf]
+link p_dash to c_candle--><g id="link_p_dash_c_candle"><path d="M103.34,324.1869 C102.49,349.7869 101.44,380.9069 100.59,406.2369 " fill="none" id="p_dash-to-c_candle" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="100.42,411.5569,104.726,402.6992,100.5913,406.5598,96.7307,402.4251,100.42,411.5569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[9dc3ab19a6ef402e8fd33640c4eba208]
+link p_dash to c_signal--><g id="link_p_dash_c_signal"><path d="M161.02,323.8869 C174.87,333.4969 190.28,342.2969 206,347.7969 C281.39,374.1769 490.76,335.3569 565,364.7969 C588.62,374.1669 610.65,391.2269 628.3,407.9269 " fill="none" id="p_dash-to-c_signal" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="632.23,411.7069,628.5279,402.5803,628.6308,408.2362,622.9749,408.339,632.23,411.7069" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[1412f0128685697de90e44f0aad399b3]
+link p_dash to c_indic--><g id="link_p_dash_c_indic"><path d="M154.11,324.1869 C180.1,350.3169 211.82,382.2169 237.28,407.8169 " fill="none" id="p_dash-to-c_indic" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="240.99,411.5569,237.4917,402.3502,237.4688,408.0071,231.812,407.9842,240.99,411.5569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[7c5164d97fe6db01c63a5c8101de0c93]
+link p_veille to c_news--><g id="link_p_veille_c_news"><path d="M515.62,324.1869 C506.57,349.8969 495.56,381.1669 486.63,406.5569 " fill="none" id="p_veille-to-c_news" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="484.87,411.5569,491.6283,404.3927,486.5281,406.8398,484.081,401.7397,484.87,411.5569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[ec3024653acf9b0c4539d0215c10fc34]
+link p_portfolio to c_chat--><g id="link_p_portfolio_c_chat"><path d="M766.49,324.1869 C783.02,347.8569 802.85,376.2469 819.73,400.4169 " fill="none" id="p_portfolio-to-c_chat" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="822.62,404.5669,820.7335,394.9004,819.7517,400.4714,814.1807,399.4896,822.62,404.5669" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[33f3fc52ccdae696fd48f6acea798c30]
+link p_perf to c_signal--><g id="link_p_perf_c_signal"><path d="M859.55,323.8169 C847.58,332.5269 834.73,340.9669 822,347.7969 C801.68,358.6869 792.99,353.3269 773,364.7969 C752.3,376.6669 731.84,392.9269 714.62,408.2869 " fill="none" id="p_perf-to-c_signal" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="710.77,411.7569,720.1355,408.7094,714.4865,408.4121,714.7838,402.763,710.77,411.7569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[d85bbdb543f51ca640c052f2fda60e43]
+link c_candle to api_client--><g id="link_c_candle_api_client"><path d="M142.07,497.8969 C156.78,509.8969 174.08,521.6369 192,528.7969 C266.21,558.4469 297.19,515.1769 371,545.7969 C391.14,554.1569 410.33,568.0769 426.36,582.1069 " fill="none" id="c_candle-to-api_client" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="430.37,585.6669,426.3199,576.6893,426.6401,582.3371,420.9923,582.6572,430.37,585.6669" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[b060621bc0449cada7a5d80609ff2a43]
+link c_signal to api_client--><g id="link_c_signal_api_client"><path d="M620.32,497.8769 C590.81,523.3769 553.14,555.9369 522.9,582.0769 " fill="none" id="c_signal-to-api_client" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="518.87,585.5569,528.295,582.6988,522.6532,582.2877,523.0643,576.6458,518.87,585.5569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[478ff5fd67f0ae3900be0cc575656c13]
+link c_news to api_client--><g id="link_c_news_api_client"><path d="M470,497.8769 C470,522.8569 470,554.6069 470,580.4669 " fill="none" id="c_news-to-api_client" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="470,585.5569,474,576.5569,470,580.5569,466,576.5569,470,585.5569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[172ed9cab7cc082f1fb90ca6dc1c211b]
+link c_chat to api_client--><g id="link_c_chat_api_client"><path d="M807.04,504.8469 C796.38,513.6469 784.77,522.1269 773,528.7969 C704.61,567.5569 618.82,593.7869 556.01,609.4569 " fill="none" id="c_chat-to-api_client" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="551.14,610.6569,560.8367,612.3815,555.9941,609.4576,558.9179,604.615,551.14,610.6569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[4dd97d0da04d6df3791da4c52e01db89]
+link c_indic to api_client--><g id="link_c_indic_api_client"><path d="M328.75,497.8769 C356.48,523.3769 391.87,555.9369 420.29,582.0769 " fill="none" id="c_indic-to-api_client" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="424.08,585.5569,420.158,576.5226,420.3978,582.1744,414.746,582.4141,424.08,585.5569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[429c7b685616c83df86056380c1d3600]
+link api_client to fastapi--><g id="link_api_client_fastapi"><path d="M470,671.9169 C470,694.6069 470,722.1869 470,743.3769 " fill="none" id="api_client-to-fastapi" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="470,748.6169,474,739.6169,470,743.6169,466,739.6169,470,748.6169" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="471" y="715.9355">REST HTTP</text></g><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="350" x="327.5" y="823.7344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="350" x="327.5" y="836.7295">src/frontend/ | 5 pages, 5 composants, i18n FR/EN</text><!--MD5=[7025859562e035f8c7e65ca180526ce4]
+@startuml C05-frontend-components
+!include _common.puml
+
+title CryptoBot — Frontend Streamlit
+caption src/frontend/ | 5 pages, 5 composants, i18n FR/EN
+
+' ============================================================
+' Personas
+' ============================================================
+actor "Noah\nTrader" as noah
+actor "Sarah\nJournaliste" as sarah
+actor "Aleksandar\nDebutant" as aleksandar
+
+' ============================================================
+' Pages
+' ============================================================
+package "Pages" #FEF3E8 {
+  [Dashboard\nCandlestick multi-TF\nIndicateurs, signaux\nAlertes temps reel] as p_dash <<page>>
+  [Veille\nNews feed\nSentiment analysis\nAlertes reglementaires] as p_veille <<page>>
+  [Portfolio\nPosition tracking\nP&L calcul\nChatbot IA] as p_portfolio <<page>>
+  [Analytics\nHeatmaps correlations\nMarket microstructure\nVolume analysis] as p_analytics <<page>>
+  [Performance\nHistorique signaux\nWin rate, Sharpe\nRendement simule] as p_perf <<page>>
+}
+
+' ============================================================
+' Components
+' ============================================================
+package "Composants Plotly" #F3EEFF {
+  [CandlestickChart\nmulti-timeframe\nindicators overlay] as c_candle <<component>>
+  [SignalCard\ndirection, confidence\nleverage, fees] as c_signal <<component>>
+  [NewsFeed\nsource, sentiment\nkeywords highlight] as c_news <<component>>
+  [IndicatorPanel\nRSI, Bollinger\ntrend, harmonics] as c_indic <<component>>
+  [ChatbotWidget\nmessage input\nLLM response\ndisclaimer] as c_chat <<component>>
+}
+
+' ============================================================
+' API Client
+' ============================================================
+package "Infra" #ECFDF5 {
+  [APIClient\nbase_url: /api/v1\nget/post/put/delete\nerror handling] as api_client
+  [i18n\nFR / EN\nlabels, messages] as i18n
+}
+
+' ============================================================
+' Backend
+' ============================================================
+node "FastAPI\n/api/v1/*" as fastapi #F5F5F5
+
+' ============================================================
+' Relations — Personas -> Pages
+' ============================================================
+noah - -> p_dash : signaux, charts
+noah - -> p_analytics : correlations
+sarah - -> p_veille : news, regulatory
+sarah - -> p_analytics : heatmaps
+aleksandar - -> p_portfolio : chatbot, P&L
+aleksandar - -> p_perf : historique
+
+' Pages -> Components
+p_dash - -> c_candle
+p_dash - -> c_signal
+p_dash - -> c_indic
+p_veille - -> c_news
+p_portfolio - -> c_chat
+p_perf - -> c_signal
+
+' Components -> APIClient
+c_candle - -> api_client
+c_signal - -> api_client
+c_news - -> api_client
+c_chat - -> api_client
+c_indic - -> api_client
+
+' APIClient -> Backend
+api_client - -> fastapi : REST HTTP
+
+@enduml
+
+@startuml C05-frontend-components
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Frontend Streamlit
+caption src/frontend/ | 5 pages, 5 composants, i18n FR/EN
+
+actor "Noah\nTrader" as noah
+actor "Sarah\nJournaliste" as sarah
+actor "Aleksandar\nDebutant" as aleksandar
+
+package "Pages" #FEF3E8 {
+  [Dashboard\nCandlestick multi-TF\nIndicateurs, signaux\nAlertes temps reel] as p_dash <<page>>
+  [Veille\nNews feed\nSentiment analysis\nAlertes reglementaires] as p_veille <<page>>
+  [Portfolio\nPosition tracking\nP&L calcul\nChatbot IA] as p_portfolio <<page>>
+  [Analytics\nHeatmaps correlations\nMarket microstructure\nVolume analysis] as p_analytics <<page>>
+  [Performance\nHistorique signaux\nWin rate, Sharpe\nRendement simule] as p_perf <<page>>
+}
+
+package "Composants Plotly" #F3EEFF {
+  [CandlestickChart\nmulti-timeframe\nindicators overlay] as c_candle <<component>>
+  [SignalCard\ndirection, confidence\nleverage, fees] as c_signal <<component>>
+  [NewsFeed\nsource, sentiment\nkeywords highlight] as c_news <<component>>
+  [IndicatorPanel\nRSI, Bollinger\ntrend, harmonics] as c_indic <<component>>
+  [ChatbotWidget\nmessage input\nLLM response\ndisclaimer] as c_chat <<component>>
+}
+
+package "Infra" #ECFDF5 {
+  [APIClient\nbase_url: /api/v1\nget/post/put/delete\nerror handling] as api_client
+  [i18n\nFR / EN\nlabels, messages] as i18n
+}
+
+node "FastAPI\n/api/v1/*" as fastapi #F5F5F5
+
+noah - -> p_dash : signaux, charts
+noah - -> p_analytics : correlations
+sarah - -> p_veille : news, regulatory
+sarah - -> p_analytics : heatmaps
+aleksandar - -> p_portfolio : chatbot, P&L
+aleksandar - -> p_perf : historique
+
+p_dash - -> c_candle
+p_dash - -> c_signal
+p_dash - -> c_indic
+p_veille - -> c_news
+p_portfolio - -> c_chat
+p_perf - -> c_signal
+
+c_candle - -> api_client
+c_signal - -> api_client
+c_news - -> api_client
+c_chat - -> api_client
+c_indic - -> api_client
+
+api_client - -> fastapi : REST HTTP
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

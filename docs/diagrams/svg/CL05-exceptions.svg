@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="608px" preserveAspectRatio="none" style="width:1660px;height:608px;background:#FFFFFF;" version="1.1" viewBox="0 0 1660 608" width="1660px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="263" x="691.5" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="253" x="696.5" y="22.9951">CryptoBot — Arbre d'Exceptions</text><!--MD5=[534eb5369bc23deaaa947713cfb2becf]
+class CryptoBotError--><g id="elem_CryptoBotError"><rect codeLine="9" fill="#FEF3E8" height="87.9063" id="CryptoBotError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="172" x="629" y="44.2969"/><ellipse cx="665.5" cy="59.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M667.3281,63.5469 Q666.9219,63.75 666.4688,63.8594 Q666.0156,63.9688 665.5313,63.9688 Q663.75,63.9688 662.8125,62.8125 Q661.8906,61.6406 661.8906,59.4375 Q661.8906,57.2188 662.8125,56.0625 Q663.75,54.8906 665.5313,54.8906 Q666.0156,54.8906 666.4688,55 Q666.9375,55.0938 667.3281,55.3125 L667.3281,57.2344 Q666.8906,56.8281 666.4688,56.6406 Q666.0469,56.4375 665.6094,56.4375 Q664.6563,56.4375 664.1719,57.2031 Q663.6875,57.9531 663.6875,59.4375 Q663.6875,60.9063 664.1719,61.6563 Q664.6563,62.4063 665.6094,62.4063 Q666.0469,62.4063 666.4688,62.2188 Q666.8906,62.0313 667.3281,61.625 L667.3281,63.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="92" x="683.5" y="63.4512">CryptoBotError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="630" x2="800" y1="74.2969" y2="74.2969"/><ellipse cx="640" cy="85.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="147" x="648" y="89.4355">status_code : int = 500</text><ellipse cx="640" cy="99.2656" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="648" y="103.4043">message : str</text><ellipse cx="640" cy="113.2344" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="120" x="648" y="117.373">detail : Any = None</text><line style="stroke:#34A853;stroke-width:0.5;" x1="630" x2="800" y1="124.2031" y2="124.2031"/></g><!--MD5=[f1ec2166af04f61bf1484fb0eaea6fc2]
+class NotFoundError--><g id="elem_NotFoundError"><rect codeLine="18" fill="#F3EEFF" height="59.9688" id="NotFoundError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="144" x="7" y="192.2969"/><ellipse cx="30.9" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M32.7281,211.5469 Q32.3219,211.75 31.8688,211.8594 Q31.4156,211.9688 30.9313,211.9688 Q29.15,211.9688 28.2125,210.8125 Q27.2906,209.6406 27.2906,207.4375 Q27.2906,205.2188 28.2125,204.0625 Q29.15,202.8906 30.9313,202.8906 Q31.4156,202.8906 31.8688,203 Q32.3375,203.0938 32.7281,203.3125 L32.7281,205.2344 Q32.2906,204.8281 31.8688,204.6406 Q31.4469,204.4375 31.0094,204.4375 Q30.0563,204.4375 29.5719,205.2031 Q29.0875,205.9531 29.0875,207.4375 Q29.0875,208.9063 29.5719,209.6563 Q30.0563,210.4063 31.0094,210.4063 Q31.4469,210.4063 31.8688,210.2188 Q32.2906,210.0313 32.7281,209.625 L32.7281,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="92" x="46.1" y="211.4512">NotFoundError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="8" x2="150" y1="222.2969" y2="222.2969"/><ellipse cx="18" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="26" y="237.4355">status_code = 404</text><line style="stroke:#34A853;stroke-width:0.5;" x1="8" x2="150" y1="244.2656" y2="244.2656"/></g><!--MD5=[4ee3a6136f75423dc1a2c424414ae924]
+class AuthenticationError--><g id="elem_AuthenticationError"><rect codeLine="22" fill="#F3EEFF" height="59.9688" id="AuthenticationError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="153" x="186.5" y="192.2969"/><ellipse cx="200.5" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M202.3281,211.5469 Q201.9219,211.75 201.4688,211.8594 Q201.0156,211.9688 200.5313,211.9688 Q198.75,211.9688 197.8125,210.8125 Q196.8906,209.6406 196.8906,207.4375 Q196.8906,205.2188 197.8125,204.0625 Q198.75,202.8906 200.5313,202.8906 Q201.0156,202.8906 201.4688,203 Q201.9375,203.0938 202.3281,203.3125 L202.3281,205.2344 Q201.8906,204.8281 201.4688,204.6406 Q201.0469,204.4375 200.6094,204.4375 Q199.6563,204.4375 199.1719,205.2031 Q198.6875,205.9531 198.6875,207.4375 Q198.6875,208.9063 199.1719,209.6563 Q199.6563,210.4063 200.6094,210.4063 Q201.0469,210.4063 201.4688,210.2188 Q201.8906,210.0313 202.3281,209.625 L202.3281,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="123" x="213.5" y="211.4512">AuthenticationError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="187.5" x2="338.5" y1="222.2969" y2="222.2969"/><ellipse cx="197.5" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="205.5" y="237.4355">status_code = 401</text><line style="stroke:#34A853;stroke-width:0.5;" x1="187.5" x2="338.5" y1="244.2656" y2="244.2656"/></g><!--MD5=[c4ad782b6b06e424cdda9c7036b63737]
+class AuthorizationError--><g id="elem_AuthorizationError"><rect codeLine="26" fill="#F3EEFF" height="59.9688" id="AuthorizationError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="144" x="375" y="192.2969"/><ellipse cx="389.45" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M391.2781,211.5469 Q390.8719,211.75 390.4188,211.8594 Q389.9656,211.9688 389.4813,211.9688 Q387.7,211.9688 386.7625,210.8125 Q385.8406,209.6406 385.8406,207.4375 Q385.8406,205.2188 386.7625,204.0625 Q387.7,202.8906 389.4813,202.8906 Q389.9656,202.8906 390.4188,203 Q390.8875,203.0938 391.2781,203.3125 L391.2781,205.2344 Q390.8406,204.8281 390.4188,204.6406 Q389.9969,204.4375 389.5594,204.4375 Q388.6063,204.4375 388.1219,205.2031 Q387.6375,205.9531 387.6375,207.4375 Q387.6375,208.9063 388.1219,209.6563 Q388.6063,210.4063 389.5594,210.4063 Q389.9969,210.4063 390.4188,210.2188 Q390.8406,210.0313 391.2781,209.625 L391.2781,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="113" x="402.55" y="211.4512">AuthorizationError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="376" x2="518" y1="222.2969" y2="222.2969"/><ellipse cx="386" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="394" y="237.4355">status_code = 403</text><line style="stroke:#34A853;stroke-width:0.5;" x1="376" x2="518" y1="244.2656" y2="244.2656"/></g><!--MD5=[4ee7b5cdff3e8fb6c1d795c22c494b4b]
+class ValidationError--><g id="elem_ValidationError"><rect codeLine="30" fill="#F3EEFF" height="59.9688" id="ValidationError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="144" x="554" y="192.2969"/><ellipse cx="577.45" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M579.2781,211.5469 Q578.8719,211.75 578.4188,211.8594 Q577.9656,211.9688 577.4813,211.9688 Q575.7,211.9688 574.7625,210.8125 Q573.8406,209.6406 573.8406,207.4375 Q573.8406,205.2188 574.7625,204.0625 Q575.7,202.8906 577.4813,202.8906 Q577.9656,202.8906 578.4188,203 Q578.8875,203.0938 579.2781,203.3125 L579.2781,205.2344 Q578.8406,204.8281 578.4188,204.6406 Q577.9969,204.4375 577.5594,204.4375 Q576.6063,204.4375 576.1219,205.2031 Q575.6375,205.9531 575.6375,207.4375 Q575.6375,208.9063 576.1219,209.6563 Q576.6063,210.4063 577.5594,210.4063 Q577.9969,210.4063 578.4188,210.2188 Q578.8406,210.0313 579.2781,209.625 L579.2781,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="592.55" y="211.4512">ValidationError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="555" x2="697" y1="222.2969" y2="222.2969"/><ellipse cx="565" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="573" y="237.4355">status_code = 422</text><line style="stroke:#34A853;stroke-width:0.5;" x1="555" x2="697" y1="244.2656" y2="244.2656"/></g><!--MD5=[b3460cd13a010981e377256c3c409c24]
+class ConflictError--><g id="elem_ConflictError"><rect codeLine="34" fill="#F3EEFF" height="59.9688" id="ConflictError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="144" x="733" y="192.2969"/><ellipse cx="763.65" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M765.4781,211.5469 Q765.0719,211.75 764.6188,211.8594 Q764.1656,211.9688 763.6813,211.9688 Q761.9,211.9688 760.9625,210.8125 Q760.0406,209.6406 760.0406,207.4375 Q760.0406,205.2188 760.9625,204.0625 Q761.9,202.8906 763.6813,202.8906 Q764.1656,202.8906 764.6188,203 Q765.0875,203.0938 765.4781,203.3125 L765.4781,205.2344 Q765.0406,204.8281 764.6188,204.6406 Q764.1969,204.4375 763.7594,204.4375 Q762.8063,204.4375 762.3219,205.2031 Q761.8375,205.9531 761.8375,207.4375 Q761.8375,208.9063 762.3219,209.6563 Q762.8063,210.4063 763.7594,210.4063 Q764.1969,210.4063 764.6188,210.2188 Q765.0406,210.0313 765.4781,209.625 L765.4781,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="77" x="780.35" y="211.4512">ConflictError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="734" x2="876" y1="222.2969" y2="222.2969"/><ellipse cx="744" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="752" y="237.4355">status_code = 409</text><line style="stroke:#34A853;stroke-width:0.5;" x1="734" x2="876" y1="244.2656" y2="244.2656"/></g><!--MD5=[aaf33f4186ca64fa5103138fe551486b]
+class ConfigurationError--><g id="elem_ConfigurationError"><rect codeLine="38" fill="#F3EEFF" height="59.9688" id="ConfigurationError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="145" x="912.5" y="192.2969"/><ellipse cx="926.5" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M928.3281,211.5469 Q927.9219,211.75 927.4688,211.8594 Q927.0156,211.9688 926.5313,211.9688 Q924.75,211.9688 923.8125,210.8125 Q922.8906,209.6406 922.8906,207.4375 Q922.8906,205.2188 923.8125,204.0625 Q924.75,202.8906 926.5313,202.8906 Q927.0156,202.8906 927.4688,203 Q927.9375,203.0938 928.3281,203.3125 L928.3281,205.2344 Q927.8906,204.8281 927.4688,204.6406 Q927.0469,204.4375 926.6094,204.4375 Q925.6563,204.4375 925.1719,205.2031 Q924.6875,205.9531 924.6875,207.4375 Q924.6875,208.9063 925.1719,209.6563 Q925.6563,210.4063 926.6094,210.4063 Q927.0469,210.4063 927.4688,210.2188 Q927.8906,210.0313 928.3281,209.625 L928.3281,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="115" x="939.5" y="211.4512">ConfigurationError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="913.5" x2="1056.5" y1="222.2969" y2="222.2969"/><ellipse cx="923.5" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="931.5" y="237.4355">status_code = 500</text><line style="stroke:#34A853;stroke-width:0.5;" x1="913.5" x2="1056.5" y1="244.2656" y2="244.2656"/></g><!--MD5=[42ec3c80e6b94ad38723f8292870950a]
+class ExternalAPIError--><g id="elem_ExternalAPIError"><rect codeLine="42" fill="#FEF3E8" height="59.9688" id="ExternalAPIError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="144" x="1093" y="192.2969"/><ellipse cx="1112.85" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1114.6781,211.5469 Q1114.2719,211.75 1113.8188,211.8594 Q1113.3656,211.9688 1112.8813,211.9688 Q1111.1,211.9688 1110.1625,210.8125 Q1109.2406,209.6406 1109.2406,207.4375 Q1109.2406,205.2188 1110.1625,204.0625 Q1111.1,202.8906 1112.8813,202.8906 Q1113.3656,202.8906 1113.8188,203 Q1114.2875,203.0938 1114.6781,203.3125 L1114.6781,205.2344 Q1114.2406,204.8281 1113.8188,204.6406 Q1113.3969,204.4375 1112.9594,204.4375 Q1112.0063,204.4375 1111.5219,205.2031 Q1111.0375,205.9531 1111.0375,207.4375 Q1111.0375,208.9063 1111.5219,209.6563 Q1112.0063,210.4063 1112.9594,210.4063 Q1113.3969,210.4063 1113.8188,210.2188 Q1114.2406,210.0313 1114.6781,209.625 L1114.6781,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="101" x="1127.15" y="211.4512">ExternalAPIError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1094" x2="1236" y1="222.2969" y2="222.2969"/><ellipse cx="1104" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1112" y="237.4355">status_code = 502</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1094" x2="1236" y1="244.2656" y2="244.2656"/></g><!--MD5=[a9d1a5965508e9c1439136cc00629cd7]
+class RateLimitError--><g id="elem_RateLimitError"><rect codeLine="46" fill="#FEF3E8" height="59.9688" id="RateLimitError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="144" x="1060" y="312.2969"/><ellipse cx="1085.7" cy="327.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1087.5281,331.5469 Q1087.1219,331.75 1086.6688,331.8594 Q1086.2156,331.9688 1085.7313,331.9688 Q1083.95,331.9688 1083.0125,330.8125 Q1082.0906,329.6406 1082.0906,327.4375 Q1082.0906,325.2188 1083.0125,324.0625 Q1083.95,322.8906 1085.7313,322.8906 Q1086.2156,322.8906 1086.6688,323 Q1087.1375,323.0938 1087.5281,323.3125 L1087.5281,325.2344 Q1087.0906,324.8281 1086.6688,324.6406 Q1086.2469,324.4375 1085.8094,324.4375 Q1084.8563,324.4375 1084.3719,325.2031 Q1083.8875,325.9531 1083.8875,327.4375 Q1083.8875,328.9063 1084.3719,329.6563 Q1084.8563,330.4063 1085.8094,330.4063 Q1086.2469,330.4063 1086.6688,330.2188 Q1087.0906,330.0313 1087.5281,329.625 L1087.5281,331.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="1101.3" y="331.4512">RateLimitError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1061" x2="1203" y1="342.2969" y2="342.2969"/><ellipse cx="1071" cy="353.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1079" y="357.4355">status_code = 429</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1061" x2="1203" y1="364.2656" y2="364.2656"/></g><!--MD5=[65c1e3701fc4359b9c241a601550b751]
+class ETLError--><g id="elem_ETLError"><rect codeLine="53" fill="#ECFDF5" height="59.9688" id="ETLError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="144" x="1337" y="192.2969"/><ellipse cx="1379" cy="207.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1380.8281,211.5469 Q1380.4219,211.75 1379.9688,211.8594 Q1379.5156,211.9688 1379.0313,211.9688 Q1377.25,211.9688 1376.3125,210.8125 Q1375.3906,209.6406 1375.3906,207.4375 Q1375.3906,205.2188 1376.3125,204.0625 Q1377.25,202.8906 1379.0313,202.8906 Q1379.5156,202.8906 1379.9688,203 Q1380.4375,203.0938 1380.8281,203.3125 L1380.8281,205.2344 Q1380.3906,204.8281 1379.9688,204.6406 Q1379.5469,204.4375 1379.1094,204.4375 Q1378.1563,204.4375 1377.6719,205.2031 Q1377.1875,205.9531 1377.1875,207.4375 Q1377.1875,208.9063 1377.6719,209.6563 Q1378.1563,210.4063 1379.1094,210.4063 Q1379.5469,210.4063 1379.9688,210.2188 Q1380.3906,210.0313 1380.8281,209.625 L1380.8281,211.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="52" x="1398" y="211.4512">ETLError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1338" x2="1480" y1="222.2969" y2="222.2969"/><ellipse cx="1348" cy="233.2969" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1356" y="237.4355">status_code = 500</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1338" x2="1480" y1="244.2656" y2="244.2656"/></g><!--MD5=[e277154017e6c1974fe1ec21c5d1de6e]
+class CollectorError--><g id="elem_CollectorError"><rect codeLine="57" fill="#ECFDF5" height="46" id="CollectorError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="116" x="1239" y="319.2969"/><ellipse cx="1253" cy="334.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1254.8281,338.5469 Q1254.4219,338.75 1253.9688,338.8594 Q1253.5156,338.9688 1253.0313,338.9688 Q1251.25,338.9688 1250.3125,337.8125 Q1249.3906,336.6406 1249.3906,334.4375 Q1249.3906,332.2188 1250.3125,331.0625 Q1251.25,329.8906 1253.0313,329.8906 Q1253.5156,329.8906 1253.9688,330 Q1254.4375,330.0938 1254.8281,330.3125 L1254.8281,332.2344 Q1254.3906,331.8281 1253.9688,331.6406 Q1253.5469,331.4375 1253.1094,331.4375 Q1252.1563,331.4375 1251.6719,332.2031 Q1251.1875,332.9531 1251.1875,334.4375 Q1251.1875,335.9063 1251.6719,336.6563 Q1252.1563,337.4063 1253.1094,337.4063 Q1253.5469,337.4063 1253.9688,337.2188 Q1254.3906,337.0313 1254.8281,336.625 L1254.8281,338.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="1266" y="338.4512">CollectorError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1240" x2="1354" y1="349.2969" y2="349.2969"/><line style="stroke:#34A853;stroke-width:0.5;" x1="1240" x2="1354" y1="357.2969" y2="357.2969"/></g><!--MD5=[9715dd79a71ed69d00428f456404f528]
+class DataSourceUnavailable--><g id="elem_DataSourceUnavailable"><rect codeLine="60" fill="#ECFDF5" height="46" id="DataSourceUnavailable" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="176" x="1209" y="432.2969"/><ellipse cx="1223" cy="447.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1224.8281,451.5469 Q1224.4219,451.75 1223.9688,451.8594 Q1223.5156,451.9688 1223.0313,451.9688 Q1221.25,451.9688 1220.3125,450.8125 Q1219.3906,449.6406 1219.3906,447.4375 Q1219.3906,445.2188 1220.3125,444.0625 Q1221.25,442.8906 1223.0313,442.8906 Q1223.5156,442.8906 1223.9688,443 Q1224.4375,443.0938 1224.8281,443.3125 L1224.8281,445.2344 Q1224.3906,444.8281 1223.9688,444.6406 Q1223.5469,444.4375 1223.1094,444.4375 Q1222.1563,444.4375 1221.6719,445.2031 Q1221.1875,445.9531 1221.1875,447.4375 Q1221.1875,448.9063 1221.6719,449.6563 Q1222.1563,450.4063 1223.1094,450.4063 Q1223.5469,450.4063 1223.9688,450.2188 Q1224.3906,450.0313 1224.8281,449.625 L1224.8281,451.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="146" x="1236" y="451.4512">DataSourceUnavailable</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1210" x2="1384" y1="462.2969" y2="462.2969"/><line style="stroke:#34A853;stroke-width:0.5;" x1="1210" x2="1384" y1="470.2969" y2="470.2969"/></g><!--MD5=[2aae4c399f77c0b905307b116fefba40]
+class LoaderError--><g id="elem_LoaderError"><rect codeLine="63" fill="#ECFDF5" height="46" id="LoaderError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="104" x="1390" y="319.2969"/><ellipse cx="1404" cy="334.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1405.8281,338.5469 Q1405.4219,338.75 1404.9688,338.8594 Q1404.5156,338.9688 1404.0313,338.9688 Q1402.25,338.9688 1401.3125,337.8125 Q1400.3906,336.6406 1400.3906,334.4375 Q1400.3906,332.2188 1401.3125,331.0625 Q1402.25,329.8906 1404.0313,329.8906 Q1404.5156,329.8906 1404.9688,330 Q1405.4375,330.0938 1405.8281,330.3125 L1405.8281,332.2344 Q1405.3906,331.8281 1404.9688,331.6406 Q1404.5469,331.4375 1404.1094,331.4375 Q1403.1563,331.4375 1402.6719,332.2031 Q1402.1875,332.9531 1402.1875,334.4375 Q1402.1875,335.9063 1402.6719,336.6563 Q1403.1563,337.4063 1404.1094,337.4063 Q1404.5469,337.4063 1404.9688,337.2188 Q1405.3906,337.0313 1405.8281,336.625 L1405.8281,338.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="1417" y="338.4512">LoaderError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1391" x2="1493" y1="349.2969" y2="349.2969"/><line style="stroke:#34A853;stroke-width:0.5;" x1="1391" x2="1493" y1="357.2969" y2="357.2969"/></g><!--MD5=[20c0666d4316f21cdedbecb4a9516f9a]
+class TransformError--><g id="elem_TransformError"><rect codeLine="66" fill="#ECFDF5" height="46" id="TransformError" rx="3" ry="3" style="stroke:#34A853;stroke-width:0.5;" width="124" x="1529" y="319.2969"/><ellipse cx="1543" cy="334.2969" fill="#ADD1B2" rx="10" ry="10" style="stroke:#181818;stroke-width:1.0;"/><path d="M1544.8281,338.5469 Q1544.4219,338.75 1543.9688,338.8594 Q1543.5156,338.9688 1543.0313,338.9688 Q1541.25,338.9688 1540.3125,337.8125 Q1539.3906,336.6406 1539.3906,334.4375 Q1539.3906,332.2188 1540.3125,331.0625 Q1541.25,329.8906 1543.0313,329.8906 Q1543.5156,329.8906 1543.9688,330 Q1544.4375,330.0938 1544.8281,330.3125 L1544.8281,332.2344 Q1544.3906,331.8281 1543.9688,331.6406 Q1543.5469,331.4375 1543.1094,331.4375 Q1542.1563,331.4375 1541.6719,332.2031 Q1541.1875,332.9531 1541.1875,334.4375 Q1541.1875,335.9063 1541.6719,336.6563 Q1542.1563,337.4063 1543.1094,337.4063 Q1543.5469,337.4063 1543.9688,337.2188 Q1544.3906,337.0313 1544.8281,336.625 L1544.8281,338.5469 Z " fill="#333333"/><text fill="#555555" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="1556" y="338.4512">TransformError</text><line style="stroke:#34A853;stroke-width:0.5;" x1="1530" x2="1652" y1="349.2969" y2="349.2969"/><line style="stroke:#34A853;stroke-width:0.5;" x1="1530" x2="1652" y1="357.2969" y2="357.2969"/></g><!--MD5=[5d3e81a9f7d6f9e86d769a53f229f50f]
+reverse link CryptoBotError to NotFoundError--><g id="link_CryptoBotError_NotFoundError"><path codeLine="72" d="M608.83,105.2769 C498.18,122.8769 320.16,153.8469 169,192.2969 C163.27,193.7569 157.38,195.3769 151.47,197.0869 " fill="none" id="CryptoBotError-backto-NotFoundError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="607.84,98.3469,628.69,102.1469,610.02,112.1769,607.84,98.3469" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[dc4d0b3182e821038ad817fea9b8fa41]
+reverse link CryptoBotError to AuthenticationError--><g id="link_CryptoBotError_AuthenticationError"><path codeLine="73" d="M609.35,119.1169 C537.98,139.4069 441.7,167.0469 357,192.2969 C351.35,193.9769 345.52,195.7369 339.66,197.5169 " fill="none" id="CryptoBotError-backto-AuthenticationError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="607.63,112.3269,628.78,113.6069,611.46,125.7969,607.63,112.3269" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[7f67b4851b2b2de61a90a06742520d5d]
+reverse link CryptoBotError to AuthorizationError--><g id="link_CryptoBotError_AuthorizationError"><path codeLine="74" d="M610.5,140.7669 C575.02,158.2369 536.65,177.1469 506,192.2369 " fill="none" id="CryptoBotError-backto-AuthorizationError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="607.69,134.3469,628.73,131.7869,613.88,146.9069,607.69,134.3469" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[d62d9dce373ada07ff08e9829580670e]
+reverse link CryptoBotError to ValidationError--><g id="link_CryptoBotError_ValidationError"><path codeLine="75" d="M674.37,149.5569 C664.38,164.3669 654.13,179.5769 645.65,192.1569 " fill="none" id="CryptoBotError-backto-ValidationError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="668.87,145.1869,685.86,132.5169,680.48,153.0169,668.87,145.1869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[07f2d464c2e71369e4744431d6a5888a]
+reverse link CryptoBotError to ConflictError--><g id="link_CryptoBotError_ConflictError"><path codeLine="76" d="M755.75,149.0669 C765.96,164.0369 776.46,179.4369 785.13,192.1569 " fill="none" id="CryptoBotError-backto-ConflictError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="749.95,152.9869,744.47,132.5169,761.52,145.0969,749.95,152.9869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[9e7c5c98e59cf19280309d31dd43706b]
+reverse link CryptoBotError to ConfigurationError--><g id="link_CryptoBotError_ConfigurationError"><path codeLine="77" d="M819.14,140.2069 C855.23,157.8569 894.43,177.0169 925.65,192.2869 " fill="none" id="CryptoBotError-backto-ConfigurationError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="816.07,146.4969,801.17,131.4269,822.21,133.9169,816.07,146.4969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[5dd3343b03f7d2b965a28688df13f34f]
+reverse link CryptoBotError to ExternalAPIError--><g id="link_CryptoBotError_ExternalAPIError"><path codeLine="78" d="M820.64,118.5269 C892.53,138.6669 989.72,166.3669 1075,192.2969 C1080.81,194.0669 1086.82,195.9269 1092.86,197.8169 " fill="none" id="CryptoBotError-backto-ExternalAPIError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="818.44,125.1869,801.07,113.0569,822.21,111.6969,818.44,125.1869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[20f8619b0841ad96d3ffc2e484daf957]
+reverse link ExternalAPIError to RateLimitError--><g id="link_ExternalAPIError_RateLimitError"><path codeLine="79" d="M1151.35,272.1069 C1147.55,285.6769 1143.55,299.9869 1140.18,312.0569 " fill="none" id="ExternalAPIError-backto-RateLimitError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="1144.71,269.8369,1156.84,252.4669,1158.2,273.6069,1144.71,269.8369" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[db5a57c2f9e678f66fb3f62828ede028]
+reverse link CryptoBotError to ETLError--><g id="link_CryptoBotError_ETLError"><path codeLine="81" d="M820.97,109.4569 C963.74,136.6069 1214.07,184.2169 1336.89,207.5869 " fill="none" id="CryptoBotError-backto-ETLError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="819.48,116.2969,801.14,105.6769,822.1,102.5369,819.48,116.2969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[db977e172dcf2ff089468a60ea9ea536]
+reverse link ETLError to CollectorError--><g id="link_ETLError_CollectorError"><path codeLine="82" d="M1367.47,267.0469 C1350.65,284.7769 1331.95,304.4769 1318.04,319.1269 " fill="none" id="ETLError-backto-CollectorError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="1362.47,262.1569,1381.31,252.4669,1372.62,271.7869,1362.47,262.1569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[847551288f595fde850e66dafeda00a7]
+reverse link ETLError to LoaderError--><g id="link_ETLError_LoaderError"><path codeLine="83" d="M1422.59,271.9069 C1427.18,288.2969 1432.07,305.7969 1435.8,319.1269 " fill="none" id="ETLError-backto-LoaderError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="1415.8,273.6069,1417.16,252.4669,1429.29,269.8369,1415.8,273.6069" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[d412bf89a7728f0f64bec506e5294935]
+reverse link ETLError to TransformError--><g id="link_ETLError_TransformError"><path codeLine="84" d="M1471.16,263.5969 C1499.82,282.1769 1532.73,303.5169 1556.8,319.1269 " fill="none" id="ETLError-backto-TransformError" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="1466.96,269.2169,1453.99,252.4669,1474.58,257.4769,1466.96,269.2169" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[ae29d87f7935641d92f4dd256a36f196]
+reverse link CollectorError to DataSourceUnavailable--><g id="link_CollectorError_DataSourceUnavailable"><path codeLine="85" d="M1297,385.6269 C1297,401.4769 1297,418.8369 1297,432.1369 " fill="none" id="CollectorError-backto-DataSourceUnavailable" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="none" points="1290,385.4969,1297,365.4969,1304,385.4969,1290,385.4969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><rect fill="#F5F5F5" height="81.1875" rx="3" ry="3" style="stroke:#CCCCCC;stroke-width:1.0;" width="232" x="1406" y="492.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="62" x="1417" y="513.292">Couleur</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="77" x="1489" y="513.292">Categorie</text><rect fill="#FEF3E8" height="16.2969" style="stroke:none;stroke-width:1.0;" width="72" x="1412" y="516.5938"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1412" y="529.5889"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="110" x="1488" y="529.5889">Base + External</text><rect fill="#F3EEFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="72" x="1412" y="532.8906"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1412" y="545.8857"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="140" x="1488" y="545.8857">Application (4xx/5xx)</text><rect fill="#ECFDF5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="72" x="1412" y="549.1875"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1412" y="562.1826"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="100" x="1488" y="562.1826">ETL specifique</text><line style="stroke:#333333;stroke-width:1.0;" x1="1412" x2="1632" y1="500.2969" y2="500.2969"/><line style="stroke:#333333;stroke-width:1.0;" x1="1412" x2="1632" y1="516.5938" y2="516.5938"/><line style="stroke:#333333;stroke-width:1.0;" x1="1412" x2="1632" y1="532.8906" y2="532.8906"/><line style="stroke:#333333;stroke-width:1.0;" x1="1412" x2="1632" y1="549.1875" y2="549.1875"/><line style="stroke:#333333;stroke-width:1.0;" x1="1412" x2="1632" y1="565.4844" y2="565.4844"/><line style="stroke:#333333;stroke-width:1.0;" x1="1412" x2="1412" y1="500.2969" y2="565.4844"/><line style="stroke:#333333;stroke-width:1.0;" x1="1484" x2="1484" y1="500.2969" y2="565.4844"/><line style="stroke:#333333;stroke-width:1.0;" x1="1632" x2="1632" y1="500.2969" y2="565.4844"/><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="262" x="692" y="583.4844"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="262" x="692" y="596.4795">src/shared/exceptions.py | 13 classes</text><!--MD5=[3e0b2444f1de0294c634fb2cfc8e5d09]
+@startuml CL05-exceptions
+!include _common.puml
+
+title CryptoBot — Arbre d'Exceptions
+caption src/shared/exceptions.py | 13 classes
+
+' ============================================================
+' Base
+' ============================================================
+class CryptoBotError #FEF3E8 {
+  + status_code : int = 500
+  + message : str
+  + detail : Any = None
+}
+
+' ============================================================
+' Application Exceptions
+' ============================================================
+class NotFoundError #F3EEFF {
+  + status_code = 404
+}
+
+class AuthenticationError #F3EEFF {
+  + status_code = 401
+}
+
+class AuthorizationError #F3EEFF {
+  + status_code = 403
+}
+
+class ValidationError #F3EEFF {
+  + status_code = 422
+}
+
+class ConflictError #F3EEFF {
+  + status_code = 409
+}
+
+class ConfigurationError #F3EEFF {
+  + status_code = 500
+}
+
+class ExternalAPIError #FEF3E8 {
+  + status_code = 502
+}
+
+class RateLimitError #FEF3E8 {
+  + status_code = 429
+}
+
+' ============================================================
+' ETL Exceptions
+' ============================================================
+class ETLError #ECFDF5 {
+  + status_code = 500
+}
+
+class CollectorError #ECFDF5 {
+}
+
+class DataSourceUnavailable #ECFDF5 {
+}
+
+class LoaderError #ECFDF5 {
+}
+
+class TransformError #ECFDF5 {
+}
+
+' ============================================================
+' Hierarchy
+' ============================================================
+CryptoBotError <|- - NotFoundError
+CryptoBotError <|- - AuthenticationError
+CryptoBotError <|- - AuthorizationError
+CryptoBotError <|- - ValidationError
+CryptoBotError <|- - ConflictError
+CryptoBotError <|- - ConfigurationError
+CryptoBotError <|- - ExternalAPIError
+ExternalAPIError <|- - RateLimitError
+
+CryptoBotError <|- - ETLError
+ETLError <|- - CollectorError
+ETLError <|- - LoaderError
+ETLError <|- - TransformError
+CollectorError <|- - DataSourceUnavailable
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom right
+  |= Couleur |= Categorie |
+  | <#FEF3E8> | Base + External |
+  | <#F3EEFF> | Application (4xx/5xx) |
+  | <#ECFDF5> | ETL specifique |
+endlegend
+
+@enduml
+
+@startuml CL05-exceptions
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Arbre d'Exceptions
+caption src/shared/exceptions.py | 13 classes
+
+class CryptoBotError #FEF3E8 {
+  + status_code : int = 500
+  + message : str
+  + detail : Any = None
+}
+
+class NotFoundError #F3EEFF {
+  + status_code = 404
+}
+
+class AuthenticationError #F3EEFF {
+  + status_code = 401
+}
+
+class AuthorizationError #F3EEFF {
+  + status_code = 403
+}
+
+class ValidationError #F3EEFF {
+  + status_code = 422
+}
+
+class ConflictError #F3EEFF {
+  + status_code = 409
+}
+
+class ConfigurationError #F3EEFF {
+  + status_code = 500
+}
+
+class ExternalAPIError #FEF3E8 {
+  + status_code = 502
+}
+
+class RateLimitError #FEF3E8 {
+  + status_code = 429
+}
+
+class ETLError #ECFDF5 {
+  + status_code = 500
+}
+
+class CollectorError #ECFDF5 {
+}
+
+class DataSourceUnavailable #ECFDF5 {
+}
+
+class LoaderError #ECFDF5 {
+}
+
+class TransformError #ECFDF5 {
+}
+
+CryptoBotError <|- - NotFoundError
+CryptoBotError <|- - AuthenticationError
+CryptoBotError <|- - AuthorizationError
+CryptoBotError <|- - ValidationError
+CryptoBotError <|- - ConflictError
+CryptoBotError <|- - ConfigurationError
+CryptoBotError <|- - ExternalAPIError
+ExternalAPIError <|- - RateLimitError
+
+CryptoBotError <|- - ETLError
+ETLError <|- - CollectorError
+ETLError <|- - LoaderError
+ETLError <|- - TransformError
+CollectorError <|- - DataSourceUnavailable
+
+legend bottom right
+  |= Couleur |= Categorie |
+  | <#FEF3E8> | Base + External |
+  | <#F3EEFF> | Application (4xx/5xx) |
+  | <#ECFDF5> | ETL specifique |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

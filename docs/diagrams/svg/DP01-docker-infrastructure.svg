@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1020px" preserveAspectRatio="none" style="width:1980px;height:1020px;background:#FFFFFF;" version="1.1" viewBox="0 0 1980 1020" width="1980px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="363" x="801.75" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="353" x="806.75" y="22.9951">CryptoBot — Infrastructure Docker Compose</text><!--MD5=[e2946e95c599d62b446bb41a8c2bbc18]
+cluster fnet--><g id="cluster_fnet"><path d="M1274.5,170.7969 L1365.5,170.7969 A4.5,4.5 0 0 1 1368.5,173.7969 L1375.5,190.7656 L1459.5,190.7656 A3,3 0 0 1 1462.5,193.7656 L1462.5,622.7969 A3,3 0 0 1 1459.5,625.7969 L1274.5,625.7969 A3,3 0 0 1 1271.5,622.7969 L1271.5,173.7969 A3,3 0 0 1 1274.5,170.7969 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="1271.5" x2="1375.5" y1="190.7656" y2="190.7656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="91" x="1275.5" y="183.9355">frontend-net</text></g><!--MD5=[433db2a93b791209ba26beda5cf8b3bb]
+cluster bnet--><g id="cluster_bnet"><path d="M156.5,163.7969 L245.5,163.7969 A4.5,4.5 0 0 1 248.5,166.7969 L255.5,183.7656 L1134.5,183.7656 A3,3 0 0 1 1137.5,186.7656 L1137.5,770.7969 A3,3 0 0 1 1134.5,773.7969 L156.5,773.7969 A3,3 0 0 1 153.5,770.7969 L153.5,166.7969 A3,3 0 0 1 156.5,163.7969 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="153.5" x2="255.5" y1="183.7656" y2="183.7656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="89" x="157.5" y="176.9355">backend-net</text></g><!--MD5=[8824c66cba45be527cf3dd56bcd70cd2]
+entity nginx--><g id="elem_nginx"><polygon fill="#F3EEFF" points="1293,352.7969,1303,342.7969,1408,342.7969,1408,404.7031,1398,414.7031,1293,414.7031,1293,352.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1398" x2="1408" y1="352.7969" y2="342.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1293" x2="1398" y1="352.7969" y2="352.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1398" x2="1398" y1="352.7969" y2="414.7031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="1308" y="373.9355">nginx</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="75" x="1308" y="387.9043">nginx:alpine</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="52" x="1308" y="401.873">:80 :443</text></g><!--MD5=[b6678c732d1ff6484754a56c6e4a5c5c]
+entity fe--><g id="elem_fe"><polygon fill="#F3EEFF" points="1303.5,547.7969,1313.5,537.7969,1425.5,537.7969,1425.5,599.7031,1415.5,609.7031,1303.5,609.7031,1303.5,547.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1415.5" x2="1425.5" y1="547.7969" y2="537.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1303.5" x2="1415.5" y1="547.7969" y2="547.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1415.5" x2="1415.5" y1="547.7969" y2="609.7031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="54" x="1318.5" y="568.9355">frontend</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="56" x="1318.5" y="582.9043">Streamlit</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="1318.5" y="596.873">:8501 | 512M</text></g><!--MD5=[618cd89ce163ffb4179aaebe97b5f8b9]
+entity ngexp--><g id="elem_ngexp"><polygon fill="#F3EEFF" points="1287.5,212.7969,1297.5,202.7969,1417.5,202.7969,1417.5,250.7344,1407.5,260.7344,1287.5,260.7344,1287.5,212.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1407.5" x2="1417.5" y1="212.7969" y2="202.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1287.5" x2="1407.5" y1="212.7969" y2="212.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1407.5" x2="1407.5" y1="212.7969" y2="260.7344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="90" x="1302.5" y="233.9355">nginx-exporter</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="26" x="1302.5" y="247.9043">32M</text></g><!--MD5=[e2307af040e3f87d22824e7603ca28ec]
+entity api--><g id="elem_api"><polygon fill="#F3EEFF" points="833.5,547.7969,843.5,537.7969,955.5,537.7969,955.5,599.7031,945.5,609.7031,833.5,609.7031,833.5,547.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="945.5" x2="955.5" y1="547.7969" y2="537.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="833.5" x2="945.5" y1="547.7969" y2="547.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="945.5" x2="945.5" y1="547.7969" y2="609.7031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="19" x="848.5" y="568.9355">api</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="848.5" y="582.9043">FastAPI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="848.5" y="596.873">:8000 | 512M</text></g><!--MD5=[5f5753442e7fadb4fd16694c78ce39f0]
+entity tsdb--><g id="elem_tsdb"><path d="M405,696.7969 C405,686.7969 455.5,686.7969 455.5,686.7969 C455.5,686.7969 506,686.7969 506,696.7969 L506,747.7031 C506,757.7031 455.5,757.7031 455.5,757.7031 C455.5,757.7031 405,757.7031 405,747.7031 L405,696.7969 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M405,696.7969 C405,706.7969 455.5,706.7969 455.5,706.7969 C455.5,706.7969 506,706.7969 506,696.7969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="415" y="721.9355">timescaledb</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="415" y="735.9043">PG16 | :5433</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="17" x="415" y="749.873">1G</text></g><!--MD5=[dd69d516781b0f0936e849bb07507e10]
+entity minio--><g id="elem_minio"><path d="M913.5,696.7969 C913.5,686.7969 975.5,686.7969 975.5,686.7969 C975.5,686.7969 1037.5,686.7969 1037.5,696.7969 L1037.5,747.7031 C1037.5,757.7031 975.5,757.7031 975.5,757.7031 C975.5,757.7031 913.5,757.7031 913.5,747.7031 L913.5,696.7969 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M913.5,696.7969 C913.5,706.7969 975.5,706.7969 975.5,706.7969 C975.5,706.7969 1037.5,706.7969 1037.5,696.7969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="923.5" y="721.9355">minio</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="923.5" y="735.9043">S3 | :9000 :9001</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="34" x="923.5" y="749.873">512M</text></g><!--MD5=[e3a56af7e226478f972bb17db43d1d10]
+entity mlflow--><g id="elem_mlflow"><polygon fill="#F3EEFF" points="676.5,554.7969,686.5,544.7969,798.5,544.7969,798.5,592.7344,788.5,602.7344,676.5,602.7344,676.5,554.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="788.5" x2="798.5" y1="554.7969" y2="544.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="676.5" x2="788.5" y1="554.7969" y2="554.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="788.5" x2="788.5" y1="554.7969" y2="602.7344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="38" x="691.5" y="575.9355">mlflow</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="691.5" y="589.9043">:5000 | 512M</text></g><!--MD5=[e39b5510b9df8a85b5a394f0a9df859b]
+entity etl--><g id="elem_etl"><polygon fill="#F3EEFF" points="526,554.7969,536,544.7969,641,544.7969,641,592.7344,631,602.7344,526,602.7344,526,554.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="631" x2="641" y1="554.7969" y2="544.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="526" x2="631" y1="554.7969" y2="554.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="631" x2="631" y1="554.7969" y2="602.7344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="541" y="575.9355">etl-worker</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="75" x="541" y="589.9043">1G | no port</text></g><!--MD5=[7ce0a005af9af233f40b4067b5f7c15a]
+entity mlw--><g id="elem_mlw"><polygon fill="#F3EEFF" points="968,359.7969,978,349.7969,1083,349.7969,1083,397.7344,1073,407.7344,968,407.7344,968,359.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1073" x2="1083" y1="359.7969" y2="349.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="968" x2="1073" y1="359.7969" y2="359.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1073" x2="1073" y1="359.7969" y2="407.7344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="60" x="983" y="380.9355">ml-worker</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="75" x="983" y="394.9043">1G | no port</text></g><!--MD5=[7617a468e6fd29cf21357e7d5e04380c]
+entity prom--><g id="elem_prom"><polygon fill="#F3EEFF" points="798.5,352.7969,808.5,342.7969,932.5,342.7969,932.5,404.7031,922.5,414.7031,798.5,414.7031,798.5,352.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="922.5" x2="932.5" y1="352.7969" y2="342.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="798.5" x2="922.5" y1="352.7969" y2="352.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="922.5" x2="922.5" y1="352.7969" y2="414.7031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="813.5" y="373.9355">prometheus</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="813.5" y="387.9043">v2.52.0 | :9090</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="34" x="813.5" y="401.873">512M</text></g><!--MD5=[c2d977b135fb8c79299c5948712bf02a]
+entity graf--><g id="elem_graf"><polygon fill="#F3EEFF" points="939.5,205.7969,949.5,195.7969,1073.5,195.7969,1073.5,257.7031,1063.5,267.7031,939.5,267.7031,939.5,205.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1063.5" x2="1073.5" y1="205.7969" y2="195.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="939.5" x2="1063.5" y1="205.7969" y2="205.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="1063.5" x2="1063.5" y1="205.7969" y2="267.7031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="49" x="954.5" y="226.9355">grafana</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="954.5" y="240.9043">v10.4.2 | :3000</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="34" x="954.5" y="254.873">256M</text></g><!--MD5=[987513b4d2a15fad95d48431a81aff7d]
+entity pgexp--><g id="elem_pgexp"><polygon fill="#F3EEFF" points="170,554.7969,180,544.7969,323,544.7969,323,592.7344,313,602.7344,170,602.7344,170,554.7969" style="stroke:#7C5CFC;stroke-width:0.5;"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="313" x2="323" y1="554.7969" y2="544.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="170" x2="313" y1="554.7969" y2="554.7969"/><line style="stroke:#7C5CFC;stroke-width:0.5;" x1="313" x2="313" y1="554.7969" y2="602.7344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="113" x="185" y="575.9355">postgres-exporter</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="26" x="185" y="589.9043">64M</text></g><!--MD5=[5f2f9dbbee692058d60489180693f774]
+entity users--><g id="elem_users"><ellipse cx="1540.5" cy="51.2969" fill="#F1F1F1" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M1540.5,59.2969 L1540.5,86.2969 M1527.5,67.2969 L1553.5,67.2969 M1540.5,86.2969 L1527.5,101.2969 M1540.5,86.2969 L1553.5,101.2969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="36" x="1522.5" y="113.9355">Users</text></g><!--MD5=[53a7890647be042c111b8a807eed420f]
+entity internet--><g id="elem_internet"><path d="M1487.4242,212.5098 C1490.6488,204.3153 1496.688,204.6791 1501.9369,210.3985 C1504.5644,202.4766 1509.2199,200.8083 1515.4715,206.8977 C1518.7841,200.0853 1522.7956,200.4307 1527.9459,204.8581 C1531.2899,197.9182 1537.1673,198.536 1540.9686,204.3927 C1546.0208,197.4756 1550.8577,198.5987 1555.7377,204.5897 C1561.7192,199.6543 1566.7978,201.2596 1569.0693,208.6142 C1574.2502,202.5161 1578.9081,202.8945 1582.7306,210.0178 C1587.23,204.2213 1591.9273,205.3077 1595.1446,211.3609 C1607.7824,216.1787 1606.7871,227.2582 1596.9913,233.9131 C1606.0504,241.6719 1604.0674,247.3749 1594.8072,253.0421 C1592.3751,259.1103 1587.7847,261.6722 1582.5388,255.9766 C1578.1477,262.1018 1572.8546,264.0255 1567.8112,256.6904 C1564.0789,263.3232 1558.3087,264.1462 1554.0795,257.1926 C1551.0476,263.5717 1546.4559,263.6674 1541.6232,259.275 C1537.6065,264.705 1532.0152,265.3632 1528.8845,258.3668 C1523.8389,264.5459 1518.2688,264.7352 1514.6293,256.9332 C1510.4093,263.8173 1503.4114,262.6346 1500.5281,255.5808 C1495.9695,261.1391 1491.6156,261.6038 1487.8054,254.81 C1481.3617,252.7923 1479.7846,248.3 1484.5229,243.1377 C1478.9766,242.8795 1475.1253,238.907 1478.7595,233.2808 C1475.4867,227.1202 1475.6289,222.7235 1483.7444,221.3022 C1480.9141,217.3871 1481.8909,212.9246 1487.4242,212.5098 " fill="#F5F5F5" style="stroke:#181818;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="50" x="1494" y="228.9355">Internet</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="1494" y="242.9043">Cloudflare DNS</text></g><!--MD5=[84fafb904bb647e1839de14faefeb4ff]
+entity vol_tsdb--><g id="elem_vol_tsdb"><path d="M391,830.7969 C391,820.7969 455.5,820.7969 455.5,820.7969 C455.5,820.7969 520,820.7969 520,830.7969 L520,853.7656 C520,863.7656 455.5,863.7656 455.5,863.7656 C455.5,863.7656 391,863.7656 391,853.7656 L391,830.7969 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M391,830.7969 C391,840.7969 455.5,840.7969 455.5,840.7969 C455.5,840.7969 520,840.7969 520,830.7969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="401" y="855.9355">timescaledb-data</text></g><!--MD5=[e417ba93cd09329bdfb5fbef055b982f]
+entity vol_minio--><g id="elem_vol_minio"><path d="M932.5,830.7969 C932.5,820.7969 975.5,820.7969 975.5,820.7969 C975.5,820.7969 1018.5,820.7969 1018.5,830.7969 L1018.5,853.7656 C1018.5,863.7656 975.5,863.7656 975.5,863.7656 C975.5,863.7656 932.5,863.7656 932.5,853.7656 L932.5,830.7969 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:0.5;"/><path d="M932.5,830.7969 C932.5,840.7969 975.5,840.7969 975.5,840.7969 C975.5,840.7969 1018.5,840.7969 1018.5,830.7969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="942.5" y="855.9355">minio-data</text></g><!--MD5=[b0f4ff2d85c2de04f4206aa6300c5741]
+entity vol_prom--><g id="elem_vol_prom"><path d="M6,562.2969 C6,552.2969 70.5,552.2969 70.5,552.2969 C70.5,552.2969 135,552.2969 135,562.2969 L135,585.2656 C135,595.2656 70.5,595.2656 70.5,595.2656 C70.5,595.2656 6,595.2656 6,585.2656 L6,562.2969 " fill="#FEF3E8" style="stroke:#34A853;stroke-width:0.5;"/><path d="M6,562.2969 C6,572.2969 70.5,572.2969 70.5,572.2969 C70.5,572.2969 135,572.2969 135,562.2969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="16" y="587.4355">prometheus-data</text></g><!--MD5=[5cb741fe673719b8404fc3755fc43d72]
+entity vol_graf--><g id="elem_vol_graf"><path d="M1153.5,367.2969 C1153.5,357.2969 1204.5,357.2969 1204.5,357.2969 C1204.5,357.2969 1255.5,357.2969 1255.5,367.2969 L1255.5,390.2656 C1255.5,400.2656 1204.5,400.2656 1204.5,400.2656 C1204.5,400.2656 1153.5,400.2656 1153.5,390.2656 L1153.5,367.2969 " fill="#FEF3E8" style="stroke:#34A853;stroke-width:0.5;"/><path d="M1153.5,367.2969 C1153.5,377.2969 1204.5,377.2969 1204.5,377.2969 C1204.5,377.2969 1255.5,377.2969 1255.5,367.2969 " fill="none" style="stroke:#34A853;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="1163.5" y="392.4355">grafana-data</text></g><g id="elem_GMN492"><path d="M1154,706.2969 L1154,738.2344 A3,3 0 0 0 1157,741.2344 L1306,741.2344 A3,3 0 0 0 1309,738.2344 L1309,713.2969 L1299,703.2969 L1157,703.2969 A3,3 0 0 0 1154,706.2969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:0.5;"/><path d="M1299,703.2969 L1299,711.7969 A1.5,1.5 0 0 0 1300.5,713.2969 L1309,713.2969 L1299,703.2969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="67" x="1160" y="719.4355">pg_isready</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="134" x="1160" y="733.4043">10s interval, 5 retries</text></g><g id="elem_GMN495"><path d="M1478,557.7969 L1478,589.7344 A3,3 0 0 0 1481,592.7344 L1634,592.7344 A3,3 0 0 0 1637,589.7344 L1637,564.7969 L1627,554.7969 L1481,554.7969 A3,3 0 0 0 1478,557.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:0.5;"/><path d="M1627,554.7969 L1627,563.2969 A1.5,1.5 0 0 0 1628.5,564.7969 L1637,564.7969 L1627,554.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="71" x="1484" y="570.9355">curl /health</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="1484" y="584.9043">30s interval, 15s start</text></g><g id="elem_GMN498"><path d="M1672.5,564.7969 L1672.5,582.7656 A3,3 0 0 0 1675.5,585.7656 L1811.5,585.7656 A3,3 0 0 0 1814.5,582.7656 L1814.5,571.7969 L1804.5,561.7969 L1675.5,561.7969 A3,3 0 0 0 1672.5,564.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:0.5;"/><path d="M1804.5,561.7969 L1804.5,570.2969 A1.5,1.5 0 0 0 1806,571.7969 L1814.5,571.7969 L1804.5,561.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="121" x="1678.5" y="577.9355">curl /_stcore/health</text></g><g id="elem_GMN501"><path d="M1849.5,557.7969 L1849.5,589.7344 A3,3 0 0 0 1852.5,592.7344 L1970.5,592.7344 A3,3 0 0 0 1973.5,589.7344 L1973.5,564.7969 L1963.5,554.7969 L1852.5,554.7969 A3,3 0 0 0 1849.5,557.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:0.5;"/><path d="M1963.5,554.7969 L1963.5,563.2969 A1.5,1.5 0 0 0 1965,564.7969 L1973.5,564.7969 L1963.5,554.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="83" x="1855.5" y="570.9355">import src.etl</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="103" x="1855.5" y="584.9043">30s start_period</text></g><g id="elem_GMN504"><path d="M1479,362.7969 L1479,394.7344 A3,3 0 0 0 1482,397.7344 L1705,397.7344 A3,3 0 0 0 1708,394.7344 L1708,369.7969 L1698,359.7969 L1482,359.7969 A3,3 0 0 0 1479,362.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:0.5;"/><path d="M1698,359.7969 L1698,368.2969 A1.5,1.5 0 0 0 1699.5,369.7969 L1708,369.7969 L1698,359.7969 " fill="#FEF3E8" style="stroke:#181818;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="1485" y="375.9355">import src.ml</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="208" x="1485" y="389.9043">30s start_period, depends mlflow</text></g><!--MD5=[ee28bd1aa446e499e37a7e282c0c2506]
+link users to internet--><g id="link_users_internet"><path d="M1540.5,117.1069 C1540.5,141.4469 1540.5,173.2869 1540.5,197.0669 " fill="none" id="users-to-internet" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1540.5,202.3269,1544.5,193.3269,1540.5,197.3269,1536.5,193.3269,1540.5,202.3269" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[09d2f474c52f5ea8962e9f30708fe5ae]
+link internet to nginx--><g id="link_internet_nginx"><path d="M1503.42,261.0969 C1474.17,283.4169 1433.07,314.7769 1400.85,339.3769 " fill="none" id="internet-to-nginx" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1396.56,342.6469,1406.1421,340.3701,1400.5358,339.6149,1401.291,334.0087,1396.56,342.6469" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="39" x="1451.5" y="309.9355">HTTPS</text></g><!--MD5=[87f9650504f0545b2ec693f2fe838c4a]
+link nginx to api--><g id="link_nginx_api"><path d="M1292.99,406.1769 C1286.43,409.1169 1279.83,412.0369 1273.5,414.7969 C1164.46,462.2969 1036.58,514.9869 960.72,545.9369 " fill="none" id="nginx-to-api" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="955.8,547.9369,965.644,548.2456,960.4305,546.0504,962.6256,540.8368,955.8,547.9369" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="1201.5" y="480.9355">/api/*</text></g><!--MD5=[75feef97e2000b252bc1e6e8681e30fb]
+link nginx to fe--><g id="link_nginx_fe"><path d="M1353.07,415.1969 C1355.48,448.3869 1359.07,497.9569 1361.59,532.6169 " fill="none" id="nginx-to-fe" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1361.95,537.6269,1365.2967,528.3641,1361.5927,532.6397,1357.3172,528.9357,1361.95,537.6269" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="53" x="1395" y="456.9355">/crypto/*</text><path d="M1364.5,468.7656 L1364.5,499.7656 A3,3 0 0 0 1367.5,502.7656 L1475.5,502.7656 A3,3 0 0 0 1478.5,499.7656 L1478.5,475.7656 L1468.5,465.7656 L1367.5,465.7656 A3,3 0 0 0 1364.5,468.7656 " fill="#FEF3E8" style="stroke:#181818;stroke-width:0.5;"/><path d="M1468.5,465.7656 L1468.5,474.2656 A1.5,1.5 0 0 0 1470,475.7656 L1478.5,475.7656 L1468.5,465.7656 " fill="#FEF3E8" style="stroke:#181818;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="1370.5" y="481.9043">frontend-net</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="1370.5" y="495.873">+ backend-net</text></g><!--MD5=[e9915c2fd463d0a62e25c347d5f374bb]
+link api to tsdb--><g id="link_api_tsdb"><path d="M857.56,609.8469 C845.39,619.3469 831.18,628.4669 816.5,633.7969 C782.62,646.1069 689.48,633.0969 654.5,641.7969 C639.26,645.5869 636.95,650.6269 622.5,656.7969 C585.72,672.4969 543.72,688.7069 511.05,700.9569 " fill="none" id="api-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="506.29,702.7269,516.1215,703.3121,510.9716,700.9713,513.3125,695.8214,506.29,702.7269" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="655.5" y="653.9355">SQL queries</text></g><!--MD5=[e00426c3b3944145e21a85c35e1a2f07]
+link api to minio--><g id="link_api_minio"><path d="M944.52,609.9269 C956.75,618.0669 969.94,626.4869 982.5,633.7969 C989.37,637.7969 994.32,635.0369 998.5,641.7969 C1005.97,653.8769 1004.24,668.4869 999.3,681.8669 " fill="none" id="api-to-minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="997.35,686.7269,1004.4319,679.8824,999.2242,682.0914,997.0152,676.8837,997.35,686.7269" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="1003.5" y="653.9355">S3 objects</text></g><!--MD5=[787d6879f4ae026e16fe056aa2088441]
+link etl to tsdb--><g id="link_etl_tsdb"><path d="M551.88,602.8369 C536.78,614.5469 517.81,626.9969 498.5,633.7969 C486.63,637.9769 394.08,632.5869 385.5,641.7969 C371.4,656.9369 383.21,674.1169 400.88,688.6269 " fill="none" id="etl-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="404.98,691.8669,400.3926,683.1516,401.0549,688.7696,395.4369,689.4319,404.98,691.8669" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="386.5" y="653.9355">insert batches</text></g><!--MD5=[32f615626a681dfbb73893113f9b7c2d]
+link etl to minio--><g id="link_etl_minio"><path d="M611.74,602.8969 C625.11,614.4669 641.97,626.7869 659.5,633.7969 C692.27,646.9069 704.48,632.3969 738.5,641.7969 C753.64,645.9769 755.86,651.0969 770.5,656.7969 C815.77,674.4369 868.02,690.8169 908.44,702.6569 " fill="none" id="etl-to-minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="913.31,704.0769,905.79,697.7169,908.51,702.6769,903.55,705.3969,913.31,704.0769" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="771.5" y="653.9355">export parquet</text></g><!--MD5=[d379296fc82b9d4a5de263a8e9fbd72c]
+link mlw to tsdb--><g id="link_mlw_tsdb"><path d="M970.13,407.9369 C963.62,410.5569 956.99,412.9169 950.5,414.7969 C714.46,483.0669 591.86,370.9369 411.5,537.7969 C370.44,575.7869 345.62,606.6969 370.5,656.7969 C377.31,670.5069 388.58,682.0969 400.73,691.4869 " fill="none" id="mlw-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="404.87,694.5969,400.07,685.9969,400.87,691.5969,395.27,692.3969,404.87,694.5969" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="95" x="412.5" y="578.4355">read indicators</text></g><!--MD5=[d096d76303a88852f25a6d4580cce831]
+link mlw to minio--><g id="link_mlw_minio"><path d="M1030.52,407.8069 C1035.23,433.7669 1042.56,473.4469 1049.5,507.7969 C1062.85,573.9269 1111.18,597.7769 1078.5,656.7969 C1070.16,671.8569 1056.68,683.8569 1042.19,693.2369 " fill="none" id="mlw-to-minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1037.66,696.0669,1047.4107,694.68,1041.8976,693.413,1043.1646,687.8999,1037.66,696.0669" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="1090.5" y="578.4355">model artifacts</text></g><!--MD5=[ffd5c798b7cec800e32b19c073aea714]
+link mlw to mlflow--><g id="link_mlw_mlflow"><path d="M970.1,407.8369 C963.6,410.4669 956.97,412.8669 950.5,414.7969 C905.32,428.2469 771.8,409.5469 740.5,444.7969 C717.99,470.1469 721.24,510.7169 727.54,539.3769 " fill="none" id="mlw-to-mlflow" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="728.74,544.5869,730.6055,534.9163,727.6115,539.7159,722.812,536.7219,728.74,544.5869" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="741.5" y="480.9355">experiment tracking</text></g><!--MD5=[c97b2521a21532f6bbc7d3f87199ea18]
+link mlflow to tsdb--><g id="link_mlflow_tsdb"><path d="M708.47,602.9569 C694.51,614.6869 676.84,627.1169 658.5,633.7969 C629.22,644.4569 546.16,627.4369 518.5,641.7969 C501.21,650.7669 487.1,666.8269 476.65,682.1769 " fill="none" id="mlflow-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="473.8,686.4769,482.1079,681.1874,476.5636,682.31,475.441,676.7657,473.8,686.4769" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="98" x="519.5" y="653.9355">metadata store</text></g><!--MD5=[31fea2dce605cb0ba37f583f40b2f428]
+link mlflow to minio--><g id="link_mlflow_minio"><path d="M767.53,602.8969 C781.42,614.3169 798.76,626.5169 816.5,633.7969 C840.58,643.6769 850.55,631.6169 874.5,641.7969 C897.41,651.5369 919.53,667.8869 937.21,683.2369 " fill="none" id="mlflow-to-minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="941.14,686.6969,937.0176,677.7523,937.3833,683.3973,931.7383,683.7629,941.14,686.6969" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="902.5" y="653.9355">artifact store</text></g><!--MD5=[28390583cbfda8129bc67e073ea4d1e3]
+link prom to api--><g id="link_prom_api"><path d="M870.82,415.1969 C875.81,448.3869 883.26,497.9569 888.46,532.6169 " fill="none" id="prom-to-api" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="889.21,537.6269,891.828,528.1323,888.4669,532.6824,883.9168,529.3213,889.21,537.6269" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="884.5" y="480.9355">scrape /metrics</text></g><!--MD5=[80d588e3ebce116d11df00f6b0e2ad19]
+link pgexp to tsdb--><g id="link_pgexp_tsdb"><path d="M248.33,603.0969 C250.87,620.5969 256.81,642.3869 270.5,656.7969 C304.28,692.3369 358.67,708.2969 399.75,715.4669 " fill="none" id="pgexp-to-tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="404.69,716.2969,396.4777,710.8601,399.7592,715.4679,395.1514,718.7494,404.69,716.2969" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="271.5" y="653.9355">pg metrics</text></g><!--MD5=[35fda01ab745d10110b4d35d94a9cf90]
+link ngexp to nginx--><g id="link_ngexp_nginx"><path d="M1352.11,261.0969 C1351.81,282.8769 1351.39,313.2469 1351.06,337.5569 " fill="none" id="ngexp-to-nginx" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1350.98,342.6469,1355.1082,333.7049,1351.0514,337.6474,1347.109,333.5907,1350.98,342.6469" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="1352.5" y="309.9355">stub_status</text></g><!--MD5=[f0d5fb16fe52e70df62c3c38644c56c9]
+link graf to prom--><g id="link_graf_prom"><path d="M972.37,267.8969 C951.49,289.3669 924.75,316.8669 903.24,338.9869 " fill="none" id="graf-to-prom" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="899.56,342.7669,908.7015,339.1017,903.0452,339.1817,902.9652,333.5254,899.56,342.7669" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="72" x="940.5" y="309.9355">datasource</text></g><!--MD5=[7cbacaab3ed14df21245e5c5d9b237fc]
+link tsdb to vol_tsdb--><g id="link_tsdb_vol_tsdb"><path d="M455.5,758.0669 C455.5,776.5469 455.5,798.8669 455.5,815.7469 " fill="none" id="tsdb-to-vol_tsdb" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="455.5,820.7969,459.5,811.7969,455.5,815.7969,451.5,811.7969,455.5,820.7969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[ef0053cd8d54b1041f2dbefe518eabc0]
+link minio to vol_minio--><g id="link_minio_vol_minio"><path d="M975.5,758.0669 C975.5,776.5469 975.5,798.8669 975.5,815.7469 " fill="none" id="minio-to-vol_minio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="975.5,820.7969,979.5,811.7969,975.5,815.7969,971.5,811.7969,975.5,820.7969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[bdb9b422dce68fa1ac616d64e4490d05]
+link prom to vol_prom--><g id="link_prom_vol_prom"><path d="M798.34,383.5969 C704.42,390.0969 529.1,406.5569 384.5,444.7969 C277.5,473.0969 255.83,495.6269 153.5,537.7969 C143.93,541.7369 133.77,545.9869 123.95,550.1069 " fill="none" id="prom-to-vol_prom" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="119.16,552.1169,129.0069,552.3109,123.7682,550.1766,125.9025,544.9378,119.16,552.1169" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[99a39c09fba291499cb805a0ec5d4ade]
+link graf to vol_graf--><g id="link_graf_vol_graf"><path d="M1054.43,267.8969 C1090.9,294.6069 1140.12,330.6469 1172.07,354.0469 " fill="none" id="graf-to-vol_graf" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1176.27,357.1269,1171.3673,348.585,1172.2344,354.175,1166.6443,355.042,1176.27,357.1269" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[efe886a6e85f306457978bc89bc3a5c6]
+link tsdb to GMN492--><g id="link_tsdb_GMN492"><path d="M506.04,705.9669 C618.38,672.1569 896.53,602.3469 1120,660.2969 C1151.95,668.5769 1184.48,688.2269 1206.09,703.1969 " fill="none" id="tsdb-GMN492" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[5385865f0f42efc6426aa8d0dbe4f6d5]
+link api to GMN495--><g id="link_api_GMN495"><path d="M921.49,537.7569 C940.61,515.3969 968.41,488.6569 1000,476.2969 C1184.18,404.2269 1259.7,407.1769 1445,476.2969 C1486.89,491.9269 1523.54,530.9569 1542.9,554.6269 " fill="none" id="api-GMN495" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[19a98d0d0007bb52e1b1813e770b12e5]
+link fe to GMN498--><g id="link_fe_GMN498"><path d="M1394.1,537.7069 C1414.91,515.3269 1444.87,488.5769 1478,476.2969 C1544.26,451.7469 1571.13,450.6969 1637,476.2969 C1681.63,493.6369 1718.95,539.3769 1735.02,561.4869 " fill="none" id="fe-GMN498" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[32267e64e06fe1d65657b7a1f70dada0]
+link etl to GMN501--><g id="link_etl_GMN501"><path d="M601.67,544.5869 C618.1,521.1969 644.64,490.0969 677,476.2969 C793.31,426.6869 1698.31,427.6069 1815,476.2969 C1853.02,492.1669 1883.73,531.1069 1899.64,554.6969 " fill="none" id="etl-GMN501" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[c98b96e5920d1b6fc177d8f75c1bd8af]
+link mlw to GMN504--><g id="link_mlw_GMN504"><path d="M1063.94,349.7169 C1088.32,333.1369 1121.34,313.9769 1154,305.2969 C1278.99,272.0769 1319.07,275.8369 1445,305.2969 C1489.68,315.7469 1536.33,341.7069 1565.15,359.7969 " fill="none" id="mlw-GMN504" style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><rect fill="#F5F5F5" height="97.4844" rx="3" ry="3" style="stroke:#CCCCCC;stroke-width:1.0;" width="286" x="8" y="887.7656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="62" x="19" y="908.7607">Couleur</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="49" x="147" y="908.7607">Usage</text><rect fill="#F3EEFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="128" x="14" y="912.0625"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="925.0576"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="87" x="146" y="925.0576">frontend-net</text><rect fill="#FEF3E8" height="16.2969" style="stroke:none;stroke-width:1.0;" width="128" x="14" y="928.3594"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="941.3545"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="88" x="146" y="941.3545">backend-net</text><rect fill="#ECFDF5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="128" x="14" y="944.6563"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="957.6514"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="138" x="146" y="957.6514">Stockage persistant</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="118" x="19" y="973.9482">Memoire totale</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="64" x="147" y="973.9482">~5.8 GB</text><line style="stroke:#333333;stroke-width:1.0;" x1="14" x2="288" y1="895.7656" y2="895.7656"/><line style="stroke:#333333;stroke-width:1.0;" x1="14" x2="288" y1="912.0625" y2="912.0625"/><line style="stroke:#333333;stroke-width:1.0;" x1="14" x2="288" y1="928.3594" y2="928.3594"/><line style="stroke:#333333;stroke-width:1.0;" x1="14" x2="288" y1="944.6563" y2="944.6563"/><line style="stroke:#333333;stroke-width:1.0;" x1="14" x2="288" y1="960.9531" y2="960.9531"/><line style="stroke:#333333;stroke-width:1.0;" x1="14" x2="288" y1="977.25" y2="977.25"/><line style="stroke:#333333;stroke-width:1.0;" x1="14" x2="14" y1="895.7656" y2="977.25"/><line style="stroke:#333333;stroke-width:1.0;" x1="142" x2="142" y1="895.7656" y2="977.25"/><line style="stroke:#333333;stroke-width:1.0;" x1="288" x2="288" y1="895.7656" y2="977.25"/><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="253" x="856.75" y="995.25"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="253" x="856.75" y="1008.2451">12 services | 2 networks | 4 volumes</text><!--MD5=[2adcd8a2604517a086332b2f4dd7eaa1]
+@startuml DP01-docker-infrastructure
+!include _common.puml
+
+title CryptoBot — Infrastructure Docker Compose
+caption 12 services | 2 networks | 4 volumes
+
+' ============================================================
+' External
+' ============================================================
+actor "Users" as users
+cloud "Internet\nCloudflare DNS" as internet #F5F5F5
+
+' ============================================================
+' frontend-net
+' ============================================================
+package "frontend-net" as fnet #F3EEFF {
+  node "nginx\nnginx:alpine\n:80 :443" as nginx
+  node "frontend\nStreamlit\n:8501 | 512M" as fe
+  node "nginx-exporter\n32M" as ngexp
+}
+
+' ============================================================
+' backend-net
+' ============================================================
+package "backend-net" as bnet #FEF3E8 {
+  node "api\nFastAPI\n:8000 | 512M" as api
+
+  database "timescaledb\nPG16 | :5433\n1G" as tsdb #ECFDF5
+  database "minio\nS3 | :9000 :9001\n512M" as minio #ECFDF5
+
+  node "mlflow\n:5000 | 512M" as mlflow
+  node "etl-worker\n1G | no port" as etl
+  node "ml-worker\n1G | no port" as mlw
+
+  node "prometheus\nv2.52.0 | :9090\n512M" as prom
+  node "grafana\nv10.4.2 | :3000\n256M" as graf
+  node "postgres-exporter\n64M" as pgexp
+}
+
+' ============================================================
+' Volumes
+' ============================================================
+database "timescaledb-data" as vol_tsdb #ECFDF5
+database "minio-data" as vol_minio #ECFDF5
+database "prometheus-data" as vol_prom #FEF3E8
+database "grafana-data" as vol_graf #FEF3E8
+
+' ============================================================
+' Relations — Access
+' ============================================================
+users - -> internet
+internet - -> nginx : HTTPS
+
+' Nginx routing
+nginx - -> api : /api/*
+nginx - -> fe : /crypto/*
+
+' API in both networks
+note on link : frontend-net\n+ backend-net
+
+' ============================================================
+' Relations — Data
+' ============================================================
+api - -> tsdb : SQL queries
+api - -> minio : S3 objects
+
+etl - -> tsdb : insert batches
+etl - -> minio : export parquet
+
+mlw - -> tsdb : read indicators
+mlw - -> minio : model artifacts
+mlw - -> mlflow : experiment tracking
+
+mlflow - -> tsdb : metadata store
+mlflow - -> minio : artifact store
+
+' ============================================================
+' Relations — Monitoring
+' ============================================================
+prom - -> api : scrape /metrics
+pgexp - -> tsdb : pg metrics
+ngexp - -> nginx : stub_status
+graf - -> prom : datasource
+
+' ============================================================
+' Relations — Volumes
+' ============================================================
+tsdb - -> vol_tsdb
+minio - -> vol_minio
+prom - -> vol_prom
+graf - -> vol_graf
+
+' ============================================================
+' Health checks (notes)
+' ============================================================
+note right of tsdb : pg_isready\n10s interval, 5 retries
+note right of api : curl /health\n30s interval, 15s start
+note right of fe : curl /_stcore/health
+note right of etl : import src.etl\n30s start_period
+note right of mlw : import src.ml\n30s start_period, depends mlflow
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom left
+  |= Couleur |= Usage |
+  | <#F3EEFF> | frontend-net |
+  | <#FEF3E8> | backend-net |
+  | <#ECFDF5> | Stockage persistant |
+  |= Memoire totale |= ~5.8 GB |
+endlegend
+
+@enduml
+
+@startuml DP01-docker-infrastructure
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Infrastructure Docker Compose
+caption 12 services | 2 networks | 4 volumes
+
+actor "Users" as users
+cloud "Internet\nCloudflare DNS" as internet #F5F5F5
+
+package "frontend-net" as fnet #F3EEFF {
+  node "nginx\nnginx:alpine\n:80 :443" as nginx
+  node "frontend\nStreamlit\n:8501 | 512M" as fe
+  node "nginx-exporter\n32M" as ngexp
+}
+
+package "backend-net" as bnet #FEF3E8 {
+  node "api\nFastAPI\n:8000 | 512M" as api
+
+  database "timescaledb\nPG16 | :5433\n1G" as tsdb #ECFDF5
+  database "minio\nS3 | :9000 :9001\n512M" as minio #ECFDF5
+
+  node "mlflow\n:5000 | 512M" as mlflow
+  node "etl-worker\n1G | no port" as etl
+  node "ml-worker\n1G | no port" as mlw
+
+  node "prometheus\nv2.52.0 | :9090\n512M" as prom
+  node "grafana\nv10.4.2 | :3000\n256M" as graf
+  node "postgres-exporter\n64M" as pgexp
+}
+
+database "timescaledb-data" as vol_tsdb #ECFDF5
+database "minio-data" as vol_minio #ECFDF5
+database "prometheus-data" as vol_prom #FEF3E8
+database "grafana-data" as vol_graf #FEF3E8
+
+users - -> internet
+internet - -> nginx : HTTPS
+
+nginx - -> api : /api/*
+nginx - -> fe : /crypto/*
+
+note on link : frontend-net\n+ backend-net
+
+api - -> tsdb : SQL queries
+api - -> minio : S3 objects
+
+etl - -> tsdb : insert batches
+etl - -> minio : export parquet
+
+mlw - -> tsdb : read indicators
+mlw - -> minio : model artifacts
+mlw - -> mlflow : experiment tracking
+
+mlflow - -> tsdb : metadata store
+mlflow - -> minio : artifact store
+
+prom - -> api : scrape /metrics
+pgexp - -> tsdb : pg metrics
+ngexp - -> nginx : stub_status
+graf - -> prom : datasource
+
+tsdb - -> vol_tsdb
+minio - -> vol_minio
+prom - -> vol_prom
+graf - -> vol_graf
+
+note right of tsdb : pg_isready\n10s interval, 5 retries
+note right of api : curl /health\n30s interval, 15s start
+note right of fe : curl /_stcore/health
+note right of etl : import src.etl\n30s start_period
+note right of mlw : import src.ml\n30s start_period, depends mlflow
+
+legend bottom left
+  |= Couleur |= Usage |
+  | <#F3EEFF> | frontend-net |
+  | <#FEF3E8> | backend-net |
+  | <#ECFDF5> | Stockage persistant |
+  |= Memoire totale |= ~5.8 GB |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

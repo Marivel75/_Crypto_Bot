@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1484px" preserveAspectRatio="none" style="width:369px;height:1484px;background:#FFFFFF;" version="1.1" viewBox="0 0 369 1484" width="369px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="327" x="14.25" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="317" x="19.25" y="22.9951">CryptoBot — Machine a Etats d'un Signal</text><ellipse cx="199.5" cy="53.2969" fill="#222222" rx="10" ry="10" style="stroke:none;stroke-width:1.0;"/><ellipse cx="208.5" cy="1328.2969" fill="none" rx="10" ry="10" style="stroke:#222222;stroke-width:1.0;"/><ellipse cx="209" cy="1328.7969" fill="#222222" rx="6" ry="6" style="stroke:none;stroke-width:1.0;"/><path d="M122,138.2969 L276.5,138.2969 A3,3 0 0 1 279.5,141.2969 L279.5,162.2656 L119,162.2656 L119,141.2969 A3,3 0 0 1 122,138.2969 " fill="#FEF3E8" style="stroke:#FEF3E8;stroke-width:1.0;"/><path d="M119,162.2656 L279.5,162.2656 L279.5,534.2656 A3,3 0 0 1 276.5,537.2656 L122,537.2656 A3,3 0 0 1 119,534.2656 L119,162.2656 " fill="#FFFFFF" style="stroke:#FFFFFF;stroke-width:1.0;"/><rect height="398.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;fill:none;" width="160.5" x="119" y="138.2969"/><line style="stroke:#E8943A;stroke-width:0.5;fill:none;" x1="119" x2="279.5" y1="162.2656" y2="162.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="67" x="165.75" y="154.4355">Computing</text><g id="Computing.eval"><rect fill="#FEF3E8" height="50" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="123" x="131" y="174.2656"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="131" x2="254" y1="198.2344" y2="198.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="103" x="141" y="190.4043">Evaluating Rules</text></g><g id="Computing.agg"><rect fill="#FEF3E8" height="50" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="97" x="144" y="275.2656"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="144" x2="241" y1="299.2344" y2="299.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="77" x="154" y="291.4043">Aggregating</text></g><g id="Computing.blend"><rect fill="#FEF3E8" height="50" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="75" x="155" y="376.2656"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="155" x2="230" y1="400.2344" y2="400.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="55" x="165" y="392.4043">ML Blend</text></g><g id="Computing.valid"><rect fill="#FEF3E8" height="50" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="82" x="151.5" y="477.2656"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="151.5" x2="233.5" y1="501.2344" y2="501.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="161.5" y="493.4043">Validation</text></g><!--MD5=[f3400a068d7673cd5630323dee2fe884]
+link eval to agg--><g id="link_eval_agg"><path d="M192.5,224.4856 C192.5,238.1456 192.5,255.3256 192.5,269.7656 " fill="none" id="eval-to-agg" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="192.5,274.9556,196.5,265.9556,192.5,269.9556,188.5,265.9556,192.5,274.9556" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="193.5" y="254.4043">RuleResult[]</text></g><!--MD5=[32c9b2a20ee1d1357c9d7b4853455efa]
+link agg to blend--><g id="link_agg_blend"><path d="M192.5,325.4856 C192.5,339.1456 192.5,356.3256 192.5,370.7656 " fill="none" id="agg-to-blend" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="192.5,375.9556,196.5,366.9556,192.5,370.9556,188.5,366.9556,192.5,375.9556" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="69" x="193.5" y="355.4043">confidence</text></g><!--MD5=[bccd97b5c9f738dc8e0d60ffa3a81687]
+link blend to valid--><g id="link_blend_valid"><path d="M192.5,426.4856 C192.5,440.1456 192.5,457.3256 192.5,471.7656 " fill="none" id="blend-to-valid" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="192.5,476.9556,196.5,467.9556,192.5,471.9556,188.5,467.9556,192.5,476.9556" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="65" x="193.5" y="456.4043">final score</text></g><g id="Active"><rect fill="#ECFDF5" height="89.8438" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="141" x="39" y="626.2969"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="39" x2="180" y1="650.2656" y2="650.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="37" x="91" y="642.4355">Active</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="121" x="44" y="666.4043">symbol, signal_type</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="44" y="680.373">confidence &gt;= 0.6</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="44" y="694.3418">leverage, fees</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="44" y="708.3105">model_version</text></g><path d="M10,838.2969 L147,838.2969 A3,3 0 0 1 150,841.2969 L150,862.2656 L7,862.2656 L7,841.2969 A3,3 0 0 1 10,838.2969 " fill="#F3EEFF" style="stroke:#F3EEFF;stroke-width:1.0;"/><path d="M7,862.2656 L150,862.2656 L150,1103.2656 A3,3 0 0 1 147,1106.2656 L10,1106.2656 A3,3 0 0 1 7,1103.2656 L7,862.2656 " fill="#FFFFFF" style="stroke:#FFFFFF;stroke-width:1.0;"/><rect height="267.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;fill:none;" width="143" x="7" y="838.2969"/><line style="stroke:#E8943A;stroke-width:0.5;fill:none;" x1="7" x2="150" y1="862.2656" y2="862.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="123" x="17" y="854.4355">Evaluation Windows</text><g id="EvalWindows.ev1h"><rect fill="#FEF3E8" height="50" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="70" x="19" y="874.2656"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="19" x2="89" y1="898.2344" y2="898.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="50" x="29" y="890.4043">After 1h</text></g><g id="EvalWindows.ev4h"><rect fill="#FEF3E8" height="50" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="70" x="19" y="960.2656"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="19" x2="89" y1="984.2344" y2="984.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="50" x="29" y="976.4043">After 4h</text></g><g id="EvalWindows.ev1d"><rect fill="#FEF3E8" height="50" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="70" x="19" y="1046.2656"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="19" x2="89" y1="1070.2344" y2="1070.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="50" x="29" y="1062.4043">After 1d</text></g><!--MD5=[c41311a486d03d749d64ab16a54eb419]
+link ev1h to ev4h--><g id="link_ev1h_ev4h"><path d="M54,924.5656 C54,934.0556 54,945.0156 54,954.9456 " fill="none" id="ev1h-to-ev4h" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="54,960.0256,58,951.0256,54,955.0256,50,951.0256,54,960.0256" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[d982258ce9caa7ec30dce35d7c4eed5f]
+link ev4h to ev1d--><g id="link_ev4h_ev1d"><path d="M54,1010.5656 C54,1020.0556 54,1031.0156 54,1040.9456 " fill="none" id="ev4h-to-ev1d" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="54,1046.0256,58,1037.0256,54,1041.0256,50,1037.0256,54,1046.0256" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><g id="Evaluated"><rect fill="#ECFDF5" height="75.875" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="149" x="62" y="1181.2969"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="62" x2="211" y1="1205.2656" y2="1205.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="105.5" y="1197.4355">Evaluated</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="129" x="67" y="1221.4043">price_after_1h/4h/1d</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="67" y="1235.373">pnl_simulated</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="67" y="1249.3418">was_correct (bool)</text></g><g id="Discarded"><rect fill="#F5F5F5" height="61.9063" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="120" x="230.5" y="746.2969"/><line style="stroke:#E8943A;stroke-width:0.5;" x1="230.5" x2="350.5" y1="770.2656" y2="770.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="63" x="259" y="762.4355">Discarded</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="235.5" y="786.4043">Below threshold</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="89" x="235.5" y="800.373">or gate failure</text></g><!--MD5=[cc46f5a79a87917f4aef1b450a3f1246]
+link *start to Computing--><g id="link_*start_Computing"><path d="M199.5,63.3769 C199.5,76.3669 199.5,102.1069 199.5,132.8169 " fill="none" id="*start-to-Computing" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="199.5,138.1969,203.5,129.1969,199.5,133.1969,195.5,129.1969,199.5,138.1969" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="200.5" y="105.4355">APScheduler trigger</text></g><!--MD5=[469f553f851aaeb92093cd589adab522]
+link Computing to Discarded--><g id="link_Computing_Discarded"><path d="M240.81,537.3869 C256.96,615.0369 273.82,696.1169 283.16,741.0169 " fill="none" id="Computing-to-Discarded" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="284.21,746.0369,286.2971,736.4117,283.1937,741.1413,278.4641,738.0378,284.21,746.0369" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="254.5" y="579.4355">confidence &lt; 0.6</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="84" x="266" y="593.4043">or gate failed</text></g><!--MD5=[350c0c00ab77f8ee9e473fd766f6b0b3]
+link Computing to Active--><g id="link_Computing_Active"><path d="M145.59,537.3769 C137.13,568.5269 129.11,598.0669 122.79,621.3569 " fill="none" id="Computing-to-Active" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="121.46,626.2269,127.6679,618.5808,122.7635,621.3998,119.9445,616.4953,121.46,626.2269" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="137.5" y="579.4355">All gates pass</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="141" y="593.4043">Persist to DB</text></g><!--MD5=[a06754aba179728a713ac044bdf9a979]
+link Active to EvalWindows--><g id="link_Active_EvalWindows"><path d="M63.57,716.3969 C56.58,725.5669 50.4,735.6869 46.5,746.2969 C36.45,773.5969 34.85,803.8369 37.65,833.0569 " fill="none" id="Active-to-EvalWindows" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="38.19,838.1169,41.2427,828.7531,37.6755,833.1434,33.2851,829.5762,38.19,838.1169" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="165" x="47.5" y="774.9355">evaluate_signal_outcomes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="88" x="86" y="788.9043">(every 1 hour)</text></g><!--MD5=[4abd048b1c9a7117124570bf85559298]
+link EvalWindows to Evaluated--><g id="link_EvalWindows_Evaluated"><path d="M110.05,1106.5469 C116.05,1131.8969 121.9,1156.6269 126.57,1176.3569 " fill="none" id="EvalWindows-to-Evaluated" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="127.73,1181.2569,129.5354,1171.5749,126.5713,1176.393,121.7532,1173.4289,127.73,1181.2569" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="120.5" y="1148.4355">All windows checked</text></g><!--MD5=[7dc0f9619901ef039d17fed0bc3d9e35]
+link Evaluated to *end--><g id="link_Evaluated_*end"><path d="M161.48,1257.4169 C175.05,1277.5969 190.94,1301.2069 200.34,1315.1669 " fill="none" id="Evaluated-to-*end" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="203.26,1319.5169,201.5499,1309.8176,200.4668,1315.3698,194.9146,1314.2867,203.26,1319.5169" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[7eb20fe3e361ef73ad47a66dafbfd06a]
+link Discarded to *end--><g id="link_Discarded_*end"><path d="M289.46,808.4969 C286.89,872.2669 278.75,1025.1469 256.5,1151.2969 C248.04,1199.2869 241.42,1210.3169 228.5,1257.2969 C223.18,1276.6669 216.76,1298.9569 212.65,1313.0869 " fill="none" id="Discarded-to-*end" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="211.15,1318.2469,217.4893,1310.7094,212.5368,1313.4431,209.8032,1308.4905,211.15,1318.2469" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><rect fill="#F5F5F5" height="97.4844" rx="3" ry="3" style="stroke:#CCCCCC;stroke-width:1.0;" width="208" x="139.5" y="1351.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="30" x="150.5" y="1372.292">Etat</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="96" x="190.5" y="1372.292">Signification</text><rect fill="#FEF3E8" height="16.2969" style="stroke:none;stroke-width:1.0;" width="40" x="145.5" y="1375.5938"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="145.5" y="1388.5889"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="106" x="189.5" y="1388.5889">Calcul en cours</text><rect fill="#ECFDF5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="40" x="145.5" y="1391.8906"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="145.5" y="1404.8857"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="131" x="189.5" y="1404.8857">Signal actif / evalue</text><rect fill="#F3EEFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="40" x="145.5" y="1408.1875"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="145.5" y="1421.1826"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="148" x="189.5" y="1421.1826">Fenetres d'evaluation</text><rect fill="#F5F5F5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="40" x="145.5" y="1424.4844"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="145.5" y="1437.4795"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="45" x="189.5" y="1437.4795">Rejete</text><line style="stroke:#333333;stroke-width:1.0;" x1="145.5" x2="341.5" y1="1359.2969" y2="1359.2969"/><line style="stroke:#333333;stroke-width:1.0;" x1="145.5" x2="341.5" y1="1375.5938" y2="1375.5938"/><line style="stroke:#333333;stroke-width:1.0;" x1="145.5" x2="341.5" y1="1391.8906" y2="1391.8906"/><line style="stroke:#333333;stroke-width:1.0;" x1="145.5" x2="341.5" y1="1408.1875" y2="1408.1875"/><line style="stroke:#333333;stroke-width:1.0;" x1="145.5" x2="341.5" y1="1424.4844" y2="1424.4844"/><line style="stroke:#333333;stroke-width:1.0;" x1="145.5" x2="341.5" y1="1440.7813" y2="1440.7813"/><line style="stroke:#333333;stroke-width:1.0;" x1="145.5" x2="145.5" y1="1359.2969" y2="1440.7813"/><line style="stroke:#333333;stroke-width:1.0;" x1="185.5" x2="185.5" y1="1359.2969" y2="1440.7813"/><line style="stroke:#333333;stroke-width:1.0;" x1="341.5" x2="341.5" y1="1359.2969" y2="1440.7813"/><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="151" x="102.25" y="1458.7813"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="151" x="102.25" y="1471.7764">TradingSignal lifecycle</text><!--MD5=[a72880b61166d85226b5ce6babae2789]
+@startuml ST01-signal-states
+!include _common.puml
+
+title CryptoBot — Machine a Etats d'un Signal
+caption TradingSignal lifecycle
+
+[*] - -> Computing : APScheduler trigger
+
+state "Computing" as Computing #FEF3E8 {
+  state "Evaluating Rules" as eval
+  state "Aggregating" as agg
+  state "ML Blend" as blend
+  state "Validation" as valid
+
+  eval - -> agg : RuleResult[]
+  agg - -> blend : confidence
+  blend - -> valid : final score
+}
+
+Computing - -> Discarded : confidence < 0.6\nor gate failed
+
+state "Active" as Active #ECFDF5 {
+  Active : symbol, signal_type
+  Active : confidence >= 0.6
+  Active : leverage, fees
+  Active : model_version
+}
+
+Computing - -> Active : All gates pass\nPersist to DB
+
+state "Evaluation Windows" as EvalWindows #F3EEFF {
+  state "After 1h" as ev1h
+  state "After 4h" as ev4h
+  state "After 1d" as ev1d
+
+  ev1h - -> ev4h
+  ev4h - -> ev1d
+}
+
+Active - -> EvalWindows : evaluate_signal_outcomes\n(every 1 hour)
+
+state "Evaluated" as Evaluated #ECFDF5 {
+  Evaluated : price_after_1h/4h/1d
+  Evaluated : pnl_simulated
+  Evaluated : was_correct (bool)
+}
+
+EvalWindows - -> Evaluated : All windows checked
+
+state "Discarded" as Discarded #F5F5F5 {
+  Discarded : Below threshold
+  Discarded : or gate failure
+}
+
+Evaluated - -> [*]
+Discarded - -> [*]
+
+legend bottom right
+  |= Etat |= Signification |
+  | <#FEF3E8> | Calcul en cours |
+  | <#ECFDF5> | Signal actif / evalue |
+  | <#F3EEFF> | Fenetres d'evaluation |
+  | <#F5F5F5> | Rejete |
+endlegend
+
+@enduml
+
+@startuml ST01-signal-states
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Machine a Etats d'un Signal
+caption TradingSignal lifecycle
+
+[*] - -> Computing : APScheduler trigger
+
+state "Computing" as Computing #FEF3E8 {
+  state "Evaluating Rules" as eval
+  state "Aggregating" as agg
+  state "ML Blend" as blend
+  state "Validation" as valid
+
+  eval - -> agg : RuleResult[]
+  agg - -> blend : confidence
+  blend - -> valid : final score
+}
+
+Computing - -> Discarded : confidence < 0.6\nor gate failed
+
+state "Active" as Active #ECFDF5 {
+  Active : symbol, signal_type
+  Active : confidence >= 0.6
+  Active : leverage, fees
+  Active : model_version
+}
+
+Computing - -> Active : All gates pass\nPersist to DB
+
+state "Evaluation Windows" as EvalWindows #F3EEFF {
+  state "After 1h" as ev1h
+  state "After 4h" as ev4h
+  state "After 1d" as ev1d
+
+  ev1h - -> ev4h
+  ev4h - -> ev1d
+}
+
+Active - -> EvalWindows : evaluate_signal_outcomes\n(every 1 hour)
+
+state "Evaluated" as Evaluated #ECFDF5 {
+  Evaluated : price_after_1h/4h/1d
+  Evaluated : pnl_simulated
+  Evaluated : was_correct (bool)
+}
+
+EvalWindows - -> Evaluated : All windows checked
+
+state "Discarded" as Discarded #F5F5F5 {
+  Discarded : Below threshold
+  Discarded : or gate failure
+}
+
+Evaluated - -> [*]
+Discarded - -> [*]
+
+legend bottom right
+  |= Etat |= Signification |
+  | <#FEF3E8> | Calcul en cours |
+  | <#ECFDF5> | Signal actif / evalue |
+  | <#F3EEFF> | Fenetres d'evaluation |
+  | <#F5F5F5> | Rejete |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

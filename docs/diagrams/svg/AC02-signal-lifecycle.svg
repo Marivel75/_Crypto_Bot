@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1933px" preserveAspectRatio="none" style="width:2333px;height:1933px;background:#FFFFFF;" version="1.1" viewBox="0 0 2333 1933" width="2333px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="302" x="1014.25" y="15"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="292" x="1019.25" y="32.9951">CryptoBot — Cycle de Vie d'un Signal</text><rect fill="#FEF3E8" height="1854" style="stroke:#FEF3E8;stroke-width:1.0;" width="165" x="15" y="48.627"/><ellipse cx="98.5" cy="77.5957" fill="#222222" rx="10" ry="10" style="stroke:#222222;stroke-width:1.0;"/><rect fill="#FEF3E8" height="61.9063" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="129" x="34" y="107.5957"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="44" y="128.7344">Recuperer OHLCV</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="44" y="142.7031">multi-timeframe</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="98" x="44" y="156.6719">(1h, 2h, 3h, 4h)</text><rect fill="#FEF3E8" height="47.9375" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="155" x="21" y="189.502"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="135" x="31" y="210.6406">Calculer RSI, Bollinger</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="110" x="31" y="224.6094">Harmonics, Trend</text><line style="stroke:#000000;stroke-width:1.5;" x1="15" x2="15" y1="48.627" y2="1902.627"/><rect fill="#F3EEFF" height="1854" style="stroke:#F3EEFF;stroke-width:1.0;" width="612.5" x="180" y="48.627"/><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="158" x="405.5" y="257.4395"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="415.5" y="278.5781">RuleEngine.evaluate()</text><rect fill="#555555" height="6" rx="2.5" ry="2.5" style="stroke:#555555;stroke-width:1.0;" width="602.5" x="186" y="311.4082"/><rect fill="#FEF3E8" height="47.9375" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="102" x="198" y="337.4082"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="208" y="358.5469">RSI evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="208" y="372.5156">(poids 0.25)</text><rect fill="#FEF3E8" height="47.9375" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="137" x="322.5" y="337.4082"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="332.5" y="358.5469">Bollinger evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="332.5" y="372.5156">(poids 0.25)</text><rect fill="#FEF3E8" height="47.9375" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="142" x="487.5" y="337.4082"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="122" x="497.5" y="358.5469">Harmonic evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="497.5" y="372.5156">(poids 0.30)</text><rect fill="#FEF3E8" height="47.9375" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="119" x="657.5" y="337.4082"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="99" x="667.5" y="358.5469">Trend evaluator</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="667.5" y="372.5156">(poids 0.20)</text><rect fill="#555555" height="6" rx="2.5" ry="2.5" style="stroke:#555555;stroke-width:1.0;" width="602.5" x="186" y="405.3457"/><rect fill="#FEF3E8" height="61.9063" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="166" x="401.5" y="431.3457"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="411.5" y="452.4844">Convergence checks</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="123" x="411.5" y="466.4531">(RSI+BB, Trend+RSI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="146" x="411.5" y="480.4219">multi-TF, supermajority)</text><rect fill="#FEF3E8" height="61.9063" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="170" x="399.5" y="513.252"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="150" x="409.5" y="534.3906">RuleEngine.aggregate()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="112" x="409.5" y="548.3594">weighted average</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="409.5" y="562.3281">opposition penalty</text><polygon fill="#F3EEFF" points="408,595.1582,561,595.1582,573,607.1582,561,619.1582,408,619.1582,396,607.1582,408,595.1582" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="153" x="408" y="611.3125">rule_confidence &gt;= 0.6?</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="21" x="375" y="604.3281">yes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="16" x="573" y="604.3281">no</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="152" x="310" y="629.1582"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="132" x="320" y="650.2969">Produce RuleResult[]</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="187" x="489.5" y="629.1582"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="167" x="499.5" y="650.2969">Discard — below threshold</text><ellipse cx="583" cy="694.127" rx="11" ry="11" style="stroke:#222222;stroke-width:1.0;fill:none;"/><ellipse cx="583" cy="694.127" fill="#222222" rx="6" ry="6" style="stroke:#111111;stroke-width:1.0;"/><line style="stroke:#000000;stroke-width:1.5;" x1="180" x2="180" y1="48.627" y2="1902.627"/><rect fill="#ECFDF5" height="1854" style="stroke:#ECFDF5;stroke-width:1.0;" width="718" x="792.5" y="48.627"/><polygon fill="#F3EEFF" points="1157.5,725.127,1279.5,725.127,1291.5,737.127,1279.5,749.127,1157.5,749.127,1145.5,737.127,1157.5,725.127" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="122" x="1157.5" y="741.2813">Predictor available?</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="21" x="1124.5" y="734.2969">yes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="60" x="1291.5" y="734.2969">rules only</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="147" x="960" y="759.127"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="970" y="780.2656">ML predict(features)</text><polygon fill="#F3EEFF" points="983.5,813.0957,1083.5,813.0957,1095.5,825.0957,1083.5,837.0957,983.5,837.0957,971.5,825.0957,983.5,813.0957" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="100" x="983.5" y="829.25">Same direction?</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="21" x="950.5" y="822.2656">yes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="45" x="1095.5" y="822.2656">conflict</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="224" x="798.5" y="847.0957"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="204" x="808.5" y="868.2344">confidence = 0.6*ML + 0.4*rules</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="228" x="1042.5" y="847.0957"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="208" x="1052.5" y="868.2344">confidence = 0.4 * min(ML, rules)</text><polygon fill="#F3EEFF" points="1033.5,887.0645,1045.5,899.0645,1033.5,911.0645,1021.5,899.0645,1033.5,887.0645" style="stroke:#7C5CFC;stroke-width:0.5;"/><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="206" x="1300.5" y="759.127"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="186" x="1310.5" y="780.2656">confidence = rule_confidence</text><polygon fill="#F3EEFF" points="1218.5,917.0645,1230.5,929.0645,1218.5,941.0645,1206.5,929.0645,1218.5,917.0645" style="stroke:#7C5CFC;stroke-width:0.5;"/><rect fill="#FEF3E8" height="47.9375" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="170" x="1133.5" y="961.0645"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="1143.5" y="982.2031">Sentiment adjustment</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="150" x="1143.5" y="996.1719">+/- 5 percentage points</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="128" x="1154.5" y="1029.002"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="108" x="1164.5" y="1050.1406">Clamp [0.0, 0.95]</text><polygon fill="#F3EEFF" points="1142,1082.9707,1295,1082.9707,1307,1094.9707,1295,1106.9707,1142,1106.9707,1130,1094.9707,1142,1082.9707" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="153" x="1142" y="1099.125">final confidence &gt;= 0.6?</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="21" x="1109" y="1092.1406">yes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="16" x="1307" y="1092.1406">no</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="139" x="1050.5" y="1116.9707"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="1060.5" y="1138.1094">Build TradingSignal</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="67" x="1283.5" y="1116.9707"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="47" x="1293.5" y="1138.1094">Discard</text><ellipse cx="1317" cy="1181.9395" rx="11" ry="11" style="stroke:#222222;stroke-width:1.0;fill:none;"/><ellipse cx="1317" cy="1181.9395" fill="#222222" rx="6" ry="6" style="stroke:#111111;stroke-width:1.0;"/><line style="stroke:#000000;stroke-width:1.5;" x1="792.5" x2="792.5" y1="48.627" y2="1902.627"/><rect fill="#FEF3E8" height="1854" style="stroke:#FEF3E8;stroke-width:1.0;" width="276" x="1510.5" y="48.627"/><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="172" x="1591.5" y="1212.9395"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="152" x="1601.5" y="1234.0781">Suggest leverage (1-20)</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="106" x="1624.5" y="1266.9082"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="1634.5" y="1288.0469">Estimate fees</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="161" x="1597" y="1320.877"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="141" x="1607" y="1342.0156">Verify 2x margin safety</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="188" x="1583.5" y="1374.8457"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="168" x="1593.5" y="1395.9844">Check fee/confidence ratio</text><polygon fill="#F3EEFF" points="1630.5,1428.8145,1724.5,1428.8145,1736.5,1440.8145,1724.5,1452.8145,1630.5,1452.8145,1618.5,1440.8145,1630.5,1428.8145" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="1630.5" y="1444.9688">All gates pass?</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="21" x="1597.5" y="1437.9844">yes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="16" x="1736.5" y="1437.9844">no</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="179" x="1516.5" y="1462.8145"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="159" x="1526.5" y="1483.9531">Persist to trading_signals</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="67" x="1715.5" y="1462.8145"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="47" x="1725.5" y="1483.9531">Discard</text><ellipse cx="1749" cy="1527.7832" rx="11" ry="11" style="stroke:#222222;stroke-width:1.0;fill:none;"/><ellipse cx="1749" cy="1527.7832" fill="#222222" rx="6" ry="6" style="stroke:#111111;stroke-width:1.0;"/><line style="stroke:#000000;stroke-width:1.5;" x1="1510.5" x2="1510.5" y1="48.627" y2="1902.627"/><rect fill="#F5F5F5" height="1854" style="stroke:#F5F5F5;stroke-width:1.0;" width="528" x="1786.5" y="48.627"/><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="172" x="1965.5" y="1558.7832"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="152" x="1975.5" y="1579.9219">Wait evaluation windows</text><rect fill="#555555" height="6" rx="2.5" ry="2.5" style="stroke:#555555;stroke-width:1.0;" width="518" x="1792.5" y="1612.752"/><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="151" x="1804.5" y="1638.752"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="131" x="1814.5" y="1659.8906">Check price_after_1h</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="151" x="1976" y="1638.752"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="131" x="1986" y="1659.8906">Check price_after_4h</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="151" x="2147.5" y="1638.752"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="131" x="2157.5" y="1659.8906">Check price_after_1d</text><rect fill="#555555" height="6" rx="2.5" ry="2.5" style="stroke:#555555;stroke-width:1.0;" width="518" x="1792.5" y="1692.7207"/><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="166" x="1968.5" y="1718.7207"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="146" x="1978.5" y="1739.8594">Compute pnl_simulated</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="161" x="1971" y="1772.6895"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="141" x="1981" y="1793.8281">Set was_correct (bool)</text><rect fill="#FEF3E8" height="33.9688" rx="3" ry="3" style="stroke:#E8943A;stroke-width:0.5;" width="161" x="1971" y="1826.6582"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="141" x="1981" y="1847.7969">Persist SignalOutcome</text><ellipse cx="2051.5" cy="1891.627" rx="11" ry="11" style="stroke:#222222;stroke-width:1.0;fill:none;"/><ellipse cx="2051.5" cy="1891.627" fill="#222222" rx="6" ry="6" style="stroke:#111111;stroke-width:1.0;"/><line style="stroke:#000000;stroke-width:1.5;" x1="1786.5" x2="1786.5" y1="48.627" y2="1902.627"/><line style="stroke:#000000;stroke-width:1.5;" x1="2314.5" x2="2314.5" y1="48.627" y2="1902.627"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="98.5" x2="98.5" y1="87.5957" y2="107.5957"/><polygon fill="#4A6FA5" points="94.5,97.5957,98.5,107.5957,102.5,97.5957,98.5,101.5957" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="98.5" x2="98.5" y1="169.502" y2="189.502"/><polygon fill="#4A6FA5" points="94.5,179.502,98.5,189.502,102.5,179.502,98.5,183.502" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="249" x2="249" y1="317.4082" y2="337.4082"/><polygon fill="#4A6FA5" points="245,327.4082,249,337.4082,253,327.4082,249,331.4082" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="391" x2="391" y1="317.4082" y2="337.4082"/><polygon fill="#4A6FA5" points="387,327.4082,391,337.4082,395,327.4082,391,331.4082" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="558.5" x2="558.5" y1="317.4082" y2="337.4082"/><polygon fill="#4A6FA5" points="554.5,327.4082,558.5,337.4082,562.5,327.4082,558.5,331.4082" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="717" x2="717" y1="317.4082" y2="337.4082"/><polygon fill="#4A6FA5" points="713,327.4082,717,337.4082,721,327.4082,717,331.4082" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="249" x2="249" y1="385.3457" y2="405.3457"/><polygon fill="#4A6FA5" points="245,395.3457,249,405.3457,253,395.3457,249,399.3457" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="391" x2="391" y1="385.3457" y2="405.3457"/><polygon fill="#4A6FA5" points="387,395.3457,391,405.3457,395,395.3457,391,399.3457" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="558.5" x2="558.5" y1="385.3457" y2="405.3457"/><polygon fill="#4A6FA5" points="554.5,395.3457,558.5,405.3457,562.5,395.3457,558.5,399.3457" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="717" x2="717" y1="385.3457" y2="405.3457"/><polygon fill="#4A6FA5" points="713,395.3457,717,405.3457,721,395.3457,717,399.3457" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="484.5" x2="484.5" y1="291.4082" y2="311.4082"/><polygon fill="#4A6FA5" points="480.5,301.4082,484.5,311.4082,488.5,301.4082,484.5,305.4082" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="484.5" x2="484.5" y1="411.3457" y2="431.3457"/><polygon fill="#4A6FA5" points="480.5,421.3457,484.5,431.3457,488.5,421.3457,484.5,425.3457" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="484.5" x2="484.5" y1="493.252" y2="513.252"/><polygon fill="#4A6FA5" points="480.5,503.252,484.5,513.252,488.5,503.252,484.5,507.252" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="583" x2="583" y1="663.127" y2="683.127"/><polygon fill="#4A6FA5" points="579,673.127,583,683.127,587,673.127,583,677.127" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="396" x2="386" y1="607.1582" y2="607.1582"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="386" x2="386" y1="607.1582" y2="629.1582"/><polygon fill="#4A6FA5" points="382,619.1582,386,629.1582,390,619.1582,386,623.1582" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="573" x2="583" y1="607.1582" y2="607.1582"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="583" x2="583" y1="607.1582" y2="629.1582"/><polygon fill="#4A6FA5" points="579,619.1582,583,629.1582,587,619.1582,583,623.1582" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="386" x2="386" y1="663.127" y2="710.127"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="386" x2="1218.5" y1="710.127" y2="710.127"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1218.5" x2="1218.5" y1="710.127" y2="725.127"/><polygon fill="#4A6FA5" points="1214.5,715.127,1218.5,725.127,1222.5,715.127,1218.5,719.127" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="484.5" x2="484.5" y1="575.1582" y2="595.1582"/><polygon fill="#4A6FA5" points="480.5,585.1582,484.5,595.1582,488.5,585.1582,484.5,589.1582" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="971.5" x2="910.5" y1="825.0957" y2="825.0957"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="910.5" x2="910.5" y1="825.0957" y2="847.0957"/><polygon fill="#4A6FA5" points="906.5,837.0957,910.5,847.0957,914.5,837.0957,910.5,841.0957" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1095.5" x2="1156.5" y1="825.0957" y2="825.0957"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1156.5" x2="1156.5" y1="825.0957" y2="847.0957"/><polygon fill="#4A6FA5" points="1152.5,837.0957,1156.5,847.0957,1160.5,837.0957,1156.5,841.0957" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="910.5" x2="910.5" y1="881.0645" y2="899.0645"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="910.5" x2="1021.5" y1="899.0645" y2="899.0645"/><polygon fill="#4A6FA5" points="1011.5,895.0645,1021.5,899.0645,1011.5,903.0645,1015.5,899.0645" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1156.5" x2="1156.5" y1="881.0645" y2="899.0645"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1156.5" x2="1045.5" y1="899.0645" y2="899.0645"/><polygon fill="#4A6FA5" points="1055.5,895.0645,1045.5,899.0645,1055.5,903.0645,1051.5,899.0645" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1033.5" x2="1033.5" y1="793.0957" y2="813.0957"/><polygon fill="#4A6FA5" points="1029.5,803.0957,1033.5,813.0957,1037.5,803.0957,1033.5,807.0957" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1145.5" x2="1033.5" y1="737.127" y2="737.127"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1033.5" x2="1033.5" y1="737.127" y2="759.127"/><polygon fill="#4A6FA5" points="1029.5,749.127,1033.5,759.127,1037.5,749.127,1033.5,753.127" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1291.5" x2="1403.5" y1="737.127" y2="737.127"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1403.5" x2="1403.5" y1="737.127" y2="759.127"/><polygon fill="#4A6FA5" points="1399.5,749.127,1403.5,759.127,1407.5,749.127,1403.5,753.127" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1033.5" x2="1033.5" y1="911.0645" y2="929.0645"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1033.5" x2="1206.5" y1="929.0645" y2="929.0645"/><polygon fill="#4A6FA5" points="1196.5,925.0645,1206.5,929.0645,1196.5,933.0645,1200.5,929.0645" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1403.5" x2="1403.5" y1="793.0957" y2="929.0645"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1403.5" x2="1230.5" y1="929.0645" y2="929.0645"/><polygon fill="#4A6FA5" points="1240.5,925.0645,1230.5,929.0645,1240.5,933.0645,1236.5,929.0645" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1218.5" x2="1218.5" y1="941.0645" y2="961.0645"/><polygon fill="#4A6FA5" points="1214.5,951.0645,1218.5,961.0645,1222.5,951.0645,1218.5,955.0645" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1218.5" x2="1218.5" y1="1009.002" y2="1029.002"/><polygon fill="#4A6FA5" points="1214.5,1019.002,1218.5,1029.002,1222.5,1019.002,1218.5,1023.002" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1317" x2="1317" y1="1150.9395" y2="1170.9395"/><polygon fill="#4A6FA5" points="1313,1160.9395,1317,1170.9395,1321,1160.9395,1317,1164.9395" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1130" x2="1120" y1="1094.9707" y2="1094.9707"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1120" x2="1120" y1="1094.9707" y2="1116.9707"/><polygon fill="#4A6FA5" points="1116,1106.9707,1120,1116.9707,1124,1106.9707,1120,1110.9707" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1307" x2="1317" y1="1094.9707" y2="1094.9707"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1317" x2="1317" y1="1094.9707" y2="1116.9707"/><polygon fill="#4A6FA5" points="1313,1106.9707,1317,1116.9707,1321,1106.9707,1317,1110.9707" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1120" x2="1120" y1="1150.9395" y2="1197.9395"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1120" x2="1677.5" y1="1197.9395" y2="1197.9395"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1677.5" x2="1677.5" y1="1197.9395" y2="1212.9395"/><polygon fill="#4A6FA5" points="1673.5,1202.9395,1677.5,1212.9395,1681.5,1202.9395,1677.5,1206.9395" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1218.5" x2="1218.5" y1="1062.9707" y2="1082.9707"/><polygon fill="#4A6FA5" points="1214.5,1072.9707,1218.5,1082.9707,1222.5,1072.9707,1218.5,1076.9707" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1677.5" x2="1677.5" y1="1246.9082" y2="1266.9082"/><polygon fill="#4A6FA5" points="1673.5,1256.9082,1677.5,1266.9082,1681.5,1256.9082,1677.5,1260.9082" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1677.5" x2="1677.5" y1="1300.877" y2="1320.877"/><polygon fill="#4A6FA5" points="1673.5,1310.877,1677.5,1320.877,1681.5,1310.877,1677.5,1314.877" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1677.5" x2="1677.5" y1="1354.8457" y2="1374.8457"/><polygon fill="#4A6FA5" points="1673.5,1364.8457,1677.5,1374.8457,1681.5,1364.8457,1677.5,1368.8457" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1749" x2="1749" y1="1496.7832" y2="1516.7832"/><polygon fill="#4A6FA5" points="1745,1506.7832,1749,1516.7832,1753,1506.7832,1749,1510.7832" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1618.5" x2="1606" y1="1440.8145" y2="1440.8145"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1606" x2="1606" y1="1440.8145" y2="1462.8145"/><polygon fill="#4A6FA5" points="1602,1452.8145,1606,1462.8145,1610,1452.8145,1606,1456.8145" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1736.5" x2="1749" y1="1440.8145" y2="1440.8145"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1749" x2="1749" y1="1440.8145" y2="1462.8145"/><polygon fill="#4A6FA5" points="1745,1452.8145,1749,1462.8145,1753,1452.8145,1749,1456.8145" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1606" x2="1606" y1="1496.7832" y2="1543.7832"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1606" x2="2051.5" y1="1543.7832" y2="1543.7832"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1543.7832" y2="1558.7832"/><polygon fill="#4A6FA5" points="2047.5,1548.7832,2051.5,1558.7832,2055.5,1548.7832,2051.5,1552.7832" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1677.5" x2="1677.5" y1="1408.8145" y2="1428.8145"/><polygon fill="#4A6FA5" points="1673.5,1418.8145,1677.5,1428.8145,1681.5,1418.8145,1677.5,1422.8145" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1880" x2="1880" y1="1618.752" y2="1638.752"/><polygon fill="#4A6FA5" points="1876,1628.752,1880,1638.752,1884,1628.752,1880,1632.752" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1618.752" y2="1638.752"/><polygon fill="#4A6FA5" points="2047.5,1628.752,2051.5,1638.752,2055.5,1628.752,2051.5,1632.752" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2223" x2="2223" y1="1618.752" y2="1638.752"/><polygon fill="#4A6FA5" points="2219,1628.752,2223,1638.752,2227,1628.752,2223,1632.752" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="1880" x2="1880" y1="1672.7207" y2="1692.7207"/><polygon fill="#4A6FA5" points="1876,1682.7207,1880,1692.7207,1884,1682.7207,1880,1686.7207" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1672.7207" y2="1692.7207"/><polygon fill="#4A6FA5" points="2047.5,1682.7207,2051.5,1692.7207,2055.5,1682.7207,2051.5,1686.7207" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2223" x2="2223" y1="1672.7207" y2="1692.7207"/><polygon fill="#4A6FA5" points="2219,1682.7207,2223,1692.7207,2227,1682.7207,2223,1686.7207" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1592.752" y2="1612.752"/><polygon fill="#4A6FA5" points="2047.5,1602.752,2051.5,1612.752,2055.5,1602.752,2051.5,1606.752" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1698.7207" y2="1718.7207"/><polygon fill="#4A6FA5" points="2047.5,1708.7207,2051.5,1718.7207,2055.5,1708.7207,2051.5,1712.7207" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1752.6895" y2="1772.6895"/><polygon fill="#4A6FA5" points="2047.5,1762.6895,2051.5,1772.6895,2055.5,1762.6895,2051.5,1766.6895" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1806.6582" y2="1826.6582"/><polygon fill="#4A6FA5" points="2047.5,1816.6582,2051.5,1826.6582,2055.5,1816.6582,2051.5,1820.6582" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="2051.5" x2="2051.5" y1="1860.627" y2="1880.627"/><polygon fill="#4A6FA5" points="2047.5,1870.627,2051.5,1880.627,2055.5,1870.627,2051.5,1874.627" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="98.5" x2="98.5" y1="237.4395" y2="242.4395"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="98.5" x2="484.5" y1="242.4395" y2="242.4395"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="484.5" x2="484.5" y1="242.4395" y2="257.4395"/><polygon fill="#4A6FA5" points="480.5,247.4395,484.5,257.4395,488.5,247.4395,484.5,251.4395" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="62.5" y="59.7656">Indicateurs</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="449.25" y="59.7656">Rule Engine</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="55" x="1124" y="59.7656">ML Blend</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="62" x="1617.5" y="59.7656">Validation</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="1988" y="59.7656">Post-Hoc Evaluation</text><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="256" x="1037.25" y="1903.627"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="256" x="1037.25" y="1916.6221">De l'indicateur a l'evaluation post-hoc</text><!--MD5=[905d94add830e4b819987b3b3ffd234e]
+@startuml AC02-signal-lifecycle
+!include _common.puml
+
+title CryptoBot — Cycle de Vie d'un Signal
+caption De l'indicateur a l'evaluation post-hoc
+
+|#FEF3E8| Indicateurs |
+start
+:Recuperer OHLCV\nmulti-timeframe\n(1h, 2h, 3h, 4h);
+:Calculer RSI, Bollinger\nHarmonics, Trend;
+
+|#F3EEFF| Rule Engine |
+:RuleEngine.evaluate();
+fork
+  :RSI evaluator\n(poids 0.25);
+fork again
+  :Bollinger evaluator\n(poids 0.25);
+fork again
+  :Harmonic evaluator\n(poids 0.30);
+fork again
+  :Trend evaluator\n(poids 0.20);
+end fork
+
+:Convergence checks\n(RSI+BB, Trend+RSI\nmulti-TF, supermajority);
+
+:RuleEngine.aggregate()\nweighted average\nopposition penalty;
+
+if (rule_confidence >= 0.6?) then (yes)
+  :Produce RuleResult[];
+else (no)
+  :Discard — below threshold;
+  stop
+endif
+
+|#ECFDF5| ML Blend |
+if (Predictor available?) then (yes)
+  :ML predict(features);
+  if (Same direction?) then (yes)
+    :confidence = 0.6*ML + 0.4*rules;
+  else (conflict)
+    :confidence = 0.4 * min(ML, rules);
+  endif
+else (rules only)
+  :confidence = rule_confidence;
+endif
+
+:Sentiment adjustment\n+/- 5 percentage points;
+:Clamp [0.0, 0.95];
+
+if (final confidence >= 0.6?) then (yes)
+  :Build TradingSignal;
+else (no)
+  :Discard;
+  stop
+endif
+
+|#FEF3E8| Validation |
+:Suggest leverage (1-20);
+:Estimate fees;
+:Verify 2x margin safety;
+:Check fee/confidence ratio;
+
+if (All gates pass?) then (yes)
+  :Persist to trading_signals;
+else (no)
+  :Discard;
+  stop
+endif
+
+|#F5F5F5| Post-Hoc Evaluation |
+:Wait evaluation windows;
+fork
+  :Check price_after_1h;
+fork again
+  :Check price_after_4h;
+fork again
+  :Check price_after_1d;
+end fork
+
+:Compute pnl_simulated;
+:Set was_correct (bool);
+:Persist SignalOutcome;
+
+stop
+
+@enduml
+
+@startuml AC02-signal-lifecycle
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Cycle de Vie d'un Signal
+caption De l'indicateur a l'evaluation post-hoc
+
+|#FEF3E8| Indicateurs |
+start
+:Recuperer OHLCV\nmulti-timeframe\n(1h, 2h, 3h, 4h);
+:Calculer RSI, Bollinger\nHarmonics, Trend;
+
+|#F3EEFF| Rule Engine |
+:RuleEngine.evaluate();
+fork
+  :RSI evaluator\n(poids 0.25);
+fork again
+  :Bollinger evaluator\n(poids 0.25);
+fork again
+  :Harmonic evaluator\n(poids 0.30);
+fork again
+  :Trend evaluator\n(poids 0.20);
+end fork
+
+:Convergence checks\n(RSI+BB, Trend+RSI\nmulti-TF, supermajority);
+
+:RuleEngine.aggregate()\nweighted average\nopposition penalty;
+
+if (rule_confidence >= 0.6?) then (yes)
+  :Produce RuleResult[];
+else (no)
+  :Discard — below threshold;
+  stop
+endif
+
+|#ECFDF5| ML Blend |
+if (Predictor available?) then (yes)
+  :ML predict(features);
+  if (Same direction?) then (yes)
+    :confidence = 0.6*ML + 0.4*rules;
+  else (conflict)
+    :confidence = 0.4 * min(ML, rules);
+  endif
+else (rules only)
+  :confidence = rule_confidence;
+endif
+
+:Sentiment adjustment\n+/- 5 percentage points;
+:Clamp [0.0, 0.95];
+
+if (final confidence >= 0.6?) then (yes)
+  :Build TradingSignal;
+else (no)
+  :Discard;
+  stop
+endif
+
+|#FEF3E8| Validation |
+:Suggest leverage (1-20);
+:Estimate fees;
+:Verify 2x margin safety;
+:Check fee/confidence ratio;
+
+if (All gates pass?) then (yes)
+  :Persist to trading_signals;
+else (no)
+  :Discard;
+  stop
+endif
+
+|#F5F5F5| Post-Hoc Evaluation |
+:Wait evaluation windows;
+fork
+  :Check price_after_1h;
+fork again
+  :Check price_after_4h;
+fork again
+  :Check price_after_1d;
+end fork
+
+:Compute pnl_simulated;
+:Set was_correct (bool);
+:Persist SignalOutcome;
+
+stop
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

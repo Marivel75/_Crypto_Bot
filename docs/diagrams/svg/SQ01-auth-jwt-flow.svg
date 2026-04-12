@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1275px" preserveAspectRatio="none" style="width:876px;height:1275px;background:#FFFFFF;" version="1.1" viewBox="0 0 876 1275" width="876px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="272" x="298" y="10"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="262" x="303" y="27.9951">CryptoBot — Authentification JWT</text><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="277" x="295.5" y="1250.1094"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="277" x="295.5" y="1263.1045">POST /api/v1/auth/register + login + me</text><rect fill="#F5F5F5" height="198.75" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.5;" width="801.5" x="10" y="634.7656"/><path d="M10,761.6094 L811.5,761.6094 L811.5,830.5156 A3,3 0 0 1 808.5,833.5156 L13,833.5156 A3,3 0 0 1 10,830.5156 L10,761.6094 " fill="#F5F5F5" style="stroke:none;stroke-width:1.0;"/><rect fill="#F5F5F5" height="143.8125" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.5;" width="849" x="10" y="1014.3281"/><path d="M10,1114.2031 L859,1114.2031 L859,1155.1406 A3,3 0 0 1 856,1158.1406 L13,1158.1406 A3,3 0 0 1 10,1155.1406 L10,1114.2031 " fill="#F5F5F5" style="stroke:none;stroke-width:1.0;"/><line style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="40" x2="40" y1="116.2656" y2="1175.1406"/><line style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="256.5" x2="256.5" y1="116.2656" y2="1175.1406"/><line style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="333.5" x2="333.5" y1="116.2656" y2="1175.1406"/><line style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="583" x2="583" y1="116.2656" y2="1175.1406"/><line style="stroke:#CCCCCC;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="806" x2="806" y1="116.2656" y2="1175.1406"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="35" x="20" y="113.4355">Client</text><ellipse cx="40.5" cy="50.7969" fill="#E2E2F0" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M40.5,58.7969 L40.5,85.7969 M27.5,66.7969 L53.5,66.7969 M40.5,85.7969 L27.5,100.7969 M40.5,85.7969 L53.5,100.7969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="35" x="20" y="1185.2793">Client</text><ellipse cx="40.5" cy="1196.6094" fill="#E2E2F0" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M40.5,1204.6094 L40.5,1231.6094 M27.5,1212.6094 L53.5,1212.6094 M40.5,1231.6094 L27.5,1246.6094 M40.5,1231.6094 L53.5,1246.6094 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><rect fill="#F5F5F5" height="27.9688" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:0.5;" width="48" x="232.5" y="87.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="34" x="239.5" y="105.4355">Nginx</text><rect fill="#F5F5F5" height="27.9688" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:0.5;" width="48" x="232.5" y="1174.1406"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="34" x="239.5" y="1192.2793">Nginx</text><rect fill="#FEF3E8" height="41.9375" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:0.5;" width="86" x="290.5" y="73.3281"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="310.5" y="91.4668">FastAPI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="72" x="297.5" y="105.4355">auth router</text><rect fill="#FEF3E8" height="41.9375" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:0.5;" width="86" x="290.5" y="1174.1406"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="310.5" y="1192.2793">FastAPI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="72" x="297.5" y="1206.248">auth router</text><rect fill="#F3EEFF" height="27.9688" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:0.5;" width="93" x="537" y="87.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="544" y="105.4355">auth_service</text><rect fill="#F3EEFF" height="27.9688" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:0.5;" width="93" x="537" y="1174.1406"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="544" y="1192.2793">auth_service</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="764" y="99.4668">TimescaleDB</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="35" x="786" y="113.4355">users</text><path d="M788.5,52.3281 C788.5,42.3281 806.5,42.3281 806.5,42.3281 C806.5,42.3281 824.5,42.3281 824.5,52.3281 L824.5,78.3281 C824.5,88.3281 806.5,88.3281 806.5,88.3281 C806.5,88.3281 788.5,88.3281 788.5,78.3281 L788.5,52.3281 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:1.5;"/><path d="M788.5,52.3281 C788.5,62.3281 806.5,62.3281 806.5,62.3281 C806.5,62.3281 824.5,62.3281 824.5,52.3281 " fill="none" style="stroke:#34A853;stroke-width:1.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="764" y="1185.2793">TimescaleDB</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="35" x="786" y="1199.248">users</text><path d="M788.5,1212.0781 C788.5,1202.0781 806.5,1202.0781 806.5,1202.0781 C806.5,1202.0781 824.5,1202.0781 824.5,1212.0781 L824.5,1238.0781 C824.5,1248.0781 806.5,1248.0781 806.5,1248.0781 C806.5,1248.0781 788.5,1248.0781 788.5,1238.0781 L788.5,1212.0781 " fill="#ECFDF5" style="stroke:#34A853;stroke-width:1.5;"/><path d="M788.5,1212.0781 C788.5,1222.0781 806.5,1222.0781 806.5,1222.0781 C806.5,1222.0781 824.5,1222.0781 824.5,1212.0781 " fill="none" style="stroke:#34A853;stroke-width:1.5;"/><rect fill="#4A6FA5" height="3" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.0;" width="869" x="0" y="146.25"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="869" y1="146.25" y2="146.25"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="869" y1="149.25" y2="149.25"/><rect fill="#4A6FA5" height="21.9688" rx="3" ry="3" style="stroke:#000000;stroke-width:2.0;" width="78" x="395.5" y="136.2656"/><text fill="#FFFFFF" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="60" x="401.5" y="151.4043">Register</text><polygon fill="#4A6FA5" points="244.5,184.2031,254.5,188.2031,244.5,192.2031,248.5,188.2031" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="40.5" x2="250.5" y1="188.2031" y2="188.2031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="163" x="47.5" y="183.373">POST /api/v1/auth/register</text><polygon fill="#4A6FA5" points="321.5,212.1719,331.5,216.1719,321.5,220.1719,325.5,216.1719" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="256.5" x2="327.5" y1="216.1719" y2="216.1719"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="263.5" y="211.3418">proxy</text><polygon fill="#4A6FA5" points="571.5,240.1406,581.5,244.1406,571.5,248.1406,575.5,244.1406" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="333.5" x2="577.5" y1="244.1406" y2="244.1406"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="164" x="340.5" y="239.3105">register_user(UserCreate)</text><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="583.5" x2="625.5" y1="272.1094" y2="272.1094"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="625.5" x2="625.5" y1="272.1094" y2="285.1094"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="584.5" x2="625.5" y1="285.1094" y2="285.1094"/><polygon fill="#4A6FA5" points="594.5,281.1094,584.5,285.1094,594.5,289.1094,590.5,285.1094" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="146" x="590.5" y="267.2793">hash_password(bcrypt)</text><polygon fill="#4A6FA5" points="794.5,309.0781,804.5,313.0781,794.5,317.0781,798.5,313.0781" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="583.5" x2="800.5" y1="313.0781" y2="313.0781"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="82" x="590.5" y="308.248">INSERT users</text><polygon fill="#4A6FA5" points="594.5,337.0469,584.5,341.0469,594.5,345.0469,590.5,341.0469" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="588.5" x2="805.5" y1="341.0469" y2="341.0469"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="54" x="600.5" y="336.2168">UserOrm</text><polygon fill="#4A6FA5" points="344.5,365.0156,334.5,369.0156,344.5,373.0156,340.5,369.0156" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="338.5" x2="582.5" y1="369.0156" y2="369.0156"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="54" x="350.5" y="364.1855">UserOrm</text><polygon fill="#4A6FA5" points="51.5,392.9844,41.5,396.9844,51.5,400.9844,47.5,396.9844" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="45.5" x2="332.5" y1="396.9844" y2="396.9844"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="57.5" y="392.1543">201 UserResponse</text><rect fill="#4A6FA5" height="3" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.0;" width="869" x="0" y="424.9688"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="869" y1="424.9688" y2="424.9688"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="869" y1="427.9688" y2="427.9688"/><rect fill="#4A6FA5" height="21.9688" rx="3" ry="3" style="stroke:#000000;stroke-width:2.0;" width="57" x="406" y="414.9844"/><text fill="#FFFFFF" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="39" x="412" y="430.123">Login</text><polygon fill="#4A6FA5" points="244.5,462.9219,254.5,466.9219,244.5,470.9219,248.5,466.9219" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="40.5" x2="250.5" y1="466.9219" y2="466.9219"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="144" x="47.5" y="462.0918">POST /api/v1/auth/login</text><polygon fill="#4A6FA5" points="321.5,490.8906,331.5,494.8906,321.5,498.8906,325.5,494.8906" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="256.5" x2="327.5" y1="494.8906" y2="494.8906"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="263.5" y="490.0605">proxy</text><polygon fill="#4A6FA5" points="571.5,518.8594,581.5,522.8594,571.5,526.8594,575.5,522.8594" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="333.5" x2="577.5" y1="522.8594" y2="522.8594"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="226" x="340.5" y="518.0293">authenticate_user(email, password)</text><polygon fill="#4A6FA5" points="794.5,546.8281,804.5,550.8281,794.5,554.8281,798.5,550.8281" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="583.5" x2="800.5" y1="550.8281" y2="550.8281"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="133" x="590.5" y="545.998">SELECT user BY email</text><polygon fill="#4A6FA5" points="594.5,574.7969,584.5,578.7969,594.5,582.7969,590.5,578.7969" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="588.5" x2="805.5" y1="578.7969" y2="578.7969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="54" x="600.5" y="573.9668">UserOrm</text><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="583.5" x2="625.5" y1="606.7656" y2="606.7656"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="625.5" x2="625.5" y1="606.7656" y2="619.7656"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="584.5" x2="625.5" y1="619.7656" y2="619.7656"/><polygon fill="#4A6FA5" points="594.5,615.7656,584.5,619.7656,594.5,623.7656,590.5,619.7656" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="147" x="590.5" y="601.9355">verify_password(bcrypt)</text><path d="M13,634.7656 L74,634.7656 L74,640.7344 L64,650.7344 L10,650.7344 L10,637.7656 A3,3 0 0 1 13,634.7656 " fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"/><rect fill="none" height="198.75" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.5;" width="801.5" x="10" y="634.7656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="19" x="25" y="646.9043">alt</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="117" x="89" y="647.9043">[Password valid]</text><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="583.5" x2="625.5" y1="670.7031" y2="670.7031"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="625.5" x2="625.5" y1="670.7031" y2="683.7031"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="584.5" x2="625.5" y1="683.7031" y2="683.7031"/><polygon fill="#4A6FA5" points="594.5,679.7031,584.5,683.7031,594.5,687.7031,590.5,683.7031" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="209" x="590.5" y="665.873">create_access_token(JWT HS256)</text><polygon fill="#4A6FA5" points="344.5,707.6719,334.5,711.6719,344.5,715.6719,340.5,711.6719" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="338.5" x2="582.5" y1="711.6719" y2="711.6719"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="350.5" y="706.8418">access_token</text><polygon fill="#4A6FA5" points="51.5,749.6094,41.5,753.6094,51.5,757.6094,47.5,753.6094" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="45.5" x2="332.5" y1="753.6094" y2="753.6094"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="123" x="57.5" y="734.8105">200 LoginResponse</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="239" x="57.5" y="748.7793">{access_token, token_type: "bearer"}</text><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="10" x2="811.5" y1="762.6094" y2="762.6094"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="130" x="15" y="773.748">[Password invalid]</text><polygon fill="#4A6FA5" points="344.5,793.5469,334.5,797.5469,344.5,801.5469,340.5,797.5469" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="338.5" x2="582.5" y1="797.5469" y2="797.5469"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="123" x="350.5" y="792.7168">AuthenticationError</text><polygon fill="#4A6FA5" points="51.5,821.5156,41.5,825.5156,51.5,829.5156,47.5,825.5156" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="45.5" x2="332.5" y1="825.5156" y2="825.5156"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="111" x="57.5" y="820.6855">401 Unauthorized</text><rect fill="#4A6FA5" height="3" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.0;" width="869" x="0" y="860.5"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="869" y1="860.5" y2="860.5"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="869" y1="863.5" y2="863.5"/><rect fill="#4A6FA5" height="21.9688" rx="3" ry="3" style="stroke:#000000;stroke-width:2.0;" width="182" x="343.5" y="850.5156"/><text fill="#FFFFFF" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="164" x="349.5" y="865.6543">Authenticated Request</text><polygon fill="#4A6FA5" points="244.5,912.4219,254.5,916.4219,244.5,920.4219,248.5,916.4219" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="40.5" x2="250.5" y1="916.4219" y2="916.4219"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="47.5" y="897.623">GET /api/v1/auth/me</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="192" x="47.5" y="911.5918">Authorization: Bearer &lt;token&gt;</text><polygon fill="#4A6FA5" points="321.5,940.3906,331.5,944.3906,321.5,948.3906,325.5,944.3906" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="256.5" x2="327.5" y1="944.3906" y2="944.3906"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="263.5" y="939.5605">proxy</text><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="333.5" x2="375.5" y1="986.3281" y2="986.3281"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="375.5" x2="375.5" y1="986.3281" y2="999.3281"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="334.5" x2="375.5" y1="999.3281" y2="999.3281"/><polygon fill="#4A6FA5" points="344.5,995.3281,334.5,999.3281,344.5,1003.3281,340.5,999.3281" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="340.5" y="967.5293">get_current_user()</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="72" x="340.5" y="981.498">decode JWT</text><path d="M13,1014.3281 L74,1014.3281 L74,1020.2969 L64,1030.2969 L10,1030.2969 L10,1017.3281 A3,3 0 0 1 13,1014.3281 " fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"/><rect fill="none" height="143.8125" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.5;" width="849" x="10" y="1014.3281"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="19" x="25" y="1026.4668">alt</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="90" x="89" y="1027.4668">[Token valid]</text><polygon fill="#4A6FA5" points="794.5,1046.2656,804.5,1050.2656,794.5,1054.2656,798.5,1050.2656" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;" x1="333.5" x2="800.5" y1="1050.2656" y2="1050.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="111" x="340.5" y="1045.4355">SELECT user BY id</text><polygon fill="#4A6FA5" points="344.5,1074.2344,334.5,1078.2344,344.5,1082.2344,340.5,1078.2344" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="338.5" x2="805.5" y1="1078.2344" y2="1078.2344"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="54" x="350.5" y="1073.4043">UserOrm</text><polygon fill="#4A6FA5" points="51.5,1102.2031,41.5,1106.2031,51.5,1110.2031,47.5,1106.2031" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="45.5" x2="332.5" y1="1106.2031" y2="1106.2031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="119" x="57.5" y="1101.373">200 UserResponse</text><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="10" x2="859" y1="1115.2031" y2="1115.2031"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="160" x="15" y="1126.3418">[Token expired/invalid]</text><polygon fill="#4A6FA5" points="51.5,1146.1406,41.5,1150.1406,51.5,1154.1406,47.5,1150.1406" style="stroke:#4A6FA5;stroke-width:1.0;"/><line style="stroke:#4A6FA5;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="45.5" x2="332.5" y1="1150.1406" y2="1150.1406"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="151" x="57.5" y="1145.3105">401 AuthenticationError</text><!--MD5=[1962482aaa5c8c4c4817bea14dd156f6]
+@startuml SQ01-auth-jwt-flow
+!include _common.puml
+
+title CryptoBot — Authentification JWT
+caption POST /api/v1/auth/register + login + me
+
+actor "Client" as client
+participant "Nginx" as nginx #F5F5F5
+participant "FastAPI\nauth router" as api #FEF3E8
+participant "auth_service" as svc #F3EEFF
+database "TimescaleDB\nusers" as db #ECFDF5
+
+== Register ==
+client -> nginx : POST /api/v1/auth/register
+nginx -> api : proxy
+api -> svc : register_user(UserCreate)
+svc -> svc : hash_password(bcrypt)
+svc -> db : INSERT users
+db - -> svc : UserOrm
+svc - -> api : UserOrm
+api - -> client : 201 UserResponse
+
+== Login ==
+client -> nginx : POST /api/v1/auth/login
+nginx -> api : proxy
+api -> svc : authenticate_user(email, password)
+svc -> db : SELECT user BY email
+db - -> svc : UserOrm
+svc -> svc : verify_password(bcrypt)
+alt Password valid
+  svc -> svc : create_access_token(JWT HS256)
+  svc - -> api : access_token
+  api - -> client : 200 LoginResponse\n{access_token, token_type: "bearer"}
+else Password invalid
+  svc - -> api : AuthenticationError
+  api - -> client : 401 Unauthorized
+end
+
+== Authenticated Request ==
+client -> nginx : GET /api/v1/auth/me\nAuthorization: Bearer <token>
+nginx -> api : proxy
+api -> api : get_current_user()\ndecode JWT
+alt Token valid
+  api -> db : SELECT user BY id
+  db - -> api : UserOrm
+  api - -> client : 200 UserResponse
+else Token expired/invalid
+  api - -> client : 401 AuthenticationError
+end
+
+@enduml
+
+@startuml SQ01-auth-jwt-flow
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Authentification JWT
+caption POST /api/v1/auth/register + login + me
+
+actor "Client" as client
+participant "Nginx" as nginx #F5F5F5
+participant "FastAPI\nauth router" as api #FEF3E8
+participant "auth_service" as svc #F3EEFF
+database "TimescaleDB\nusers" as db #ECFDF5
+
+== Register ==
+client -> nginx : POST /api/v1/auth/register
+nginx -> api : proxy
+api -> svc : register_user(UserCreate)
+svc -> svc : hash_password(bcrypt)
+svc -> db : INSERT users
+db - -> svc : UserOrm
+svc - -> api : UserOrm
+api - -> client : 201 UserResponse
+
+== Login ==
+client -> nginx : POST /api/v1/auth/login
+nginx -> api : proxy
+api -> svc : authenticate_user(email, password)
+svc -> db : SELECT user BY email
+db - -> svc : UserOrm
+svc -> svc : verify_password(bcrypt)
+alt Password valid
+  svc -> svc : create_access_token(JWT HS256)
+  svc - -> api : access_token
+  api - -> client : 200 LoginResponse\n{access_token, token_type: "bearer"}
+else Password invalid
+  svc - -> api : AuthenticationError
+  api - -> client : 401 Unauthorized
+end
+
+== Authenticated Request ==
+client -> nginx : GET /api/v1/auth/me\nAuthorization: Bearer <token>
+nginx -> api : proxy
+api -> api : get_current_user()\ndecode JWT
+alt Token valid
+  api -> db : SELECT user BY id
+  db - -> api : UserOrm
+  api - -> client : 200 UserResponse
+else Token expired/invalid
+  api - -> client : 401 AuthenticationError
+end
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

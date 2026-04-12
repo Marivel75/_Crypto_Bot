@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="510px" preserveAspectRatio="none" style="width:1748px;height:510px;background:#FFFFFF;" version="1.1" viewBox="0 0 1748 510" width="1748px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="328" x="703" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="318" x="708" y="22.9951">CryptoBot — Roadmap Features Phase 2</text><!--MD5=[bd6ff999a41aeb53b565afd95fc4fcc4]
+cluster Phase 1 (existant)--><g id="cluster_Phase 1 (existant)"><path d="M450,236.2969 L578,236.2969 A4.5,4.5 0 0 1 581,239.2969 L588,256.2656 L1096,256.2656 A3,3 0 0 1 1099,259.2656 L1099,353.2969 A3,3 0 0 1 1096,356.2969 L450,356.2969 A3,3 0 0 1 447,353.2969 L447,239.2969 A3,3 0 0 1 450,236.2969 " fill="#F5F5F5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="447" x2="588" y1="256.2656" y2="256.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="128" x="451" y="249.4355">Phase 1 (existant)</text></g><!--MD5=[43587843d84a861e80db0d570075c93b]
+cluster P0 — Quick Wins (8 pts)--><g id="cluster_P0 — Quick Wins (8 pts)"><path d="M9,50.2969 L172,50.2969 A4.5,4.5 0 0 1 175,53.2969 L182,70.2656 L616,70.2656 A3,3 0 0 1 619,73.2656 L619,181.2969 A3,3 0 0 1 616,184.2969 L9,184.2969 A3,3 0 0 1 6,181.2969 L6,53.2969 A3,3 0 0 1 9,50.2969 " fill="#ECFDF5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="6" x2="182" y1="70.2656" y2="70.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="163" x="10" y="63.4355">P0 — Quick Wins (8 pts)</text></g><!--MD5=[2375e60f9a22f682f4ebce57f23197f8]
+cluster P1 — Medium (15 pts)--><g id="cluster_P1 — Medium (15 pts)"><path d="M646,50.2969 L795,50.2969 A4.5,4.5 0 0 1 798,53.2969 L805,70.2656 L1232,70.2656 A3,3 0 0 1 1235,73.2656 L1235,181.2969 A3,3 0 0 1 1232,184.2969 L646,184.2969 A3,3 0 0 1 643,181.2969 L643,53.2969 A3,3 0 0 1 646,50.2969 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="643" x2="805" y1="70.2656" y2="70.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="149" x="647" y="63.4355">P1 — Medium (15 pts)</text></g><!--MD5=[875d26e35074ff362ec4d71058689fe9]
+cluster P2 — High Effort (34 pts)--><g id="cluster_P2 — High Effort (34 pts)"><path d="M1419,43.2969 L1588,43.2969 A4.5,4.5 0 0 1 1591,46.2969 L1598,63.2656 L1738,63.2656 A3,3 0 0 1 1741,66.2656 L1741,360.2969 A3,3 0 0 1 1738,363.2969 L1419,363.2969 A3,3 0 0 1 1416,360.2969 L1416,46.2969 A3,3 0 0 1 1419,43.2969 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="1416" x2="1598" y1="63.2656" y2="63.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="169" x="1420" y="56.4355">P2 — High Effort (34 pts)</text></g><!--MD5=[e39b5510b9df8a85b5a394f0a9df859b]
+entity etl--><g id="elem_etl"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="114" x="463" y="268.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="557" y="273.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="555" y="275.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="555" y="279.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="478" y="299.4355">ETL Pipeline</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="73" x="478" y="313.4043">5 collectors</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="478" y="327.373">10 jobs</text></g><!--MD5=[52f38f83105e4d01312faed08f8fa76c]
+entity rules--><g id="elem_rules"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="166" x="612" y="268.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="758" y="273.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="756" y="275.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="756" y="279.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="74" x="627" y="299.4355">Rule Engine</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="627" y="313.4043">RSI, BB, Harmonics</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="126" x="627" y="327.373">Trend, Convergence</text></g><!--MD5=[e2307af040e3f87d22824e7603ca28ec]
+entity api--><g id="elem_api"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="123" x="959.5" y="268.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1062.5" y="273.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1060.5" y="275.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1060.5" y="279.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="46" x="974.5" y="299.4355">FastAPI</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="58" x="974.5" y="313.4043">8 routers</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="83" x="974.5" y="327.373">22 endpoints</text></g><!--MD5=[b1e3d2dcb3697de9e6328d1cb436cbc4]
+entity frontend--><g id="elem_frontend"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="111" x="813.5" y="268.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="904.5" y="273.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="902.5" y="275.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="902.5" y="279.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="56" x="828.5" y="299.4355">Streamlit</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="51" x="828.5" y="313.4043">5 pages</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="71" x="828.5" y="327.373">3 personas</text></g><!--MD5=[50bff64abf064dc6b3b7a3674723fb01]
+entity f1--><g id="elem_f1"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="185" x="205.5" y="82.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="370.5" y="87.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="368.5" y="89.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="368.5" y="93.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="145" x="220.5" y="113.4355">F1 Regulatory Scraping</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="66" x="220.5" y="127.4043">ESMA, SEC</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="87" x="220.5" y="141.373">BeautifulSoup</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="220.5" y="155.3418">3 pts</text></g><!--MD5=[14b204a2d365da347d4e5216c4632307]
+entity f2--><g id="elem_f2"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="149" x="21.5" y="89.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="150.5" y="94.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="148.5" y="96.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="148.5" y="100.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="36.5" y="120.4355">F2 RSS ESMA/SEC</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="36.5" y="134.4043">Feed integration</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="36.5" y="148.373">2 pts</text></g><!--MD5=[f7e6953e2419ccd112d4caf0426b59c9]
+entity f3--><g id="elem_f3"><rect fill="#F3EEFF" height="71.9063" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="178" x="425" y="89.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="583" y="94.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="581" y="96.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="581" y="100.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="138" x="440" y="120.4355">F3 K-Means Clustering</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="440" y="134.4043">Market regimes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="440" y="148.373">3 pts</text></g><!--MD5=[fa6ec8e0f347257fcbdd931aa60175fb]
+entity f4--><g id="elem_f4"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="156" x="1063" y="82.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1199" y="87.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1197" y="89.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1197" y="93.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="1078" y="113.4355">F4 Alerts System</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="116" x="1078" y="127.4043">Price, signal, news</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="105" x="1078" y="141.373">WebSocket push</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="1078" y="155.3418">5 pts</text></g><!--MD5=[30b5f72c5aa3b5233148d0a68e2b05df]
+entity f5--><g id="elem_f5"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="149" x="658.5" y="82.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="787.5" y="87.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="785.5" y="89.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="785.5" y="93.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="673.5" y="113.4355">F5 On-Chain Data</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="67" x="673.5" y="127.4043">Public APIs</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="93" x="673.5" y="141.373">Whale tracking</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="673.5" y="155.3418">5 pts</text></g><!--MD5=[076a262e84a6a671fddacec33a86f131]
+entity f6--><g id="elem_f6"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="185" x="842.5" y="82.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1007.5" y="87.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1005.5" y="89.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1005.5" y="93.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="145" x="857.5" y="113.4355">F6 LSTM Deep Learning</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="857.5" y="127.4043">Sequence prediction</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="857.5" y="141.373">Multi-step forecast</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="32" x="857.5" y="155.3418">5 pts</text></g><!--MD5=[00cad513f10ad161176a1afcee13fa4f]
+entity f7--><g id="elem_f7"><rect fill="#F3EEFF" height="99.8438" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="179" x="1432.5" y="75.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1591.5" y="80.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1589.5" y="82.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1589.5" y="86.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="107" x="1447.5" y="106.4355">F7 Paper Trading</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="1447.5" y="120.4043">Simulated execution</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="79" x="1447.5" y="134.373">P&amp;L tracking</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="139" x="1447.5" y="148.3418">Portfolio management</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="40" x="1447.5" y="162.3105">13 pts</text></g><!--MD5=[caa85564afe8acacf8694eb02f2d5581]
+entity f8--><g id="elem_f8"><rect fill="#F3EEFF" height="85.875" rx="3" ry="3" style="stroke:#7C5CFC;stroke-width:0.5;" width="189" x="1447.5" y="261.2969"/><rect fill="#F3EEFF" height="10" style="stroke:#7C5CFC;stroke-width:0.5;" width="15" x="1616.5" y="266.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1614.5" y="268.2969"/><rect fill="#F3EEFF" height="2" style="stroke:#7C5CFC;stroke-width:0.5;" width="4" x="1614.5" y="272.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="81" x="1462.5" y="292.4355">F8 RL Agents</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="149" x="1462.5" y="306.4043">Reinforcement Learning</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="114" x="1462.5" y="320.373">Policy optimization</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="40" x="1462.5" y="334.3418">21 pts</text></g><!--MD5=[432121cd42232d1e8d134e9da17417d2]
+link f1 to etl--><g id="link_f1_etl"><path d="M311.04,168.5169 C318.2,186.2469 328.61,206.0269 343,220.2969 C374.71,251.7469 420.59,272.7969 457.69,285.8269 " fill="none" id="f1-to-etl" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="462.63,287.5369,455.4412,280.8047,457.9069,285.8959,452.8157,288.3616,462.63,287.5369" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="112" x="344" y="217.4355">nouveau collector</text></g><!--MD5=[cc17351e30bb46c6c54ecc1fa1761bde]
+link f2 to etl--><g id="link_f2_etl"><path d="M130.97,161.5369 C152.43,181.3669 181.4,205.1169 211,220.2969 C291.09,261.3669 393.58,283.6969 458.03,294.5569 " fill="none" id="f2-to-etl" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="462.99,295.3869,454.7777,289.9501,458.0592,294.5579,453.4514,297.8394,462.99,295.3869" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="112" x="212" y="217.4355">nouveau collector</text></g><!--MD5=[5087f8975b01583b5873885ff9bbf690]
+link f3 to rules--><g id="link_f3_rules"><path d="M548.17,161.4069 C565.62,179.1969 587.29,201.0469 607,220.2969 C621.96,234.9069 638.59,250.7069 653.34,264.5569 " fill="none" id="f3-to-rules" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="657.04,268.0369,653.2277,258.9558,653.399,264.6101,647.7447,264.7814,657.04,268.0369" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="117" x="608" y="217.4355">nouveau evaluator</text></g><!--MD5=[b1b4442f70016cc345d6a5783f6f930f]
+link f4 to api--><g id="link_f4_api"><path d="M1127.33,168.7269 C1120.93,185.5069 1112.41,204.5169 1102,220.2969 C1091.66,235.9669 1078.11,251.2269 1065.06,264.3069 " fill="none" id="f4-to-api" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1061.39,267.9369,1070.5966,264.4384,1064.9398,264.4156,1064.9626,258.7588,1061.39,267.9369" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="1111" y="217.4355">WebSocket endpoint</text></g><!--MD5=[ac153832b53490c396ade17a9395af90]
+link f4 to frontend--><g id="link_f4_frontend"><path d="M1090.43,168.3669 C1076.5,177.8469 1060.84,186.7369 1045,192.2969 C1026.18,198.8969 879.58,190.6969 866,205.2969 C851.89,220.4669 851.88,243.3569 855.74,263.1969 " fill="none" id="f4-to-frontend" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="856.8,268.1769,858.8331,258.5402,855.7563,263.287,851.0094,260.2101,856.8,268.1769" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="86" x="867" y="217.4355">notification UI</text></g><!--MD5=[d37bb609c92cb1f7736d140afecf76fa]
+link f5 to etl--><g id="link_f5_etl"><path d="M671.67,168.3069 C655.22,177.7269 636.99,186.6069 619,192.2969 C587.73,202.1869 494.14,181.1069 472,205.2969 C456.66,222.0569 466.23,244.6169 480.73,263.8769 " fill="none" id="f5-to-etl" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="484.1,268.1769,481.7248,258.6187,481.0273,264.2324,475.4136,263.535,484.1,268.1769" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="112" x="473" y="217.4355">nouveau collector</text></g><!--MD5=[a819a3848c67070c695139f725940a0d]
+link f6 to rules--><g id="link_f6_rules"><path d="M872.82,168.3369 C857.66,177.2369 841.14,185.8769 825,192.2969 C800.05,202.2269 788.45,190.5769 766,205.2969 C744.11,219.6469 726.71,243.2369 714.62,263.6769 " fill="none" id="f6-to-rules" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="711.96,268.2569,719.925,262.4639,714.4607,263.9271,712.9974,258.4628,711.96,268.2569" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="58" x="767" y="217.4355">ML model</text></g><!--MD5=[860a397a3f2d5fd8430b69dabb507e42]
+link f7 to api--><g id="link_f7_api"><path d="M1432.43,157.9369 C1333.4,192.9269 1176.18,248.4769 1087.51,279.7969 " fill="none" id="f7-to-api" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1082.56,281.5469,1092.3793,282.3095,1087.2726,279.8761,1089.706,274.7693,1082.56,281.5469" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="112" x="1287" y="217.4355">trading endpoints</text></g><!--MD5=[12f981b11840e7c3ff653f07d02aebfc]
+link f7 to frontend--><g id="link_f7_frontend"><path d="M1432.26,151.1469 C1376.05,165.6569 1301.83,182.9069 1235,192.2969 C1127.02,207.4569 1095.65,178.3269 990,205.2969 C988.57,205.6669 943.2,227.4369 942,228.2969 C927.69,238.5769 913.75,251.8269 901.95,264.3269 " fill="none" id="f7-to-frontend" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="898.35,268.1769,907.4156,264.3279,901.7621,264.5221,901.5679,258.8686,898.35,268.1769" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="102" x="991" y="217.4355">paper trading UI</text></g><!--MD5=[ea76fd42277e0cbdb2a42c4e7e57aa70]
+link f8 to f7--><g id="link_f8_f7"><path d="M1537.24,261.1569 C1534.52,237.0669 1531.07,206.5969 1528.15,180.7169 " fill="none" id="f8-to-f7" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="1527.57,175.5969,1524.5972,184.9864,1528.1269,180.5658,1532.5475,184.0954,1527.57,175.5969" style="stroke:#4A6FA5;stroke-width:1.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="165" x="1533" y="217.4355">depends on paper trading</text></g><!--MD5=[549b69734ad54a4055d1ac20a277cddc]
+link f7 to f8--><g id="link_f7_f8"><path d="M1478.18,175.3569 C1470.49,189.4969 1466.48,205.1969 1472,220.2969 C1476.78,233.3869 1484.64,245.8369 1493.4,256.9269 " fill="none" id="f7-to-f8" style="stroke:#E8943A;stroke-width:2.0;"/><polygon fill="#E8943A" points="1496.66,260.9469,1494.0891,251.4395,1493.507,257.0663,1487.8802,256.4842,1496.66,260.9469" style="stroke:#E8943A;stroke-width:2.0;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="49" x="1473" y="217.4355">bloque</text></g><rect fill="#F5F5F5" height="97.4844" rx="3" ry="3" style="stroke:#CCCCCC;stroke-width:1.0;" width="315" x="1411" y="377.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="58" x="1422" y="398.292">Priorite</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="96" x="1528" y="398.292">Story Points</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="53" x="1634" y="398.292">Risque</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="98" x="1421" y="414.5889">P0 Quick Wins</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="35" x="1527" y="414.5889">8 pts</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="26" x="1633" y="414.5889">Bas</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="77" x="1421" y="430.8857">P1 Medium</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="44" x="1527" y="430.8857">15 pts</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="77" x="1633" y="430.8857">Bas-Moyen</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="93" x="1421" y="447.1826">P2 High Effort</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="44" x="1527" y="447.1826">34 pts</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="83" x="1633" y="447.1826">Moyen-Haut</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1417" y="463.4795"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="39" x="1421" y="463.4795">Total</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1460" y="463.4795"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1523" y="463.4795"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="50" x="1527" y="463.4795">62 pts</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1577" y="463.4795"> </text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="4" x="1629" y="463.4795"> </text><line style="stroke:#333333;stroke-width:1.0;" x1="1417" x2="1720" y1="385.2969" y2="385.2969"/><line style="stroke:#333333;stroke-width:1.0;" x1="1417" x2="1720" y1="401.5938" y2="401.5938"/><line style="stroke:#333333;stroke-width:1.0;" x1="1417" x2="1720" y1="417.8906" y2="417.8906"/><line style="stroke:#333333;stroke-width:1.0;" x1="1417" x2="1720" y1="434.1875" y2="434.1875"/><line style="stroke:#333333;stroke-width:1.0;" x1="1417" x2="1720" y1="450.4844" y2="450.4844"/><line style="stroke:#333333;stroke-width:1.0;" x1="1417" x2="1720" y1="466.7813" y2="466.7813"/><line style="stroke:#333333;stroke-width:1.0;" x1="1417" x2="1417" y1="385.2969" y2="466.7813"/><line style="stroke:#333333;stroke-width:1.0;" x1="1523" x2="1523" y1="385.2969" y2="466.7813"/><line style="stroke:#333333;stroke-width:1.0;" x1="1629" x2="1629" y1="385.2969" y2="466.7813"/><line style="stroke:#333333;stroke-width:1.0;" x1="1720" x2="1720" y1="385.2969" y2="466.7813"/><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="292" x="721" y="484.7813"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="292" x="721" y="497.7764">8 features | 62 story points | Sprints 11-16</text><!--MD5=[82c2c32d2a1dd6b07033cef460b02e95]
+@startuml C07-phase2-features
+!include _common.puml
+
+title CryptoBot — Roadmap Features Phase 2
+caption 8 features | 62 story points | Sprints 11-16
+
+' ============================================================
+' Existing Phase 1
+' ============================================================
+package "Phase 1 (existant)" #F5F5F5 {
+  [ETL Pipeline\n5 collectors\n10 jobs] as etl
+  [Rule Engine\nRSI, BB, Harmonics\nTrend, Convergence] as rules
+  [FastAPI\n8 routers\n22 endpoints] as api
+  [Streamlit\n5 pages\n3 personas] as frontend
+}
+
+' ============================================================
+' P0 — Quick Wins (8 pts, Sprint 11)
+' ============================================================
+package "P0 — Quick Wins (8 pts)" #ECFDF5 {
+  [F1 Regulatory Scraping\nESMA, SEC\nBeautifulSoup\n3 pts] as f1
+  [F2 RSS ESMA/SEC\nFeed integration\n2 pts] as f2
+  [F3 K-Means Clustering\nMarket regimes\n3 pts] as f3
+}
+
+' ============================================================
+' P1 — Medium (15 pts, Sprint 12-13)
+' ============================================================
+package "P1 — Medium (15 pts)" #FEF3E8 {
+  [F4 Alerts System\nPrice, signal, news\nWebSocket push\n5 pts] as f4
+  [F5 On-Chain Data\nPublic APIs\nWhale tracking\n5 pts] as f5
+  [F6 LSTM Deep Learning\nSequence prediction\nMulti-step forecast\n5 pts] as f6
+}
+
+' ============================================================
+' P2 — High Effort (34 pts, Sprint 13-16)
+' ============================================================
+package "P2 — High Effort (34 pts)" #F3EEFF {
+  [F7 Paper Trading\nSimulated execution\nP&L tracking\nPortfolio management\n13 pts] as f7
+  [F8 RL Agents\nReinforcement Learning\nPolicy optimization\n21 pts] as f8
+}
+
+' ============================================================
+' Integration Points
+' ============================================================
+f1 - -> etl : nouveau collector
+f2 - -> etl : nouveau collector
+f3 - -> rules : nouveau evaluator
+f4 - -> api : WebSocket endpoint
+f4 - -> frontend : notification UI
+f5 - -> etl : nouveau collector
+f6 - -> rules : ML model
+f7 - -> api : trading endpoints
+f7 - -> frontend : paper trading UI
+f8 - -> f7 : depends on paper trading
+
+' Critical path
+f7 -[#E8943A,bold]-> f8 : **bloque**
+
+legend bottom right
+  |= Priorite |= Story Points |= Risque |
+  | P0 Quick Wins | 8 pts | Bas |
+  | P1 Medium | 15 pts | Bas-Moyen |
+  | P2 High Effort | 34 pts | Moyen-Haut |
+  | **Total** | **62 pts** | |
+endlegend
+
+@enduml
+
+@startuml C07-phase2-features
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Roadmap Features Phase 2
+caption 8 features | 62 story points | Sprints 11-16
+
+package "Phase 1 (existant)" #F5F5F5 {
+  [ETL Pipeline\n5 collectors\n10 jobs] as etl
+  [Rule Engine\nRSI, BB, Harmonics\nTrend, Convergence] as rules
+  [FastAPI\n8 routers\n22 endpoints] as api
+  [Streamlit\n5 pages\n3 personas] as frontend
+}
+
+package "P0 — Quick Wins (8 pts)" #ECFDF5 {
+  [F1 Regulatory Scraping\nESMA, SEC\nBeautifulSoup\n3 pts] as f1
+  [F2 RSS ESMA/SEC\nFeed integration\n2 pts] as f2
+  [F3 K-Means Clustering\nMarket regimes\n3 pts] as f3
+}
+
+package "P1 — Medium (15 pts)" #FEF3E8 {
+  [F4 Alerts System\nPrice, signal, news\nWebSocket push\n5 pts] as f4
+  [F5 On-Chain Data\nPublic APIs\nWhale tracking\n5 pts] as f5
+  [F6 LSTM Deep Learning\nSequence prediction\nMulti-step forecast\n5 pts] as f6
+}
+
+package "P2 — High Effort (34 pts)" #F3EEFF {
+  [F7 Paper Trading\nSimulated execution\nP&L tracking\nPortfolio management\n13 pts] as f7
+  [F8 RL Agents\nReinforcement Learning\nPolicy optimization\n21 pts] as f8
+}
+
+f1 - -> etl : nouveau collector
+f2 - -> etl : nouveau collector
+f3 - -> rules : nouveau evaluator
+f4 - -> api : WebSocket endpoint
+f4 - -> frontend : notification UI
+f5 - -> etl : nouveau collector
+f6 - -> rules : ML model
+f7 - -> api : trading endpoints
+f7 - -> frontend : paper trading UI
+f8 - -> f7 : depends on paper trading
+
+f7 -[#E8943A,bold]-> f8 : **bloque**
+
+legend bottom right
+  |= Priorite |= Story Points |= Risque |
+  | P0 Quick Wins | 8 pts | Bas |
+  | P1 Medium | 15 pts | Bas-Moyen |
+  | P2 High Effort | 34 pts | Moyen-Haut |
+  | **Total** | **62 pts** | |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

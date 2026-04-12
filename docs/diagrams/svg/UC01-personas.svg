@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1353px" preserveAspectRatio="none" style="width:464px;height:1353px;background:#FFFFFF;" version="1.1" viewBox="0 0 464 1353" width="464px" zoomAndPan="magnify"><defs/><g><rect fill="#FFFFFF" height="26.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="339" x="55.5" y="5"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="329" x="60.5" y="22.9951">CryptoBot — Cas d'Utilisation par Persona</text><!--MD5=[59dc1ce8c7f0b1a8f5d1cb5a81b82f74]
+cluster CryptoBot--><g id="cluster_CryptoBot"><rect fill="#F5F5F5" height="1278" rx="3" ry="3" style="stroke:#4A6FA5;stroke-width:1.0;" width="285" x="173" y="44.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="71" x="280" y="57.4355">CryptoBot</text></g><!--MD5=[0d1efccdffd50bef89096ea366f2dacf]
+cluster Dashboard--><g id="cluster_Dashboard"><path d="M201,84.2969 L279,84.2969 A4.5,4.5 0 0 1 282,87.2969 L289,104.2656 L430,104.2656 A3,3 0 0 1 433,107.2656 L433,337.2969 A3,3 0 0 1 430,340.2969 L201,340.2969 A3,3 0 0 1 198,337.2969 L198,87.2969 A3,3 0 0 1 201,84.2969 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="198" x2="289" y1="104.2656" y2="104.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="78" x="202" y="97.4355">Dashboard</text></g><!--MD5=[b0434e335131af1a419df154340481e9]
+cluster Veille--><g id="cluster_Veille"><path d="M200,762.2969 L239,762.2969 A4.5,4.5 0 0 1 242,765.2969 L249,782.2656 L431,782.2656 A3,3 0 0 1 434,785.2656 L434,1015.2969 A3,3 0 0 1 431,1018.2969 L200,1018.2969 A3,3 0 0 1 197,1015.2969 L197,765.2969 A3,3 0 0 1 200,762.2969 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="197" x2="249" y1="782.2656" y2="782.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="39" x="201" y="775.4355">Veille</text></g><!--MD5=[898c4ef1216a0d531538d67cc292fbf5]
+cluster Portfolio--><g id="cluster_Portfolio"><path d="M223,1042.2969 L284,1042.2969 A4.5,4.5 0 0 1 287,1045.2969 L294,1062.2656 L408,1062.2656 A3,3 0 0 1 411,1065.2656 L411,1295.2969 A3,3 0 0 1 408,1298.2969 L223,1298.2969 A3,3 0 0 1 220,1295.2969 L220,1045.2969 A3,3 0 0 1 223,1042.2969 " fill="#ECFDF5" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="220" x2="294" y1="1062.2656" y2="1062.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="61" x="224" y="1055.4355">Portfolio</text></g><!--MD5=[6629dc9890c0dd0cccadf803c7f40a36]
+cluster Analytics--><g id="cluster_Analytics"><path d="M214,364.2969 L278,364.2969 A4.5,4.5 0 0 1 281,367.2969 L288,384.2656 L417,384.2656 A3,3 0 0 1 420,387.2656 L420,536.2969 A3,3 0 0 1 417,539.2969 L214,539.2969 A3,3 0 0 1 211,536.2969 L211,367.2969 A3,3 0 0 1 214,364.2969 " fill="#FEF3E8" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="211" x2="288" y1="384.2656" y2="384.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="64" x="215" y="377.4355">Analytics</text></g><!--MD5=[c3c4b01735169753ab09534411ddc2aa]
+cluster Performance--><g id="cluster_Performance"><path d="M201,563.2969 L291,563.2969 A4.5,4.5 0 0 1 294,566.2969 L301,583.2656 L430,583.2656 A3,3 0 0 1 433,586.2656 L433,735.2969 A3,3 0 0 1 430,738.2969 L201,738.2969 A3,3 0 0 1 198,735.2969 L198,566.2969 A3,3 0 0 1 201,563.2969 " fill="#F3EEFF" style="stroke:#4A6FA5;stroke-width:1.5;"/><line style="stroke:#4A6FA5;stroke-width:1.5;" x1="198" x2="301" y1="583.2656" y2="583.2656"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="90" x="202" y="576.4355">Performance</text></g><g id="elem_uc_charts"><ellipse cx="315.5272" cy="220.0524" fill="#F3EEFF" rx="85.0272" ry="22.7555" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="263.0444" y="215.3386">Consulter charts</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="97" x="266.5444" y="229.3073">multi-timeframe</text></g><g id="elem_uc_signals"><ellipse cx="315.4533" cy="301.0517" fill="#F3EEFF" rx="77.9533" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="76" x="277.4533" y="296.2216">Voir signaux</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="94" x="268.4533" y="310.1903">BUY/SELL actifs</text></g><g id="elem_uc_indic"><ellipse cx="315.6072" cy="139.1159" fill="#F3EEFF" rx="101.6072" ry="22.819" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="249.1072" y="134.9508">Analyser indicateurs</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="125" x="250.1072" y="148.9196">RSI, Bollinger, Trend</text></g><g id="elem_uc_news"><ellipse cx="315.5949" cy="979.2159" fill="#F3EEFF" rx="102.5949" ry="22.919" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="104" x="263.5949" y="974.3858">Suivre actualites</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="130" x="250.5949" y="988.3545">crypto en temps reel</text></g><g id="elem_uc_reg"><ellipse cx="315.4031" cy="817.0517" fill="#F3EEFF" rx="82.9031" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="101" x="264.9031" y="812.2216">Recevoir alertes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="95" x="267.9031" y="826.1903">reglementaires</text></g><g id="elem_uc_sentiment"><ellipse cx="315.332" cy="898.0517" fill="#F3EEFF" rx="75.832" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="269.832" y="893.2216">Voir sentiment</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="68" x="281.332" y="907.1903">par source</text></g><g id="elem_uc_portfolio"><ellipse cx="315.3675" cy="1259.0517" fill="#F3EEFF" rx="79.3675" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="267.3675" y="1254.2216">Gerer positions</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="44" x="293.3675" y="1268.1903">(CRUD)</text></g><g id="elem_uc_pnl"><ellipse cx="315.6396" cy="1097.0517" fill="#F3EEFF" rx="66.6396" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="78" x="276.6396" y="1092.2216">Calculer P&amp;L</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="40" x="295.6396" y="1106.1903">simule</text></g><g id="elem_uc_chat"><ellipse cx="315.3675" cy="1178.0517" fill="#F3EEFF" rx="79.3675" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="96" x="267.3675" y="1173.2216">Utiliser chatbot</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="73" x="278.8675" y="1187.1903">assistant IA</text></g><g id="elem_uc_heatmap"><ellipse cx="315.332" cy="419.0517" fill="#F3EEFF" rx="75.832" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="91" x="269.832" y="414.2216">Voir heatmaps</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="75" x="277.832" y="428.1903">correlations</text></g><g id="elem_uc_volume"><ellipse cx="315.5599" cy="500.0517" fill="#F3EEFF" rx="88.5599" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="108" x="261.5599" y="495.2216">Analyser volumes</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="109" x="261.0599" y="509.1903">et microstructure</text></g><g id="elem_uc_history"><ellipse cx="315.6072" cy="699.1159" fill="#F3EEFF" rx="101.6072" ry="22.819" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="127" x="249.1072" y="694.9508">Consulter historique</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="48" x="288.6072" y="708.9196">signaux</text></g><g id="elem_uc_perf"><ellipse cx="315.6604" cy="618.0517" fill="#F3EEFF" rx="78.6604" ry="22.7548" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="78" x="276.6604" y="613.2216">Voir win rate</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="95" x="268.1604" y="627.1903">et Sharpe ratio</text></g><!--MD5=[ef570840cc7279c530a711c2b23bef77]
+entity noah--><g id="elem_noah"><ellipse cx="79.5" cy="324.7969" fill="#FEF3E8" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M79.5,332.7969 L79.5,359.7969 M66.5,340.7969 L92.5,340.7969 M79.5,359.7969 L66.5,374.7969 M79.5,359.7969 L92.5,374.7969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="33" x="12" y="387.4355">Noah</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="135" x="12" y="401.4043">(Trader independant)</text></g><!--MD5=[a8a1a187114bf8996be097019e338e96]
+entity sarah--><g id="elem_sarah"><ellipse cx="79.5" cy="822.7969" fill="#F3EEFF" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M79.5,830.7969 L79.5,857.7969 M66.5,838.7969 L92.5,838.7969 M79.5,857.7969 L66.5,872.7969 M79.5,857.7969 L92.5,872.7969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="37" x="8.5" y="885.4355">Sarah</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="142" x="8.5" y="899.4043">(Journaliste financiere)</text></g><!--MD5=[4bc09776e4f113d7c85cfd7329fd7e38]
+entity aleksandar--><g id="elem_aleksandar"><ellipse cx="79.5" cy="1061.7969" fill="#ECFDF5" rx="8" ry="8" style="stroke:#7C5CFC;stroke-width:0.5;"/><path d="M79.5,1069.7969 L79.5,1096.7969 M66.5,1077.7969 L92.5,1077.7969 M79.5,1096.7969 L66.5,1111.7969 M79.5,1096.7969 L92.5,1111.7969 " fill="none" style="stroke:#7C5CFC;stroke-width:0.5;"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="70" x="6" y="1124.4355">Aleksandar</text><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="12" lengthAdjust="spacing" textLength="147" x="6" y="1138.4043">(Investisseur debutant)</text></g><!--MD5=[bd831ac6700086368e63103e69c3e244]
+link noah to uc_charts--><g id="link_noah_uc_charts"><path d="M108.51,316.2169 C123.13,296.4669 142.64,274.4769 165,260.2969 C185.86,247.0569 211.03,238.1769 234.71,232.2169 " fill="none" id="noah-to-uc_charts" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="239.74,230.9869,230.0481,229.2354,234.8826,232.1726,231.9454,237.0071,239.74,230.9869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[6270ad87f8efb6a85040211325956c19]
+link noah to uc_signals--><g id="link_noah_uc_signals"><path d="M147.24,343.4669 C179.68,335.2869 218.49,325.5069 250.55,317.4169 " fill="none" id="noah-to-uc_signals" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="255.64,316.1369,245.9327,314.4728,250.7935,317.3664,247.8999,322.2271,255.64,316.1369" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[388bfceccfbf6d5b037344511048bbd4]
+link noah to uc_indic--><g id="link_noah_uc_indic"><path d="M89.81,316.1169 C100.81,274.8169 123.14,214.3869 165,179.2969 C180.66,166.1669 200.21,157.3069 219.96,151.3469 " fill="none" id="noah-to-uc_indic" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="224.98,149.8869,215.2237,148.5401,220.1762,151.2737,217.4426,156.2262,224.98,149.8869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[1975eabf93d44eab0c49060d02344c93]
+link noah to uc_heatmap--><g id="link_noah_uc_heatmap"><path d="M147.24,377.1269 C179.94,385.3669 219.1,395.2469 251.31,403.3669 " fill="none" id="noah-to-uc_heatmap" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="256.42,404.6569,248.6799,398.5666,251.5735,403.4274,246.7127,406.321,256.42,404.6569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[7fc416ace0662e18cf65cf6f3b5ced08]
+link noah to uc_history--><g id="link_noah_uc_history"><path d="M80.21,404.3969 C82.26,469.1769 95.88,589.7669 165,658.2969 C179.45,672.6169 198.4,682.0569 217.93,688.2469 " fill="none" id="noah-to-uc_history" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="222.91,689.7569,215.4477,683.3292,218.1228,688.3136,213.1385,690.9887,222.91,689.7569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[2776a7d25a76d3a4076bbc573de344b4]
+link noah to uc_perf--><g id="link_noah_uc_perf"><path d="M92.52,404.2969 C105.13,443.6669 128.31,500.9169 165,539.2969 C190.8,566.2869 227.87,585.9569 258.64,598.9269 " fill="none" id="noah-to-uc_perf" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="263.52,600.9469,256.7398,593.8035,258.9017,599.0309,253.6742,601.1928,263.52,600.9469" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[4f735705be52e206dd62e55b9a11df9b]
+link sarah to uc_news--><g id="link_sarah_uc_news"><path d="M119.31,902.6669 C132.67,915.7169 148.45,928.9769 165,938.2969 C184.73,949.4069 207.64,957.6469 229.51,963.6969 " fill="none" id="sarah-to-uc_news" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="234.45,965.0269,226.7994,958.8247,229.6219,963.727,224.7196,966.5496,234.45,965.0269" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[39a3b8e3e7043a2d81ffad4a80c14964]
+link sarah to uc_reg--><g id="link_sarah_uc_reg"><path d="M150.71,845.9969 C178.72,841.0869 211.01,835.4269 239.48,830.4469 " fill="none" id="sarah-to-uc_reg" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="244.75,829.5169,235.1977,827.1181,239.8239,830.3736,236.5685,834.9998,244.75,829.5169" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[8788808f8fcf7d61479ee4c9b01f138c]
+link sarah to uc_sentiment--><g id="link_sarah_uc_sentiment"><path d="M150.71,870.2969 C180.1,875.3269 214.22,881.1569 243.68,886.1869 " fill="none" id="sarah-to-uc_sentiment" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="248.75,887.0569,240.5531,881.597,243.8215,886.214,239.2045,889.4825,248.75,887.0569" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[4b72f6cecea5bb0b6cf03ff997e75289]
+link sarah to uc_heatmap--><g id="link_sarah_uc_heatmap"><path d="M84.12,813.9669 C92.59,721.0269 116.76,510.1569 165,459.2969 C183.29,440.0169 209.76,429.6669 235.36,424.2169 " fill="none" id="sarah-to-uc_heatmap" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="240.47,423.1969,230.8591,421.045,235.5676,424.1802,232.4324,428.8887,240.47,423.1969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[ea60ecfb01070a01453aec593ee04dee]
+link aleksandar to uc_portfolio--><g id="link_aleksandar_uc_portfolio"><path d="M101.48,1141.5369 C115.93,1167.4769 137.47,1198.8769 165,1218.2969 C186.24,1233.2769 212.72,1242.7869 237.48,1248.8269 " fill="none" id="aleksandar-to-uc_portfolio" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="242.4,1249.9869,234.5681,1244.0152,237.5354,1248.8313,232.7192,1251.7986,242.4,1249.9869" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[4589720e62eae0185634baa4a8ed8b73]
+link aleksandar to uc_pnl--><g id="link_aleksandar_uc_pnl"><path d="M153.26,1097.2969 C182.05,1097.2969 215.04,1097.2969 243.65,1097.2969 " fill="none" id="aleksandar-to-uc_pnl" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="248.94,1097.2969,239.94,1093.2969,243.94,1097.2969,239.94,1101.2969,248.94,1097.2969" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[4c1f3def3b041f983bd2ab7cbd306dbb]
+link aleksandar to uc_chat--><g id="link_aleksandar_uc_chat"><path d="M153.45,1132.7869 C157.33,1134.3669 161.2,1135.8869 165,1137.2969 C191.73,1147.1969 221.93,1155.9269 248.15,1162.7569 " fill="none" id="aleksandar-to-uc_chat" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="253,1164.0069,245.2938,1157.8739,248.1604,1162.7506,243.2837,1165.6172,253,1164.0069" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[82291997ed988df3dbfd8f52e7d6aa4a]
+link aleksandar to uc_signals--><g id="link_aleksandar_uc_signals"><path d="M103.85,1053.0069 C121.07,1017.8369 143.14,966.8369 153,919.2969 C159.08,889.9669 149.26,405.7769 165,380.2969 C184.04,349.4769 219.46,330.0169 251.05,318.1169 " fill="none" id="aleksandar-to-uc_signals" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="256.08,316.2769,246.2518,315.639,251.389,318.0074,249.0206,323.1446,256.08,316.2769" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><!--MD5=[1fbeaf14bae6136a22fea2cdb6a74262]
+link aleksandar to uc_history--><g id="link_aleksandar_uc_history"><path d="M102.85,1053.1869 C119.64,1017.8969 141.62,966.6669 153,919.2969 C160.35,888.7169 147.64,804.5169 165,778.2969 C183.77,749.9469 216.15,731.0869 245.98,718.9169 " fill="none" id="aleksandar-to-uc_history" style="stroke:#4A6FA5;stroke-width:1.0;"/><polygon fill="#4A6FA5" points="250.75,717.0269,240.9092,716.6294,246.1027,718.8715,243.8606,724.065,250.75,717.0269" style="stroke:#4A6FA5;stroke-width:1.0;"/></g><rect fill="#FFFFFF" height="16.2969" rx="3" ry="3" style="stroke:#00000000;stroke-width:1.0;" width="211" x="119.5" y="1328.2969"/><text fill="#333333" font-family="&quot;Segoe UI, Helvetica, Arial, sans-serif&quot;" font-size="14" lengthAdjust="spacing" textLength="211" x="119.5" y="1341.292">3 personas | 5 pages Streamlit</text><!--MD5=[470143741f0ce70895e0954c57e3f0cc]
+@startuml UC01-personas
+!include _common.puml
+
+title CryptoBot — Cas d'Utilisation par Persona
+caption 3 personas | 5 pages Streamlit
+
+left to right direction
+
+' ============================================================
+' Personas
+' ============================================================
+actor "Noah\n(Trader independant)" as noah #FEF3E8
+actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
+actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
+
+' ============================================================
+' Use Cases
+' ============================================================
+rectangle "CryptoBot" #F5F5F5 {
+
+  package "Dashboard" #FEF3E8 {
+    usecase "Consulter charts\nmulti-timeframe" as uc_charts
+    usecase "Voir signaux\nBUY/SELL actifs" as uc_signals
+    usecase "Analyser indicateurs\nRSI, Bollinger, Trend" as uc_indic
+  }
+
+  package "Veille" #F3EEFF {
+    usecase "Suivre actualites\ncrypto en temps reel" as uc_news
+    usecase "Recevoir alertes\nreglementaires" as uc_reg
+    usecase "Voir sentiment\npar source" as uc_sentiment
+  }
+
+  package "Portfolio" #ECFDF5 {
+    usecase "Gerer positions\n(CRUD)" as uc_portfolio
+    usecase "Calculer P&L\nsimule" as uc_pnl
+    usecase "Utiliser chatbot\nassistant IA" as uc_chat
+  }
+
+  package "Analytics" #FEF3E8 {
+    usecase "Voir heatmaps\ncorrelations" as uc_heatmap
+    usecase "Analyser volumes\net microstructure" as uc_volume
+  }
+
+  package "Performance" #F3EEFF {
+    usecase "Consulter historique\nsignaux" as uc_history
+    usecase "Voir win rate\net Sharpe ratio" as uc_perf
+  }
+}
+
+' ============================================================
+' Relations
+' ============================================================
+noah - -> uc_charts
+noah - -> uc_signals
+noah - -> uc_indic
+noah - -> uc_heatmap
+noah - -> uc_history
+noah - -> uc_perf
+
+sarah - -> uc_news
+sarah - -> uc_reg
+sarah - -> uc_sentiment
+sarah - -> uc_heatmap
+
+aleksandar - -> uc_portfolio
+aleksandar - -> uc_pnl
+aleksandar - -> uc_chat
+aleksandar - -> uc_signals
+aleksandar - -> uc_history
+
+@enduml
+
+@startuml UC01-personas
+
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+
+
+title CryptoBot — Cas d'Utilisation par Persona
+caption 3 personas | 5 pages Streamlit
+
+left to right direction
+
+actor "Noah\n(Trader independant)" as noah #FEF3E8
+actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
+actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
+
+rectangle "CryptoBot" #F5F5F5 {
+
+  package "Dashboard" #FEF3E8 {
+    usecase "Consulter charts\nmulti-timeframe" as uc_charts
+    usecase "Voir signaux\nBUY/SELL actifs" as uc_signals
+    usecase "Analyser indicateurs\nRSI, Bollinger, Trend" as uc_indic
+  }
+
+  package "Veille" #F3EEFF {
+    usecase "Suivre actualites\ncrypto en temps reel" as uc_news
+    usecase "Recevoir alertes\nreglementaires" as uc_reg
+    usecase "Voir sentiment\npar source" as uc_sentiment
+  }
+
+  package "Portfolio" #ECFDF5 {
+    usecase "Gerer positions\n(CRUD)" as uc_portfolio
+    usecase "Calculer P&L\nsimule" as uc_pnl
+    usecase "Utiliser chatbot\nassistant IA" as uc_chat
+  }
+
+  package "Analytics" #FEF3E8 {
+    usecase "Voir heatmaps\ncorrelations" as uc_heatmap
+    usecase "Analyser volumes\net microstructure" as uc_volume
+  }
+
+  package "Performance" #F3EEFF {
+    usecase "Consulter historique\nsignaux" as uc_history
+    usecase "Voir win rate\net Sharpe ratio" as uc_perf
+  }
+}
+
+noah - -> uc_charts
+noah - -> uc_signals
+noah - -> uc_indic
+noah - -> uc_heatmap
+noah - -> uc_history
+noah - -> uc_perf
+
+sarah - -> uc_news
+sarah - -> uc_reg
+sarah - -> uc_sentiment
+sarah - -> uc_heatmap
+
+aleksandar - -> uc_portfolio
+aleksandar - -> uc_pnl
+aleksandar - -> uc_chat
+aleksandar - -> uc_signals
+aleksandar - -> uc_history
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 19:34:49 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
