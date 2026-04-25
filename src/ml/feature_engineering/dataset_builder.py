@@ -36,7 +36,7 @@ _META_COLUMNS = {
     "low",
     "close",
     "volume",
-    # Colonnes déjà enrichies par le pipeline ETL (redondantes avec les features)
+    # Colonnes déjà enrichies par le pipeline ETL
     "price_range",
     "price_change",
     "price_change_pct",
@@ -128,8 +128,10 @@ class DatasetBuilder:
         tscv = TimeSeriesSplit(n_splits=n_splits)
         splits = [
             (
-                X.iloc[tr], X.iloc[val],
-                y.iloc[tr], y.iloc[val],
+                X.iloc[tr],
+                X.iloc[val],
+                y.iloc[tr],
+                y.iloc[val],
             )
             for tr, val in tscv.split(X)
         ]
