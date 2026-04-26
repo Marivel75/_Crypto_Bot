@@ -105,6 +105,16 @@ TRANSLATIONS: dict[str, str] = {
     "news.negative": "Négatif",
     "news.neutral": "Neutre",
     "news.avg_score": "Score moyen",
+    # fear & greed
+    "fng.title": "Fear & Greed Index",
+    "fng.subtitle": "Sentiment du marché crypto (alternative.me)",
+    "fng.unavailable": "Indice non disponible",
+    "fng.extreme_fear": "Peur Extrême",
+    "fng.fear": "Peur",
+    "fng.neutral": "Neutre",
+    "fng.greed": "Avidité",
+    "fng.extreme_greed": "Avidité Extrême",
+    # news vader
     "news.vader_title": "Comment est calculé le sentiment ?",
     "news.vader_explanation": """
 **Score VADER** (Valence Aware Dictionary and sEntiment Reasoner)
