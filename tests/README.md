@@ -7,18 +7,21 @@ Les tests sont aussi lancés par un workflow `tests.yml` sur GitHub Actions.
 
 ```
 tests/
-├── test_ohlcv_collector.py   # OHLCVCollector
-├── test_ticker_service.py    # TickerCollector et TickerCache
-├── test_data_validator.py    # DataValidator
-├── test_etl_extractor.py     # OHLCVExtractor
-├── test_etl_transformer.py   # OHLCVTransformer
-├── test_etl_loader.py        # OHLCVLoader
-├── test_etl_pipeline.py      # ETLPipelineOHLCV
-├── test_feature_builder.py   # FeatureBuilder (ML)
-├── test_dataset_builder.py   # DatasetBuilder (ML)
-├── test_baseline.py          # BaselineModel (ML)
-├── test_evaluator.py         # Evaluator (ML)
-├── test_api.py               # API FastAPI (health, ohlcv, market, signals)
+├── test_ohlcv_collector.py        # OHLCVCollector
+├── test_ticker_service.py         # TickerCollector et TickerCache
+├── test_data_validator.py         # DataValidator
+├── test_etl_extractor.py          # OHLCVExtractor
+├── test_etl_transformer.py        # OHLCVTransformer
+├── test_etl_loader.py             # OHLCVLoader
+├── test_etl_pipeline.py           # ETLPipelineOHLCV
+├── test_feature_builder.py        # FeatureBuilder (ML)
+├── test_dataset_builder.py        # DatasetBuilder (ML)
+├── test_baseline.py               # BaselineModel (ML)
+├── test_evaluator.py              # Evaluator (ML)
+├── test_api.py                    # API FastAPI (health, ohlcv, market, signals)
+├── test_frontend_utils.py         # Frontend — utils (fmt_ts, extract_*)
+├── test_frontend_api_client.py    # Frontend — APIClient (httpx mocké)
+├── test_frontend_components.py    # Frontend — candlestick, indicators
 └── README.md
 ```
 
@@ -62,6 +65,9 @@ open htmlcov/index.html
 
 # Tests API FastAPI
 ./scripts/run_tests.py --type api --verbose
+
+# Tests Frontend Streamlit
+./scripts/run_tests.py --type frontend --verbose
 ```
 
 ## Lancer un test précis avec pytest
@@ -124,18 +130,45 @@ Base SQLite en mémoire + `StaticPool`, override de la dépendance `get_db`.
 - **TestMarketTicker** (3) : liste, filtre symbol, schéma
 - **TestSignals** (7) : symbol obligatoire, indicateurs présents et numériques, 404, limites min/max
 
+### test_frontend_utils.py — 20 tests
+Fonctions pures de `frontend/utils.py` — pas de dépendance Streamlit.
+
+- **TestExtractTimeframes** (6) : tri canonique, déduplication, timeframes inconnus
+- **TestExtractSymbols** (5) : tri alpha, déduplication, clé manquante
+- **TestFmtTs** (9) : candles 1d (date seule), intraday (date+heure), suffixes tz, None
+
+### test_frontend_api_client.py — 16 tests
+`APIClient` avec `httpx.Client` mocké — aucun serveur requis.
+
+- **TestAPIClientGet** (4) : 200, 404, 500, erreur réseau
+- **TestFetchOhlcv** (4) : succès, paramètres transmis, réponse non-liste, 404
+- **TestFetchSignals** (2) : succès, 404
+- **TestFetchMarketGlobal** (2) : succès, réponse non-dict
+- **TestFetchMarketTop** (2) : succès, devise inconnue
+- **TestFetchSymbols** (2) : succès, réponse non-liste
+
+### test_frontend_components.py — 30 tests
+Fonctions pures des composants (pas d'appels `st.*` dans la suite).
+
+- **TestComputeMacdCrosses** (7) : croisements haussier/baissier, None, multiples, listes vides
+- **TestRenderCandlestick** (9) : Figure retournée, traces candlestick/volume/SMA/BB/MACD, titre
+- **TestSafeFloat** (4) : conversions, None, chaîne invalide
+- **TestRsiLabel** (5) : zones surachat/survente/neutre, valeurs limites
+- **TestBbPositionLabel** (6) : positions relative aux bandes, largeur nulle
+- **TestMacdLabel** (3) : haussier, baissier, neutre
+
 ## Couverture
 
 ```bash
-# Terminal
+# Terminal (src + api + frontend)
 ./scripts/run_tests.py --coverage
 
 # HTML
 ./scripts/run_tests.py --coverage --report
 open htmlcov/index.html
 
-# Avec pytest directement (src + api)
-python -m pytest --cov=src --cov=api tests/ --cov-report=term
+# Avec pytest directement
+python -m pytest --cov=src --cov=api --cov=frontend tests/ --cov-report=term
 ```
 
-*Mise à jour : 26/04/2026 — 251 tests au total*
+*Mise à jour : 26/04/2026 — 321 tests au total*
