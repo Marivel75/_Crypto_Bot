@@ -70,6 +70,13 @@ class APIClient:
         result = self.get("/ohlcv/symbols", params)
         return result if isinstance(result, list) else None
 
+    def fetch_distinct_count(self, symbol: str, timeframe: str) -> int:
+        """GET /ohlcv/distinct-count — nombre de timestamps uniques pour (symbol, timeframe)."""
+        result = self.get("/ohlcv/distinct-count", {"symbol": symbol, "timeframe": timeframe})
+        if isinstance(result, list) and result:
+            return max(r.get("distinct_count", 0) for r in result)
+        return 0
+
     def fetch_latest(self, timeframe: str = "1d") -> list[dict[str, Any]] | None:
         """GET /ohlcv/latest — most recent candle per symbol for the given timeframe."""
         result = self.get("/ohlcv/latest", {"timeframe": timeframe})
