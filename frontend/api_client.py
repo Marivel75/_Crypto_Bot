@@ -162,3 +162,45 @@ class APIClient:
         """GET /news/sentiment — per-source sentiment aggregates."""
         result = self.get("/news/sentiment")
         return result if isinstance(result, list) else None
+
+    # ------------------------------------------------------------------
+    # ML endpoints
+    # ------------------------------------------------------------------
+
+    def run_backtest(
+        self,
+        symbol: str,
+        timeframe: str = "1d",
+        model_type: str = "random_forest",
+        train_window: int = 180,
+        test_window: int = 30,
+    ) -> dict[str, Any]:
+        """GET /ml/backtest — lance un backtest walk-forward et retourne les résultats.
+
+        Retourne toujours un dict :
+          - succès  : résultats complets (clé "folds" présente)
+          - échec   : {"error": "message explicite"}
+        """
+        url = f"{self._base}/ml/backtest"
+        params: dict[str, Any] = {
+            "symbol": symbol,
+            "timeframe": timeframe,
+            "model_type": model_type,
+            "train_window": train_window,
+            "test_window": test_window,
+        }
+        try:
+            with httpx.Client(timeout=120.0) as client:
+                r = client.get(url, params=params)
+            if r.status_code == 200:
+                return r.json()
+            # Récupère le message d'erreur de l'API (422, 404, 500…)
+            try:
+                detail = r.json().get("detail", f"Erreur HTTP {r.status_code}")
+            except Exception:
+                detail = f"Erreur HTTP {r.status_code}"
+            logger.warning("Backtest %s → %s : %s", params, r.status_code, detail)
+            return {"error": detail}
+        except httpx.RequestError as exc:
+            logger.error("Backtest request failed: %s", exc)
+            return {"error": f"API inaccessible : {exc}"}

@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import health, ohlcv, market, signals, news
+from api.routers import health, ohlcv, market, signals, news, ml
 from api.dependencies import engine
 from src.models.news import Base as NewsBase
 
@@ -31,6 +31,7 @@ app.include_router(ohlcv.router)
 app.include_router(market.router)
 app.include_router(signals.router)
 app.include_router(news.router)
+app.include_router(ml.router)
 
 
 @app.get("/")
@@ -39,5 +40,5 @@ def root():
         "name": "Crypto Bot API",
         "version": "1.0.0",
         "docs": "/docs",
-        "endpoints": ["/health", "/ohlcv", "/market", "/signals", "/news"],
+        "endpoints": ["/health", "/ohlcv", "/market", "/signals", "/news", "/ml"],
     }
