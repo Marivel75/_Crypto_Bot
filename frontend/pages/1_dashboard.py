@@ -19,7 +19,7 @@ from frontend.components.candlestick import render_candlestick
 from frontend.components.indicators import render_indicator_summary
 from frontend.config import frontend_settings
 from frontend.i18n import t
-from frontend.utils import extract_symbols, extract_timeframes
+from frontend.utils import extract_symbols, extract_timeframes, fmt_ts
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ def _build_table(signals: list[dict[str, Any]]) -> pd.DataFrame:
     rows = []
     for row in signals:
         rows.append({
-            "Timestamp":   _fmt_ts(row.get("timestamp")),
+            "Timestamp":   fmt_ts(row.get("timestamp")),
             "Close":       row.get("close"),
             "RSI(14)":     _fmt(row.get("rsi_14"), 2),
             "SMA(20)":     _fmt(row.get("sma_20"), 2),
@@ -79,19 +79,6 @@ def _fmt(val: Any, decimals: int) -> float | None:
         return None
 
 
-def _fmt_ts(ts: Any) -> str:
-    """Format an ISO 8601 timestamp string for display.
-
-    - Midnight timestamps (1d candles) → date only: '2026-04-25'
-    - Intraday timestamps              → date + time: '2026-04-25 10:00'
-    """
-    if not ts:
-        return ""
-    s = str(ts).replace("Z", "").split("+")[0]  # strip tz
-    s = s.replace("T", " ")
-    if s.endswith(" 00:00:00") or s.endswith(" 00:00:00.000000"):
-        return s[:10]
-    return s[:16]  # YYYY-MM-DD HH:MM
 
 
 def page() -> None:

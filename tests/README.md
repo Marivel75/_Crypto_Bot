@@ -7,18 +7,21 @@ Les tests sont aussi lancés par un workflow `tests.yml` sur GitHub Actions.
 
 ```
 tests/
-├── test_ohlcv_collector.py   # OHLCVCollector
-├── test_ticker_service.py    # TickerCollector et TickerCache
-├── test_data_validator.py    # DataValidator
-├── test_etl_extractor.py     # OHLCVExtractor
-├── test_etl_transformer.py   # OHLCVTransformer
-├── test_etl_loader.py        # OHLCVLoader
-├── test_etl_pipeline.py      # ETLPipelineOHLCV
-├── test_feature_builder.py   # FeatureBuilder (ML)
-├── test_dataset_builder.py   # DatasetBuilder (ML)
-├── test_baseline.py          # BaselineModel (ML)
-├── test_evaluator.py         # Evaluator (ML)
-├── test_api.py               # API FastAPI (health, ohlcv, market, signals)
+├── test_ohlcv_collector.py        # OHLCVCollector
+├── test_ticker_service.py         # TickerCollector et TickerCache
+├── test_data_validator.py         # DataValidator
+├── test_etl_extractor.py          # OHLCVExtractor
+├── test_etl_transformer.py        # OHLCVTransformer
+├── test_etl_loader.py             # OHLCVLoader
+├── test_etl_pipeline.py           # ETLPipelineOHLCV
+├── test_feature_builder.py        # FeatureBuilder (ML)
+├── test_dataset_builder.py        # DatasetBuilder (ML)
+├── test_baseline.py               # BaselineModel (ML)
+├── test_evaluator.py              # Evaluator (ML)
+├── test_api.py                    # API FastAPI (health, ohlcv, market, signals)
+├── test_frontend_utils.py         # Frontend — utils (fmt_ts, extract_*)
+├── test_frontend_api_client.py    # Frontend — APIClient (httpx mocké)
+├── test_frontend_components.py    # Frontend — candlestick, indicators
 └── README.md
 ```
 
@@ -62,6 +65,9 @@ open htmlcov/index.html
 
 # Tests API FastAPI
 ./scripts/run_tests.py --type api --verbose
+
+# Tests Frontend Streamlit
+./scripts/run_tests.py --type frontend --verbose
 ```
 
 ## Lancer un test précis avec pytest

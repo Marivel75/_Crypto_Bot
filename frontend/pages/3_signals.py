@@ -16,7 +16,7 @@ import streamlit as st
 from frontend.api_client import APIClient
 from frontend.config import frontend_settings
 from frontend.i18n import t
-from frontend.utils import extract_symbols, extract_timeframes
+from frontend.utils import extract_symbols, extract_timeframes, fmt_ts
 
 
 @st.cache_resource
@@ -46,13 +46,6 @@ def _fmt(val: Any, decimals: int) -> float | None:
         return None
 
 
-def _fmt_ts(ts: Any) -> str:
-    if not ts:
-        return ""
-    s = str(ts).replace("Z", "").split("+")[0].replace("T", " ")
-    if s.endswith(" 00:00:00") or s.endswith(" 00:00:00.000000"):
-        return s[:10]
-    return s[:16]
 
 
 def page() -> None:
@@ -81,7 +74,7 @@ def page() -> None:
     rows = []
     for row in data:
         rows.append({
-            "Timestamp":   _fmt_ts(row.get("timestamp")),
+            "Timestamp":   fmt_ts(row.get("timestamp")),
             "Open":        _fmt(row.get("open"), 2),
             "High":        _fmt(row.get("high"), 2),
             "Low":         _fmt(row.get("low"), 2),

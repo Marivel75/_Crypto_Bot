@@ -22,3 +22,17 @@ def extract_symbols(symbols_data: list[dict[str, Any]]) -> list[str]:
     """Return the sorted unique symbols present in /ohlcv/symbols data."""
     syms = {d["symbol"] for d in symbols_data if d.get("symbol")}
     return sorted(syms)
+
+
+def fmt_ts(ts: Any) -> str:
+    """Format an ISO 8601 timestamp string for display in tables.
+
+    - Midnight timestamps (daily candles) → date only: '2026-04-25'
+    - Intraday timestamps                 → date + time: '2026-04-25 10:00'
+    """
+    if not ts:
+        return ""
+    s = str(ts).replace("Z", "").split("+")[0].replace("T", " ")
+    if s.endswith(" 00:00:00") or s.endswith(" 00:00:00.000000"):
+        return s[:10]
+    return s[:16]

@@ -16,7 +16,7 @@ def run_tests(
     Exécute les tests avec les options spécifiées.
 
     Args:
-        test_type: Type de tests à exécuter (all, unit, validation, etl, ml, api)
+        test_type: Type de tests à exécuter (all, unit, validation, etl, ml, api, frontend)
         verbose: Mode verbeux
         coverage: Générer un rapport de couverture
         report: Générer un rapport HTML
@@ -30,7 +30,7 @@ def run_tests(
         cmd.append("-v")
 
     if coverage:
-        cmd.extend(["--cov=src", "--cov=api", "--cov-report=term"])
+        cmd.extend(["--cov=src", "--cov=api", "--cov=frontend", "--cov-report=term"])
 
     if report:
         cmd.append("--cov-report=html")
@@ -56,6 +56,10 @@ def run_tests(
         cmd.append("tests/test_evaluator.py")
     elif test_type == "api":
         cmd.append("tests/test_api.py")
+    elif test_type == "frontend":
+        cmd.append("tests/test_frontend_utils.py")
+        cmd.append("tests/test_frontend_api_client.py")
+        cmd.append("tests/test_frontend_components.py")
     else:
         cmd.append("tests/")
 
@@ -75,7 +79,7 @@ def main():
 
     parser.add_argument(
         "--type",
-        choices=["all", "unit", "validation", "etl", "ml", "api"],
+        choices=["all", "unit", "validation", "etl", "ml", "api", "frontend"],
         default="all",
         help="Type de tests à exécuter (défaut: all)",
     )
