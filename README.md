@@ -62,6 +62,7 @@ python scripts/collect_news.py --interval 30  # boucle toutes les 30 min
 ./scripts/run_tests.py --type ml
 ./scripts/run_tests.py --type frontend
 ./scripts/run_tests.py --type news
+./scripts/run_tests.py --type fear
 ./scripts/run_tests.py --type unit
 ./scripts/run_tests.py --type validation
 ```
@@ -82,7 +83,7 @@ python scripts/collect_news.py --interval 30  # boucle toutes les 30 min
 │   └── quality/      # Validation des données
 ├── config/           # Configuration (settings.py, config.yaml)
 ├── scripts/          # Utilitaires (collect_news, run_tests, backup…)
-├── tests/            # Suite de tests (354 tests)
+├── tests/            # Suite de tests (371 tests)
 ├── main.py           # Point d'entrée collecte OHLCV
 └── requirements.txt
 ```

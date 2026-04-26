@@ -1,7 +1,7 @@
-"""Synchronous RSS news collector with VADER sentiment analysis.
+"""Collecteur synchrone d'articles de news via flux RSS.
 
-Adapted from roulio-dev:src/etl/collectors/news.py (async → sync,
-shared NewsArticle model → local ORM model, added sentiment + keywords).
+Récupère les articles depuis les sources RSS configurées, calcule un score
+de sentiment VADER (compound −1 à +1) et extrait les mots-clés de chaque article.
 """
 
 from __future__ import annotations

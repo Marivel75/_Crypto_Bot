@@ -115,6 +115,11 @@ class APIClient:
         result = self.get("/market/global")
         return result if isinstance(result, dict) else None
 
+    def fetch_fear_greed(self) -> dict[str, Any] | None:
+        """GET /market/fear-greed — current Fear & Greed index (0–100)."""
+        result = self.get("/market/fear-greed")
+        return result if isinstance(result, dict) else None
+
     def fetch_ticker(
         self,
         symbol: str | None = None,

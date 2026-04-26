@@ -4,6 +4,7 @@ from sqlalchemy import func
 from typing import Optional, List
 
 from api.dependencies import get_db
+from src.collectors.fear_greed_collector import FearGreedCollector
 from api.schemas.market import (
     TopCryptoSnapshotResponse,
     TopCryptoResponse,
@@ -115,3 +116,18 @@ def get_ticker(
         query = query.filter(TickerSnapshot.exchange == exchange.lower())
 
     return query.order_by(TickerSnapshot.snapshot_time.desc()).limit(limit).all()
+
+
+@router.get("/fear-greed")
+def get_fear_greed():
+    """Return the current Crypto Fear & Greed Index from alternative.me."""
+    try:
+        with FearGreedCollector() as collector:
+            result = collector.fetch()
+        return {
+            "value": result["value"],
+            "classification": result["classification"],
+            "timestamp": result["timestamp"].isoformat(),
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Fear & Greed API unavailable: {exc}")
