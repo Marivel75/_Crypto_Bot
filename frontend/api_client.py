@@ -128,3 +128,32 @@ class APIClient:
             params["exchange"] = exchange
         result = self.get("/market/ticker", params or None)
         return result if isinstance(result, list) else None
+
+    # ------------------------------------------------------------------
+    # News endpoints
+    # ------------------------------------------------------------------
+
+    def fetch_news(
+        self,
+        source: str | None = None,
+        sentiment: str | None = None,
+        limit: int = 50,
+    ) -> list[dict[str, Any]] | None:
+        """GET /news — recent articles, newest first."""
+        params: dict[str, Any] = {"limit": limit}
+        if source:
+            params["source"] = source
+        if sentiment:
+            params["sentiment"] = sentiment
+        result = self.get("/news", params)
+        return result if isinstance(result, list) else None
+
+    def fetch_news_sources(self) -> list[str] | None:
+        """GET /news/sources — distinct source names in DB."""
+        result = self.get("/news/sources")
+        return result if isinstance(result, list) else None
+
+    def fetch_news_sentiment(self) -> list[dict[str, Any]] | None:
+        """GET /news/sentiment — per-source sentiment aggregates."""
+        result = self.get("/news/sentiment")
+        return result if isinstance(result, list) else None

@@ -1,7 +1,7 @@
 # Crypto Bot
 
 Plateforme de collecte, stockage et analyse de données crypto.  
-Pipeline ETL multi-exchange → base de données → API REST → dashboard Streamlit.
+Pipeline ETL multi-exchange → base de données → API REST → dashboard Streamlit + veille actualités.
 
 ## Installation
 
@@ -18,8 +18,7 @@ Pour PostgreSQL, définir `DATABASE_URL` dans `config/config.yaml`.
 uvicorn api.main:app --reload --port 8000
 ```
 
-L'API est accessible sur `http://localhost:8000`.  
-Documentation interactive : `http://localhost:8000/docs`
+Accessible sur `http://localhost:8000` — documentation interactive : `http://localhost:8000/docs`
 
 → Détails des endpoints : [`api/README.md`](api/README.md)
 
@@ -29,40 +28,41 @@ Documentation interactive : `http://localhost:8000/docs`
 streamlit run frontend/app.py
 ```
 
-L'interface est accessible sur `http://localhost:8501`.  
-**L'API doit être démarrée en parallèle.**
+Accessible sur `http://localhost:8501`. **L'API doit être démarrée en parallèle.**
 
-Trois pages : Dashboard (graphique chandelier + indicateurs), Analytics (market cap, movers, corrélation), Signaux (tableau complet).
+Quatre pages : Dashboard (chandelier + indicateurs), Analytics (market cap, movers, corrélation), Signaux (tableau complet), Veille (news RSS + sentiment).
 
 ## Collecter des données
 
-Collecte OHLCV + Market Data depuis les exchanges et CoinGecko :
+**OHLCV + Market Data** (exchanges & CoinGecko) :
 
 ```bash
-# Collecte unique
-python main.py
+python main.py                                          # collecte unique
+python main.py --schedule                               # planifiée (quotidienne 09:00)
+python main.py --ticker --exchanges binance --runtime 120  # ticker temps réel
+```
 
-# Collecte planifiée (quotidienne à 09:00)
-python main.py --schedule
+**Actualités crypto** (RSS — Decrypt, CoinTelegraph, CryptoNews) :
 
-# Avec ticker temps réel
-python main.py --ticker --exchanges binance kraken --runtime 120
+```bash
+python scripts/collect_news.py --once      # collecte unique
+python scripts/collect_news.py             # boucle toutes les 60 min
+python scripts/collect_news.py --interval 30  # boucle toutes les 30 min
 ```
 
 ## Tests
 
 ```bash
-# Tous les tests (mode verbeux)
-./scripts/run_tests.py --verbose
-
-# Avec rapport de couverture
-./scripts/run_tests.py --verbose --coverage
+./scripts/run_tests.py --verbose           # tous les tests
+./scripts/run_tests.py --verbose --coverage  # avec couverture
 
 # Par groupe
-./scripts/run_tests.py --type api       # Tests API FastAPI
-./scripts/run_tests.py --type etl       # Tests pipeline ETL
-./scripts/run_tests.py --type ml        # Tests Machine Learning
-./scripts/run_tests.py --type unit      # Tests collecteurs
+./scripts/run_tests.py --type api
+./scripts/run_tests.py --type etl
+./scripts/run_tests.py --type ml
+./scripts/run_tests.py --type frontend
+./scripts/run_tests.py --type news
+./scripts/run_tests.py --type unit
 ./scripts/run_tests.py --type validation
 ```
 
@@ -71,19 +71,19 @@ python main.py --ticker --exchanges binance kraken --runtime 120
 ## Structure du projet
 
 ```
-├── api/              # Backend FastAPI (endpoints OHLCV, market, signals)
-├── frontend/         # Dashboard Streamlit (3 pages, composants Plotly)
+├── api/              # Backend FastAPI (OHLCV, market, signals, news)
+├── frontend/         # Dashboard Streamlit (4 pages, composants Plotly)
 ├── src/
-│   ├── collectors/   # Collecteurs OHLCV et ticker
+│   ├── collectors/   # Collecteurs OHLCV, ticker, news RSS
 │   ├── etl/          # Pipeline Extract → Transform → Load
 │   ├── models/       # Modèles SQLAlchemy
 │   ├── analytics/    # Indicateurs techniques (SMA, EMA, RSI, MACD, BB)
 │   ├── ml/           # Machine Learning (feature engineering, modèles)
 │   └── quality/      # Validation des données
 ├── config/           # Configuration (settings.py, config.yaml)
-├── scripts/          # Utilitaires (run_tests.py, backup, reset_db…)
-├── tests/            # Suite de tests (251 tests)
-├── main.py           # Point d'entrée collecte de données
+├── scripts/          # Utilitaires (collect_news, run_tests, backup…)
+├── tests/            # Suite de tests (354 tests)
+├── main.py           # Point d'entrée collecte OHLCV
 └── requirements.txt
 ```
 
@@ -91,7 +91,8 @@ python main.py --ticker --exchanges binance kraken --runtime 120
 
 | Couche | Technologie |
 |---|---|
-| Collecte | ccxt, CoinGecko API |
+| Collecte | ccxt, CoinGecko API, feedparser |
+| Sentiment | vaderSentiment |
 | Stockage | SQLAlchemy, SQLite (dev) / PostgreSQL (prod) |
 | API | FastAPI, uvicorn |
 | Frontend | Streamlit, Plotly |
