@@ -1,307 +1,174 @@
-# 🧪 Tests Crypto Bot
+# Tests Crypto Bot
 
 Ce répertoire contient tous les tests pour le projet Crypto Bot.
-Les tests sont aussi lancés par un workflow tests.yml sur github.
+Les tests sont aussi lancés par un workflow `tests.yml` sur GitHub Actions.
 
-## 📁 Structure
+## Structure
 
 ```
 tests/
-├── test_ohlcv_collector.py  # Tests unitaires pour OHLCVCollector
-├── test_ticker_service.py    # Tests unitaires pour TickerCollector et TickerCache
-├── test_data_validator.py    # Tests unitaires pour DataValidator
-├── test_etl_extractor.py    # Tests unitaires pour OHLCVExtractor
-├── test_etl_transformer.py   # Tests unitaires pour OHLCVTransformer
-├── test_etl_loader.py       # Tests unitaires pour OHLCVLoader
-├── test_etl_pipeline.py     # Tests unitaires pour ETLPipelineOHLCV
-├── README.md                # Documentation des tests
-└── integration/             # (À venir) Tests d'intégration
+├── test_ohlcv_collector.py        # OHLCVCollector
+├── test_ticker_service.py         # TickerCollector et TickerCache
+├── test_data_validator.py         # DataValidator
+├── test_etl_extractor.py          # OHLCVExtractor
+├── test_etl_transformer.py        # OHLCVTransformer
+├── test_etl_loader.py             # OHLCVLoader
+├── test_etl_pipeline.py           # ETLPipelineOHLCV
+├── test_feature_builder.py        # FeatureBuilder (ML)
+├── test_dataset_builder.py        # DatasetBuilder (ML)
+├── test_baseline.py               # BaselineModel (ML)
+├── test_evaluator.py              # Evaluator (ML)
+├── test_api.py                    # API FastAPI (health, ohlcv, market, signals)
+├── test_frontend_utils.py         # Frontend — utils (fmt_ts, extract_*)
+├── test_frontend_api_client.py    # Frontend — APIClient (httpx mocké)
+├── test_frontend_components.py    # Frontend — candlestick, indicators
+└── README.md
 ```
 
-## 🚀 Exécution des Tests
+## Lancer tous les tests
 
-### 1. Exécution de base
+La commande à retenir — exécute l'intégralité de la suite en mode verbeux :
 
 ```bash
-# Exécuter tous les tests
-python -m pytest tests/ -v
-
-# Exécuter un fichier de test spécifique
-python -m pytest tests/test_ohlcv_collector.py -v
-
-# Exécuter un test spécifique
-python -m pytest tests/test_ohlcv_collector.py::TestOHLCVCollectorInitialization::test_initialization_with_valid_parameters -v
+./scripts/run_tests.py --verbose
 ```
 
-### 2. Exécution des tests ETL
+Avec rapport de couverture (src/ + api/) :
 
 ```bash
-# Exécuter tous les tests ETL
-python -m pytest tests/test_etl_*.py -v
-
-### 3. Exécution des tests de ticker
-
-```bash
-# Exécuter les tests de ticker
-python -m pytest tests/test_ticker_service.py -v
-
-# Exécuter un test spécifique de ticker
-python -m pytest tests/test_ticker_service.py::TestTickerCollector::test_collection_loop -v
+./scripts/run_tests.py --verbose --coverage
 ```
 
-### 4. Utilisation du script de test complet
-
-Pour tester toutes les fonctionnalités avant déploiement :
+Avec rapport HTML en plus :
 
 ```bash
-# Test complet (recommandé avant production)
-python scripts/test_main.py
-
-# Ce script teste:
-# - Collecte OHLCV depuis plusieurs exchanges
-# - Collecte de ticker en temps réel
-# - Fonctionnement multi-exchanges
-# - Qualité et intégrité des données
-```
-
-# Exécuter les tests de l'extracteur
-python -m pytest tests/test_etl_extractor.py -v
-
-# Exécuter les tests du transformateur
-python -m pytest tests/test_etl_transformer.py -v
-
-# Exécuter les tests du chargeur
-python -m pytest tests/test_etl_loader.py -v
-
-# Exécuter les tests du pipeline
-python -m pytest tests/test_etl_pipeline.py -v
-
-# Exécuter un test spécifique du pipeline
-python -m pytest tests/test_etl_pipeline.py::TestETLPipeline::test_run_batch_success -v
-```
-
-### 3. Utilisation du script de test
-
-```bash
-# Aide
-python scripts/run_tests.py --help
-
-# Exécuter les tests unitaires (MarketCollector)
-python scripts/run_tests.py --type unit --verbose
-
-# Exécuter les tests de validation (DataValidator)
-python scripts/run_tests.py --type validation --verbose
-
-# Exécuter les tests ETL
-python scripts/run_tests.py --type etl --verbose
-
-# Exécuter tous les tests avec couverture
-python scripts/run_tests.py --coverage
-
-# Générer un rapport HTML
-python scripts/run_tests.py --coverage --report
-
-# Exécuter un test spécifique avec pytest directement
-python -m pytest tests/test_data_validator.py::TestCompleteOHLCVValidation::test_validate_complete_valid_data -v
-```
-
-## 📊 Tests Actuels
-
-### test_market_collector.py
-
-**15 tests** couvrant :
-
-- **Initialisation** (8 tests) :
-
-  - Validation des paramètres d'entrée
-  - Gestion des exchanges (Binance, Kraken, Coinbase)
-  - Gestion des erreurs de configuration
-
-- **Validation** (3 tests) :
-
-  - Validation des paires et timeframes
-  - Gestion des valeurs vides et invalides
-
-- **Fonctionnement** (4 tests) :
-  - Test de `fetch_and_store` avec succès
-  - Gestion des exceptions
-  - Gestion des doublons
-  - Intégration avec le pipeline ETL
-
-### test_data_validator.py
-
-**22 tests** couvrant le module de validation des données :
-
-- **Initialisation** (1 test) :
-  - Test des valeurs par défaut du valideur
-
-- **Validation de structure** (3 tests) :
-  - DataFrame vide
-  - Colonnes manquantes
-  - Structure valide
-
-- **Validation des prix** (5 tests) :
-  - Prix NaN, non numériques, négatifs
-  - Prix très bas (warnings)
-  - Prix valides
-
-- **Validation du volume** (4 tests) :
-  - Volume NaN, négatif
-  - Volume très élevé (warnings)
-  - Volume valide
-
-- **Validation de cohérence** (2 tests) :
-  - Cohérence high/low
-  - Prix d'ouverture/fermeture négatifs
-
-- **Validation des métadonnées** (3 tests) :
-  - Symbol et timeframe invalides
-  - Métadonnées valides
-
-- **Validation complète** (3 tests) :
-  - Données complètement valides
-  - Données avec erreurs
-  - Données avec warnings
-
-### test_etl_extractor.py
-
-**9 tests** couvrant le composant d'extraction :
-
-- **Initialisation** (2 tests) :
-  - Initialisation avec exchange valide
-  - Gestion des erreurs d'initialisation
-
-- **Extraction** (4 tests) :
-  - Extraction réussie
-  - Gestion des erreurs d'extraction
-  - Extraction avec données vides
-  - Extraction avec données partielles
-
-- **Batch** (3 tests) :
-  - Extraction batch réussie
-  - Gestion des erreurs batch
-  - Extraction batch avec symboles multiples
-
-### test_etl_transformer.py
-
-**12 tests** couvrant le composant de transformation :
-
-- **Initialisation** (1 test) :
-  - Initialisation avec valideur
-
-- **Transformation** (6 tests) :
-  - Transformation réussie
-  - Gestion des erreurs de transformation
-  - Transformation avec données manquantes
-  - Transformation avec données invalides
-  - Enrichissement des données
-  - Normalisation des données
-
-- **Batch** (5 tests) :
-  - Transformation batch réussie
-  - Gestion des erreurs batch
-  - Transformation batch avec symboles multiples
-  - Transformation batch avec données mixtes
-  - Transformation batch avec erreurs partielles
-
-### test_etl_loader.py
-
-**18 tests** couvrant le composant de chargement :
-
-- **Initialisation** (2 tests) :
-  - Initialisation avec base de données valide
-  - Gestion des erreurs d'initialisation
-
-- **Chargement** (6 tests) :
-  - Chargement réussi
-  - Gestion des erreurs de chargement
-  - Chargement avec données vides
-  - Chargement avec doublons
-  - Chargement avec données invalides
-  - Chargement avec erreurs de base de données
-
-- **Batch** (10 tests) :
-  - Chargement batch réussi
-  - Gestion des erreurs batch
-  - Chargement batch avec symboles multiples
-  - Chargement batch avec données mixtes
-  - Chargement batch avec erreurs partielles
-  - Chargement batch avec transactions
-  - Chargement batch avec rollback
-  - Chargement batch avec commit
-  - Chargement batch avec validation
-  - Chargement batch avec métriques
-
-### test_etl_pipeline.py
-
-**13 tests** couvrant le pipeline ETL complet :
-
-- **Initialisation** (2 tests) :
-  - Initialisation avec composants valides
-  - Gestion des erreurs d'initialisation
-
-- **Exécution** (6 tests) :
-  - Exécution réussie
-  - Gestion des erreurs d'exécution
-  - Exécution avec données vides
-  - Exécution avec données partielles
-  - Exécution avec erreurs de validation
-  - Exécution avec erreurs de transformation
-
-- **Batch** (5 tests) :
-  - Exécution batch réussie
-  - Gestion des erreurs batch
-  - Exécution batch avec symboles multiples
-  - Exécution batch avec données mixtes
-  - Exécution batch avec métriques complètes
-
-## 📈 Rapport de Couverture
-
-Pour générer un rapport de couverture :
-
-```bash
-# Installer pytest-cov
-pip install pytest-cov
-
-# Exécuter avec couverture
-python -m pytest --cov=src tests/ --cov-report=term
-
-# Générer un rapport HTML
-python -m pytest --cov=src tests/ --cov-report=html
-
-# Ouvrir le rapport
+./scripts/run_tests.py --verbose --coverage --report
 open htmlcov/index.html
 ```
 
-## 🏗️ Architecture ETL
+> Le script est exécutable directement (`chmod +x` déjà appliqué). Si nécessaire : `python scripts/run_tests.py --verbose`.
 
-Le projet utilise maintenant une architecture ETL modulaire pour le traitement des données OHLCV :
+## Lancer un groupe de tests
 
+```bash
+# Tests collecteurs (OHLCV + ticker)
+./scripts/run_tests.py --type unit --verbose
+
+# Tests validation des données
+./scripts/run_tests.py --type validation --verbose
+
+# Tests ETL (extractor, transformer, loader, pipeline)
+./scripts/run_tests.py --type etl --verbose
+
+# Tests Machine Learning (features, dataset, baseline, evaluator)
+./scripts/run_tests.py --type ml --verbose
+
+# Tests API FastAPI
+./scripts/run_tests.py --type api --verbose
+
+# Tests Frontend Streamlit
+./scripts/run_tests.py --type frontend --verbose
 ```
-MarketCollector
-  └── ETLPipeline (orchestration)
-      ├── OHLCVExtractor (extraction)
-      ├── OHLCVTransformer (transformation + validation)
-      └── OHLCVLoader (chargement)
+
+## Lancer un test précis avec pytest
+
+```bash
+# Un fichier
+python -m pytest tests/test_api.py -v
+
+# Une classe
+python -m pytest tests/test_api.py::TestSignals -v
+
+# Un test unitaire
+python -m pytest tests/test_api.py::TestSignals::test_returns_data_with_indicators -v
 ```
 
-### Composants ETL
+## Détail des tests
 
-- **OHLCVExtractor** : Récupère les données depuis les exchanges avec gestion des erreurs et retry
-- **OHLCVTransformer** : Valide, enrichit et normalise les données avec DataValidator0HCLV
-- **OHLCVLoader** : Charge les données dans la base de données avec gestion des transactions
-- **ETLPipeline** : Orchestre le pipeline complet avec suivi des performances et gestion des erreurs
+### test_ohlcv_collector.py — 15 tests
+Initialisation, validation des paramètres, `fetch_and_store`, gestion des erreurs et doublons.
 
-### PipelineResult
+### test_ticker_service.py — 15 tests
+Cache ticker, boucle de collecte, snapshots en base.
 
-Le pipeline utilise un objet `PipelineResult` pour suivre les métriques d'exécution :
-- Temps d'exécution par étape
-- Nombre de lignes traitées
-- Statut de succès/échec
-- Messages d'erreur détaillés
-- Métadonnées de traitement
+### test_data_validator.py — 22 tests
+Structure DataFrame, prix (NaN, négatifs, très bas), volume, cohérence high/low, métadonnées.
 
-\*Mise à jour : 13/01/2026
-*Ajout des tests pour DataValidator : 13/01/2026
-*Ajout du pipeline ETL complet : 13/01/2026
-*Total tests : 89 (15 + 22 + 9 + 12 + 18 + 13)
+### test_etl_extractor.py — 9 tests
+Extraction unitaire et batch, gestion des erreurs d'extraction.
+
+### test_etl_transformer.py — 12 tests
+Transformation, enrichissement, normalisation des symboles, batch.
+
+### test_etl_loader.py — 18 tests
+Chargement, transactions, rollback, gestion des doublons, batch.
+
+### test_etl_pipeline.py — 13 tests
+Orchestration complète Extract→Transform→Load, métriques, erreurs partielles.
+
+### test_feature_builder.py
+Features de retour, volatilité, indicateurs techniques, structure des bougies, volume, temporel.
+
+### test_dataset_builder.py
+Création des datasets supervisés (X, y), encodage de la cible, TimeSeriesSplit.
+
+### test_baseline.py
+Entraînement et prédiction : Dummy, LogisticRegression, RandomForest. Cross-validation.
+
+### test_evaluator.py
+Métriques : accuracy, precision, recall, F1. Cas limites (prédictions vides, classes absentes).
+
+### test_api.py — 34 tests
+Base SQLite en mémoire + `StaticPool`, override de la dépendance `get_db`.
+
+- **TestHealth** (2) : status ok, connexion DB
+- **TestOHLCV** (8) : filtres symbol/timeframe/exchange, limit, schéma, tri DESC
+- **TestOHLCVSymbols** (4) : liste, schéma, count, filtre exchange
+- **TestOHLCVLatest** (2) : données retournées, timeframe par défaut
+- **TestMarketTop** (5) : snapshot, limit, schéma, tri par rank, 404 devise inconnue
+- **TestMarketGlobal** (3) : données, schéma, liste dominance
+- **TestMarketTicker** (3) : liste, filtre symbol, schéma
+- **TestSignals** (7) : symbol obligatoire, indicateurs présents et numériques, 404, limites min/max
+
+### test_frontend_utils.py — 20 tests
+Fonctions pures de `frontend/utils.py` — pas de dépendance Streamlit.
+
+- **TestExtractTimeframes** (6) : tri canonique, déduplication, timeframes inconnus
+- **TestExtractSymbols** (5) : tri alpha, déduplication, clé manquante
+- **TestFmtTs** (9) : candles 1d (date seule), intraday (date+heure), suffixes tz, None
+
+### test_frontend_api_client.py — 16 tests
+`APIClient` avec `httpx.Client` mocké — aucun serveur requis.
+
+- **TestAPIClientGet** (4) : 200, 404, 500, erreur réseau
+- **TestFetchOhlcv** (4) : succès, paramètres transmis, réponse non-liste, 404
+- **TestFetchSignals** (2) : succès, 404
+- **TestFetchMarketGlobal** (2) : succès, réponse non-dict
+- **TestFetchMarketTop** (2) : succès, devise inconnue
+- **TestFetchSymbols** (2) : succès, réponse non-liste
+
+### test_frontend_components.py — 30 tests
+Fonctions pures des composants (pas d'appels `st.*` dans la suite).
+
+- **TestComputeMacdCrosses** (7) : croisements haussier/baissier, None, multiples, listes vides
+- **TestRenderCandlestick** (9) : Figure retournée, traces candlestick/volume/SMA/BB/MACD, titre
+- **TestSafeFloat** (4) : conversions, None, chaîne invalide
+- **TestRsiLabel** (5) : zones surachat/survente/neutre, valeurs limites
+- **TestBbPositionLabel** (6) : positions relative aux bandes, largeur nulle
+- **TestMacdLabel** (3) : haussier, baissier, neutre
+
+## Couverture
+
+```bash
+# Terminal (src + api + frontend)
+./scripts/run_tests.py --coverage
+
+# HTML
+./scripts/run_tests.py --coverage --report
+open htmlcov/index.html
+
+# Avec pytest directement
+python -m pytest --cov=src --cov=api --cov=frontend tests/ --cov-report=term
+```
+
+*Mise à jour : 26/04/2026 — 321 tests au total*
