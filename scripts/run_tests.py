@@ -60,6 +60,8 @@ def run_tests(
         cmd.append("tests/test_frontend_utils.py")
         cmd.append("tests/test_frontend_api_client.py")
         cmd.append("tests/test_frontend_components.py")
+    elif test_type == "news":
+        cmd.append("tests/test_news_collector.py")
     else:
         cmd.append("tests/")
 
@@ -79,7 +81,7 @@ def main():
 
     parser.add_argument(
         "--type",
-        choices=["all", "unit", "validation", "etl", "ml", "api", "frontend"],
+        choices=["all", "unit", "validation", "etl", "ml", "api", "frontend", "news"],
         default="all",
         help="Type de tests à exécuter (défaut: all)",
     )

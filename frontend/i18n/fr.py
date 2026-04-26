@@ -84,4 +84,40 @@ TRANSLATIONS: dict[str, str] = {
     "indicators.macd_bullish": "Haussier",
     "indicators.macd_bearish": "Baissier",
     "indicators.macd_neutral": "Neutre",
+    # nav
+    "nav.veille": "Veille",
+    # news / veille page
+    "news.header": "Veille Crypto",
+    "news.filters": "Filtres",
+    "news.all_sources": "Toutes les sources",
+    "news.all_sentiments": "Tous",
+    "news.source_label": "Source",
+    "news.sentiment_label": "Sentiment",
+    "news.limit": "Nombre d'articles",
+    "news.loading": "Chargement des actualités…",
+    "news.no_articles": "Aucun article disponible pour ces filtres.",
+    "news.no_sentiment": "Aucune donnée de sentiment disponible.",
+    "news.article_count": "{n} article(s) affiché(s)",
+    "news.tab_articles": "Articles",
+    "news.tab_sentiment": "Sentiment",
+    "news.sentiment_by_source": "Sentiment par source",
+    "news.positive": "Positif",
+    "news.negative": "Négatif",
+    "news.neutral": "Neutre",
+    "news.avg_score": "Score moyen",
+    "news.vader_title": "Comment est calculé le sentiment ?",
+    "news.vader_explanation": """
+**Score VADER** (Valence Aware Dictionary and sEntiment Reasoner)
+
+Chaque article reçoit un **score compound** entre **-1** et **+1**, calculé à partir du titre et du début du contenu :
+
+| Score | Label | Interprétation |
+|---|---|---|
+| ≥ +0.05 | ▲ Positif | Tonalité optimiste (hausse, record, adoption…) |
+| ≤ -0.05 | ▼ Négatif | Tonalité pessimiste (crash, hack, régulation…) |
+| Entre les deux | ● Neutre | Factuel ou ambigu |
+
+VADER analyse chaque mot via un dictionnaire pondéré et tient compte de la ponctuation (majuscules, points d'exclamation).
+L'**agrégat par source** (onglet Sentiment) permet de comparer la tonalité globale de chaque média.
+""",
 }
