@@ -54,6 +54,7 @@ def run_tests(
         cmd.append("tests/test_dataset_builder.py")
         cmd.append("tests/test_baseline.py")
         cmd.append("tests/test_evaluator.py")
+        cmd.append("tests/test_backtester.py")
     elif test_type == "api":
         cmd.append("tests/test_api.py")
     elif test_type == "frontend":

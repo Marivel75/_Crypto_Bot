@@ -83,7 +83,7 @@ python scripts/collect_news.py --interval 30  # boucle toutes les 30 min
 │   └── quality/      # Validation des données
 ├── config/           # Configuration (settings.py, config.yaml)
 ├── scripts/          # Utilitaires (collect_news, run_tests, backup…)
-├── tests/            # Suite de tests (371 tests)
+├── tests/            # Suite de tests (413 tests)
 ├── main.py           # Point d'entrée collecte OHLCV
 └── requirements.txt
 ```
