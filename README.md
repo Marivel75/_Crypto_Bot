@@ -72,8 +72,8 @@ python scripts/collect_news.py --interval 30  # boucle toutes les 30 min
 ## Structure du projet
 
 ```
-├── api/              # Backend FastAPI (OHLCV, market, signals, news)
-├── frontend/         # Dashboard Streamlit (4 pages, composants Plotly)
+├── api/              # Backend FastAPI (OHLCV, market, signals, news, ml)
+├── frontend/         # Dashboard Streamlit (5 pages, composants Plotly)
 ├── src/
 │   ├── collectors/   # Collecteurs OHLCV, ticker, news RSS
 │   ├── etl/          # Pipeline Extract → Transform → Load

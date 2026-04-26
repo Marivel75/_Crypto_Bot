@@ -258,7 +258,7 @@ class Backtester:
         gains = pnl[pnl > 0]
         losses = pnl[pnl < 0]
         profit_factor = (
-            float(gains.sum() / abs(losses.sum())) if losses.sum() != 0 else float("inf")
+            float(gains.sum() / abs(losses.sum())) if losses.sum() != 0 else 999.0
         )
         std_pnl = float(pnl.std()) if len(pnl) > 1 else 1.0
         sharpe = float(pnl.mean() / std_pnl) * math.sqrt(_TRADING_DAYS_PER_YEAR) if std_pnl else 0.0
@@ -351,6 +351,8 @@ class Backtester:
         pnl = float(sum(log_returns))
         sharpe = compute_sharpe(log_returns)
         pf = compute_profit_factor(log_returns)
+        if pf == float("inf"):
+            pf = 999.0
         mdd = compute_max_drawdown(log_returns)
 
         return {

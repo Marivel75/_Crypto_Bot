@@ -56,6 +56,7 @@ pg = st.navigation([
     st.Page("pages/2_analytics.py", title=t("nav.analytics"), icon=":material/analytics:"),
     st.Page("pages/3_signals.py", title=t("nav.signals"), icon=":material/signal_cellular_alt:"),
     st.Page("pages/4_veille.py", title=t("nav.veille"), icon=":material/newspaper:"),
+    st.Page("pages/5_ml.py", title=t("ml.nav"), icon=":material/model_training:"),
 ])
 
 # Sidebar branding
