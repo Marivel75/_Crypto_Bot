@@ -61,6 +61,23 @@ with st.sidebar:
     train_window = st.slider(t("ml.train_window"), min_value=30, max_value=365, value=60, step=10)
     test_window = st.slider(t("ml.test_window"), min_value=7, max_value=90, value=15, step=7)
 
+    # Diagnostique : timestamps uniques disponibles (après déduplication des fetches multiples)
+    @st.cache_data(ttl=60)
+    def _count_unique(sym: str, tf: str) -> int:
+        return _client.fetch_distinct_count(sym, tf)
+
+    n_unique = _count_unique(symbol, timeframe)
+    min_needed = train_window + 1 + test_window + 1  # 1 fold minimum
+    # Estimation conservatrice : retire 60 bougies de warmup indicateurs
+    n_usable = max(0, n_unique - 60)
+    folds_est = max(0, (n_usable - min_needed) // min_needed + 1) if n_usable >= min_needed else 0
+    if n_unique == 0:
+        st.warning("Aucune donnée — lancez `fetch_history.py`.")
+    elif n_usable < min_needed:
+        st.warning(f"{n_unique} bougies uniques ({n_usable} utiles) — il en faut ≥ {min_needed + 60} pour 1 fold.")
+    else:
+        st.info(f"{n_unique} bougies uniques → ~{folds_est} fold(s) estimé(s).")
+
     run = st.button(t("ml.run_button"), type="primary", use_container_width=True)
 
 # ---------------------------------------------------------------------------

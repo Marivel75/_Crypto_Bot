@@ -50,6 +50,10 @@ class OHLCVExtractor:
                 )
                 return raw_data
 
+            except ValueError as e:
+                # Erreur de configuration (ex: timeframe non supporté) — inutile de réessayer
+                logger.error(f"❌ Erreur de configuration, pas de retry : {e}")
+                raise ExtractionError(str(e))
             except Exception as e:
                 last_error = e
                 logger.warning(f"⚠️ Échec tentative {attempt}/{self.max_retries}: {e}")
