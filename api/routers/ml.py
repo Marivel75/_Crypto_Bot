@@ -1,5 +1,6 @@
 """Endpoints ML : backtesting walk-forward sur données historiques."""
 
+import logging
 import sys
 from pathlib import Path
 
@@ -15,6 +16,9 @@ from src.models.ohlcv import OHLCV
 from src.ml.feature_engineering.feature_builder import FeatureBuilder
 from src.ml.models.baseline import BaselineModel
 from src.ml.backtesting.backtester import Backtester
+from src.ml.mlflow_utils import log_backtest_metrics
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/ml", tags=["ml"])
 
@@ -138,6 +142,31 @@ def run_backtest(
 
     summary_dict = backtester.compute_metrics(results)
     baseline_dict = backtester.compare_baseline(results, data)
+
+    log_backtest_metrics(
+        experiment_name="backtest",
+        symbol=symbol.upper(),
+        model_version=model_type,
+        metrics={
+            "accuracy": summary_dict["accuracy"],
+            "win_rate": summary_dict["win_rate"],
+            "sharpe": summary_dict["sharpe"],
+            "profit_factor": float(summary_dict["profit_factor"]),
+            "max_drawdown": summary_dict["max_drawdown"],
+            "total_pnl": summary_dict["total_pnl"],
+            "n_folds": float(summary_dict["n_folds"]),
+            "strategy_pnl": baseline_dict["strategy_pnl"],
+            "baseline_return": baseline_dict["baseline_return"],
+            "excess_return": baseline_dict["excess_return"],
+        },
+        params={
+            "model_type": model_type,
+            "timeframe": timeframe,
+            "train_window": train_window,
+            "test_window": test_window,
+            "n_candles": len(data),
+        },
+    )
 
     folds = [
         BacktestFoldResult(

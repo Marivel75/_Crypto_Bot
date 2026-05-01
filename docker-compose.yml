@@ -1,4 +1,16 @@
 services:
+  mlflow:
+    build:
+      context: .
+      dockerfile: mlflow/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    networks:
+      - crypto-net
+
   api:
     build:
       context: .
@@ -7,10 +19,14 @@ services:
     env_file: .env
     environment:
       CRYPTO_BOT_DB_URL: sqlite:///data/processed/crypto_data.db
+      MLFLOW_TRACKING_URI: sqlite:////mlflow/mlflow.db
     ports:
       - "8000:8000"
     volumes:
       - ./data:/app/data
+      - mlflow-data:/mlflow
+    depends_on:
+      - mlflow
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -34,6 +50,9 @@ services:
         condition: service_healthy
     networks:
       - crypto-net
+
+volumes:
+  mlflow-data:
 
 networks:
   crypto-net:
