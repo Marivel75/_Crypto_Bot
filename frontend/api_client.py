@@ -70,6 +70,13 @@ class APIClient:
         result = self.get("/ohlcv/symbols", params)
         return result if isinstance(result, list) else None
 
+    def fetch_distinct_count(self, symbol: str, timeframe: str) -> int:
+        """GET /ohlcv/distinct-count — nombre de timestamps uniques pour (symbol, timeframe)."""
+        result = self.get("/ohlcv/distinct-count", {"symbol": symbol, "timeframe": timeframe})
+        if isinstance(result, list) and result:
+            return max(r.get("distinct_count", 0) for r in result)
+        return 0
+
     def fetch_latest(self, timeframe: str = "1d") -> list[dict[str, Any]] | None:
         """GET /ohlcv/latest — most recent candle per symbol for the given timeframe."""
         result = self.get("/ohlcv/latest", {"timeframe": timeframe})
@@ -115,6 +122,11 @@ class APIClient:
         result = self.get("/market/global")
         return result if isinstance(result, dict) else None
 
+    def fetch_fear_greed(self) -> dict[str, Any] | None:
+        """GET /market/fear-greed — current Fear & Greed index (0–100)."""
+        result = self.get("/market/fear-greed")
+        return result if isinstance(result, dict) else None
+
     def fetch_ticker(
         self,
         symbol: str | None = None,
@@ -128,3 +140,74 @@ class APIClient:
             params["exchange"] = exchange
         result = self.get("/market/ticker", params or None)
         return result if isinstance(result, list) else None
+
+    # ------------------------------------------------------------------
+    # News endpoints
+    # ------------------------------------------------------------------
+
+    def fetch_news(
+        self,
+        source: str | None = None,
+        sentiment: str | None = None,
+        limit: int = 50,
+    ) -> list[dict[str, Any]] | None:
+        """GET /news — recent articles, newest first."""
+        params: dict[str, Any] = {"limit": limit}
+        if source:
+            params["source"] = source
+        if sentiment:
+            params["sentiment"] = sentiment
+        result = self.get("/news", params)
+        return result if isinstance(result, list) else None
+
+    def fetch_news_sources(self) -> list[str] | None:
+        """GET /news/sources — distinct source names in DB."""
+        result = self.get("/news/sources")
+        return result if isinstance(result, list) else None
+
+    def fetch_news_sentiment(self) -> list[dict[str, Any]] | None:
+        """GET /news/sentiment — per-source sentiment aggregates."""
+        result = self.get("/news/sentiment")
+        return result if isinstance(result, list) else None
+
+    # ------------------------------------------------------------------
+    # ML endpoints
+    # ------------------------------------------------------------------
+
+    def run_backtest(
+        self,
+        symbol: str,
+        timeframe: str = "1d",
+        model_type: str = "random_forest",
+        train_window: int = 180,
+        test_window: int = 30,
+    ) -> dict[str, Any]:
+        """GET /ml/backtest — lance un backtest walk-forward et retourne les résultats.
+
+        Retourne toujours un dict :
+          - succès  : résultats complets (clé "folds" présente)
+          - échec   : {"error": "message explicite"}
+        """
+        url = f"{self._base}/ml/backtest"
+        params: dict[str, Any] = {
+            "symbol": symbol,
+            "timeframe": timeframe,
+            "model_type": model_type,
+            "train_window": train_window,
+            "test_window": test_window,
+        }
+        try:
+            with httpx.Client(timeout=120.0) as client:
+                r = client.get(url, params=params)
+            if r.status_code == 200:
+                return r.json()
+            # Récupère le message d'erreur de l'API (422, 404, 500…)
+            try:
+                detail = r.json().get("detail", f"Erreur HTTP {r.status_code}")
+            except Exception:
+                detail = f"Erreur HTTP {r.status_code}"
+            logger.warning("Backtest %s → %s : %s", params, r.status_code, detail)
+            return {"error": detail}
+        except httpx.RequestError as exc:
+            logger.error("Backtest request failed: %s", exc)
+            return {"error": f"API inaccessible : {exc}"}

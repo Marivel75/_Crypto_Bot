@@ -84,4 +84,110 @@ TRANSLATIONS: dict[str, str] = {
     "indicators.macd_bullish": "Haussier",
     "indicators.macd_bearish": "Baissier",
     "indicators.macd_neutral": "Neutre",
+    # nav
+    "nav.veille": "Veille",
+    # news / veille page
+    "news.header": "Veille Crypto",
+    "news.filters": "Filtres",
+    "news.all_sources": "Toutes les sources",
+    "news.all_sentiments": "Tous",
+    "news.source_label": "Source",
+    "news.sentiment_label": "Sentiment",
+    "news.limit": "Nombre d'articles",
+    "news.loading": "Chargement des actualités…",
+    "news.no_articles": "Aucun article disponible pour ces filtres.",
+    "news.no_sentiment": "Aucune donnée de sentiment disponible.",
+    "news.article_count": "{n} article(s) affiché(s)",
+    "news.tab_articles": "Articles",
+    "news.tab_sentiment": "Sentiment",
+    "news.sentiment_by_source": "Sentiment par source",
+    "news.positive": "Positif",
+    "news.negative": "Négatif",
+    "news.neutral": "Neutre",
+    "news.avg_score": "Score moyen",
+    # ml / backtesting
+    "ml.header": "Backtesting ML",
+    "ml.nav": "ML & Backtesting",
+    "ml.what_is_title": "C'est quoi le backtesting ?",
+    "ml.what_is_body": """
+Le **backtesting** consiste à tester une stratégie de trading sur des données *historiques* pour évaluer
+ce qu'elle aurait rapporté dans le passé. C'est la seule façon objective de valider un modèle ML
+avant de le confronter aux marchés réels.
+
+**Pourquoi le walk-forward ?**
+On ne mélange jamais passé et futur. À chaque fold, le modèle s'entraîne sur une fenêtre de dates
+puis est testé sur la fenêtre *suivante* — exactement comme en production.
+
+```
+|— train 180j —|purge|— test 30j —|embargo|— train 180j —|purge|— test 30j —| ...
+```
+
+- **Purge** : quelques jours retirés entre train et test pour éviter que les labels se chevauchent.
+- **Embargo** : quelques jours sautés après le test pour éviter les corrélations résiduelles.
+
+**Limite importante** : de bons résultats sur le passé ne garantissent pas les performances futures.
+Le backtesting est un outil de validation, pas une promesse.
+""",
+    "ml.params_title": "Paramètres",
+    "ml.symbol": "Symbole",
+    "ml.timeframe": "Timeframe",
+    "ml.model_type": "Modèle",
+    "ml.train_window": "Fenêtre d'entraînement (jours)",
+    "ml.test_window": "Fenêtre de test (jours)",
+    "ml.run_button": "Lancer le backtest",
+    "ml.running": "Calcul en cours…",
+    "ml.no_data": "Aucune donnée — vérifiez le symbole et la timeframe.",
+    "ml.not_enough_data": "Pas assez de données historiques pour ces paramètres. Réduisez les fenêtres ou collectez plus de données.",
+    "ml.results_title": "Résultats",
+    "ml.metrics_title": "Métriques agrégées",
+    "ml.folds_title": "Détail par fold",
+    "ml.baseline_title": "Stratégie vs Buy-and-Hold",
+    "ml.metric_sharpe": "Sharpe ratio",
+    "ml.metric_winrate": "Win rate",
+    "ml.metric_pnl": "PnL total",
+    "ml.metric_drawdown": "Max Drawdown",
+    "ml.metric_accuracy": "Accuracy",
+    "ml.metric_pf": "Profit Factor",
+    "ml.baseline_strategy": "Stratégie ML",
+    "ml.baseline_bah": "Buy & Hold",
+    "ml.baseline_excess": "Excès de rendement",
+    "ml.metrics_explain_title": "Comment lire ces métriques ?",
+    "ml.metrics_explain_body": """
+| Métrique | Ce qu'elle mesure | Bon signe |
+|---|---|---|
+| **Sharpe ratio** | Rendement ajusté du risque (annualisé) | > 1.0 |
+| **Win rate** | % de trades gagnants | > 50 % |
+| **PnL total** | Somme des log-returns sur les positions BUY | > 0 |
+| **Max Drawdown** | Perte max pic → creux | Proche de 0 |
+| **Profit Factor** | Gains bruts / Pertes brutes | > 1.0 |
+| **Accuracy** | % de prédictions correctes | > 55 % (marchés bruités) |
+
+Le **buy-and-hold** est la stratégie de référence : acheter et ne rien faire.
+Si la stratégie ML ne bat pas le buy-and-hold, elle n'apporte pas de valeur.
+""",
+    # fear & greed
+    "fng.title": "Fear & Greed Index",
+    "fng.subtitle": "Sentiment du marché crypto (alternative.me)",
+    "fng.unavailable": "Indice non disponible",
+    "fng.extreme_fear": "Peur Extrême",
+    "fng.fear": "Peur",
+    "fng.neutral": "Neutre",
+    "fng.greed": "Avidité",
+    "fng.extreme_greed": "Avidité Extrême",
+    # news vader
+    "news.vader_title": "Comment est calculé le sentiment ?",
+    "news.vader_explanation": """
+**Score VADER** (Valence Aware Dictionary and sEntiment Reasoner)
+
+Chaque article reçoit un **score compound** entre **-1** et **+1**, calculé à partir du titre et du début du contenu :
+
+| Score | Label | Interprétation |
+|---|---|---|
+| ≥ +0.05 | ▲ Positif | Tonalité optimiste (hausse, record, adoption…) |
+| ≤ -0.05 | ▼ Négatif | Tonalité pessimiste (crash, hack, régulation…) |
+| Entre les deux | ● Neutre | Factuel ou ambigu |
+
+VADER analyse chaque mot via un dictionnaire pondéré et tient compte de la ponctuation (majuscules, points d'exclamation).
+L'**agrégat par source** (onglet Sentiment) permet de comparer la tonalité globale de chaque média.
+""",
 }

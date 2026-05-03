@@ -66,6 +66,30 @@ def get_symbols(
     ]
 
 
+@router.get("/distinct-count")
+def get_distinct_count(
+    symbol: str = Query(..., description="Paire de trading (ex: BTC/USDT)"),
+    timeframe: str = Query(..., description="Timeframe (ex: 1d)"),
+    db: Session = Depends(get_db),
+):
+    """Retourne le nombre de timestamps distincts par exchange pour (symbol, timeframe).
+
+    Utile pour estimer le nombre de bougies uniques disponibles pour le ML,
+    indépendamment des doublons accumulés par des fetches successifs.
+    """
+    rows = (
+        db.query(
+            OHLCV.exchange,
+            func.count(func.distinct(OHLCV.timestamp)).label("distinct_count"),
+        )
+        .filter(OHLCV.symbol == symbol.upper(), OHLCV.timeframe == timeframe)
+        .group_by(OHLCV.exchange)
+        .order_by(func.count(func.distinct(OHLCV.timestamp)).desc())
+        .all()
+    )
+    return [{"exchange": r.exchange, "distinct_count": r.distinct_count} for r in rows]
+
+
 @router.get("/latest", response_model=List[OHLCVResponse])
 def get_latest(
     symbol: Optional[str] = None,

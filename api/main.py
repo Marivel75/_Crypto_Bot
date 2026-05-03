@@ -6,7 +6,27 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routers import health, ohlcv, market, signals
+from sqlalchemy import text
+
+from api.routers import health, ohlcv, market, signals, news, ml
+from api.dependencies import engine
+from src.models.news import Base as NewsBase
+
+# Create news_articles table if it doesn't exist yet (idempotent)
+NewsBase.metadata.create_all(bind=engine)
+
+# Migration légère : ajoute les colonnes entities et topics si absentes (SQLite)
+_NEW_COLUMNS = [
+    ("entities", "JSON"),
+    ("topics",   "JSON"),
+]
+with engine.connect() as _conn:
+    for _col, _type in _NEW_COLUMNS:
+        try:
+            _conn.execute(text(f"ALTER TABLE news_articles ADD COLUMN {_col} {_type}"))
+            _conn.commit()
+        except Exception:
+            pass  # colonne déjà présente
 
 app = FastAPI(
     title="Crypto Bot API",
@@ -25,6 +45,8 @@ app.include_router(health.router)
 app.include_router(ohlcv.router)
 app.include_router(market.router)
 app.include_router(signals.router)
+app.include_router(news.router)
+app.include_router(ml.router)
 
 
 @app.get("/")
@@ -33,5 +55,5 @@ def root():
         "name": "Crypto Bot API",
         "version": "1.0.0",
         "docs": "/docs",
-        "endpoints": ["/health", "/ohlcv", "/market", "/signals"],
+        "endpoints": ["/health", "/ohlcv", "/market", "/signals", "/news", "/ml"],
     }

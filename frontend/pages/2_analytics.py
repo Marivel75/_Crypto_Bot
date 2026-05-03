@@ -29,6 +29,11 @@ def _get_client() -> APIClient:
     return APIClient()
 
 
+@st.cache_data(ttl=300)
+def _fetch_fear_greed() -> dict[str, Any] | None:
+    return _get_client().fetch_fear_greed()
+
+
 @st.cache_data(ttl=120)
 def _fetch_global() -> dict[str, Any] | None:
     return _get_client().fetch_market_global()
@@ -46,6 +51,85 @@ def _fetch_ohlcv_closes(symbol: str) -> list[float] | None:
         return None
     # API returns DESC; reverse to ASC for chronological order
     return [float(r["close"]) for r in reversed(rows) if r.get("close") is not None]
+
+
+def _render_fear_greed(data: dict[str, Any]) -> None:
+    value = data.get("value", 0)
+    classification = data.get("classification", "")
+    timestamp = (data.get("timestamp") or "")[:10]
+
+    # Colour stops: extreme fear → fear → neutral → greed → extreme greed
+    if value <= 24:
+        color = "#ef4444"
+    elif value <= 44:
+        color = "#f97316"
+    elif value <= 55:
+        color = "#eab308"
+    elif value <= 74:
+        color = "#84cc16"
+    else:
+        color = "#22c55e"
+
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=value,
+        number={"font": {"size": 48, "color": color}},
+        gauge={
+            "axis": {"range": [0, 100], "tickwidth": 1, "tickcolor": "#8b949e"},
+            "bar": {"color": color, "thickness": 0.25},
+            "bgcolor": "#161b22",
+            "borderwidth": 0,
+            "steps": [
+                {"range": [0, 25],  "color": "#450a0a"},
+                {"range": [25, 45], "color": "#431407"},
+                {"range": [45, 55], "color": "#422006"},
+                {"range": [55, 75], "color": "#1a2e05"},
+                {"range": [75, 100], "color": "#052e16"},
+            ],
+            "threshold": {
+                "line": {"color": color, "width": 3},
+                "thickness": 0.85,
+                "value": value,
+            },
+        },
+        title={"text": f"{t('fng.title')}<br><span style='font-size:0.8em;color:#8b949e'>{t('fng.subtitle')}</span>"},
+    ))
+    fig.update_layout(
+        height=280,
+        margin={"t": 60, "b": 0, "l": 20, "r": 20},
+        paper_bgcolor="#0d1117",
+        font={"color": "#e6edf3"},
+    )
+
+    col_gauge, col_label = st.columns([2, 1])
+    with col_gauge:
+        st.plotly_chart(fig, use_container_width=True)
+    with col_label:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown(
+            f'<div style="font-size:1.8em;font-weight:700;color:{color}">{classification}</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f'<div style="font-size:0.85em;color:#8b949e;margin-top:4px">{timestamp}</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f'<div style="font-size:0.78em;color:#8b949e;margin-top:12px">'
+            f'0–24 Peur Extrême · 25–44 Peur<br>'
+            f'45–55 Neutre · 56–74 Avidité<br>'
+            f'75–100 Avidité Extrême</div>',
+            unsafe_allow_html=True,
+        )
+        with st.expander("C'est quoi ?", expanded=False):
+            st.caption(
+                "Le **Fear & Greed Index** mesure le sentiment global du marché crypto "
+                "sur une échelle de 0 (peur extrême) à 100 (avidité extrême). "
+                "Il est calculé par [alternative.me](https://alternative.me/crypto/fear-and-greed-index/) "
+                "à partir du volume, de la volatilité, des réseaux sociaux et des tendances de recherche. "
+                "Un marché en peur extrême peut signaler une opportunité d'achat ; "
+                "l'avidité extrême peut précéder une correction."
+            )
 
 
 def _render_kpi_cards(global_data: dict[str, Any], top_data: dict[str, Any] | None) -> None:
@@ -185,8 +269,14 @@ def _render_correlation() -> None:
 def page() -> None:
     st.header(t("analytics.header"))
 
+    fng_data = _fetch_fear_greed()
     global_data = _fetch_global()
     top_data = _fetch_top(limit=50)
+
+    if fng_data:
+        with st.container(border=True):
+            _render_fear_greed(fng_data)
+        st.divider()
 
     if global_data is None and top_data is None:
         with st.container(border=True):
