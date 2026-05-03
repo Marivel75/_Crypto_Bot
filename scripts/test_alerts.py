@@ -52,8 +52,12 @@ def run_tests():
     notify_collect_start(["binance", "kraken"], trigger="manuel")
     print(f"  {GREEN}Envoyé (ou ignoré si config manquante){RESET}")
 
-    print(f"\n{BOLD}Test 2 — Alerte fin de collecte{RESET}")
-    notify_collect_end(["binance", "kraken"], n_stored=842, duration_s=37)
+    print(f"\n{BOLD}Test 2a — Alerte fin (nouvelles bougies){RESET}")
+    notify_collect_end(["binance"], {"total_raw_rows": 27, "total_loaded_rows": 15, "total_symbols": 9, "successful": 9, "failed": 0}, duration_s=37)
+    print(f"  {GREEN}Envoyé{RESET}")
+
+    print(f"\n{BOLD}Test 2b — Alerte fin (données déjà à jour){RESET}")
+    notify_collect_end(["binance"], {"total_raw_rows": 27, "total_loaded_rows": 0, "total_symbols": 9, "successful": 9, "failed": 0}, duration_s=22)
     print(f"  {GREEN}Envoyé{RESET}")
 
     print(f"\n{BOLD}Test 3 — Alerte erreur{RESET}")

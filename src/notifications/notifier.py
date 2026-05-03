@@ -94,19 +94,67 @@ def notify_collect_start(exchanges: list[str], trigger: str = "planifié") -> No
     )
 
 
-def notify_collect_end(exchanges: list[str], n_stored: int, duration_s: float) -> None:
-    """Envoie une alerte à la fin de la collecte."""
+def _get_db_summary() -> str:
+    """Construit un résumé de l'état de la base de données."""
+    try:
+        from src.analytics.db_inspector import DBInspector
+        inspector = DBInspector()
+        stats = inspector.get_db_stats()
+        if not stats:
+            return ""
+
+        lines = [
+            "",
+            "─── État de la base de données ───────────────",
+            f"Tables           : {stats['table_count']}",
+            f"Lignes totales   : {stats['total_rows']:,}",
+            f"Taille           : {inspector.format_bytes(stats['total_size_bytes'])}",
+            "",
+        ]
+        for table, info in stats["tables"].items():
+            last = info.get("last_update") or "—"
+            if hasattr(last, "strftime"):
+                last = last.strftime("%d/%m/%Y %H:%M")
+            elif isinstance(last, str) and len(last) > 16:
+                last = last[:16].replace("T", " ")
+            lines.append(f"  {table:<30} {info['row_count']:>8,} lignes   màj {last}")
+
+        return "\n".join(lines)
+    except Exception as exc:
+        logger.warning("Résumé DB non disponible : %s", exc)
+        return ""
+
+
+def notify_collect_end(exchanges: list[str], summary: dict, duration_s: float) -> None:
+    """Envoie une alerte à la fin de la collecte avec le résumé ETL et l'état de la DB."""
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     minutes, seconds = divmod(int(duration_s), 60)
     duration_str = f"{minutes}m {seconds}s" if minutes else f"{seconds}s"
+
+    n_extracted = summary.get("total_raw_rows", 0)
+    n_loaded    = summary.get("total_loaded_rows", 0)
+    n_symbols   = summary.get("total_symbols", 0)
+    n_success   = summary.get("successful", 0)
+    n_failed    = summary.get("failed", 0)
+
+    status_note = ""
+    if n_loaded == 0 and n_extracted > 0:
+        status_note = "\n⚠️  0 nouvelle bougie insérée — données déjà à jour en base.\n"
+
+    db_section = _get_db_summary()
+
     _send(
         subject=f"[Crypto Bot] Collecte terminée — {now}",
         body=(
-            f"La collecte quotidienne est terminée.\n\n"
-            f"Exchanges       : {', '.join(exchanges)}\n"
-            f"Bougies stockées: {n_stored}\n"
-            f"Durée           : {duration_str}\n"
-            f"Fin             : {now}\n"
+            f"La collecte est terminée.\n\n"
+            f"Exchanges         : {', '.join(exchanges)}\n"
+            f"Paires traitées   : {n_symbols} ({n_success} OK, {n_failed} échec)\n"
+            f"Bougies extraites : {n_extracted}\n"
+            f"Bougies insérées  : {n_loaded}\n"
+            f"Durée             : {duration_str}\n"
+            f"Fin               : {now}\n"
+            f"{status_note}"
+            f"{db_section}\n"
         ),
     )
 

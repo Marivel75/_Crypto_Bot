@@ -29,8 +29,8 @@ class OHLCVScheduler:
         logger.info(f"OHLCVScheduler initialisé pour {len(self.exchanges)} exchanges")
         logger.info(f"Planification quotidienne à {self.schedule_time}")
 
-    def _ohlcv_collection(self, exchange: str) -> int:
-        """Collecte OHLCV pour un exchange. Retourne le nombre de bougies stockées."""
+    def _ohlcv_collection(self, exchange: str) -> dict:
+        """Collecte OHLCV pour un exchange. Retourne le résumé ETL."""
         normalized_timeframes = []
         for tf in self.timeframes:
             if exchange == "coinbase" and tf not in ["1m", "5m", "15m", "1h", "6h", "1d"]:
@@ -40,8 +40,7 @@ class OHLCVScheduler:
                 normalized_timeframes.append(tf)
 
         collector = OHLCVCollector(self.pairs, normalized_timeframes, exchange)
-        result = collector.fetch_and_store()
-        return result if isinstance(result, int) else 0
+        return collector.fetch_and_store() or {}
 
     def _ohlcv_collection_with_alerts(self, exchange: str, trigger: str = "planifié") -> None:
         """Collecte OHLCV avec alertes email début/fin/erreur."""
@@ -50,10 +49,10 @@ class OHLCVScheduler:
         t0 = _time.monotonic()
         try:
             logger.info(f"Début de la collecte OHLCV — {exchange} ({trigger})")
-            n_stored = self._ohlcv_collection(exchange)
+            summary = self._ohlcv_collection(exchange)
             duration = _time.monotonic() - t0
-            logger.info(f"✅ Collecte OHLCV {exchange} terminée — {n_stored} bougies en {duration:.0f}s")
-            notify_collect_end([exchange], n_stored, duration)
+            logger.info(f"✅ Collecte OHLCV {exchange} terminée en {duration:.0f}s")
+            notify_collect_end([exchange], summary, duration)
         except Exception as e:
             logger.error(f"❌ Échec de la collecte OHLCV {exchange}: {e}")
             notify_collect_error(str(e))
