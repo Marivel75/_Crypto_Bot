@@ -9,6 +9,7 @@ from typing import List, Optional
 from logger_settings import logger
 from config.settings import config
 from src.collectors.ohlcv_collector import OHLCVCollector
+from src.notifications.notifier import notify_collect_start, notify_collect_end, notify_collect_error
 
 
 class OHLCVScheduler:
@@ -28,46 +29,34 @@ class OHLCVScheduler:
         logger.info(f"OHLCVScheduler initialisé pour {len(self.exchanges)} exchanges")
         logger.info(f"Planification quotidienne à {self.schedule_time}")
 
-    def _ohlcv_collection(self, exchange: str) -> None:
-        """
-        Fonction de collecte quotidienne de données OHLCV pour un exchange spécifique.
-        """
+    def _ohlcv_collection(self, exchange: str) -> int:
+        """Collecte OHLCV pour un exchange. Retourne le nombre de bougies stockées."""
+        normalized_timeframes = []
+        for tf in self.timeframes:
+            if exchange == "coinbase" and tf not in ["1m", "5m", "15m", "1h", "6h", "1d"]:
+                logger.warning(f"Timeframe {tf} non supporté par Coinbase, utilisation de 1h")
+                normalized_timeframes.append("1h")
+            else:
+                normalized_timeframes.append(tf)
+
+        collector = OHLCVCollector(self.pairs, normalized_timeframes, exchange)
+        result = collector.fetch_and_store()
+        return result if isinstance(result, int) else 0
+
+    def _ohlcv_collection_with_alerts(self, exchange: str, trigger: str = "planifié") -> None:
+        """Collecte OHLCV avec alertes email début/fin/erreur."""
+        import time as _time
+        notify_collect_start([exchange], trigger=trigger)
+        t0 = _time.monotonic()
         try:
-            logger.info(
-                f"Début de la collecte quotidienne OHLCV sur l'exchange : {exchange}"
-            )
-
-            # Normalisation des timeframes pour l'exchange
-            normalized_timeframes = []
-            for tf in self.timeframes:
-                # Coinbase a des timeframes spécifiques
-                if exchange == "coinbase":
-                    # Coinbase supporte: 1m, 5m, 15m, 1h, 6h, 1d
-                    if tf not in ["1m", "5m", "15m", "1h", "6h", "1d"]:
-                        logger.warning(
-                            f"Timeframe {tf} non supporté par Coinbase, utilisation de 1h"
-                        )
-                        normalized_timeframes.append("1h")
-                    else:
-                        normalized_timeframes.append(tf)
-                else:
-                    # Binance et Kraken
-                    normalized_timeframes.append(tf)
-
-            logger.info(f"Timeframes normalisés: {normalized_timeframes}")
-
-            # Initialisation du collecteur avec l'exchange spécifié
-            collector = OHLCVCollector(self.pairs, normalized_timeframes, exchange)
-
-            # Exécution de la collecte
-            collector.fetch_and_store()
-
-            logger.info(
-                f"✅ Collecte quotidienne OHLCV {exchange} terminée avec succès"
-            )
-
+            logger.info(f"Début de la collecte OHLCV — {exchange} ({trigger})")
+            n_stored = self._ohlcv_collection(exchange)
+            duration = _time.monotonic() - t0
+            logger.info(f"✅ Collecte OHLCV {exchange} terminée — {n_stored} bougies en {duration:.0f}s")
+            notify_collect_end([exchange], n_stored, duration)
         except Exception as e:
-            logger.error(f"❌ Échec de la collecte quotidienne OHLCV {exchange}: {e}")
+            logger.error(f"❌ Échec de la collecte OHLCV {exchange}: {e}")
+            notify_collect_error(str(e))
             raise
 
     def start(self) -> None:
@@ -87,7 +76,7 @@ class OHLCVScheduler:
             # Planification de la tâche quotidienne pour chaque exchange
             for exchange in self.exchanges:
                 schedule.every().day.at(self.schedule_time).do(
-                    lambda ex=exchange: self._ohlcv_collection(ex)
+                    lambda ex=exchange: self._ohlcv_collection_with_alerts(ex, trigger=f"planifié ({self.schedule_time})")
                 )
 
             self.running = True
@@ -143,13 +132,6 @@ class OHLCVScheduler:
             raise
 
     def run_once(self) -> None:
-        """
-        Exécute une collecte immédiate OHLCV pour les tests ou le démarrage.
-        """
-        try:
-            logger.info(f"Exécution immédiate de la collecte OHLCV")
-            for exchange in self.exchanges:
-                self._ohlcv_collection(exchange)
-        except Exception as e:
-            logger.error(f"❌ Échec de l'exécution immédiate OHLCV: {e}")
-            raise
+        """Exécute une collecte immédiate OHLCV avec alertes email."""
+        for exchange in self.exchanges:
+            self._ohlcv_collection_with_alerts(exchange, trigger="manuel")
