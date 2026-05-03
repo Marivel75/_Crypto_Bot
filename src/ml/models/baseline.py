@@ -25,10 +25,16 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+try:
+    from xgboost import XGBClassifier
+    _XGBOOST_AVAILABLE = True
+except ImportError:
+    _XGBOOST_AVAILABLE = False
+
 from logger_settings import logger
 
 # Types de modèles disponibles
-_MODEL_TYPES = ("dummy", "logistic_regression", "random_forest")
+_MODEL_TYPES = ("dummy", "logistic_regression", "random_forest", "xgboost")
 
 
 class BaselineModel:
@@ -53,6 +59,8 @@ class BaselineModel:
     def __init__(self, model_type: str = "logistic_regression", random_state: int = 42):
         if model_type not in _MODEL_TYPES:
             raise ValueError(f"model_type doit être parmi {_MODEL_TYPES}. Reçu : '{model_type}'")
+        if model_type == "xgboost" and not _XGBOOST_AVAILABLE:
+            raise ImportError("xgboost n'est pas installé : pip install xgboost")
 
         self.model_type = model_type
         self.random_state = random_state
@@ -216,7 +224,7 @@ class BaselineModel:
                 random_state=self.random_state,
             )
 
-        else:  # random_forest
+        elif self.model_type == "random_forest":
             # n_estimators=200 : bon compromis perf/temps sur nos datasets (~500 lignes)
             # max_depth=6 : limite le surapprentissage (les marchés sont bruités)
             # min_samples_leaf=10 : évite les feuilles sur 1-2 exemples
@@ -230,6 +238,28 @@ class BaselineModel:
                 n_jobs=-1,
             )
 
+        else:  # xgboost
+            # n_estimators=300 : plus d'arbres compensés par un faible learning_rate
+            # max_depth=4 : arbres peu profonds pour éviter l'overfit sur séries temporelles
+            # learning_rate=0.05 : descente de gradient lente = meilleure généralisation
+            # subsample=0.8 + colsample_bytree=0.8 : stochastique pour réduire la variance
+            # scale_pos_weight : compense le déséquilibre de classes (ratio négatif/positif)
+            model = XGBClassifier(
+                n_estimators=300,
+                max_depth=4,
+                learning_rate=0.05,
+                subsample=0.8,
+                colsample_bytree=0.8,
+                scale_pos_weight=1,
+                use_label_encoder=False,
+                eval_metric="logloss",
+                random_state=self.random_state,
+                n_jobs=-1,
+                verbosity=0,
+            )
+
+        # XGBoost n'a pas besoin de scaling (basé sur des arbres)
+        # mais on le conserve pour uniformité du pipeline
         return Pipeline([
             ("scaler", StandardScaler()),
             ("model",  model),
