@@ -46,13 +46,13 @@ class TestBaselineModelInit:
         assert m.model_type == "logistic_regression"
 
     def test_valid_types(self):
-        for t in ("dummy", "logistic_regression", "random_forest"):
+        for t in ("dummy", "logistic_regression", "random_forest", "xgboost"):
             m = BaselineModel(model_type=t)
             assert m.model_type == t
 
     def test_invalid_type_raises(self):
         with pytest.raises(ValueError, match="model_type"):
-            BaselineModel(model_type="xgboost")
+            BaselineModel(model_type="unknown_model")
 
     def test_not_fitted_initially(self):
         m = BaselineModel()

@@ -15,6 +15,7 @@ if _ROOT not in sys.path:
 
 import streamlit as st
 
+from frontend.api_client import APIClient
 from frontend.config import frontend_settings
 from frontend.i18n import t
 
@@ -59,10 +60,46 @@ pg = st.navigation([
     st.Page("pages/5_ml.py", title=t("ml.nav"), icon=":material/model_training:"),
 ])
 
-# Sidebar branding
+# Sidebar branding + abonnement alertes
 with st.sidebar:
-    st.markdown(f"### Crypto Bot")
+    st.markdown("### Crypto Bot")
     st.caption(t("app.subtitle"))
+    st.divider()
+
+    with st.expander("Alertes collecte", expanded=False):
+        st.caption("Recevez un email à chaque collecte quotidienne.")
+
+        email_input = st.text_input(
+            "Votre email",
+            key="alert_email_input",
+            placeholder="vous@email.com",
+            label_visibility="collapsed",
+        )
+        col_sub, col_unsub = st.columns(2)
+
+        if col_sub.button("S'abonner", use_container_width=True, key="btn_subscribe"):
+            if email_input:
+                result = APIClient().subscribe_alert(email_input)
+                msg = result.get("message", "")
+                if "error" in result:
+                    st.error(result["error"])
+                elif msg == "subscribed":
+                    st.success("Abonnement confirmé !")
+                elif msg in ("already_subscribed", "reactivated"):
+                    st.info("Email déjà abonné.")
+            else:
+                st.warning("Saisissez un email.")
+
+        if col_unsub.button("Se désabonner", use_container_width=True, key="btn_unsubscribe"):
+            if email_input:
+                result = APIClient().unsubscribe_alert(email_input)
+                if "error" in result:
+                    st.error("Email non trouvé.")
+                else:
+                    st.success("Désabonnement effectué.")
+            else:
+                st.warning("Saisissez un email.")
+
     st.divider()
     st.caption(t("app.disclaimer"))
 

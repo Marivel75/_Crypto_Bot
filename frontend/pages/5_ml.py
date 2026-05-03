@@ -18,6 +18,7 @@ from frontend.i18n import t
 _client = APIClient()
 
 _MODEL_LABELS = {
+    "xgboost": "XGBoost ★",
     "random_forest": "Random Forest",
     "logistic_regression": "Régression Logistique",
     "dummy": "Dummy (référence)",

@@ -211,3 +211,21 @@ class APIClient:
         except httpx.RequestError as exc:
             logger.error("Backtest request failed: %s", exc)
             return {"error": f"API inaccessible : {exc}"}
+
+    def subscribe_alert(self, email: str) -> dict[str, Any]:
+        """POST /alerts/subscribe — abonne un email aux alertes de collecte."""
+        try:
+            with httpx.Client(timeout=10.0) as client:
+                r = client.post(f"{self._base}/alerts/subscribe", json={"email": email})
+            return r.json()
+        except Exception as exc:
+            return {"error": str(exc)}
+
+    def unsubscribe_alert(self, email: str) -> dict[str, Any]:
+        """DELETE /alerts/unsubscribe/{email} — désabonne un email."""
+        try:
+            with httpx.Client(timeout=10.0) as client:
+                r = client.delete(f"{self._base}/alerts/unsubscribe/{email}")
+            return r.json() if r.status_code != 404 else {"error": "Email non abonné"}
+        except Exception as exc:
+            return {"error": str(exc)}

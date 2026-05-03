@@ -75,10 +75,10 @@ class OHLCVCollector:
 
         return ETLPipelineOHLCV(extractor, transformer, loader)
 
-    def fetch_and_store(self) -> None:
+    def fetch_and_store(self) -> dict:
         """
         Récupère les données OHLCV pour toutes les paires et timeframes configurés et les stocke dans la base de données.
-        Utilise des context managers pour la gestion des ressources.
+        Retourne le résumé ETL (total_raw_rows, total_loaded_rows, successful, failed…).
         """
         all_batch_results = {}
 
@@ -121,3 +121,5 @@ class OHLCVCollector:
             for symbol in failed_symbols:
                 result = all_batch_results[symbol]
                 logger.warning(f"  - {symbol}: {result.error_step} - {result.error}")
+
+        return summary
