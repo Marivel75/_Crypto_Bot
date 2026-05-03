@@ -23,3 +23,6 @@ class SignalResponse(BaseModel):
     bb_upper: Optional[float] = None
     bb_middle: Optional[float] = None
     bb_lower: Optional[float] = None
+    signal: Optional[str] = None
+    signal_score: Optional[float] = None
+    signal_reasons: Optional[list[str]] = None

@@ -12,6 +12,8 @@ from api.dependencies import get_db
 from api.schemas.signals import SignalResponse
 from src.models.ohlcv import OHLCV
 from src.analytics.technical_calculator import TechnicalCalculator
+from src.analytics.technical_signals import TechnicalSignals
+from src.analytics.signal_scorer import score_candle
 
 router = APIRouter(prefix="/signals", tags=["signals"])
 
@@ -75,6 +77,15 @@ def get_signals(
     macd_df = _calc.calculate_macd(df)
     bb_df = _calc.calculate_bollinger_bands(df)
 
+    # Détection des croisements MACD sur la série complète
+    if isinstance(macd_df, pd.DataFrame) and "MACD" in macd_df and "MACD_signal" in macd_df:
+        df_cross = TechnicalSignals.macd_cross(macd_df, macd_col="MACD", signal_col="MACD_signal")
+        cross_up_series = df_cross["MACD_cross_up"]
+        cross_down_series = df_cross["MACD_cross_down"]
+    else:
+        cross_up_series = pd.Series([False] * len(df))
+        cross_down_series = pd.Series([False] * len(df))
+
     results = []
     # On ne retourne que les `limit` dernières lignes (après warm-up)
     start = max(0, len(df) - limit)
@@ -88,6 +99,19 @@ def get_signals(
         bb_upper = _safe(bb_df["BB_upper"], i) if isinstance(bb_df, pd.DataFrame) and "BB_upper" in bb_df else None
         bb_mid = _safe(bb_df["BB_middle"], i) if isinstance(bb_df, pd.DataFrame) and "BB_middle" in bb_df else None
         bb_lower = _safe(bb_df["BB_lower"], i) if isinstance(bb_df, pd.DataFrame) and "BB_lower" in bb_df else None
+
+        sig, score, reasons = score_candle(
+            close=_safe(df["close"], i),
+            rsi=_safe(rsi_14, i),
+            macd_line=macd_line,
+            macd_signal_val=macd_signal,
+            bb_upper=bb_upper,
+            bb_lower=bb_lower,
+            sma_20=_safe(sma_20, i),
+            sma_50=_safe(sma_50, i),
+            macd_cross_up=bool(cross_up_series.iloc[i]),
+            macd_cross_down=bool(cross_down_series.iloc[i]),
+        )
 
         results.append(
             SignalResponse(
@@ -110,6 +134,9 @@ def get_signals(
                 bb_upper=bb_upper,
                 bb_middle=bb_mid,
                 bb_lower=bb_lower,
+                signal=sig,
+                signal_score=score,
+                signal_reasons=reasons,
             )
         )
 
