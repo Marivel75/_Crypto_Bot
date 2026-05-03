@@ -12,6 +12,17 @@ _LABEL_COLORS = {
     "neutral": "#94a3b8",
 }
 
+_TOPIC_COLORS = {
+    "regulation":    "#a78bfa",
+    "hack_security": "#ef4444",
+    "adoption":      "#22c55e",
+    "defi":          "#38bdf8",
+    "nft":           "#f472b6",
+    "macro":         "#fb923c",
+    "price_action":  "#fbbf24",
+    "general":       "#475569",
+}
+
 _LABEL_ICONS = {
     "positive": "▲",
     "negative": "▼",
@@ -49,11 +60,28 @@ def render_news_feed(articles: list[dict]) -> None:
         content = art.get("content") or ""
         content_preview = content[:200].strip() + ("…" if len(content) > 200 else "")
 
+        topics: list[str] = art.get("topics") or []
+        entities: dict = art.get("entities") or {}
+        crypto_symbols: list[str] = entities.get("crypto_symbols") or []
+
         badge = _sentiment_badge(sentiment_label, sentiment_score)
+
         kw_html = " ".join(
             f'<span style="background:#1e293b;color:#94a3b8;padding:1px 6px;border-radius:4px;font-size:0.78em">{kw}</span>'
             for kw in keywords[:5]
         )
+        topic_html = " ".join(
+            f'<span style="background:{_TOPIC_COLORS.get(t, "#475569")}22;color:{_TOPIC_COLORS.get(t, "#475569")};'
+            f'border:1px solid {_TOPIC_COLORS.get(t, "#475569")}55;'
+            f'padding:1px 7px;border-radius:10px;font-size:0.75em;font-weight:600">{t.replace("_", " ")}</span>'
+            for t in topics if t != "general"
+        )
+        symbol_html = " ".join(
+            f'<span style="background:#0ea5e922;color:#38bdf8;border:1px solid #0ea5e955;'
+            f'padding:1px 6px;border-radius:4px;font-size:0.75em;font-weight:700">{sym}</span>'
+            for sym in crypto_symbols[:4]
+        )
+        tags_html = " ".join(filter(None, [topic_html, symbol_html]))
 
         st.markdown(
             f"""
@@ -63,6 +91,7 @@ def render_news_feed(articles: list[dict]) -> None:
     {'<a href="' + url + '" target="_blank" style="color:inherit;text-decoration:none">' + title + '</a>' if url else title}
   </div>
   {('<div style="font-size:0.85em;color:#8b949e;margin-bottom:6px">' + content_preview + '</div>') if content_preview else ''}
+  {('<div style="margin-top:6px">' + tags_html + '</div>') if tags_html else ''}
   {('<div style="margin-top:4px">' + kw_html + '</div>') if kw_html else ''}
 </div>
 """,

@@ -20,6 +20,8 @@ class NewsArticleResponse(BaseModel):
     sentiment_score: float | None = None
     sentiment_label: str | None = None
     keywords: list[str] | None = None
+    entities: dict | None = None
+    topics: list[str] | None = None
     collected_at: datetime | None = None
 
 

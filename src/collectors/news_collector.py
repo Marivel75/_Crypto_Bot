@@ -18,6 +18,8 @@ from urllib.parse import urlparse
 import feedparser  # type: ignore[import-untyped]
 import httpx
 
+from src.ml.nlp.text_mining import extract_keywords, extract_entities, detect_topics
+
 logger = logging.getLogger(__name__)
 
 _HTTP_TIMEOUT = httpx.Timeout(30.0, connect=10.0)
@@ -100,6 +102,8 @@ class ArticleData:
     sentiment_score: float | None = None
     sentiment_label: str | None = None
     keywords: list[str] = field(default_factory=list)
+    entities: dict = field(default_factory=dict)
+    topics: list[str] = field(default_factory=list)
 
 
 class NewsCollector:
@@ -187,6 +191,8 @@ class NewsCollector:
                 sentiment_score=art.sentiment_score,
                 sentiment_label=art.sentiment_label,
                 keywords=art.keywords,
+                entities=art.entities,
+                topics=art.topics,
             ))
             stored += 1
 
@@ -252,8 +258,11 @@ class NewsCollector:
             except Exception:
                 logger.debug("Could not parse date '%s' for '%s'", published_str, title)
 
-        sentiment_score, sentiment_label = _analyse_sentiment(f"{title} {content or ''}")
-        keywords = _extract_keywords(title, content)
+        full_text = f"{title} {content or ''}"
+        sentiment_score, sentiment_label = _analyse_sentiment(full_text)
+        keywords = extract_keywords(full_text, top_n=8)
+        entities = extract_entities(full_text)
+        topics = detect_topics(full_text)
 
         return ArticleData(
             title=title,
@@ -264,4 +273,6 @@ class NewsCollector:
             sentiment_score=sentiment_score,
             sentiment_label=sentiment_label,
             keywords=keywords,
+            entities=entities,
+            topics=topics,
         )
