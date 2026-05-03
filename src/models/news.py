@@ -23,4 +23,6 @@ class NewsArticle(Base):
     sentiment_score = Column(Float, nullable=True)   # −1 to +1 (VADER compound)
     sentiment_label = Column(String(20), nullable=True)  # positive / negative / neutral
     keywords = Column(JSON, nullable=True)           # list[str]
+    entities = Column(JSON, nullable=True)           # {"crypto_symbols": [...], "exchanges": [...]}
+    topics = Column(JSON, nullable=True)             # ["regulation", "adoption", ...]
     collected_at = Column(DateTime, default=datetime.utcnow)
