@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/ml", tags=["ml"])
 
-_VALID_MODELS = ("dummy", "logistic_regression", "random_forest")
+_VALID_MODELS = ("dummy", "logistic_regression", "random_forest", "xgboost")
 
 
 def _build_backtest_dataframe(rows: list) -> pd.DataFrame:
@@ -79,7 +79,7 @@ def _build_backtest_dataframe(rows: list) -> pd.DataFrame:
 def run_backtest(
     symbol: str = Query(..., description="Paire de trading (ex: BTC/USDT)"),
     timeframe: str = Query("1d", description="Timeframe (ex: 1d, 4h)"),
-    model_type: str = Query("random_forest", description="dummy | logistic_regression | random_forest"),
+    model_type: str = Query("random_forest", description="dummy | logistic_regression | random_forest | xgboost"),
     train_window: int = Query(180, ge=30, le=730, description="Jours d'entraînement par fold"),
     test_window: int = Query(30, ge=7, le=180, description="Jours de test par fold"),
     db: Session = Depends(get_db),
