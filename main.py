@@ -7,6 +7,7 @@ from config.settings import config
 from src.schedulers.scheduler_ohlcv import OHLCVScheduler
 from src.schedulers.scheduler_ticker import TickerScheduler
 from src.schedulers.scheduler_market_data import MarketDataScheduler
+from src.notifications.notifier import notify_collect_start, notify_collect_end, notify_collect_error
 
 
 def run_collection_once():
@@ -218,6 +219,19 @@ if __name__ == "__main__":
     if args.schedule:
         # Mode planifié
         run_scheduled_collection()
+    elif args.ticker:
+        # Mode ticker seul — 1 email start + 1 email end (pas un par exchange)
+        exchanges = config.get("exchanges")
+        runtime = config.get("ticker.runtime", 60)
+        notify_collect_start(exchanges, trigger=f"ticker temps réel ({runtime} min)")
+        t0 = time.monotonic()
+        try:
+            ticker_scheduler = TickerScheduler()
+            ticker_scheduler.run_once(runtime)
+            notify_collect_end(exchanges, {}, time.monotonic() - t0)
+        except Exception as e:
+            notify_collect_error(str(e))
+            raise
     else:
-        # Mode exécution unique
+        # Mode exécution unique OHLCV
         run_collection_once()
