@@ -1,4 +1,6 @@
 import argparse
+import os
+import signal
 import time
 import threading
 import subprocess
@@ -80,7 +82,8 @@ def run_collection_once():
         # Exécuter le script de vérification de la base de données
         try:
             logger.info("Exécution du script de vérification de la base de données...")
-            subprocess.run(["python", "scripts/check_db.py"], check=True)
+            if os.path.exists("scripts/check_db.py"):
+                subprocess.run(["python", "scripts/check_db.py"], check=True)
         except subprocess.CalledProcessError as e:
             logger.error(f"❌ Échec de l'exécution du script de vérification: {e}")
         except Exception as e:
@@ -146,14 +149,25 @@ def run_scheduled_collection():
         logger.info("Démarrage du planificateur quotidien...")
         ohlcv_scheduler.start()
 
+        # Maintenir le processus principal en vie — les schedulers tournent en threads daemon
+        # qui seraient tués si le main thread se terminait (et Docker relancerait le container)
+        logger.info("✅ Tous les schedulers démarrés — en attente...")
+        while True:
+            time.sleep(3600)
+
+    except KeyboardInterrupt:
+        logger.info("Arrêt demandé (SIGTERM/CTRL+C)")
+        notify_collect_end(config.get("exchanges"), {}, 0)
     except Exception as e:
         logger.error(f"❌ Erreur fatale dans la collecte planifiée: {e}")
+        notify_collect_error(str(e))
         raise
     finally:
         # Exécuter le script de vérification de la base de données
         try:
             logger.info("Exécution du script de vérification de la base de données...")
-            subprocess.run(["python", "scripts/check_db.py"], check=True)
+            if os.path.exists("scripts/check_db.py"):
+                subprocess.run(["python", "scripts/check_db.py"], check=True)
         except subprocess.CalledProcessError as e:
             logger.error(f"❌ Échec de l'exécution du script de vérification: {e}")
         except Exception as e:
@@ -208,6 +222,13 @@ def parse_arguments():
         help="Heure de planification quotidienne (format HH:MM, par défaut: 09:00)",
     )
     return parser.parse_args()
+
+
+def _handle_sigterm(signum, frame):
+    raise KeyboardInterrupt()
+
+# SIGTERM (docker compose down) → arrêt propre avec notification email
+signal.signal(signal.SIGTERM, _handle_sigterm)
 
 
 if __name__ == "__main__":
