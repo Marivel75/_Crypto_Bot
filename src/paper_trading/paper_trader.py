@@ -13,6 +13,13 @@ class PaperTrader:
         self.db = db
 
     def get_last_price(self, symbol: str, timeframe: str = "1d") -> float:
+        # Préférer le prix live WebSocket si disponible
+        from src.services.live_price_cache import live_price_cache
+        live = live_price_cache.get(symbol.upper())
+        if live:
+            return live
+
+        # Fallback : dernière bougie OHLCV
         row = (
             self.db.query(OHLCV)
             .filter(OHLCV.symbol == symbol.upper(), OHLCV.timeframe == timeframe)

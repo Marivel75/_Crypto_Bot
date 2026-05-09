@@ -13,6 +13,13 @@ if _ROOT not in sys.path:
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+from datetime import datetime, timezone
+
+try:
+    from streamlit_autorefresh import st_autorefresh
+    _HAS_AUTOREFRESH = True
+except ImportError:
+    _HAS_AUTOREFRESH = False
 
 from frontend.api_client import APIClient
 from frontend.config import frontend_settings
@@ -137,11 +144,38 @@ def _section_portfolio_selector() -> str | None:
 
 # ── Section : résumé métriques ────────────────────────────────────────────────
 
+def _live_badge() -> bool:
+    """Affiche un badge LIVE/OHLCV et retourne True si les prix WS sont actifs."""
+    status = _client().fetch_live_prices_status()
+    connected = status.get("connected", False) if status else False
+    if connected:
+        st.markdown(
+            '<span style="background:#22c55e;color:#fff;font-size:0.75em;'
+            'font-weight:700;padding:2px 8px;border-radius:12px">● LIVE</span>'
+            '&nbsp;<span style="color:#94a3b8;font-size:0.8em">Prix temps réel Binance WS</span>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            '<span style="background:#64748b;color:#fff;font-size:0.75em;'
+            'font-weight:700;padding:2px 8px;border-radius:12px">● OHLCV</span>'
+            '&nbsp;<span style="color:#94a3b8;font-size:0.8em">Prix de la dernière bougie journalière</span>',
+            unsafe_allow_html=True,
+        )
+    return connected
+
+
 def _section_summary(summary: dict[str, Any]) -> None:
     m = summary["metrics"]
     p = summary["portfolio"]
 
-    st.subheader("Résumé")
+    col_title, col_badge = st.columns([3, 2])
+    with col_title:
+        st.subheader("Résumé")
+    with col_badge:
+        st.markdown("<div style='padding-top:8px'>", unsafe_allow_html=True)
+        _live_badge()
+        st.markdown("</div>", unsafe_allow_html=True)
 
     c1, c2, c3, c4 = st.columns(4)
     with c1:
@@ -355,64 +389,125 @@ def _section_history(summary: dict[str, Any]) -> None:
 # ── Section : courbe de performance ──────────────────────────────────────────
 
 def _section_performance_chart(summary: dict[str, Any]) -> None:
-    closed = summary.get("closed_trades", [])
-    initial = summary["portfolio"]["initial_capital"]
+    closed   = summary.get("closed_trades", [])
+    open_pos = summary.get("open_positions", [])
+    initial  = summary["portfolio"]["initial_capital"]
+    cash     = summary["portfolio"]["cash"]
 
-    if not closed:
+    # Pas de courbe sans au moins un point de données
+    has_closed = bool([t for t in closed if t.get("exit_time") and t.get("pnl") is not None])
+    has_open   = bool(open_pos)
+    if not has_closed and not has_open:
         return
 
+    st.subheader("Courbe de performance")
+
+    # ── Série 1 : capital réalisé (trades fermés) ─────────────────────────────
     trades_sorted = sorted(
         [t for t in closed if t.get("exit_time") and t.get("pnl") is not None],
         key=lambda t: t["exit_time"],
     )
 
-    if not trades_sorted:
-        return
-
-    st.subheader("Courbe de performance")
-
-    dates = [fmt_ts(summary["portfolio"]["created_at"])]
-    capital = [initial]
+    dates_closed   = [fmt_ts(summary["portfolio"]["created_at"])]
+    capital_closed = [initial]
     running = initial
-
     for t in trades_sorted:
         running += t["pnl"]
-        dates.append(fmt_ts(t["exit_time"]))
-        capital.append(round(running, 4))
+        dates_closed.append(fmt_ts(t["exit_time"]))
+        capital_closed.append(round(running, 4))
 
-    final_color = _GREEN if capital[-1] >= initial else _RED
-    fill_color  = _GREEN_RGBA if capital[-1] >= initial else _RED_RGBA
+    realized_end = capital_closed[-1]
+    realized_color = _GREEN if realized_end >= initial else _RED
+    realized_fill  = _GREEN_RGBA if realized_end >= initial else _RED_RGBA
+
+    # ── Série 2 : capital total live (réalisé + latent positions ouvertes) ─────
+    live_prices = _client().fetch_live_prices()
+    live_value = cash
+    for pos in open_pos:
+        price = live_prices.get(pos["symbol"], pos["current_price"])
+        live_value += pos["quantity"] * price
+
+    live_total = round(live_value, 4)
+    live_color = _GREEN if live_total >= initial else _RED
 
     fig = go.Figure()
+
+    # Ligne réalisée (solide)
     fig.add_trace(go.Scatter(
-        x=dates,
-        y=capital,
+        x=dates_closed,
+        y=capital_closed,
         mode="lines+markers",
-        line=dict(color=final_color, width=2),
-        marker=dict(size=6, color=final_color),
+        name="Capital réalisé",
+        line=dict(color=realized_color, width=2),
+        marker=dict(size=6, color=realized_color),
         fill="tozeroy",
-        fillcolor=fill_color,
-        hovertemplate="%{x}<br>Capital : %{y:,.4f} USDT<extra></extra>",
+        fillcolor=realized_fill,
+        hovertemplate="%{x}<br>Réalisé : %{y:,.2f} USDT<extra></extra>",
     ))
+
+    # Point live (dernier realized → valeur live actuelle)
+    # On utilise le timestamp réel pour que Plotly détecte le changement à chaque refresh
+    if open_pos:
+        now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+        fig.add_trace(go.Scatter(
+            x=[dates_closed[-1], now_ts],
+            y=[capital_closed[-1], live_total],
+            mode="lines+markers",
+            name="Capital live (positions ouvertes)",
+            line=dict(color=live_color, width=2, dash="dot"),
+            marker=dict(size=9, color=live_color, symbol="diamond"),
+            hovertemplate="%{x}<br>Live : %{y:,.2f} USDT<extra></extra>",
+        ))
+        fig.add_annotation(
+            x=now_ts,
+            y=live_total,
+            text=f"<b>{live_total:,.2f} USDT</b>",
+            showarrow=True,
+            arrowhead=2,
+            ax=40, ay=-30,
+            font=dict(color=live_color, size=12),
+        )
+
+    # Ligne de référence capital initial
     fig.add_hline(
         y=initial,
         line_dash="dash",
         line_color=_SLATE,
-        annotation_text=f"Capital initial : {initial:,.2f}",
+        annotation_text=f"Capital initial : {initial:,.2f} USDT",
         annotation_position="bottom right",
+        annotation_font_color=_SLATE,
     )
+
     fig.update_layout(
         xaxis_title="Date",
         yaxis_title="Capital (USDT)",
-        height=320,
+        height=360,
         margin=dict(l=0, r=0, t=20, b=0),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(color="#cbd5e1"),
         xaxis=dict(gridcolor="#1e293b"),
         yaxis=dict(gridcolor="#1e293b"),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom", y=1.02,
+            xanchor="left", x=0,
+            font=dict(size=11),
+        ),
+        showlegend=True,
     )
-    st.plotly_chart(fig, use_container_width=True)
+    # key inclut live_total pour forcer un re-mount Streamlit quand le prix change
+    st.plotly_chart(fig, use_container_width=True, key=f"perf_{live_total}")
+
+    # Récapitulatif sous le graphe
+    delta = live_total - initial
+    sign  = "+" if delta >= 0 else ""
+    st.caption(
+        f"Capital initial : **{initial:,.2f} USDT** &nbsp;·&nbsp; "
+        f"Réalisé : **{realized_end:,.2f} USDT** &nbsp;·&nbsp; "
+        f"Live total : **{live_total:,.2f} USDT** "
+        f"({sign}{delta:,.2f} USDT · {sign}{delta/initial*100:.2f} %)"
+    )
 
 
 # ── Page principale ───────────────────────────────────────────────────────────
@@ -420,6 +515,10 @@ def _section_performance_chart(summary: dict[str, Any]) -> None:
 def page() -> None:
     st.header("Paper Trading")
     st.caption("Simulez des trades sur capital fictif sans risque réel.")
+
+    # Auto-refresh toutes les 5s si le package est disponible
+    if _HAS_AUTOREFRESH:
+        st_autorefresh(interval=5_000, key="pt_autorefresh")
 
     # ── Sélecteur de portefeuille ─────────────────────────────────────────────
     portfolio_id = _section_portfolio_selector()

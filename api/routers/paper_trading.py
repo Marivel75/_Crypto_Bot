@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from api.dependencies import get_db
 from api.schemas.paper_trading import (
@@ -69,6 +69,26 @@ def close_order(trade_id: str, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return trade
+
+
+@router.get("/live-prices", response_model=Dict[str, float])
+def get_live_prices():
+    """Prix temps réel depuis le cache WebSocket Binance.
+
+    Retourne un dict vide si le WS n'est pas encore connecté.
+    """
+    from src.services.live_price_cache import live_price_cache
+    return live_price_cache.all_prices()
+
+
+@router.get("/live-prices/status")
+def get_live_prices_status():
+    """État du cache WebSocket : symboles suivis, dernière mise à jour."""
+    from src.services.live_price_cache import live_price_cache
+    return {
+        "connected": live_price_cache.is_populated,
+        "prices": live_price_cache.all_with_ts(),
+    }
 
 
 @router.get("/orders", response_model=List[TradeResponse])

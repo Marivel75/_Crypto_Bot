@@ -255,6 +255,15 @@ class APIClient:
     # Paper Trading endpoints
     # ------------------------------------------------------------------
 
+    def fetch_live_prices(self) -> dict[str, float]:
+        """GET /paper-trading/live-prices — prix temps réel depuis le cache WS."""
+        result = self.get("/paper-trading/live-prices")
+        return result if isinstance(result, dict) else {}
+
+    def fetch_live_prices_status(self) -> dict[str, Any] | None:
+        """GET /paper-trading/live-prices/status — état du collecteur WS."""
+        return self.get("/paper-trading/live-prices/status")
+
     def create_portfolio(self, name: str, initial_capital: float) -> dict[str, Any]:
         """POST /paper-trading/portfolios — crée un nouveau portefeuille fictif."""
         return self.post("/paper-trading/portfolios", {"name": name, "initial_capital": initial_capital})
