@@ -86,6 +86,7 @@ TRANSLATIONS: dict[str, str] = {
     "indicators.macd_neutral": "Neutre",
     # nav
     "nav.veille": "Veille",
+    "nav.paper_trading": "Paper Trading",
     # news / veille page
     "news.header": "Veille Crypto",
     "news.filters": "Filtres",

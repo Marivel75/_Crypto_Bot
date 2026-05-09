@@ -24,6 +24,9 @@ _GREEN = "#22c55e"
 _RED = "#ef4444"
 _SLATE = "#94a3b8"
 
+_GREEN_RGBA = "rgba(34,197,94,0.13)"
+_RED_RGBA   = "rgba(239,68,68,0.13)"
+
 _PNL_HELP = "P&L = (prix sortie − prix entrée) × quantité"
 
 
@@ -40,6 +43,17 @@ def _available_symbols() -> list[str]:
     if data:
         return extract_symbols(data)
     return frontend_settings.tracked_symbols
+
+
+@st.cache_data(ttl=60)
+def _symbol_price(symbol: str) -> float | None:
+    """Prix de clôture de la dernière bougie 1d pour le symbole."""
+    data = _client().fetch_latest(timeframe="1d")
+    if data:
+        for row in data:
+            if row.get("symbol") == symbol:
+                return row.get("close")
+    return None
 
 
 @st.cache_data(ttl=30)
@@ -171,12 +185,20 @@ def _section_open_positions(summary: dict[str, Any], portfolio_id: str) -> None:
         color = _pnl_color(pnl)
         sign = "+" if pnl >= 0 else ""
 
+        base = pos["symbol"].split("/")[0]   # "BTC" depuis "BTC/USDT"
+        qty = pos["quantity"]
+        valeur_investie = qty * pos["entry_price"]
+        valeur_actuelle = qty * pos["current_price"]
+
         col_info, col_pnl, col_btn = st.columns([4, 3, 1])
         with col_info:
             st.markdown(
-                f"**{pos['symbol']}** &nbsp;·&nbsp; {pos['quantity']:.6g} unités"
-                f" &nbsp;·&nbsp; Entrée : **{pos['entry_price']:,.4f}** USDT"
-                f" &nbsp;·&nbsp; Actuel : **{pos['current_price']:,.4f}** USDT"
+                f"**{pos['symbol']}** &nbsp;·&nbsp; {qty:.6g} {base}"
+                f"<br>"
+                f"Prix entrée : **{pos['entry_price']:,.2f} USDT/{base}**"
+                f" &nbsp;→&nbsp; Prix actuel : **{pos['current_price']:,.2f} USDT/{base}**"
+                f"<br>"
+                f"Investi : **{valeur_investie:,.2f} USDT** &nbsp;·&nbsp; Valeur actuelle : **{valeur_actuelle:,.2f} USDT**"
                 f"<br><small style='color:{_SLATE}'>Source : {pos['signal_source']}"
                 f" &nbsp;·&nbsp; {fmt_ts(pos['entry_time'])}</small>",
                 unsafe_allow_html=True,
@@ -185,13 +207,15 @@ def _section_open_positions(summary: dict[str, Any], portfolio_id: str) -> None:
             st.markdown(
                 f"<div style='text-align:center;padding:4px 8px;border-radius:6px;"
                 f"border:1px solid {color}44;background:{color}0d'>"
+                f"<div style='font-size:0.7em;color:{_SLATE};margin-bottom:2px'>P&L latent</div>"
                 f"<span style='color:{color};font-weight:700;font-size:1.1em'>"
                 f"{sign}{pnl:,.4f} USDT</span><br>"
                 f"<span style='color:{color};font-size:0.85em'>{sign}{pct:.2f} %</span></div>",
                 unsafe_allow_html=True,
             )
         with col_btn:
-            if st.button("Fermer", key=f"close_{pos['id']}", use_container_width=True):
+            if st.button("Fermer", key=f"close_{pos['id']}", use_container_width=True,
+                         help="Vend la position au prix actuel et crédite le P&L sur votre cash disponible"):
                 result = _client().close_order(pos["id"])
                 if "error" in result:
                     st.error(result["error"])
@@ -210,35 +234,78 @@ def _section_place_order(portfolio_id: str, cash: float) -> None:
 
     symbols = _available_symbols()
 
-    with st.form("place_order_form", clear_on_submit=True):
-        symbol = st.selectbox("Actif", symbols)
+    symbol = st.selectbox("Actif", symbols, key="order_symbol")
+    base = symbol.split("/")[0]
 
-        mode = st.radio("Saisie par", ["Quantité (unités)", "Montant (USDT)"], horizontal=True)
+    mode = st.radio("Saisie par", ["Quantité", "Montant USDT"], horizontal=True, key="order_mode")
 
-        if mode == "Quantité (unités)":
-            qty = st.number_input("Quantité", min_value=0.0001, value=0.01, step=0.001, format="%.6f")
-            amount = None
+    if mode == "Quantité":
+        qty = st.number_input(f"Quantité ({base})", min_value=0.0001, value=0.01,
+                              step=0.001, format="%.6f", key="order_qty")
+        amount = None
+    else:
+        amount = st.number_input("Montant (USDT)", min_value=1.0, value=100.0,
+                                 step=10.0, key="order_amount")
+        qty = None
+
+    # ── Prévisualisation temps réel ───────────────────────────────────────────
+    price = _symbol_price(symbol)
+
+    if price:
+        cost_usdt = (qty * price) if mode == "Quantité" else amount
+        qty_estimated = (qty) if mode == "Quantité" else (amount / price)
+        pct_cash = (cost_usdt / cash * 100) if cash > 0 else 0
+        affordable = cost_usdt <= cash
+
+        border_color = _GREEN if affordable else _RED
+        warn = "" if affordable else f"<br><span style='color:{_RED};font-size:0.85em'>⚠ Dépasse le cash disponible</span>"
+
+        st.markdown(
+            f"""
+<div style="border:1px solid {border_color}55;border-radius:8px;padding:12px 16px;
+background:{border_color}0d;margin:8px 0">
+  <div style="font-size:0.75em;color:{_SLATE};margin-bottom:6px">Récapitulatif de l'ordre</div>
+  <table style="width:100%;font-size:0.9em;border-collapse:collapse">
+    <tr>
+      <td style="color:{_SLATE};padding:2px 0">Prix actuel ({base})</td>
+      <td style="text-align:right;font-weight:600">{price:,.2f} USDT/{base}</td>
+    </tr>
+    <tr>
+      <td style="color:{_SLATE};padding:2px 0">Quantité</td>
+      <td style="text-align:right;font-weight:600">{qty_estimated:.6g} {base}</td>
+    </tr>
+    <tr style="border-top:1px solid {border_color}33">
+      <td style="color:{_SLATE};padding:4px 0 2px">Coût total</td>
+      <td style="text-align:right;font-weight:700;font-size:1.05em;color:{border_color}">{cost_usdt:,.2f} USDT</td>
+    </tr>
+    <tr>
+      <td style="color:{_SLATE};padding:2px 0">Cash utilisé</td>
+      <td style="text-align:right;color:{border_color}">{pct_cash:.1f} % de {cash:,.2f} USDT</td>
+    </tr>
+  </table>
+  {warn}
+</div>""",
+            unsafe_allow_html=True,
+        )
+    else:
+        st.warning(f"Prix introuvable pour {symbol} — vérifiez que des données OHLCV sont disponibles.")
+
+    if st.button("Placer l'ordre BUY", use_container_width=True, type="primary",
+                 disabled=(price is None)):
+        result = _client().place_order(
+            portfolio_id=portfolio_id,
+            symbol=symbol,
+            quantity=qty,
+            amount_usdt=amount,
+        )
+        if "error" in result:
+            st.error(result["error"])
         else:
-            amount = st.number_input("Montant (USDT)", min_value=1.0, value=100.0, step=10.0)
-            qty = None
-
-        st.caption(f"Cash disponible : **{cash:,.4f} USDT**")
-
-        submitted = st.form_submit_button("Placer l'ordre", use_container_width=True)
-        if submitted:
-            result = _client().place_order(
-                portfolio_id=portfolio_id,
-                symbol=symbol,
-                quantity=qty,
-                amount_usdt=amount,
-            )
-            if "error" in result:
-                st.error(result["error"])
-            else:
-                entry = result.get("entry_price", 0)
-                q = result.get("quantity", 0)
-                st.success(f"Ordre BUY placé : {q:.6g} {symbol} @ {entry:,.4f} USDT")
-                st.rerun()
+            entry = result.get("entry_price", 0)
+            q = result.get("quantity", 0)
+            cost = q * entry
+            st.success(f"Ordre BUY placé : {q:.6g} {base} @ {entry:,.2f} USDT/{base} — Coût : {cost:,.2f} USDT")
+            st.rerun()
 
 
 # ── Section : historique des trades ──────────────────────────────────────────
@@ -256,16 +323,22 @@ def _section_history(summary: dict[str, Any]) -> None:
     for t in closed:
         pnl = t.get("pnl")
         pct = t.get("pnl_pct")
+        base = t["symbol"].split("/")[0]
+        qty = t["quantity"]
+        entry = t["entry_price"]
+        exit_ = t.get("exit_price")
         rows.append({
-            "Symbole":      t["symbol"],
-            "Quantité":     round(t["quantity"], 6),
-            "Entrée":       t["entry_price"],
-            "Sortie":       t.get("exit_price"),
-            "P&L (USDT)":   round(pnl, 4) if pnl is not None else None,
-            "P&L (%)":      round(pct, 2) if pct is not None else None,
-            "Source":       t["signal_source"],
-            "Ouverture":    fmt_ts(t["entry_time"]),
-            "Fermeture":    fmt_ts(t.get("exit_time")),
+            "Symbole":          t["symbol"],
+            f"Quantité ({base})": round(qty, 6),
+            "Investi (USDT)":   round(qty * entry, 2),
+            "Récupéré (USDT)":  round(qty * exit_, 2) if exit_ else None,
+            "Prix entrée":      entry,
+            "Prix sortie":      exit_,
+            "P&L (USDT)":       round(pnl, 4) if pnl is not None else None,
+            "P&L (%)":          round(pct, 2) if pct is not None else None,
+            "Source":           t["signal_source"],
+            "Ouverture":        fmt_ts(t["entry_time"]),
+            "Fermeture":        fmt_ts(t.get("exit_time")),
         })
 
     df = pd.DataFrame(rows)
@@ -308,6 +381,7 @@ def _section_performance_chart(summary: dict[str, Any]) -> None:
         capital.append(round(running, 4))
 
     final_color = _GREEN if capital[-1] >= initial else _RED
+    fill_color  = _GREEN_RGBA if capital[-1] >= initial else _RED_RGBA
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
@@ -317,7 +391,7 @@ def _section_performance_chart(summary: dict[str, Any]) -> None:
         line=dict(color=final_color, width=2),
         marker=dict(size=6, color=final_color),
         fill="tozeroy",
-        fillcolor=f"{final_color}22",
+        fillcolor=fill_color,
         hovertemplate="%{x}<br>Capital : %{y:,.4f} USDT<extra></extra>",
     ))
     fig.add_hline(

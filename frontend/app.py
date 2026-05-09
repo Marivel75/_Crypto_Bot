@@ -58,6 +58,7 @@ pg = st.navigation([
     st.Page("pages/3_signals.py", title=t("nav.signals"), icon=":material/signal_cellular_alt:"),
     st.Page("pages/4_veille.py", title=t("nav.veille"), icon=":material/newspaper:"),
     st.Page("pages/5_ml.py", title=t("ml.nav"), icon=":material/model_training:"),
+    st.Page("pages/6_paper_trading.py", title=t("nav.paper_trading"), icon=":material/currency_exchange:"),
 ])
 
 # Sidebar branding + abonnement alertes
