@@ -14,13 +14,15 @@ RUNTIME   ?= 120
 # ── Local (sans Docker) ───────────────────────────────────────
 
 run:
+	@pkill -f "uvicorn api.main:app" 2>/dev/null || true
 	@echo "→ Démarrage de l'API FastAPI (port 8000)…"
-	@uvicorn api.main:app --host 0.0.0.0 --port 8000 &
-	@echo "→ Démarrage du frontend Streamlit (port 8501)…"
-	@echo "  API  : http://localhost:8000/docs"
-	@echo "  Front: http://localhost:8501"
-	@echo "  (Ctrl+C pour arrêter Streamlit — 'make stop' pour l'API)"
-	@streamlit run frontend/app.py
+	@python -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --log-level warning & \
+	echo "  Attente de l'API…" && \
+	until curl -s http://localhost:8000/health > /dev/null 2>&1; do sleep 0.5; done && \
+	echo "  API prête  : http://localhost:8000/docs" && \
+	echo "  Front      : http://localhost:8501" && \
+	echo "  (Ctrl+C pour arrêter Streamlit — 'make stop' pour l'API)" && \
+	streamlit run frontend/app.py
 
 stop:
 	@echo "→ Arrêt de l'API FastAPI…"
