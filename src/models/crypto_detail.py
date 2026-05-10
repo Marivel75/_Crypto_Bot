@@ -74,10 +74,10 @@ class CryptoDetail(Base):
 
     # ATH/ATL
     ath_price = Column(Float, nullable=True, comment="ATH prix USD")
-    ath_date = Column(String(20), nullable=True, comment="Date ATH")
+    ath_date = Column(String(30), nullable=True, comment="Date ATH")
     ath_change_pct = Column(Float, nullable=True, comment="ATH change %")
     atl_price = Column(Float, nullable=True, comment="ATL prix USD")
-    atl_date = Column(String(20), nullable=True, comment="Date ATL")
+    atl_date = Column(String(30), nullable=True, comment="Date ATL")
     atl_change_pct = Column(Float, nullable=True, comment="ATL change %")
 
     # Supply

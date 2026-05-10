@@ -4,7 +4,7 @@
 .PHONY: run stop \
         docker docker-stop docker-logs \
         news history collect collect-schedule ticker collect-live \
-        db-migrate db-check \
+        db-migrate db-check db-inspect \
         tests test-api test-paper test-cov \
         help
 
@@ -98,6 +98,10 @@ db-migrate:
 db-check:
 	@python -c "from api.dependencies import engine; print('DB connectée :', engine.url)"
 
+db-inspect:
+	@echo "→ Inspection de la base de données (DB : $(DB))…"
+	@python scripts/check_db.py
+
 # ── Tests ─────────────────────────────────────────────────────
 
 tests:
@@ -146,6 +150,8 @@ help:
 	@echo "  ────────────────────────────────────────────────────────────────"
 	@echo "  make db-migrate             Migre les données SQLite → PostgreSQL"
 	@echo "  make db-check               Vérifie la connexion à la base active"
+	@echo "  make db-inspect             Inspecte le contenu de la base active"
+	@echo "  make db-inspect DB=postgres Inspecte PostgreSQL"
 	@echo ""
 	@echo "  TESTS"
 	@echo "  ────────────────────────────────────────────────────────────────"

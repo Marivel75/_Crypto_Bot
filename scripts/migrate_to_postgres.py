@@ -107,9 +107,17 @@ def migrate(postgres_url: str) -> None:
     for base in _ALL_BASES:
         base.metadata.create_all(bind=pg_engine)
 
-    # Liste des tables présentes dans SQLite
-    tables = inspect(sqlite_engine).get_table_names()
-    print(f"Tables détectées dans SQLite : {', '.join(tables)}\n")
+    # Ordre d'insertion respectant les foreign keys : sorted_tables renvoie
+    # l'ordre de suppression (enfants d'abord), on le renverse pour l'insertion.
+    from sqlalchemy import MetaData
+    pg_meta = MetaData()
+    pg_meta.reflect(bind=pg_engine)
+    ordered_tables = [t.name for t in pg_meta.sorted_tables]
+
+    # On ne migre que les tables présentes dans SQLite
+    sqlite_tables = set(inspect(sqlite_engine).get_table_names())
+    tables = [t for t in ordered_tables if t in sqlite_tables]
+    print(f"Tables à migrer (ordre FK) : {', '.join(tables)}\n")
 
     for table in tables:
         _migrate_table(sqlite_engine, pg_engine, table)

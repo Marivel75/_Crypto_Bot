@@ -10,6 +10,11 @@ from config.settings import config
 from typing import Generator, Any
 
 
+def _engine_kwargs(url: str) -> dict:
+    """Retourne les connect_args appropriés selon le dialecte."""
+    return {"connect_args": {"check_same_thread": False}} if url.startswith("sqlite") else {}
+
+
 class DatabaseConnection:
     """
     Context manager pour la gestion des connexions database, garantit que les connexions à la base de données sont correctement ouvertes et fermées, même en cas d'erreur.
@@ -27,7 +32,7 @@ class DatabaseConnection:
             sqlalchemy.engine.Connection: Connexion à la base de données
         """
         try:
-            self.engine = create_engine(self.db_url)
+            self.engine = create_engine(self.db_url, **_engine_kwargs(self.db_url))
             self.connection = self.engine.connect()
             logger.debug("✅ Connexion à la base de données ouverte")
             return self.connection
@@ -70,7 +75,8 @@ def database_session() -> Generator[Any, None, None]:
     """
     from sqlalchemy.orm import sessionmaker
 
-    Session = sessionmaker(bind=create_engine(config.get("database.url")))
+    _url = config.get("database.url")
+    Session = sessionmaker(bind=create_engine(_url, **_engine_kwargs(_url)))
     session = Session()
 
     try:
@@ -95,7 +101,8 @@ def database_transaction() -> Generator[Any, None, None]:
     Yields:
         sqlalchemy.engine.Connection: Connexion avec gestion des transactions
     """
-    engine = create_engine(config.get("database.url"))
+    _url = config.get("database.url")
+    engine = create_engine(_url, **_engine_kwargs(_url))
     connection = engine.connect()
     transaction = connection.begin()
 
