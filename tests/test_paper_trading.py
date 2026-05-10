@@ -16,6 +16,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from unittest.mock import patch
+
 from api.main import app
 from api.dependencies import get_db
 from src.models.ohlcv import OHLCV, Base as OHLCVBase
@@ -73,11 +75,21 @@ def override_get_db():
         db.close()
 
 
-app.dependency_overrides[get_db] = override_get_db
+@pytest.fixture(scope="module", autouse=True)
+def _db_override():
+    original = app.dependency_overrides.get(get_db)
+    app.dependency_overrides[get_db] = override_get_db
+    # Neutralise le cache live pour que get_last_price() utilise les bougies OHLCV seedées
+    with patch("src.services.live_price_cache.live_price_cache.get", return_value=None):
+        yield
+    if original is not None:
+        app.dependency_overrides[get_db] = original
+    else:
+        app.dependency_overrides.pop(get_db, None)
 
 
 @pytest.fixture(scope="module")
-def client():
+def client(_db_override):
     with TestClient(app) as c:
         yield c
 
