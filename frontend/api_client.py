@@ -44,6 +44,27 @@ class APIClient:
             logger.error("GET %s failed: %s", path, exc)
             return None
 
+    def post(self, path: str, json: dict[str, Any] | None = None) -> dict[str, Any]:
+        """POST *path* and return the parsed JSON body.
+
+        Always returns a dict — on error the dict contains an ``"error"`` key.
+        """
+        url = f"{self._base}{path}"
+        try:
+            with httpx.Client(timeout=_TIMEOUT) as client:
+                r = client.post(url, json=json)
+            if r.status_code in (200, 201):
+                return r.json()
+            try:
+                detail = r.json().get("detail", f"Erreur HTTP {r.status_code}")
+            except Exception:
+                detail = f"Erreur HTTP {r.status_code}"
+            logger.warning("POST %s → HTTP %s : %s", path, r.status_code, detail)
+            return {"error": detail}
+        except httpx.RequestError as exc:
+            logger.error("POST %s failed: %s", path, exc)
+            return {"error": str(exc)}
+
     # ------------------------------------------------------------------
     # OHLCV endpoints
     # ------------------------------------------------------------------
@@ -229,3 +250,71 @@ class APIClient:
             return r.json() if r.status_code != 404 else {"error": "Email non abonné"}
         except Exception as exc:
             return {"error": str(exc)}
+
+    # ------------------------------------------------------------------
+    # Paper Trading endpoints
+    # ------------------------------------------------------------------
+
+    def fetch_live_prices(self) -> dict[str, float]:
+        """GET /paper-trading/live-prices — prix temps réel depuis le cache WS."""
+        result = self.get("/paper-trading/live-prices")
+        return result if isinstance(result, dict) else {}
+
+    def fetch_live_prices_status(self) -> dict[str, Any] | None:
+        """GET /paper-trading/live-prices/status — état du collecteur WS."""
+        return self.get("/paper-trading/live-prices/status")
+
+    def create_portfolio(self, name: str, initial_capital: float) -> dict[str, Any]:
+        """POST /paper-trading/portfolios — crée un nouveau portefeuille fictif."""
+        return self.post("/paper-trading/portfolios", {"name": name, "initial_capital": initial_capital})
+
+    def list_portfolios(self) -> list[dict[str, Any]] | None:
+        """GET /paper-trading/portfolios — liste tous les portefeuilles."""
+        result = self.get("/paper-trading/portfolios")
+        return result if isinstance(result, list) else None
+
+    def get_portfolio_summary(self, portfolio_id: str) -> dict[str, Any] | None:
+        """GET /paper-trading/portfolios/{id} — résumé complet (métriques + positions)."""
+        result = self.get(f"/paper-trading/portfolios/{portfolio_id}")
+        return result if isinstance(result, dict) else None
+
+    def place_order(
+        self,
+        portfolio_id: str,
+        symbol: str,
+        quantity: float | None = None,
+        amount_usdt: float | None = None,
+        signal_source: str = "manual",
+        signal_score: float | None = None,
+    ) -> dict[str, Any]:
+        """POST /paper-trading/orders — ouvre une position BUY."""
+        payload: dict[str, Any] = {"portfolio_id": portfolio_id, "symbol": symbol, "signal_source": signal_source}
+        if quantity is not None:
+            payload["quantity"] = quantity
+        if amount_usdt is not None:
+            payload["amount_usdt"] = amount_usdt
+        if signal_score is not None:
+            payload["signal_score"] = signal_score
+        return self.post("/paper-trading/orders", payload)
+
+    def close_order(self, trade_id: str) -> dict[str, Any]:
+        """POST /paper-trading/orders/{id}/close — ferme une position ouverte."""
+        return self.post(f"/paper-trading/orders/{trade_id}/close")
+
+    def list_orders(
+        self,
+        portfolio_id: str | None = None,
+        symbol: str | None = None,
+        status: str | None = None,
+        limit: int = 200,
+    ) -> list[dict[str, Any]] | None:
+        """GET /paper-trading/orders — historique des trades."""
+        params: dict[str, Any] = {"limit": limit}
+        if portfolio_id:
+            params["portfolio_id"] = portfolio_id
+        if symbol:
+            params["symbol"] = symbol
+        if status:
+            params["status"] = status
+        result = self.get("/paper-trading/orders", params)
+        return result if isinstance(result, list) else None

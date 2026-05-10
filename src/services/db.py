@@ -37,10 +37,12 @@ def get_db_engine():
         from src.models.ohlcv import Base as OHLCVBase
         from src.models.ticker import Base as TickerBase
         from src.models.market_data_base import MarketDataBase
+        from src.models.paper_trade import Base as PaperTradeBase
 
         OHLCVBase.metadata.create_all(engine)
         TickerBase.metadata.create_all(engine)
         MarketDataBase.metadata.create_all(engine)
+        PaperTradeBase.metadata.create_all(engine)
 
         logger.info(f"Connexion à la base de données: {DATABASE_URL}")
         return engine
