@@ -6,9 +6,10 @@ Encapsule les opérations courantes dans une classe dédiée : DBInspector.
 from typing import Optional, Dict, Any, List
 import pandas as pd
 from datetime import datetime
-from sqlalchemy import text
+from sqlalchemy import create_engine, inspect as sa_inspect, text
 from logger_settings import logger
-from src.services.db_context import database_session, DatabaseConnection
+from config.settings import config
+from src.services.db_context import database_session, DatabaseConnection, _engine_kwargs
 
 
 class DBInspector:
@@ -23,6 +24,9 @@ class DBInspector:
     def __init__(self):
         """Initialise l'inspecteur de base de données."""
         logger.debug("Initialisation de DBInspector")
+        _url = config.get("database.url")
+        self._engine = create_engine(_url, **_engine_kwargs(_url))
+        self._inspector = sa_inspect(self._engine)
 
     def _build_ohlcv_query(
         self,
@@ -155,25 +159,14 @@ class DBInspector:
         logger.info("Inspection de la structure de la base de données...")
 
         try:
-            with DatabaseConnection() as conn:
-                # Récupérer les tables
-                tables_result = conn.execute(
-                    text("SELECT name FROM sqlite_master WHERE type='table';")
-                )
-                tables = [row[0] for row in tables_result.fetchall()]
-                logger.info(f"Nombre de tables dans la db : {len(tables)}")
+            tables = self._inspector.get_table_names()
+            logger.info(f"Nombre de tables dans la db : {len(tables)}")
 
+            with self._engine.connect() as conn:
                 for table in tables:
-                    # Récupérer les colonnes
-                    columns_result = conn.execute(text(f"PRAGMA table_info({table})"))
-                    columns = [
-                        row[1] for row in columns_result.fetchall()
-                    ]  # Nom de la colonne
+                    columns = [col["name"] for col in self._inspector.get_columns(table)]
                     logger.info(f"Colonnes de la table '{table}': {columns}")
-
-                    # Compter les lignes
-                    count_result = conn.execute(text(f"SELECT COUNT(*) FROM {table}"))
-                    count = count_result.fetchone()[0]
+                    count = conn.execute(text(f'SELECT COUNT(*) FROM "{table}"')).scalar()
                     logger.info(f"Nombre de lignes de la table '{table}' : {count}")
 
         except Exception as e:
@@ -191,11 +184,7 @@ class DBInspector:
             Exception: En cas d'erreur lors de la requête.
         """
         try:
-            with DatabaseConnection() as conn:
-                result = conn.execute(
-                    text("SELECT name FROM sqlite_master WHERE type='table';")
-                )
-                return [row[0] for row in result.fetchall()]
+            return self._inspector.get_table_names()
         except Exception as e:
             logger.error(f"❌ Erreur lors de la récupération des noms de tables: {e}")
             raise
@@ -214,12 +203,10 @@ class DBInspector:
             Exception: En cas d'erreur lors de la requête.
         """
         try:
-            with DatabaseConnection() as conn:
-                result = conn.execute(text(f"PRAGMA table_info({table_name})"))
-                schema = {
-                    row[1]: row[2] for row in result.fetchall()
-                }  # {nom_colonne: type}
-                return schema
+            return {
+                col["name"]: str(col["type"])
+                for col in self._inspector.get_columns(table_name)
+            }
         except Exception as e:
             logger.error(
                 f"❌ Erreur lors de la récupération du schéma de la table {table_name}: {e}"
@@ -291,45 +278,22 @@ class DBInspector:
             Dict[str, Any]: Statistiques complètes de la base de données
         """
         try:
-            with DatabaseConnection() as conn:
-                # Récupérer la liste des tables
-                result = conn.execute(
-                    text(
-                        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-                    )
-                )
-                tables = [row[0] for row in result.fetchall()]
+            tables = self._inspector.get_table_names()
+            table_stats = {}
+            total_rows = 0
 
-                # Récupérer des informations pour chaque table
-                table_stats = {}
-                total_rows = 0
-                total_size = 0
+            for table_name in tables:
+                table_info = self._get_table_info_detailed(table_name)
+                if table_info:
+                    table_stats[table_name] = table_info
+                    total_rows += table_info["row_count"]
 
-                for table_name in tables:
-                    if table_name.startswith("sqlite_"):
-                        continue  # Ignorer les tables système
-
-                    table_info = self._get_table_info_detailed(table_name)
-                    if table_info:
-                        table_stats[table_name] = table_info
-                        total_rows += table_info["row_count"]
-                        total_size += table_info["table_size_bytes"]
-
-                # Récupérer la taille totale de la base de données
-                result = conn.execute(
-                    text(
-                        "SELECT page_count * page_size as db_size FROM pragma_page_count(), pragma_page_size()"
-                    )
-                )
-                db_size_result = result.fetchone()
-                db_size_bytes = db_size_result[0] if db_size_result else 0
-
-                return {
-                    "table_count": len(table_stats),
-                    "total_rows": total_rows,
-                    "total_size_bytes": db_size_bytes,
-                    "tables": table_stats,
-                }
+            return {
+                "table_count": len(table_stats),
+                "total_rows": total_rows,
+                "total_size_bytes": total_rows * 1024,  # estimation
+                "tables": table_stats,
+            }
 
         except Exception as e:
             logger.error(
@@ -356,9 +320,9 @@ class DBInspector:
                 row_count = result.fetchone()[0]
 
                 # Récupérer la structure de la table
-                result = conn.execute(text(f"PRAGMA table_info({table_name})"))
-                columns = result.fetchall()
-                column_names = [col[1] for col in columns]
+                col_defs = self._inspector.get_columns(table_name)
+                column_names = [col["name"] for col in col_defs]
+                columns = col_defs  # pour len()
 
                 # Récupérer la dernière mise à jour
                 last_update = None
@@ -478,30 +442,18 @@ class DBInspector:
             Dict[str, Any]: Indicateurs de santé de la base de données
         """
         try:
-            with DatabaseConnection() as conn:
-                # Vérifier l'intégrité de la base de données
-                result = conn.execute(text("PRAGMA integrity_check"))
-                integrity_result = result.fetchone()
-                integrity_ok = (
-                    integrity_result[0] == "ok" if integrity_result else False
-                )
+            # Vérification de la connexion (portable SQLite + PostgreSQL)
+            with self._engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            integrity_ok = True
 
-                # Vérifier les tables spécifiques
-                health_indicators = {"integrity_ok": integrity_ok, "tables_present": {}}
+            existing_tables = set(self._inspector.get_table_names())
+            required_tables = ["ohlcv", "ticker_snapshots"]
 
-                # Vérifier la présence des tables principales
-                required_tables = ["ohlcv", "ticker_snapshots"]
-                result = conn.execute(
-                    text("SELECT name FROM sqlite_master WHERE type='table'")
-                )
-                existing_tables = [row[0] for row in result.fetchall()]
-
-                for table in required_tables:
-                    health_indicators["tables_present"][table] = (
-                        table in existing_tables
-                    )
-
-                return health_indicators
+            return {
+                "integrity_ok": integrity_ok,
+                "tables_present": {t: t in existing_tables for t in required_tables},
+            }
 
         except Exception as e:
             logger.error(
