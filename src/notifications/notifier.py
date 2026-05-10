@@ -38,10 +38,11 @@ def _get_subscriber_emails() -> list[str]:
         from config.settings import config
         from sqlalchemy import create_engine, text
         db_url = config.get("database.url")
-        engine = create_engine(db_url, connect_args={"check_same_thread": False})
+        connect_args = {"check_same_thread": False} if db_url.startswith("sqlite") else {}
+        engine = create_engine(db_url, connect_args=connect_args)
         with engine.connect() as conn:
             rows = conn.execute(
-                text("SELECT email FROM alert_subscribers WHERE active = 1")
+                text("SELECT email FROM alert_subscribers WHERE active = true")
             ).fetchall()
         return [row[0] for row in rows]
     except Exception as exc:

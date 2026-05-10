@@ -6,32 +6,38 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import text
+from sqlalchemy import inspect, text
 
 from api.routers import health, ohlcv, market, signals, news, ml, alerts, paper_trading
 from api.dependencies import engine
+from src.models.ohlcv import Base as OHLCVBase
+from src.models.ticker import Base as TickerBase
+from src.models.market_data_base import MarketDataBase
 from src.models.news import Base as NewsBase
 from src.models.alert_subscriber import Base as AlertBase
 from src.models.paper_trade import Base as PaperTradeBase
 from config.settings import config
 
-# Create tables if they don't exist yet (idempotent)
+# Create all tables if they don't exist yet (idempotent — works on SQLite and PostgreSQL)
+OHLCVBase.metadata.create_all(bind=engine)
+TickerBase.metadata.create_all(bind=engine)
+MarketDataBase.metadata.create_all(bind=engine)
 NewsBase.metadata.create_all(bind=engine)
 AlertBase.metadata.create_all(bind=engine)
 PaperTradeBase.metadata.create_all(bind=engine)
 
-# Migration légère : ajoute les colonnes entities et topics si absentes (SQLite)
+# Lightweight migration: add entities and topics columns if missing.
+# Uses inspect() to check existing columns — works on SQLite and PostgreSQL.
 _NEW_COLUMNS = [
     ("entities", "JSON"),
     ("topics",   "JSON"),
 ]
+_existing_cols = {col["name"] for col in inspect(engine).get_columns("news_articles")}
 with engine.connect() as _conn:
     for _col, _type in _NEW_COLUMNS:
-        try:
+        if _col not in _existing_cols:
             _conn.execute(text(f"ALTER TABLE news_articles ADD COLUMN {_col} {_type}"))
-            _conn.commit()
-        except Exception:
-            pass  # colonne déjà présente
+    _conn.commit()
 
 
 @asynccontextmanager
