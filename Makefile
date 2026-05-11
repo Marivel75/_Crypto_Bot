@@ -1,7 +1,7 @@
 # Crypto Bot — Makefile
 # ============================================================
 
-.PHONY: run run-all stop mlflow \
+.PHONY: setup run run-all stop mlflow \
         docker docker-stop docker-logs \
         news history collect collect-schedule ticker collect-live \
         db-migrate db-check db-inspect \
@@ -30,6 +30,11 @@ ifeq ($(DB),postgres)
 else
   export CRYPTO_BOT_DB_URL=$(_SQLITE_URL)
 endif
+
+# ── Installation ─────────────────────────────────────────────
+
+setup:
+	@bash setup.sh
 
 # ── Local (sans Docker) ───────────────────────────────────────
 
