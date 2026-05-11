@@ -1,0 +1,53 @@
+---
+# Deploy crypto-bot to VPS
+# Usage: ansible-playbook -i inventories/production.ini playbooks/deploy.yml
+
+- name: Deploy Crypto Bot
+  hosts: vps
+  become: false
+  vars_files:
+    - ../group_vars/vps.yml
+
+  tasks:
+    - name: Sync project files to VPS
+      synchronize:
+        src: "{{ playbook_dir }}/../../../"
+        dest: "{{ docker_compose_dir }}/"
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.env"
+          - "--exclude=__pycache__"
+          - "--exclude=.pytest_cache"
+          - "--exclude=.mypy_cache"
+          - "--exclude=.ruff_cache"
+          - "--exclude=mlruns"
+          - "--exclude=*.pyc"
+          - "--exclude=.venv"
+          - "--exclude=dev.db"
+        delete: true
+
+    - name: Verify .env file exists on VPS
+      stat:
+        path: "{{ docker_compose_dir }}/.env"
+      register: env_file
+
+    - name: Fail if .env missing
+      fail:
+        msg: ".env file missing on VPS at {{ docker_compose_dir }}/.env"
+      when: not env_file.stat.exists
+
+    - name: Make deploy script executable
+      file:
+        path: "{{ docker_compose_dir }}/scripts/deploy.sh"
+        mode: "0755"
+
+    - name: Run deploy script
+      command: "{{ docker_compose_dir }}/scripts/deploy.sh"
+      args:
+        chdir: "{{ docker_compose_dir }}"
+      register: deploy_output
+      changed_when: true
+
+    - name: Show deploy output
+      debug:
+        var: deploy_output.stdout_lines
