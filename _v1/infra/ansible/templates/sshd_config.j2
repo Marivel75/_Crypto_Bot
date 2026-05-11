@@ -1,0 +1,41 @@
+# Managed by Ansible — do not edit manually.
+# Role: security | Template: sshd_config.j2
+
+Port 22
+Protocol 2
+
+# Authentication
+PermitRootLogin no
+MaxAuthTries 3
+AllowUsers {{ deploy_user }}
+
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
+# Forwarding
+X11Forwarding no
+AllowTcpForwarding no
+AllowAgentForwarding no
+GatewayPorts no
+
+# Misc hardening
+UseDNS no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+KerberosAuthentication no
+GSSAPIAuthentication no
+IgnoreRhosts yes
+HostbasedAuthentication no
+
+# Session timeouts
+ClientAliveInterval 300
+ClientAliveCountMax 2
+LoginGraceTime 30
+
+# Logging
+LogLevel VERBOSE
+SyslogFacility AUTH
+
+# Allow SFTP
+Subsystem sftp /usr/lib/openssh/sftp-server

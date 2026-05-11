@@ -1,20 +1,54 @@
 # Group variables for VPS servers
+# Aligned with prod state on 2026-05-11 (W-VPS-DEBUG reconciliation).
 ---
 # System
 timezone: Europe/Paris
 swap_size: 2G
 deploy_user: ubuntu
 
+# SSH
+# Public key on the controller used to seed the deploy user's authorized_keys.
+ssh_public_key_path: "~/.ssh/id_rsa.pub"
+
 # Docker
 docker_compose_dir: /home/ubuntu/cryptobot
 
 # Domain / SSL
-domain_name: "monpetitbet.fr"
-letsencrypt_email: "admin@monpetitbet.fr"
+domain_name: "dtsc-cryptobot.fr"
+domain_aliases:
+  - "www.dtsc-cryptobot.fr"
+letsencrypt_email: "admin@dtsc-cryptobot.fr"
 
-# Nginx (handled by host nginx, not Docker nginx)
-nginx_worker_processes: auto
-nginx_worker_connections: 1024
+# Nginx host (handled by host nginx, separate from Docker container nginx)
+nginx_worker_processes: 6
+nginx_worker_connections: 4096
+nginx_client_max_body_size: "50m"
+
+# Cloudflare proxy IPv4/IPv6 ranges used by set_real_ip_from.
+# Source: https://www.cloudflare.com/ips-v4 / ips-v6 (refresh periodically).
+cloudflare_ip_ranges:
+  - "103.21.244.0/22"
+  - "103.22.200.0/22"
+  - "103.31.4.0/22"
+  - "104.16.0.0/13"
+  - "104.24.0.0/14"
+  - "108.162.192.0/18"
+  - "131.0.72.0/22"
+  - "141.101.64.0/18"
+  - "162.158.0.0/15"
+  - "172.64.0.0/13"
+  - "173.245.48.0/20"
+  - "188.114.96.0/20"
+  - "190.93.240.0/20"
+  - "197.234.240.0/22"
+  - "198.41.128.0/17"
+  - "2400:cb00::/32"
+  - "2606:4700::/32"
+  - "2803:f800::/32"
+  - "2405:b500::/32"
+  - "2405:8100::/32"
+  - "2a06:98c0::/29"
+  - "2c0f:f248::/32"
 
 # Firewall (UFW)
 ufw_allowed_ports:
@@ -22,10 +56,26 @@ ufw_allowed_ports:
   - "80/tcp"
   - "443/tcp"
 
+# Internal-only UFW rules (Docker bridge network)
+ufw_internal_rules:
+  - { port: "8080", proto: "tcp", source: "172.18.0.0/16", comment: "nginx stub_status for docker" }
+  - { port: "8080", proto: "udp", source: "172.18.0.0/16", comment: "nginx stub_status for docker" }
+  - { port: "9113", proto: "tcp", source: "172.18.0.0/16", comment: "nginx-exporter for docker" }
+  - { port: "9113", proto: "udp", source: "172.18.0.0/16", comment: "nginx-exporter for docker" }
+
 # Fail2Ban
-fail2ban_maxretry: 5
-fail2ban_bantime: 3600
+fail2ban_bantime: 86400        # 24h (prod-aligned, was 3600 in v1)
 fail2ban_findtime: 600
+fail2ban_maxretry_default: 5
+fail2ban_maxretry_sshd: 3      # sshd is stricter than DEFAULT
+fail2ban_maxretry_nginx_http_auth: 5
+fail2ban_maxretry_nginx_botsearch: 2
+fail2ban_ignoreip:
+  - "127.0.0.1/8"
+  - "::1"
+  - "176.183.129.231"          # Jules - Bouygues IPv4 #1
+  - "176.191.69.125"            # Jules - Bouygues IPv4 #2
+  - "2a04:cec0:c001:42bb:46c3:f69d:d9f3:ed0"  # Jules - Bouygues IPv6
 
 # Backups
 backup_retention_days: 30
@@ -37,8 +87,9 @@ backup_schedule: "0 3 * * *"  # 3 AM daily
 healthcheck_url: "/health"
 healthcheck_interval: 60
 
-# Application
+# Application services running via docker compose
 app_services:
+  # Core app
   - timescaledb
   - minio
   - mlflow
@@ -46,5 +97,11 @@ app_services:
   - frontend
   - etl-worker
   - ml-worker
+  # Observability
   - prometheus
   - grafana
+  # Exporters / monitoring (added in reconciliation)
+  - nginx-exporter
+  - postgres-exporter
+  - node-exporter
+  - cadvisor
