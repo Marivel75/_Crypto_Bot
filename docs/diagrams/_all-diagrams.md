@@ -1007,7 +1007,7 @@ package "Collectors" as coll #FEF3E8 {
 ' ============================================================
 package "NLP\nsrc/ml/nlp/" as nlp #F3EEFF {
   [text_mining.py\nextract_keywords(TF-IDF)\nextract_entities()\ndetect_topics(CountVectorizer)] as tm <<transformer>>
-  [VADER\nvaderSentiment\nSentimentIntensityAnalyzer\ncompound ∈ [−1, +1]] as vader <<transformer>>
+  [VADER\nvaderSentiment\nSentimentIntensityAnalyzer\ncompound dans (-1, +1)] as vader <<transformer>>
 }
 
 ' ============================================================
@@ -1262,7 +1262,7 @@ skinparam legend {
 @enduml
 
 title CryptoBot — Composants ML V2 (code main)
-caption Rule engine | Feature builder | Backtester walk-forward | NLP VADER/TFIDF
+caption Rule engine | Feature builder | Backtester walk-forward | NLP TextMining (sklearn)
 
 ' ============================================================
 ' API Routers
@@ -1369,12 +1369,12 @@ tc --> sc : RSI, MACD, BB, SMA values
 ' Relations — Feature Engineering
 ' ============================================================
 tc --> fb : calcule_rsi/macd/bbands/sma/ema
-fb --> db : build() → FeatureBuilder output
+db_pg --> fb : OHLCV rows (read)
 
 ' ============================================================
 ' Relations — Models
 ' ============================================================
-db --> bm : (X_train, y_train) / (X_test, y_test)
+fb --> bm : (X, y) dataset (en mémoire)
 bm --> me : cross_validate() fold_results
 bm --> bktest : implements Strategy Protocol
 
@@ -1542,7 +1542,7 @@ skinparam legend {
 @enduml
 
 title CryptoBot — Composants API V2 (code main)
-caption 8 routers FastAPI | Middleware CORS+RequestID | Pydantic schemas
+caption 8 routers FastAPI | Middleware CORS | Pydantic schemas
 
 ' ============================================================
 ' Entry point
@@ -1557,7 +1557,7 @@ package "FastAPI App (api/main.py)" #F5F5F5 {
   ' --- Middleware ---
   package "Middleware" #FEF3E8 {
     [CORSMiddleware\nallow_origins=["*"]\nallow_methods=["*"]\nallow_headers=["*"]] as cors <<middleware>>
-    [RequestIdMiddleware\n(absent — CORS only)] as note_mw <<middleware>>
+    ' RequestIdMiddleware absent dans api/main.py — CORS only
   }
 
   ' --- Lifespan ---
@@ -2406,6 +2406,7 @@ package "Reverse-proxy + TLS <<backlog>>" {
 package "Observability <<backlog>>" {
   component "Prometheus\n(scrape 15s)" <<backlog>> as PROM
   component "Grafana\n(4 dashboards)" <<backlog>> as GRAF
+  component "Loki\n(logs aggregation)" <<backlog>> as LOKI
   component "node-exporter\n(:9100)" <<backlog>> as NODE
   component "postgres-exporter\n(:9187)" <<backlog>> as PGEXP
   component "cadvisor\n(:8080)" <<backlog>> as CADV
@@ -2415,31 +2416,23 @@ package "Observability <<backlog>>" {
     postgres-exporter:9187, cadvisor:8080.
     Grafana : api_overview, business,
     database, system (4 dashboards JSON).
+    Loki : agrège les logs applicatifs (mlflow,
+    api, frontend, collector) — query via Grafana.
   end note
   PROM --> NODE : scrape
   PROM --> PGEXP : scrape
   PROM --> CADV : scrape
-  GRAF --> PROM : query
+  GRAF --> PROM : query metrics
+  GRAF --> LOKI : query logs
 }
 
-package "Workers split <<backlog>>" {
-  component "etl-worker\n(collecte + transform)" <<transformer>> as ETLW
-  component "ml-worker\n(scoring + signaux)" <<model>> as MLW
-  note right of ETLW
-    V2 actuel : service unique `collector`
-    (docker-compose.yml racine, SQLite).
-    V3 cible : split en etl-worker + ml-worker
-    (group_vars/vps.yml#app_services).
-  end note
-}
 
 ' Gap V2 -> V3 visible : compose racine n'a pas ces services
 note as N_GAP
   **Gap V2 actuel** (docker-compose.yml racine) :
   mlflow | api | frontend | collector (SQLite)
   — aucun TimescaleDB, Nginx, Prometheus, Grafana,
-  node-exporter, postgres-exporter, cadvisor,
-  etl-worker ni ml-worker.
+  Loki, node-exporter, postgres-exporter, cadvisor.
 end note
 
 @enduml
@@ -6794,8 +6787,6 @@ left to right direction
 ' Personas
 ' ============================================================
 actor "Noah\n(Trader independant)" as noah #FEF3E8
-actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
-actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
 
 ' ============================================================
 ' Use Cases
@@ -6847,6 +6838,10 @@ rectangle "CryptoBot" #F5F5F5 {
 
 }
 
+' Personas placés à droite (déclarés après le rectangle)
+actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
+actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
+
 ' ============================================================
 ' Relations — Noah (Trader independant)
 ' ============================================================
@@ -6868,29 +6863,29 @@ noah --> uc_pt_chart
 ' ============================================================
 ' Relations — Sarah (Journaliste financiere)
 ' ============================================================
-sarah --> uc_news
-sarah --> uc_filter
-sarah --> uc_sentiment
-sarah --> uc_mcap
-sarah --> uc_dominance
-sarah --> uc_fng
-sarah --> uc_movers
+uc_news <-- sarah
+uc_filter <-- sarah
+uc_sentiment <-- sarah
+uc_mcap <-- sarah
+uc_dominance <-- sarah
+uc_fng <-- sarah
+uc_movers <-- sarah
 
 ' ============================================================
 ' Relations — Aleksandar (Investisseur debutant)
 ' ============================================================
-aleksandar --> uc_candle
-aleksandar --> uc_dash_signals
-aleksandar --> uc_mcap
-aleksandar --> uc_dominance
-aleksandar --> uc_fng
-aleksandar --> uc_movers
-aleksandar --> uc_corr
-aleksandar --> uc_liquidity
-aleksandar --> uc_pt_create
-aleksandar --> uc_pt_order
-aleksandar --> uc_pt_open
-aleksandar --> uc_pt_history
+uc_candle <-- aleksandar
+uc_dash_signals <-- aleksandar
+uc_mcap <-- aleksandar
+uc_dominance <-- aleksandar
+uc_fng <-- aleksandar
+uc_movers <-- aleksandar
+uc_corr <-- aleksandar
+uc_liquidity <-- aleksandar
+uc_pt_create <-- aleksandar
+uc_pt_order <-- aleksandar
+uc_pt_open <-- aleksandar
+uc_pt_history <-- aleksandar
 
 @enduml
 ```

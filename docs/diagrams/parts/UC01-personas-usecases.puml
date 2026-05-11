@@ -152,8 +152,6 @@ left to right direction
 ' Personas
 ' ============================================================
 actor "Noah\n(Trader independant)" as noah #FEF3E8
-actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
-actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
 
 ' ============================================================
 ' Use Cases
@@ -205,6 +203,10 @@ rectangle "CryptoBot" #F5F5F5 {
 
 }
 
+' Personas placés à droite (déclarés après le rectangle)
+actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
+actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
+
 ' ============================================================
 ' Relations — Noah (Trader independant)
 ' ============================================================
@@ -226,28 +228,28 @@ noah --> uc_pt_chart
 ' ============================================================
 ' Relations — Sarah (Journaliste financiere)
 ' ============================================================
-sarah --> uc_news
-sarah --> uc_filter
-sarah --> uc_sentiment
-sarah --> uc_mcap
-sarah --> uc_dominance
-sarah --> uc_fng
-sarah --> uc_movers
+uc_news <-- sarah
+uc_filter <-- sarah
+uc_sentiment <-- sarah
+uc_mcap <-- sarah
+uc_dominance <-- sarah
+uc_fng <-- sarah
+uc_movers <-- sarah
 
 ' ============================================================
 ' Relations — Aleksandar (Investisseur debutant)
 ' ============================================================
-aleksandar --> uc_candle
-aleksandar --> uc_dash_signals
-aleksandar --> uc_mcap
-aleksandar --> uc_dominance
-aleksandar --> uc_fng
-aleksandar --> uc_movers
-aleksandar --> uc_corr
-aleksandar --> uc_liquidity
-aleksandar --> uc_pt_create
-aleksandar --> uc_pt_order
-aleksandar --> uc_pt_open
-aleksandar --> uc_pt_history
+uc_candle <-- aleksandar
+uc_dash_signals <-- aleksandar
+uc_mcap <-- aleksandar
+uc_dominance <-- aleksandar
+uc_fng <-- aleksandar
+uc_movers <-- aleksandar
+uc_corr <-- aleksandar
+uc_liquidity <-- aleksandar
+uc_pt_create <-- aleksandar
+uc_pt_order <-- aleksandar
+uc_pt_open <-- aleksandar
+uc_pt_history <-- aleksandar
 
 @enduml

@@ -144,7 +144,7 @@ skinparam legend {
 @enduml
 
 title CryptoBot — Composants API V2 (code main)
-caption 8 routers FastAPI | Middleware CORS+RequestID | Pydantic schemas
+caption 8 routers FastAPI | Middleware CORS | Pydantic schemas
 
 ' ============================================================
 ' Entry point
@@ -159,7 +159,7 @@ package "FastAPI App (api/main.py)" #F5F5F5 {
   ' --- Middleware ---
   package "Middleware" #FEF3E8 {
     [CORSMiddleware\nallow_origins=["*"]\nallow_methods=["*"]\nallow_headers=["*"]] as cors <<middleware>>
-    [RequestIdMiddleware\n(absent — CORS only)] as note_mw <<middleware>>
+    ' RequestIdMiddleware absent dans api/main.py — CORS only
   }
 
   ' --- Lifespan ---

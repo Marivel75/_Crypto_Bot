@@ -192,6 +192,7 @@ package "Reverse-proxy + TLS <<backlog>>" {
 package "Observability <<backlog>>" {
   component "Prometheus\n(scrape 15s)" <<backlog>> as PROM
   component "Grafana\n(4 dashboards)" <<backlog>> as GRAF
+  component "Loki\n(logs aggregation)" <<backlog>> as LOKI
   component "node-exporter\n(:9100)" <<backlog>> as NODE
   component "postgres-exporter\n(:9187)" <<backlog>> as PGEXP
   component "cadvisor\n(:8080)" <<backlog>> as CADV
@@ -201,31 +202,23 @@ package "Observability <<backlog>>" {
     postgres-exporter:9187, cadvisor:8080.
     Grafana : api_overview, business,
     database, system (4 dashboards JSON).
+    Loki : agrège les logs applicatifs (mlflow,
+    api, frontend, collector) — query via Grafana.
   end note
   PROM --> NODE : scrape
   PROM --> PGEXP : scrape
   PROM --> CADV : scrape
-  GRAF --> PROM : query
+  GRAF --> PROM : query metrics
+  GRAF --> LOKI : query logs
 }
 
-package "Workers split <<backlog>>" {
-  component "etl-worker\n(collecte + transform)" <<transformer>> as ETLW
-  component "ml-worker\n(scoring + signaux)" <<model>> as MLW
-  note right of ETLW
-    V2 actuel : service unique `collector`
-    (docker-compose.yml racine, SQLite).
-    V3 cible : split en etl-worker + ml-worker
-    (group_vars/vps.yml#app_services).
-  end note
-}
 
 ' Gap V2 -> V3 visible : compose racine n'a pas ces services
 note as N_GAP
   **Gap V2 actuel** (docker-compose.yml racine) :
   mlflow | api | frontend | collector (SQLite)
   — aucun TimescaleDB, Nginx, Prometheus, Grafana,
-  node-exporter, postgres-exporter, cadvisor,
-  etl-worker ni ml-worker.
+  Loki, node-exporter, postgres-exporter, cadvisor.
 end note
 
 @enduml

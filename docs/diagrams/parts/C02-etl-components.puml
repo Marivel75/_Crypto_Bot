@@ -196,7 +196,7 @@ package "Collectors" as coll #FEF3E8 {
 ' ============================================================
 package "NLP\nsrc/ml/nlp/" as nlp #F3EEFF {
   [text_mining.py\nextract_keywords(TF-IDF)\nextract_entities()\ndetect_topics(CountVectorizer)] as tm <<transformer>>
-  [VADER\nvaderSentiment\nSentimentIntensityAnalyzer\ncompound ∈ [−1, +1]] as vader <<transformer>>
+  [VADER\nvaderSentiment\nSentimentIntensityAnalyzer\ncompound dans (-1, +1)] as vader <<transformer>>
 }
 
 ' ============================================================

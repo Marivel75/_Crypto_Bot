@@ -144,7 +144,7 @@ skinparam legend {
 @enduml
 
 title CryptoBot — Composants ML V2 (code main)
-caption Rule engine | Feature builder | Backtester walk-forward | NLP VADER/TFIDF
+caption Rule engine | Feature builder | Backtester walk-forward | NLP TextMining (sklearn)
 
 ' ============================================================
 ' API Routers
@@ -251,12 +251,12 @@ tc --> sc : RSI, MACD, BB, SMA values
 ' Relations — Feature Engineering
 ' ============================================================
 tc --> fb : calcule_rsi/macd/bbands/sma/ema
-fb --> db : build() → FeatureBuilder output
+db_pg --> fb : OHLCV rows (read)
 
 ' ============================================================
 ' Relations — Models
 ' ============================================================
-db --> bm : (X_train, y_train) / (X_test, y_test)
+fb --> bm : (X, y) dataset (en mémoire)
 bm --> me : cross_validate() fold_results
 bm --> bktest : implements Strategy Protocol
 
