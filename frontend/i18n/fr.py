@@ -5,7 +5,6 @@ from __future__ import annotations
 TRANSLATIONS: dict[str, str] = {
     # app
     "app.subtitle": "Surveillance & Signaux",
-    "app.disclaimer": "Projet scolaire - pas de conseil financier.",
     # api
     "api.unavailable": "API non disponible. Vérifiez que le backend est démarré.",
     "api.invalid_response": "Réponse invalide du backend.",

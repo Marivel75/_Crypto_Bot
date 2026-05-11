@@ -67,6 +67,7 @@ docker-logs:
 # ── Données ───────────────────────────────────────────────────
 
 news:
+	@echo "→ Collecte des news RSS — DB : $(DB)"
 	@python scripts/collect_news.py --once
 
 history:

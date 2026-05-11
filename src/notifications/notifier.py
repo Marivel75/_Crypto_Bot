@@ -58,11 +58,11 @@ def _recipients() -> list[str]:
     return emails
 
 
-def _send(subject: str, body: str) -> None:
+def _send(subject: str, body: str, recipients: list[str] | None = None) -> None:
     if not _enabled():
         return
-    recipients = _recipients()
-    if not recipients:
+    targets = recipients if recipients is not None else _recipients()
+    if not targets:
         return
     try:
         ctx = ssl.create_default_context()
@@ -70,13 +70,13 @@ def _send(subject: str, body: str) -> None:
             server.ehlo()
             server.starttls(context=ctx)
             server.login(_FROM, _PWD)
-            for to in recipients:
+            for to in targets:
                 msg = MIMEText(body, "plain", "utf-8")
                 msg["Subject"] = subject
                 msg["From"]    = _FROM
                 msg["To"]      = to
                 server.sendmail(_FROM, to, msg.as_string())
-        logger.info("Alerte email envoyée à %d destinataire(s) : %s", len(recipients), subject)
+        logger.info("Alerte email envoyée à %d destinataire(s) : %s", len(targets), subject)
     except Exception as exc:
         logger.warning("Alerte email non envoyée (non-bloquant) : %s", exc)
 
@@ -157,6 +157,62 @@ def notify_collect_end(exchanges: list[str], summary: dict, duration_s: float) -
             f"{status_note}"
             f"{db_section}\n"
         ),
+    )
+
+
+def notify_subscribe_confirmation(email: str, articles: list[dict] | None = None) -> None:
+    """Envoie un email de confirmation d'inscription avec les dernières actualités."""
+    now = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+    news_section = ""
+    if articles:
+        lines = ["", "─── Dernières actualités ─────────────────────", ""]
+        for art in articles[:5]:
+            pub = art.get("published_at") or art.get("collected_at") or ""
+            if pub:
+                pub = str(pub)[:16].replace("T", " ")
+            title = art.get("title", "—")
+            source = art.get("source", "—")
+            url = art.get("url", "")
+            label = art.get("sentiment_label", "")
+            sentiment_str = f" [{label}]" if label else ""
+            lines.append(f"• {title}{sentiment_str}")
+            lines.append(f"  {source} · {pub}")
+            if url:
+                lines.append(f"  {url}")
+            lines.append("")
+        news_section = "\n".join(lines)
+
+    _send(
+        subject="[Crypto Bot] Inscription confirmée aux alertes",
+        body=(
+            f"Bonjour,\n\n"
+            f"Votre inscription aux alertes Crypto Bot a bien été enregistrée.\n\n"
+            f"Vous recevrez désormais un email à chaque collecte de données "
+            f"(démarrage, fin, erreurs éventuelles).\n\n"
+            f"Date d'inscription : {now}\n"
+            f"Email : {email}\n"
+            f"{news_section}"
+            f"\nPour vous désabonner, utilisez le bouton 'Se désabonner' sur la plateforme.\n"
+        ),
+        recipients=[email],
+    )
+
+
+def notify_unsubscribe_confirmation(email: str) -> None:
+    """Envoie un email de confirmation de désabonnement."""
+    now = datetime.now().strftime("%d/%m/%Y %H:%M")
+    _send(
+        subject="[Crypto Bot] Désabonnement confirmé",
+        body=(
+            f"Bonjour,\n\n"
+            f"Votre désabonnement aux alertes Crypto Bot a bien été pris en compte.\n\n"
+            f"Date : {now}\n"
+            f"Email : {email}\n\n"
+            f"Vous ne recevrez plus de notifications de collecte.\n"
+            f"Vous pouvez vous réinscrire à tout moment depuis la plateforme.\n"
+        ),
+        recipients=[email],
     )
 
 

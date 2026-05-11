@@ -44,6 +44,9 @@ st.header(t("news.header"))
 
 # Sidebar filters
 with st.sidebar:
+    if st.button(t("dashboard.refresh"), use_container_width=True):
+        st.cache_data.clear()
+    st.divider()
     st.markdown(f"### {t('news.filters')}")
     sources = _fetch_sources()
     source_options = [t("news.all_sources")] + sources
@@ -66,9 +69,6 @@ with st.sidebar:
     sentiment_filter = _sentiment_map[selected_sentiment]
 
     limit = st.slider(t("news.limit"), min_value=10, max_value=200, value=50, step=10)
-    st.divider()
-    if st.button(t("dashboard.refresh")):
-        st.cache_data.clear()
 
 # ---------------------------------------------------------------------------
 # Main content: two tabs

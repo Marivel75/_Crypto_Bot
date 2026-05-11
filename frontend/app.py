@@ -101,7 +101,4 @@ with st.sidebar:
             else:
                 st.warning("Saisissez un email.")
 
-    st.divider()
-    st.caption(t("app.disclaimer"))
-
 pg.run()
