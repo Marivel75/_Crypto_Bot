@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import streamlit as st
 
 from frontend.i18n import t
@@ -9,7 +10,7 @@ from frontend.i18n import t
 _LABEL_COLORS = {
     "positive": "#22c55e",
     "negative": "#ef4444",
-    "neutral": "#94a3b8",
+    "neutral":  "#94a3b8",
 }
 
 _TOPIC_COLORS = {
@@ -26,15 +27,14 @@ _TOPIC_COLORS = {
 _LABEL_ICONS = {
     "positive": "▲",
     "negative": "▼",
-    "neutral": "●",
+    "neutral":  "●",
 }
 
+_RE_HTML = re.compile(r"<[^>]+>")
 
-def _sentiment_badge(label: str | None, score: float | None) -> str:
-    color = _LABEL_COLORS.get(label or "neutral", "#94a3b8")
-    icon = _LABEL_ICONS.get(label or "neutral", "●")
-    score_str = f" {score:+.2f}" if score is not None else ""
-    return f'<span style="color:{color};font-weight:600">{icon} {label or "—"}{score_str}</span>'
+
+def _strip_html(text: str) -> str:
+    return _RE_HTML.sub(" ", text).strip()
 
 
 def render_news_feed(articles: list[dict]) -> None:
@@ -48,7 +48,6 @@ def render_news_feed(articles: list[dict]) -> None:
         url = art.get("url", "")
         source = art.get("source", "—")
         published_at = art.get("published_at") or art.get("collected_at") or ""
-        # Format timestamp: keep only date+hour if intraday
         if published_at and "T" in str(published_at):
             published_at = str(published_at)[:16].replace("T", " ")
         elif published_at:
@@ -57,46 +56,67 @@ def render_news_feed(articles: list[dict]) -> None:
         sentiment_label = art.get("sentiment_label")
         sentiment_score = art.get("sentiment_score")
         keywords: list[str] = art.get("keywords") or []
-        content = art.get("content") or ""
-        content_preview = content[:200].strip() + ("…" if len(content) > 200 else "")
+
+        # Strip HTML from content before preview so no link is duplicated
+        content_raw = art.get("content") or ""
+        content_clean = _strip_html(content_raw)
+        content_preview = content_clean[:200].strip() + ("…" if len(content_clean) > 200 else "")
 
         topics: list[str] = art.get("topics") or []
         entities: dict = art.get("entities") or {}
         crypto_symbols: list[str] = entities.get("crypto_symbols") or []
 
-        badge = _sentiment_badge(sentiment_label, sentiment_score)
+        # Badge HTML (no links, safe for st.html)
+        color = _LABEL_COLORS.get(sentiment_label or "neutral", "#94a3b8")
+        icon = _LABEL_ICONS.get(sentiment_label or "neutral", "●")
+        score_str = f" {sentiment_score:+.2f}" if sentiment_score is not None else ""
+        badge_html = (
+            f'<span style="color:{color};font-weight:600">'
+            f'{icon} {sentiment_label or "—"}{score_str}</span>'
+        )
 
-        kw_html = " ".join(
-            f'<span style="background:#1e293b;color:#94a3b8;padding:1px 6px;border-radius:4px;font-size:0.78em">{kw}</span>'
-            for kw in keywords[:5]
+        # Tag spans (no links)
+        topic_spans = " ".join(
+            f'<span style="background:{_TOPIC_COLORS.get(topic, "#475569")}22;'
+            f'color:{_TOPIC_COLORS.get(topic, "#475569")};'
+            f'border:1px solid {_TOPIC_COLORS.get(topic, "#475569")}55;'
+            f'padding:1px 7px;border-radius:10px;font-size:0.75em;font-weight:600">'
+            f'{topic.replace("_", " ")}</span>'
+            for topic in topics if topic != "general"
         )
-        topic_html = " ".join(
-            f'<span style="background:{_TOPIC_COLORS.get(t, "#475569")}22;color:{_TOPIC_COLORS.get(t, "#475569")};'
-            f'border:1px solid {_TOPIC_COLORS.get(t, "#475569")}55;'
-            f'padding:1px 7px;border-radius:10px;font-size:0.75em;font-weight:600">{t.replace("_", " ")}</span>'
-            for t in topics if t != "general"
-        )
-        symbol_html = " ".join(
-            f'<span style="background:#0ea5e922;color:#38bdf8;border:1px solid #0ea5e955;'
-            f'padding:1px 6px;border-radius:4px;font-size:0.75em;font-weight:700">{sym}</span>'
+        symbol_spans = " ".join(
+            f'<span style="background:#0ea5e922;color:#38bdf8;'
+            f'border:1px solid #0ea5e955;padding:1px 6px;border-radius:4px;font-size:0.75em;font-weight:700">'
+            f'{sym}</span>'
             for sym in crypto_symbols[:4]
         )
-        tags_html = " ".join(filter(None, [topic_html, symbol_html]))
-
-        st.markdown(
-            f"""
-<div style="border:1px solid #30363d;border-radius:8px;padding:12px 16px;margin-bottom:10px">
-  <div style="font-size:0.8em;color:#8b949e;margin-bottom:4px">{source} &nbsp;·&nbsp; {published_at} &nbsp;·&nbsp; {badge}</div>
-  <div style="font-size:1.0em;font-weight:600;margin-bottom:4px">
-    {'<a href="' + url + '" target="_blank" style="color:inherit;text-decoration:none">' + title + '</a>' if url else title}
-  </div>
-  {('<div style="font-size:0.85em;color:#8b949e;margin-bottom:6px">' + content_preview + '</div>') if content_preview else ''}
-  {('<div style="margin-top:6px">' + tags_html + '</div>') if tags_html else ''}
-  {('<div style="margin-top:4px">' + kw_html + '</div>') if kw_html else ''}
-</div>
-""",
-            unsafe_allow_html=True,
+        kw_spans = " ".join(
+            f'<span style="background:#1e293b;color:#94a3b8;'
+            f'padding:1px 6px;border-radius:4px;font-size:0.78em">{kw}</span>'
+            for kw in keywords[:5]
         )
+        tags_combined = " ".join(filter(None, [topic_spans, symbol_spans]))
+
+        with st.container(border=True):
+            # Header: source · date · sentiment (st.html for colors, no title text here)
+            st.html(
+                f'<div style="font-size:0.8em;color:#8b949e;margin-bottom:2px">'
+                f'{source} &nbsp;·&nbsp; {published_at} &nbsp;·&nbsp; {badge_html}'
+                f'</div>'
+            )
+            # Title as native markdown link — pas de <a href> dans st.html
+            safe_title = title.replace("[", "\\[").replace("]", "\\]")
+            if url:
+                st.markdown(f"**[{safe_title}]({url})**")
+            else:
+                st.markdown(f"**{safe_title}**")
+            # Content preview as plain text (HTML stripped)
+            if content_preview:
+                st.caption(content_preview)
+            # Tags (st.html safe: no links, no title text)
+            if tags_combined or kw_spans:
+                all_tags = " ".join(filter(None, [tags_combined, kw_spans]))
+                st.html(f'<div style="margin-top:2px">{all_tags}</div>')
 
 
 def render_sentiment_summary(sentiment_data: list[dict]) -> None:

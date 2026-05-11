@@ -5,14 +5,13 @@ from __future__ import annotations
 TRANSLATIONS: dict[str, str] = {
     # app
     "app.subtitle": "Surveillance & Signaux",
-    "app.disclaimer": "Projet scolaire - pas de conseil financier.",
     # api
     "api.unavailable": "API non disponible. Vérifiez que le backend est démarré.",
     "api.invalid_response": "Réponse invalide du backend.",
     "api.http_error": "Erreur API ({status}).",
     # nav
     "nav.dashboard": "Dashboard",
-    "nav.analytics": "Analytics",
+    "nav.market_overview": "Market Overview",
     "nav.signals": "Signaux",
     # dashboard
     "dashboard.header": "Dashboard",
@@ -29,7 +28,7 @@ TRANSLATIONS: dict[str, str] = {
     "dashboard.signals_header": "Signaux récents",
     "dashboard.no_signals": "Aucun signal disponible.",
     # analytics
-    "analytics.header": "Analytics",
+    "analytics.header": "Market Overview",
     "analytics.market_cap": "Market Cap Total",
     "analytics.btc_dominance": "BTC Dominance",
     "analytics.eth_dominance": "ETH Dominance",
@@ -47,7 +46,7 @@ TRANSLATIONS: dict[str, str] = {
     "analytics.correlation_chart_title": "Corrélation des rendements journaliers",
     "analytics.correlation_insufficient": "Données insuffisantes pour calculer la matrice de corrélation.",
     "analytics.correlation_min_hint": "Au moins 2 symboles avec historique sont requis.",
-    "analytics.backend_unavailable": "Backend non disponible - impossible de charger les analytics.",
+    "analytics.backend_unavailable": "Backend non disponible - impossible de charger les données marché.",
     "analytics.backend_hint": "Vérifiez que le service FastAPI est démarré et accessible.",
     "analytics.heatmap_title": "Performance 24h",
     "analytics.heatmap_chart_title": "Performance 24h par crypto",
