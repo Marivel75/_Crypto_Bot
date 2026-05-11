@@ -143,6 +143,11 @@ class APIClient:
         result = self.get("/market/global")
         return result if isinstance(result, dict) else None
 
+    def fetch_market_history(self, limit: int = 90) -> list[dict[str, Any]] | None:
+        """GET /market/history — série temporelle market cap + volume."""
+        result = self.get("/market/history", {"limit": limit})
+        return result if isinstance(result, list) else None
+
     def fetch_fear_greed(self) -> dict[str, Any] | None:
         """GET /market/fear-greed — current Fear & Greed index (0–100)."""
         result = self.get("/market/fear-greed")
