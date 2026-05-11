@@ -1,0 +1,137 @@
+# Managed by Ansible — do not edit manually.
+# Role: nginx | Template: nginx-vhost.conf.j2
+
+server {
+    server_name {{ domain_name }}{% for alias in domain_aliases %} {{ alias }}{% endfor %};
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    # Security headers (inline — Streamlit needs permissive CSP for CDN assets)
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "cross-origin" always;
+    add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
+
+    # FastAPI health check
+    location /health {
+        include /etc/nginx/snippets/proxy-params.conf;
+        proxy_pass http://127.0.0.1:8000/health;
+    }
+
+    # FastAPI auth — strict rate limit
+    location /api/v1/auth/ {
+        limit_req zone=crypto_auth burst=5 nodelay;
+        include /etc/nginx/snippets/proxy-params.conf;
+        proxy_pass http://127.0.0.1:8000/api/v1/auth/;
+    }
+
+    # All API routes
+    location /api/ {
+        limit_req zone=crypto_api burst=50 nodelay;
+        include /etc/nginx/snippets/proxy-params.conf;
+        proxy_pass http://127.0.0.1:8000/api/;
+    }
+
+    # Streamlit dashboard + WebSocket (on /)
+    location /crypto/ {
+        return 301 /;
+    }
+
+    location /_stcore/ {
+        include /etc/nginx/snippets/proxy-params.conf;
+        proxy_pass http://127.0.0.1:8501/_stcore/;
+    }
+
+    location / {
+        include /etc/nginx/snippets/proxy-params.conf;
+        proxy_pass http://127.0.0.1:8501/;
+    }
+
+    # Grafana
+    location /grafana/ {
+        include /etc/nginx/snippets/proxy-params.conf;
+        proxy_pass http://127.0.0.1:3000/grafana/;
+    }
+
+    # FastAPI docs
+    location ~ ^/(docs|redoc|openapi\.json) {
+        limit_req zone=crypto_api burst=50 nodelay;
+        include /etc/nginx/snippets/proxy-params.conf;
+        proxy_pass http://127.0.0.1:8000;
+    }
+
+    location ~* \.(php|asp|aspx|jsp|cgi)$ {
+        deny all;
+        return 404;
+    }
+
+    location ~ /\. {
+        deny all;
+        return 404;
+    }
+
+    # --- Proxy API Anthropic ---
+    location /x/ {
+        resolver 1.1.1.1 8.8.8.8 valid=300s;
+        resolver_timeout 5s;
+        set $upstream_anthropic https://api.anthropic.com;
+        rewrite ^/x/(.*)$ /$1 break;
+        proxy_pass $upstream_anthropic;
+        proxy_ssl_server_name on;
+        proxy_set_header Host api.anthropic.com;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_buffering off;
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 300s;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        chunked_transfer_encoding on;
+    }
+
+    # --- Proxy claude.ai ---
+    location /y/ {
+        resolver 1.1.1.1 8.8.8.8 valid=300s;
+        resolver_timeout 5s;
+        set $upstream_claude https://claude.ai;
+        rewrite ^/y/(.*)$ /$1 break;
+        proxy_pass $upstream_claude;
+        proxy_ssl_server_name on;
+        proxy_set_header Host claude.ai;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_buffering off;
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 300s;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        chunked_transfer_encoding on;
+    }
+
+    listen 443 ssl;
+    listen [::]:443 ssl ipv6only=on;
+    ssl_certificate /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+{% for host in [domain_name] + domain_aliases %}
+    if ($host = {{ host }}) {
+        return 301 https://$host$request_uri;
+    }
+{% endfor %}
+    listen 80;
+    listen [::]:80;
+    server_name {{ domain_name }}{% for alias in domain_aliases %} {{ alias }}{% endfor %};
+    return 404;
+}
