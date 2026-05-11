@@ -1,0 +1,275 @@
+@startuml C03-ml-components
+@startuml _common
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+@enduml
+
+title CryptoBot — Composants ML V2 (code main)
+caption Rule engine | Feature builder | Backtester walk-forward | NLP VADER/TFIDF
+
+' ============================================================
+' API Routers
+' ============================================================
+package "api/routers/" #F5F5F5 {
+  [GET /signals\nsymbol, timeframe, limit\nretourne SignalResponse[]] as r_signals <<router>>
+  [GET /ml/backtest\nsymbol, timeframe, model_type\ntrain_window, test_window\nretourne BacktestResponse] as r_ml <<router>>
+}
+
+' ============================================================
+' Rule Engine — src/analytics/
+' ============================================================
+package "src/analytics/ — Rule Engine" as p_analytics #F3EEFF {
+
+  package "technical_calculator.py" #white {
+    [TechnicalCalculator\ncalculate_rsi(window=14)\ncalculate_macd(fast=12,slow=26,signal=9)\ncalculate_bollinger_bands(window=20,std=2.0)\ncalculate_sma(window=7|20|50)\ncalculate_ema(window=9|21)\n[pandas_ta_classic]] as tc <<rule>>
+  }
+
+  package "technical_signals.py" #white {
+    [TechnicalSignals\nmacd_cross(confirm_next_candle)\nget_macd_signals() → {buy, sell}\nrsi_conditions(overbought=70, oversold=30)] as ts <<rule>>
+  }
+
+  package "signal_scorer.py" #white {
+    [score_candle(close, rsi,\nmacd_line, macd_signal,\nbb_upper, bb_lower,\nsma_20, sma_50,\nmacd_cross_up, macd_cross_down)\n→ (signal, score[-1,+1], reasons)\nRules: RSI oversold/overbought\nMACD cross up/down\nBB band breach\nSMA20>SMA50 trend] as sc <<rule>>
+  }
+}
+
+' ============================================================
+' Feature Engineering — src/ml/feature_engineering/
+' ============================================================
+package "src/ml/feature_engineering/" as p_feat #F3EEFF {
+
+  [FeatureBuilder\nbuild(df_ohlcv) → df_features\n— Returns: log_return_1, return_4/12/24\n— Volatility: rolling_std_5/10/20\n— Technical: rsi_14, macd/signal/hist\n  bb_position, bb_width\n  sma_7/20/50_ratio, ema_9/21_ratio\n— Candle: hl_spread, body_ratio\n  upper/lower_wick_ratio\n— Volume: volume_ma_ratio, volume_change\n— Temporal: hour, day_of_week\n  day_of_month, month, is_weekend\n~30 features total] as fb
+
+  [DatasetBuilder\nbuild(df_features) → (X, y)\nmode: direction|return\nhorizon: N bougies\ntarget: close(t+N) > close(t)\ntime_series_split(n_splits=5)\ntrain_test_split_temporal(ratio=0.2)\nanti-leakage: no future data] as db
+}
+
+' ============================================================
+' Models — src/ml/models/
+' ============================================================
+package "src/ml/models/" as p_models #F3EEFF {
+
+  [BaselineModel\nfit(X_train, y_train)\npredict(X) → labels\npredict_proba(X) → [p0, p1]\ncross_validate(n_splits=5)\nfeature_importances()\nTypes:\n  dummy (most_frequent)\n  logistic_regression\n    (balanced, C=0.1)\n  random_forest\n    (200 trees, max_depth=6)\n  xgboost (optional,\n    300 trees, lr=0.05)\nPipeline: StandardScaler + model] as bm <<model>>
+
+  [ModelEvaluator\nevaluate_folds(fold_results)\ncompare_models({name: results})\nML: accuracy, precision\n    recall, F1\nFinance: win_rate\n  profit_factor\n  sharpe annualisé\n    (sqrt(8760) factor)] as me
+}
+
+' ============================================================
+' Backtesting — src/ml/backtesting/
+' ============================================================
+package "src/ml/backtesting/" as p_bt #F3EEFF {
+
+  [Backtester\nwalk_forward(data, strategy)\ntrain_window=180d, test_window=30d\npurge_days=1, embargo_days=1\nMetrics/fold: accuracy, win_rate\n  pnl (log-returns on BUY)\n  sharpe (annualisé √365)\n  profit_factor, max_drawdown\ncompute_metrics() → global summary\ncompare_baseline() vs buy-and-hold] as bktest
+
+  note right of bktest
+    Strategy Protocol:
+    fit(X, y) + predict(X)
+    Graceful fold skip on error
+  end note
+}
+
+' ============================================================
+' NLP — src/ml/nlp/
+' ============================================================
+package "src/ml/nlp/" as p_nlp #F3EEFF {
+
+  [TextMining\nextract_keywords(text, top_n=8)\n  TF-IDF (ngram 1-2, sublinear_tf)\ncount_term_frequencies(texts, top_n=50)\n  CountVectorizer\nextract_entities(text)\n  → {crypto_symbols, exchanges}\ndetect_topics(text)\n  → regulation|hack|adoption\n    defi|nft|macro|price_action\n    |general\nanalyse_text() pipeline complet\n[sklearn TfidfVectorizer\n  + CountVectorizer]] as tm <<model>>
+}
+
+' ============================================================
+' MLOps — src/ml/mlflow_utils.py
+' ============================================================
+package "src/ml/ — MLOps" as p_mlops #ECFDF5 {
+
+  [mlflow_utils\nlog_experiment(\n  experiment_name, params,\n  metrics, tags, artifact_paths)\nlog_backtest_metrics(\n  experiment_name, symbol,\n  model_version, metrics)\nDegradation gracieuse:\n  warning si serveur absent\n  retourne None (non-bloquant)\nMLFLOW_TRACKING_URI env var] as mlu
+
+  database "MLflow Server\nexperiment tracking\nrun registry" as mlflow_db #ECFDF5
+}
+
+' ============================================================
+' Storage
+' ============================================================
+database "SQLite\nohlcv table\n(OHLCV model)" as db_pg #ECFDF5
+
+' ============================================================
+' Relations — API Routers
+' ============================================================
+r_signals --> tc : calcule RSI/MACD/BB/SMA/EMA
+r_signals --> ts : macd_cross detection
+r_signals --> sc : score_candle()
+r_ml --> fb : FeatureBuilder.build()
+r_ml --> bm : BaselineModel(model_type)
+r_ml --> bktest : Backtester.walk_forward()
+r_ml --> mlu : log_backtest_metrics()
+
+' ============================================================
+' Relations — Rule Engine
+' ============================================================
+tc --> ts : DataFrame avec indicateurs
+ts --> sc : MACD_cross_up/down flags
+tc --> sc : RSI, MACD, BB, SMA values
+
+' ============================================================
+' Relations — Feature Engineering
+' ============================================================
+tc --> fb : calcule_rsi/macd/bbands/sma/ema
+fb --> db : build() → FeatureBuilder output
+
+' ============================================================
+' Relations — Models
+' ============================================================
+db --> bm : (X_train, y_train) / (X_test, y_test)
+bm --> me : cross_validate() fold_results
+bm --> bktest : implements Strategy Protocol
+
+' ============================================================
+' Relations — Backtesting & MLOps
+' ============================================================
+bktest --> mlu : log_backtest_metrics()
+mlu --> mlflow_db : mlflow.log_params/metrics/artifacts
+
+' ============================================================
+' Relations — Storage
+' ============================================================
+db_pg --> r_signals : rows OHLCV
+db_pg --> r_ml : rows OHLCV (best exchange)
+
+@enduml

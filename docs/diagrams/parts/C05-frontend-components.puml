@@ -1,0 +1,258 @@
+@startuml C05-frontend-components
+@startuml _common
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+@enduml
+
+title CryptoBot — Composants Frontend V2 (code main)
+caption 6 pages Streamlit | APIClient | Plotly | i18n FR
+
+' ============================================================
+' Entry point
+' ============================================================
+package "app.py — Entry Point" #FEF3E8 {
+  [app.py\nst.set_page_config\nst.navigation (6 pages)\nSidebar: alertes email\nAdaptive dark/light CSS] as app_entry
+}
+
+' ============================================================
+' Configuration & helpers
+' ============================================================
+package "Config & Utils" #F5F5F5 {
+  [FrontendSettings\napi_url (env API_URL)\ntracked_symbols\ntimeframes\nlog_level] as cfg <<component>>
+
+  [utils.py\nextract_symbols()\nextract_timeframes()\nfmt_ts()] as utils <<component>>
+}
+
+' ============================================================
+' i18n — FR seulement (pas d'EN dans le code main)
+' ============================================================
+package "i18n" #F5F5F5 {
+  [i18n/fr.py\nTRANSLATIONS dict\n(nav, dashboard, analytics,\nsignals, news, ml, fng,\npaper_trading, candlestick,\nindicators)] as i18n_fr <<component>>
+
+  [i18n/__init__.py\nt(key) → str FR\nfallback: key itself] as i18n_fn <<component>>
+}
+
+' ============================================================
+' Pages Streamlit
+' ============================================================
+package "Pages Streamlit" #FEF3E8 {
+  [1_dashboard.py\nCandlestick multi-TF\nIndicateurs RSI/BB/MACD\nTableau signaux 20 dernieres\nselectbox symbol + TF\ncache ttl=60s] as p_dash <<page>>
+
+  [2_market_overview.py\nFear & Greed gauge\nKPI: market cap, BTC dominance, vol\nEvolution capitalisation (area)\nDominance pie BTC/ETH/autres\nHeatmap performance 24h\nTop Movers gainers/losers\nTop 20 tableau detaille\nLiquidite scatter (bubble)\nCorrelation heatmap 5 symboles] as p_market <<page>>
+
+  [3_signals.py\nSignal actuel (BUY/SELL/HOLD)\nScore composite -1 a +1\nRepartition signaux periode\nTableau RSI/SMA/EMA/MACD/BB\ncode couleur dynamique\ncache ttl=60s] as p_signals <<page>>
+
+  [4_veille.py\nFiltres source + sentiment\nTab Articles: render_news_feed\nTab Sentiment: render_sentiment_summary\nExplicatif VADER] as p_veille <<page>>
+
+  [5_ml.py\nBacktest walk-forward\nModeles: XGBoost, RF,\nLogReg, Dummy\nKPI: Sharpe, win rate,\nPnL, drawdown,\naccuracy, profit factor\nStrategie vs Buy-and-Hold\nPnL par fold (bar chart)\ncache ttl=300s] as p_ml <<page>>
+
+  [6_paper_trading.py\nPortefeuille fictif\nPositions ouvertes\nOrdre BUY (qty ou montant)\nHistorique trades fermes\nCourbe performance\nauto-refresh 5s (WS LIVE)\nMetriques: P&L realise + latent\nwin rate] as p_pt <<page>>
+}
+
+' ============================================================
+' Composants Plotly/Streamlit
+' ============================================================
+package "Composants Plotly" #F3EEFF {
+  [candlestick.py\nrender_candlestick()\nOHLCV candlestick + volume\nSMA20/SMA50/EMA20\nBollinger Bands\nMACD cross markers\n2 subplots (75/25)] as c_candle <<component>>
+
+  [indicators.py\nrender_indicator_summary()\nRSI(14) metrique\nBollinger position label\nMACD haussier/baissier\n3 colonnes st.columns] as c_indic <<component>>
+
+  [news_feed.py\nrender_news_feed()\nArticle: titre, source, date\nsentiment badge VADER\ntopics + crypto symbols\nrender_sentiment_summary()\nPar-source: pos/neg/neu\navg_score] as c_news <<component>>
+}
+
+' ============================================================
+' APIClient
+' ============================================================
+package "Infra" #ECFDF5 {
+  [APIClient\nbase_url: API_URL\nhttpx sync\nOHLCV: fetch_ohlcv, fetch_symbols,\n  fetch_distinct_count, fetch_latest\nSignals: fetch_signals\nMarket: fetch_market_top,\n  fetch_market_global,\n  fetch_market_history,\n  fetch_fear_greed, fetch_ticker\nNews: fetch_news, fetch_news_sources,\n  fetch_news_sentiment\nML: run_backtest (timeout 120s)\nAlerts: subscribe_alert,\n  unsubscribe_alert\nPaperTrading: fetch_live_prices,\n  create_portfolio, list_portfolios,\n  get_portfolio_summary,\n  place_order, close_order,\n  list_orders] as api_client
+}
+
+' ============================================================
+' Backend FastAPI
+' ============================================================
+node "FastAPI Backend\n/api/v1/*" as fastapi #F5F5F5
+
+' ============================================================
+' Relations — app.py
+' ============================================================
+app_entry --> p_dash : navigate
+app_entry --> p_market : navigate
+app_entry --> p_signals : navigate
+app_entry --> p_veille : navigate
+app_entry --> p_ml : navigate
+app_entry --> p_pt : navigate
+app_entry --> api_client : subscribe_alert\nunsubscribe_alert
+app_entry --> cfg : frontend_settings
+app_entry --> i18n_fn : t()
+
+' Config & i18n
+cfg --> i18n_fn
+i18n_fn --> i18n_fr : TRANSLATIONS
+
+' Pages -> Composants
+p_dash --> c_candle : render_candlestick()
+p_dash --> c_indic : render_indicator_summary()
+p_veille --> c_news : render_news_feed()\nrender_sentiment_summary()
+
+' Pages -> Utils
+p_dash --> utils : extract_symbols\nextract_timeframes\nfmt_ts
+p_market --> utils
+p_signals --> utils
+p_pt --> utils
+
+' Pages -> APIClient
+p_dash --> api_client : fetch_signals\nfetch_symbols\n/health
+p_market --> api_client : fetch_fear_greed\nfetch_market_global\nfetch_market_top\nfetch_market_history\nfetch_ohlcv
+p_signals --> api_client : fetch_signals\nfetch_symbols
+p_veille --> api_client : fetch_news\nfetch_news_sources\nfetch_news_sentiment
+p_ml --> api_client : run_backtest\nfetch_symbols\nfetch_distinct_count
+p_pt --> api_client : list_portfolios\ncreate_portfolio\nget_portfolio_summary\nplace_order\nclose_order\nlist_orders\nfetch_live_prices\nfetch_live_prices_status\nfetch_symbols\nfetch_latest
+
+' Composants -> APIClient (via pages, pas en direct sauf import _DARK_LAYOUT)
+c_candle --> i18n_fn : t()
+c_indic --> i18n_fn : t()
+c_news --> i18n_fn : t()
+
+' APIClient -> Backend
+api_client --> fastapi : REST HTTP\n(httpx sync, timeout 10s\nML: 120s)
+
+@enduml

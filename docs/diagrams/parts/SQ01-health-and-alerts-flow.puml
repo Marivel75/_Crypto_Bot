@@ -1,0 +1,270 @@
+@startuml SQ01-health-and-alerts-flow
+@startuml _common
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+@enduml
+
+title CryptoBot — Flow Healthcheck + Alerts Subscribe V2 (code main)
+caption Pivot V2 — l'auth JWT V1 n'existe pas; on modélise les flows réels
+
+' ============================================================
+' Participants communs aux deux flows
+' ============================================================
+actor       Client         as client
+participant "API Router\n<<router>>"       as router
+participant "get_db()\n<<service>>"        as dep
+database    "SQLite\n<<database>>" as db
+participant "notifier.py\n<<service>>"     as notifier
+participant "SMTP Server"                  as smtp
+
+' ============================================================
+' FLOW A — GET /health
+' ============================================================
+== GET /health ==
+
+client  ->  router   : GET /health
+activate router
+
+router  ->  dep      : Depends(get_db)
+activate dep
+dep     ->  db       : open session
+db     -->  dep      : Session
+dep    -->  router   : db: Session
+deactivate dep
+
+router  ->  db       : db.execute(text("SELECT 1"))
+activate db
+alt db reachable
+    db     -->  router   : result OK\ndb_status = "connected"
+else db unreachable
+    db     -->  router   : Exception raised\ndb_status = "unavailable"
+end
+deactivate db
+
+note right of router
+  Pas de ping MLflow dans\n  le code V2 actuel —\n  seul le DB est sondé.
+end note
+
+router  -->  client  : 200 OK\n{"status":"ok","db":"connected",\n "timestamp":"2026-05-11T..."}
+deactivate router
+
+' ============================================================
+' FLOW B — POST /alerts/subscribe
+' ============================================================
+== Subscribe alerts ==
+
+client  ->  router   : POST /alerts/subscribe\n{"email": "user@example.com"}
+activate router
+
+router  ->  dep      : Depends(get_db)
+activate dep
+dep     ->  db       : open session
+db     -->  dep      : Session
+dep    -->  router   : db: Session
+deactivate dep
+
+router  ->  db       : query(AlertSubscriber)\n.filter_by(email=body.email).first()
+activate db
+db     -->  router   : existing: AlertSubscriber | None
+deactivate db
+
+alt already subscribed and active
+    router  -->  client  : 200 OK\n{"email":"...","message":"already_subscribed"}
+
+else existing but inactive — reactivation
+    router  ->  db       : existing.active = True\ndb.commit()
+    activate db
+    db     -->  router   : OK
+    deactivate db
+
+    router  ->  db       : query(NewsArticle).order_by(...).limit(5)
+    activate db
+    db     -->  router   : articles[0..5]
+    deactivate db
+
+    router  ->  notifier : notify_subscribe_confirmation(email, articles)
+    activate notifier
+    notifier -> notifier : _enabled()? check FROM + PWD env vars
+    alt SMTP configured
+        notifier -> smtp : starttls + login\nsendmail([email])
+        activate smtp
+        smtp   --> notifier : sent
+        deactivate smtp
+    else SMTP not configured
+        notifier -> notifier : no-op (silent)
+    end
+    notifier --> router  : return
+    deactivate notifier
+
+    router  -->  client  : 200 OK\n{"email":"...","message":"reactivated"}
+
+else new subscriber
+    router  ->  db       : db.add(AlertSubscriber(email))\ndb.commit()
+    activate db
+    db     -->  router   : OK
+    deactivate db
+
+    router  ->  db       : query(NewsArticle).order_by(...).limit(5)
+    activate db
+    db     -->  router   : articles[0..5]
+    deactivate db
+
+    router  ->  notifier : notify_subscribe_confirmation(email, articles)
+    activate notifier
+    notifier -> notifier : _enabled()? check FROM + PWD env vars
+    alt SMTP configured
+        notifier -> smtp : starttls + login\nsendmail([email])
+        activate smtp
+        smtp   --> notifier : sent
+        deactivate smtp
+    else SMTP not configured
+        notifier -> notifier : no-op (silent)
+    end
+    notifier --> router  : return
+    deactivate notifier
+
+    router  -->  client  : 200 OK\n{"email":"...","message":"subscribed"}
+end
+
+deactivate router
+
+@enduml

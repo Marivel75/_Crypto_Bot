@@ -1,0 +1,510 @@
+@startuml CL03-fastapi-schemas
+@startuml _common
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+@enduml
+
+title CryptoBot — Schemas FastAPI V2 (code main)
+caption ~25 endpoints | 8 routers | Pydantic v2 request/response
+
+' ============================================================
+' PACKAGE: health  — GET /health
+' ============================================================
+package "health" {
+  class HealthResponse <<response>> {
+    status : str
+    db : str
+    timestamp : str
+  }
+  note right of HealthResponse : inline dict, no Pydantic model\nGET /health
+}
+
+' ============================================================
+' PACKAGE: market  — 5 endpoints
+' ============================================================
+package "market" {
+
+  class TopCryptoResponse <<response>> {
+    rank : Optional[int]
+    crypto_id : str
+    symbol : str
+    name : str
+    price : Optional[float]
+    market_cap : Optional[float]
+    volume_24h : Optional[float]
+    price_change_pct_24h : Optional[float]
+  }
+
+  class TopCryptoSnapshotResponse <<response>> {
+    snapshot_time : datetime
+    vs_currency : str
+    cryptos : List[TopCryptoResponse]
+  }
+
+  class DominanceItem <<response>> {
+    asset : str
+    percentage : float
+  }
+
+  class GlobalMarketResponse <<response>> {
+    snapshot_time : datetime
+    active_cryptocurrencies : Optional[int]
+    markets : Optional[int]
+    market_cap_change_24h : Optional[float]
+    volume_change_24h : Optional[float]
+    market_cap_usd : Optional[float]
+    volume_usd : Optional[float]
+    dominance : List[DominanceItem]
+  }
+
+  class TickerResponse <<response>> {
+    symbol : str
+    exchange : str
+    price : Optional[float]
+    volume_24h : Optional[float]
+    price_change_24h : Optional[float]
+    price_change_pct_24h : Optional[float]
+    high_24h : Optional[float]
+    low_24h : Optional[float]
+    snapshot_time : datetime
+  }
+
+  class FearGreedResponse <<response>> {
+    value : Any
+    classification : str
+    timestamp : str
+  }
+  note right of FearGreedResponse : inline dict\nGET /market/fear-greed
+
+  class MarketHistoryItem <<response>> {
+    timestamp : str
+    market_cap_usd : float
+    volume_usd : float
+  }
+  note right of MarketHistoryItem : inline dict list\nGET /market/history
+
+  TopCryptoSnapshotResponse *-- "0..*" TopCryptoResponse : cryptos
+  GlobalMarketResponse *-- "0..*" DominanceItem : dominance
+}
+
+' ============================================================
+' PACKAGE: ohlcv  — 4 endpoints
+' ============================================================
+package "ohlcv" {
+
+  class OHLCVResponse <<response>> {
+    id : str
+    timestamp : datetime
+    symbol : str
+    timeframe : str
+    open : float
+    high : float
+    low : float
+    close : float
+    volume : float
+    price_range : Optional[float]
+    price_change : Optional[float]
+    price_change_pct : Optional[float]
+    date : Optional[str]
+    exchange : str
+  }
+
+  class SymbolInfo <<response>> {
+    symbol : str
+    exchange : str
+    timeframe : str
+    count : int
+    latest_timestamp : Optional[datetime]
+  }
+
+  class DistinctCountItem <<response>> {
+    exchange : str
+    distinct_count : int
+  }
+  note right of DistinctCountItem : inline dict list\nGET /ohlcv/distinct-count
+}
+
+' ============================================================
+' PACKAGE: signals  — 1 endpoint
+' ============================================================
+package "signals" {
+
+  class SignalResponse <<response>> {
+    timestamp : datetime
+    symbol : str
+    timeframe : str
+    exchange : str
+    open : float
+    high : float
+    low : float
+    close : float
+    volume : float
+    sma_20 : Optional[float]
+    sma_50 : Optional[float]
+    ema_20 : Optional[float]
+    rsi_14 : Optional[float]
+    macd_line : Optional[float]
+    macd_signal : Optional[float]
+    macd_histogram : Optional[float]
+    bb_upper : Optional[float]
+    bb_middle : Optional[float]
+    bb_lower : Optional[float]
+    signal : Optional[str]
+    signal_score : Optional[float]
+    signal_reasons : Optional[List[str]]
+  }
+  note right of SignalResponse : GET /signals\nquery: symbol, timeframe, exchange, limit
+}
+
+' ============================================================
+' PACKAGE: news  — 3 endpoints
+' ============================================================
+package "news" {
+
+  class NewsArticleResponse <<response>> {
+    id : str
+    title : str
+    url : str
+    source : str
+    published_at : Optional[datetime]
+    content : Optional[str]
+    sentiment_score : Optional[float]
+    sentiment_label : Optional[str]
+    keywords : Optional[List[str]]
+    entities : Optional[dict]
+    topics : Optional[List[str]]
+    collected_at : Optional[datetime]
+  }
+
+  class NewsSentimentResponse <<response>> {
+    source : str
+    total : int
+    positive : int
+    negative : int
+    neutral : int
+    avg_score : Optional[float]
+  }
+  note bottom of NewsSentimentResponse : GET /news/sentiment\naggregated per source
+}
+
+' ============================================================
+' PACKAGE: alerts  — 2 endpoints
+' ============================================================
+package "alerts" {
+
+  class SubscribeRequest <<request>> {
+    email : EmailStr
+  }
+
+  class SubscribeResponse <<response>> {
+    email : str
+    message : str
+  }
+
+  note bottom of SubscribeRequest : POST /alerts/subscribe\nDELETE /alerts/unsubscribe/{email}
+  SubscribeRequest ..> SubscribeResponse : produces
+}
+
+' ============================================================
+' PACKAGE: ml  — 1 endpoint
+' ============================================================
+package "ml" {
+
+  class BacktestFoldResult <<response>> {
+    fold : int
+    train_start : datetime
+    train_end : datetime
+    test_start : datetime
+    test_end : datetime
+    n_train : int
+    n_test : int
+    accuracy : float
+    win_rate : float
+    pnl : float
+    sharpe : float
+    profit_factor : float
+    max_drawdown : float
+  }
+
+  class BacktestSummary <<response>> {
+    accuracy : float
+    win_rate : float
+    sharpe : float
+    profit_factor : float
+    max_drawdown : float
+    total_pnl : float
+    n_folds : int
+  }
+
+  class BacktestBaseline <<response>> {
+    strategy_pnl : float
+    baseline_return : float
+    excess_return : float
+    sharpe : float
+  }
+
+  class BacktestResponse <<response>> {
+    symbol : str
+    timeframe : str
+    model_type : str
+    train_window : int
+    test_window : int
+    n_candles : int
+    folds : List[BacktestFoldResult]
+    summary : BacktestSummary
+    baseline : BacktestBaseline
+  }
+  note right of BacktestResponse : GET /ml/backtest\nquery: symbol, timeframe, model_type\ntrain_window, test_window
+
+  BacktestResponse *-- "0..*" BacktestFoldResult : folds
+  BacktestResponse *-- "1" BacktestSummary : summary
+  BacktestResponse *-- "1" BacktestBaseline : baseline
+}
+
+' ============================================================
+' PACKAGE: paper_trading  — 8 endpoints
+' ============================================================
+package "paper_trading" {
+
+  class PortfolioCreate <<request>> {
+    name : str
+    initial_capital : float
+  }
+
+  class PortfolioResponse <<response>> {
+    id : str
+    name : str
+    initial_capital : float
+    cash : float
+    created_at : datetime
+  }
+
+  class OrderCreate <<request>> {
+    portfolio_id : str
+    symbol : str
+    quantity : Optional[float]
+    amount_usdt : Optional[float]
+    signal_source : str
+    signal_score : Optional[float]
+  }
+
+  class TradeResponse <<response>> {
+    id : str
+    portfolio_id : str
+    symbol : str
+    side : str
+    quantity : float
+    entry_price : float
+    entry_time : datetime
+    exit_price : Optional[float]
+    exit_time : Optional[datetime]
+    status : str
+    pnl : Optional[float]
+    pnl_pct : Optional[float]
+    signal_source : str
+    signal_score : Optional[float]
+    created_at : datetime
+  }
+
+  class OpenPositionOut <<response>> {
+    id : str
+    symbol : str
+    quantity : float
+    entry_price : float
+    current_price : float
+    pnl_latent : float
+    pnl_latent_pct : float
+    signal_source : str
+    entry_time : datetime
+  }
+
+  class ClosedTradeOut <<response>> {
+    id : str
+    symbol : str
+    quantity : float
+    entry_price : float
+    exit_price : Optional[float]
+    pnl : Optional[float]
+    pnl_pct : Optional[float]
+    signal_source : str
+    entry_time : datetime
+    exit_time : Optional[datetime]
+  }
+
+  class PortfolioMetrics <<response>> {
+    total_capital : float
+    total_realized_pnl : float
+    latent_pnl : float
+    win_rate : float
+    total_closed_trades : int
+    total_open_trades : int
+    best_trade_pnl : Optional[float]
+    worst_trade_pnl : Optional[float]
+  }
+
+  class PortfolioSummary <<response>> {
+    portfolio : PortfolioResponse
+    metrics : PortfolioMetrics
+    open_positions : List[OpenPositionOut]
+    closed_trades : List[ClosedTradeOut]
+  }
+
+  class LivePricesResponse <<response>> {
+    __root__ : Dict[str, float]
+  }
+  note right of LivePricesResponse : GET /paper-trading/live-prices\ninline Dict[str,float]
+
+  class LivePricesStatus <<response>> {
+    connected : bool
+    prices : Dict[str, Any]
+  }
+  note right of LivePricesStatus : GET /paper-trading/live-prices/status\ninline dict
+
+  PortfolioCreate ..> PortfolioResponse : POST /paper-trading/portfolios
+  OrderCreate ..> TradeResponse : POST /paper-trading/orders
+  PortfolioSummary *-- "1" PortfolioResponse : portfolio
+  PortfolioSummary *-- "1" PortfolioMetrics : metrics
+  PortfolioSummary *-- "0..*" OpenPositionOut : open_positions
+  PortfolioSummary *-- "0..*" ClosedTradeOut : closed_trades
+}
+
+@enduml

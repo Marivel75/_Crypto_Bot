@@ -1,0 +1,489 @@
+@startuml ER01-database-schema
+@startuml _common
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+@enduml
+
+title CryptoBot — Schéma BD V2 (SQLite, code main)
+caption Tables réelles src/models/ | crypto_data.db | pas de TimescaleDB
+
+' ============================================================
+' Remarque : schéma géré via Base.metadata.create_all()
+' (pas de migrations alembic ni de dossier migrations/)
+' Fichier DB : data/processed/crypto_data.db
+' Moteur : SQLite + check_same_thread=False
+' ============================================================
+
+' ------------------------------------------------------------------
+' Groupe 1 : Market global (MarketDataBase)
+' ------------------------------------------------------------------
+
+package "Global Market" #F5F5F5 {
+
+  entity "global_market_snapshot" as GMS {
+    * id : INTEGER <<PK>>
+    --
+    * timestamp : DATETIME <<unique, idx>>
+    active_cryptocurrencies : INTEGER
+    upcoming_icos : INTEGER
+    ongoing_icos : INTEGER
+    ended_icos : INTEGER
+    markets : INTEGER
+    market_cap_change_24h : REAL
+    volume_change_24h : REAL
+    created_at : DATETIME
+  }
+
+  entity "global_market_cap" as GMC {
+    * id : INTEGER <<PK>>
+    --
+    * snapshot_id : INTEGER <<FK, idx>>
+    * currency : VARCHAR(10) <<idx>>
+    * value : REAL
+    --
+    idx_marketcap_snapshot_currency (snapshot_id, currency)
+  }
+
+  entity "global_market_volume" as GMV {
+    * id : INTEGER <<PK>>
+    --
+    * snapshot_id : INTEGER <<FK, idx>>
+    * currency : VARCHAR(10) <<idx>>
+    * value : REAL
+    --
+    idx_volume_snapshot_currency (snapshot_id, currency)
+  }
+
+  entity "global_market_dominance" as GMD {
+    * id : INTEGER <<PK>>
+    --
+    * snapshot_id : INTEGER <<FK, idx>>
+    * asset : VARCHAR(10) <<idx>>
+    * percentage : REAL
+    --
+    idx_dominance_snapshot_asset (snapshot_id, asset)
+  }
+
+}
+
+' ------------------------------------------------------------------
+' Groupe 2 : Top crypto (MarketDataBase)
+' ------------------------------------------------------------------
+
+package "Top Crypto" #F5F5F5 {
+
+  entity "top_crypto_snapshot" as TCS {
+    * id : INTEGER <<PK>>
+    --
+    * snapshot_time : DATETIME
+    * vs_currency : VARCHAR(10)
+  }
+
+  entity "top_crypto" as TC {
+    * id : INTEGER <<PK>>
+    --
+    * snapshot_id : INTEGER <<FK>>
+    rank : INTEGER
+    * crypto_id : VARCHAR(50)
+    * symbol : VARCHAR(20)
+    * name : VARCHAR(50)
+    market_cap : REAL
+    price : REAL
+    volume_24h : REAL
+    price_change_pct_24h : REAL
+    --
+    idx_top_crypto_snapshot_id (snapshot_id)
+    idx_top_crypto_rank (rank)
+    idx_top_crypto_symbol (symbol)
+  }
+
+}
+
+' ------------------------------------------------------------------
+' Groupe 3 : Crypto detail (MarketDataBase)
+' ------------------------------------------------------------------
+
+package "Crypto Detail" #F5F5F5 {
+
+  entity "crypto_detail_snapshot" as CDS {
+    * id : INTEGER <<PK>>
+    --
+    * snapshot_time : DATETIME
+    * cryptos_count : INTEGER
+  }
+
+  entity "crypto_detail" as CD {
+    * id : INTEGER <<PK>>
+    --
+    * snapshot_id : INTEGER <<FK>>
+    * crypto_id : VARCHAR(50)
+    * symbol : VARCHAR(20)
+    * name : VARCHAR(100)
+    rank : INTEGER
+    categories : VARCHAR(500)
+    genesis_date : VARCHAR(20)
+    hashing_algorithm : VARCHAR(100)
+    block_time_minutes : INTEGER
+    image_large : VARCHAR(500)
+    image_small : VARCHAR(500)
+    links_homepage : VARCHAR(1000)
+    links_blockchain_site : VARCHAR(2000)
+    links_whitepaper : VARCHAR(500)
+    links_reddit : VARCHAR(500)
+    links_twitter : VARCHAR(100)
+    community_twitter : INTEGER
+    community_reddit : INTEGER
+    community_facebook : INTEGER
+    developer_stars : INTEGER
+    developer_forks : INTEGER
+    developer_subscribers : INTEGER
+    developer_issues : INTEGER
+    developer_pull_requests : INTEGER
+    market_cap_rank : INTEGER
+    market_cap : REAL
+    total_volume : REAL
+    high_24h : REAL
+    low_24h : REAL
+    price_change_24h : REAL
+    price_change_pct_24h : REAL
+    ath_price : REAL
+    ath_date : VARCHAR(30)
+    ath_change_pct : REAL
+    atl_price : REAL
+    atl_date : VARCHAR(30)
+    atl_change_pct : REAL
+    circulating_supply : REAL
+    total_supply : REAL
+    max_supply : REAL
+    last_updated : DATETIME
+    --
+    idx_crypto_detail_snapshot_id (snapshot_id)
+    idx_crypto_detail_crypto_id (crypto_id)
+    idx_crypto_detail_symbol (symbol)
+    idx_crypto_detail_rank (rank)
+  }
+
+}
+
+' ------------------------------------------------------------------
+' Groupe 4 : OHLCV & Ticker (bases séparées)
+' ------------------------------------------------------------------
+
+package "Trading Data" #F5F5F5 {
+
+  entity "ohlcv" as OHLCV {
+    * id : VARCHAR(36) <<PK, UUID>>
+    --
+    * timestamp : DATETIME
+    * symbol : VARCHAR(20)
+    * timeframe : VARCHAR(10)
+    * open : REAL
+    * high : REAL
+    * low : REAL
+    * close : REAL
+    * volume : REAL
+    price_range : REAL
+    price_change : REAL
+    price_change_pct : REAL
+    date : VARCHAR(10)
+    * exchange : VARCHAR(20)
+    created_at : DATETIME
+    updated_at : DATETIME
+    --
+    idx_ohlcv_symbol_timeframe (symbol, timeframe)
+    idx_ohlcv_timestamp (timestamp)
+    idx_ohlcv_symbol_timestamp (symbol, timestamp)
+  }
+
+  entity "ticker_snapshots" as TS {
+    * id : VARCHAR(36) <<PK, UUID>>
+    --
+    * snapshot_time : DATETIME
+    * symbol : VARCHAR(20)
+    * exchange : VARCHAR(20)
+    price : REAL
+    volume_24h : REAL
+    price_change_24h : REAL
+    price_change_pct_24h : REAL
+    high_24h : REAL
+    low_24h : REAL
+    created_at : DATETIME
+    --
+    idx_ticker_snapshot_time (snapshot_time)
+    idx_ticker_symbol_time (symbol, snapshot_time)
+  }
+
+}
+
+' ------------------------------------------------------------------
+' Groupe 5 : Paper trading (Base séparée)
+' ------------------------------------------------------------------
+
+package "Paper Trading" #F5F5F5 {
+
+  entity "paper_portfolios" as PP {
+    * id : VARCHAR(36) <<PK, UUID>>
+    --
+    * name : VARCHAR(100)
+    * initial_capital : REAL
+    * cash : REAL
+    created_at : DATETIME
+  }
+
+  entity "paper_trades" as PT {
+    * id : VARCHAR(36) <<PK, UUID>>
+    --
+    * portfolio_id : VARCHAR(36) <<FK>>
+    * symbol : VARCHAR(20)
+    * side : VARCHAR(4)
+    * quantity : REAL
+    * entry_price : REAL
+    * entry_time : DATETIME
+    exit_price : REAL
+    exit_time : DATETIME
+    * status : VARCHAR(6)
+    pnl : REAL
+    pnl_pct : REAL
+    * signal_source : VARCHAR(50)
+    signal_score : REAL
+    created_at : DATETIME
+    --
+    idx_paper_trades_portfolio (portfolio_id)
+    idx_paper_trades_status (status)
+    idx_paper_trades_symbol (symbol)
+  }
+
+}
+
+' ------------------------------------------------------------------
+' Groupe 6 : News (Base séparée)
+' ------------------------------------------------------------------
+
+package "News & NLP" #F5F5F5 {
+
+  entity "news_articles" as NA {
+    * id : VARCHAR(36) <<PK, UUID>>
+    --
+    * title : VARCHAR(500)
+    * url : VARCHAR(1000) <<unique>>
+    * source : VARCHAR(150)
+    published_at : DATETIME
+    content : TEXT
+    sentiment_score : REAL
+    sentiment_label : VARCHAR(20)
+    keywords : JSON
+    entities : JSON
+    topics : JSON
+    collected_at : DATETIME
+  }
+
+}
+
+' ------------------------------------------------------------------
+' Groupe 7 : Alertes (Base séparée)
+' ------------------------------------------------------------------
+
+package "Alertes" #F5F5F5 {
+
+  entity "alert_subscribers" as AS {
+    * id : INTEGER <<PK>>
+    --
+    * email : VARCHAR <<unique, idx>>
+    * active : BOOLEAN
+    * created_at : DATETIME
+  }
+
+}
+
+' ------------------------------------------------------------------
+' Relations (FK explicites)
+' ------------------------------------------------------------------
+
+GMS ||--o{ GMC : "snapshot_id"
+GMS ||--o{ GMV : "snapshot_id"
+GMS ||--o{ GMD : "snapshot_id"
+
+TCS ||--o{ TC : "snapshot_id"
+
+CDS ||--o{ CD : "snapshot_id"
+
+PP ||--o{ PT : "portfolio_id"
+
+' ------------------------------------------------------------------
+' Notes
+' ------------------------------------------------------------------
+
+note bottom of GMS
+  Base : MarketDataBase
+  (declarative_base partagée)
+end note
+
+note bottom of OHLCV
+  Base : OHLCVBase (declarative_base dédiée)
+  Schéma créé via Base.metadata.create_all()
+  Pas de migrations/alembic
+end note
+
+note bottom of NA
+  Base : declarative_base() dédiée
+  id = UUID v4 (str)
+end note
+
+note bottom of AS
+  Base : declarative_base() dédiée
+  (alert_subscriber.py)
+end note
+
+legend right
+  <<PK>>   Clé primaire
+  <<FK>>   Clé étrangère
+  <<idx>>  Index simple
+  *        NOT NULL
+  Colonnes sans * = nullable
+  UUID = VARCHAR(36) uuid4
+  JSON = colonne SQLite TEXT (JSON sérialisé)
+  Moteur : SQLite | check_same_thread=False
+  Fichier : data/processed/crypto_data.db
+  Schéma : Base.metadata.create_all() (pas d'alembic)
+endlegend
+
+@enduml

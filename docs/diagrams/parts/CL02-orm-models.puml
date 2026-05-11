@@ -1,0 +1,512 @@
+@startuml CL02-orm-models
+@startuml _common
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+@enduml
+
+title CryptoBot — Modèles ORM SQLAlchemy V2 (SQLite)
+caption Tables réelles dans src/models/ | SQLite engine
+
+' ============================================================
+' Bases SQLAlchemy
+' ============================================================
+
+package "SQLAlchemy Bases" <<Frame>> {
+
+  class MarketDataBase <<declarative_base>> {
+    ' Base partagée : GlobalMarketSnapshot, GlobalMarketCap,
+    ' GlobalMarketVolume, GlobalMarketDominance,
+    ' TopCryptoSnapshot, TopCrypto,
+    ' CryptoDetailSnapshot, CryptoDetail
+  }
+
+  class OHLCVBase <<declarative_base>> {
+    ' Base isolée pour OHLCV
+  }
+
+  class TickerBase <<declarative_base>> {
+    ' Base isolée pour TickerSnapshot
+  }
+
+  class PaperTradeBase <<declarative_base>> {
+    ' Base isolée pour PaperPortfolio / PaperTrade
+  }
+
+  class AlertSubscriberBase <<declarative_base>> {
+    ' Base isolée pour AlertSubscriber
+  }
+
+  class NewsBase <<declarative_base>> {
+    ' Base isolée pour NewsArticle
+  }
+}
+
+' ============================================================
+' Groupe Market Global (MarketDataBase)
+' ============================================================
+
+package "Global Market (MarketDataBase)" <<Frame>> {
+
+  class GlobalMarketSnapshot <<table>> {
+    + id : Integer [PK, autoincrement]
+    --
+    timestamp : DateTime [UNIQUE, INDEX]
+    active_cryptocurrencies : Integer
+    upcoming_icos : Integer
+    ongoing_icos : Integer
+    ended_icos : Integer
+    markets : Integer
+    market_cap_change_24h : Float
+    volume_change_24h : Float
+    created_at : DateTime
+    ==
+    __tablename__ = "global_market_snapshot"
+  }
+
+  class GlobalMarketCap <<table>> {
+    + id : Integer [PK]
+    --
+    snapshot_id : Integer [FK -> global_market_snapshot.id, INDEX]
+    currency : String(10) [INDEX]
+    value : Float
+    ==
+    __tablename__ = "global_market_cap"
+    idx_marketcap_snapshot_currency(snapshot_id, currency)
+  }
+
+  class GlobalMarketVolume <<table>> {
+    + id : Integer [PK]
+    --
+    snapshot_id : Integer [FK -> global_market_snapshot.id, INDEX]
+    currency : String(10) [INDEX]
+    value : Float
+    ==
+    __tablename__ = "global_market_volume"
+    idx_volume_snapshot_currency(snapshot_id, currency)
+  }
+
+  class GlobalMarketDominance <<table>> {
+    + id : Integer [PK]
+    --
+    snapshot_id : Integer [FK -> global_market_snapshot.id, INDEX]
+    asset : String(10) [INDEX]
+    percentage : Float
+    ==
+    __tablename__ = "global_market_dominance"
+    idx_dominance_snapshot_asset(snapshot_id, asset)
+  }
+}
+
+' ============================================================
+' Groupe Top Crypto (MarketDataBase)
+' ============================================================
+
+package "Top Crypto (MarketDataBase)" <<Frame>> {
+
+  class TopCryptoSnapshot <<table>> {
+    + id : Integer [PK, autoincrement]
+    --
+    snapshot_time : DateTime
+    vs_currency : String(10)
+    ==
+    __tablename__ = "top_crypto_snapshot"
+  }
+
+  class TopCrypto <<table>> {
+    + id : Integer [PK, autoincrement]
+    --
+    snapshot_id : Integer [FK -> top_crypto_snapshot.id]
+    rank : Integer
+    crypto_id : String(50)
+    symbol : String(20)
+    name : String(50)
+    market_cap : Float
+    price : Float
+    volume_24h : Float
+    price_change_pct_24h : Float
+    ==
+    __tablename__ = "top_crypto"
+    idx_top_crypto_snapshot_id(snapshot_id)
+    idx_top_crypto_rank(rank)
+    idx_top_crypto_symbol(symbol)
+  }
+}
+
+' ============================================================
+' Groupe Crypto Detail (MarketDataBase)
+' ============================================================
+
+package "Crypto Detail (MarketDataBase)" <<Frame>> {
+
+  class CryptoDetailSnapshot <<table>> {
+    + id : Integer [PK, autoincrement]
+    --
+    snapshot_time : DateTime
+    cryptos_count : Integer
+    ==
+    __tablename__ = "crypto_detail_snapshot"
+  }
+
+  class CryptoDetail <<table>> {
+    + id : Integer [PK, autoincrement]
+    --
+    snapshot_id : Integer [FK -> crypto_detail_snapshot.id]
+    crypto_id : String(50)
+    symbol : String(20)
+    name : String(100)
+    rank : Integer
+    categories : String(500)
+    genesis_date : String(20)
+    hashing_algorithm : String(100)
+    block_time_minutes : Integer
+    image_large : String(500)
+    image_small : String(500)
+    links_homepage : String(1000)
+    links_blockchain_site : String(2000)
+    links_whitepaper : String(500)
+    links_reddit : String(500)
+    links_twitter : String(100)
+    community_twitter : Integer
+    community_reddit : Integer
+    community_facebook : Integer
+    developer_stars : Integer
+    developer_forks : Integer
+    developer_subscribers : Integer
+    developer_issues : Integer
+    developer_pull_requests : Integer
+    market_cap_rank : Integer
+    market_cap : Float
+    total_volume : Float
+    high_24h : Float
+    low_24h : Float
+    price_change_24h : Float
+    price_change_pct_24h : Float
+    ath_price : Float
+    ath_date : String(30)
+    ath_change_pct : Float
+    atl_price : Float
+    atl_date : String(30)
+    atl_change_pct : Float
+    circulating_supply : Float
+    total_supply : Float
+    max_supply : Float
+    last_updated : DateTime
+    ==
+    __tablename__ = "crypto_detail"
+    idx_crypto_detail_snapshot_id(snapshot_id)
+    idx_crypto_detail_crypto_id(crypto_id)
+    idx_crypto_detail_symbol(symbol)
+    idx_crypto_detail_rank(rank)
+  }
+}
+
+' ============================================================
+' OHLCV (OHLCVBase — base isolée)
+' ============================================================
+
+package "OHLCV (OHLCVBase)" <<Frame>> {
+
+  class OHLCV <<table>> {
+    + id : String(36) [PK, UUID]
+    --
+    timestamp : DateTime
+    symbol : String(20)
+    timeframe : String(10)
+    open : Float
+    high : Float
+    low : Float
+    close : Float
+    volume : Float
+    price_range : Float
+    price_change : Float
+    price_change_pct : Float
+    date : String(10)
+    exchange : String(20)
+    created_at : DateTime
+    updated_at : DateTime
+    ==
+    __tablename__ = "ohlcv"
+    idx_ohlcv_symbol_timeframe(symbol, timeframe)
+    idx_ohlcv_timestamp(timestamp)
+    idx_ohlcv_symbol_timestamp(symbol, timestamp)
+  }
+}
+
+' ============================================================
+' Ticker (TickerBase — base isolée)
+' ============================================================
+
+package "Ticker (TickerBase)" <<Frame>> {
+
+  class TickerSnapshot <<table>> {
+    + id : String(36) [PK, UUID]
+    --
+    snapshot_time : DateTime
+    symbol : String(20)
+    exchange : String(20)
+    price : Float
+    volume_24h : Float
+    price_change_24h : Float
+    price_change_pct_24h : Float
+    high_24h : Float
+    low_24h : Float
+    created_at : DateTime
+    ==
+    __tablename__ = "ticker_snapshots"
+    idx_ticker_snapshot_time(snapshot_time)
+    idx_ticker_symbol_time(symbol, snapshot_time)
+  }
+}
+
+' ============================================================
+' Paper Trading (PaperTradeBase — base isolée)
+' ============================================================
+
+package "Paper Trading (PaperTradeBase)" <<Frame>> {
+
+  class PaperPortfolio <<table>> {
+    + id : String(36) [PK, UUID]
+    --
+    name : String(100)
+    initial_capital : Float
+    cash : Float
+    created_at : DateTime
+    ==
+    __tablename__ = "paper_portfolios"
+  }
+
+  class PaperTrade <<table>> {
+    + id : String(36) [PK, UUID]
+    --
+    portfolio_id : String(36) [FK -> paper_portfolios.id]
+    symbol : String(20)
+    side : String(4)
+    quantity : Float
+    entry_price : Float
+    entry_time : DateTime
+    exit_price : Float
+    exit_time : DateTime
+    status : String(6)
+    pnl : Float
+    pnl_pct : Float
+    signal_source : String(50)
+    signal_score : Float
+    created_at : DateTime
+    ==
+    __tablename__ = "paper_trades"
+    idx_paper_trades_portfolio(portfolio_id)
+    idx_paper_trades_status(status)
+    idx_paper_trades_symbol(symbol)
+  }
+}
+
+' ============================================================
+' Alertes (AlertSubscriberBase — base isolée)
+' ============================================================
+
+package "Alertes (AlertSubscriberBase)" <<Frame>> {
+
+  class AlertSubscriber <<table>> {
+    + id : Integer [PK, INDEX]
+    --
+    email : String [UNIQUE, INDEX]
+    active : Boolean
+    created_at : DateTime
+    ==
+    __tablename__ = "alert_subscribers"
+  }
+}
+
+' ============================================================
+' News (NewsBase — base isolée)
+' ============================================================
+
+package "News (NewsBase)" <<Frame>> {
+
+  class NewsArticle <<table>> {
+    + id : String(36) [PK, UUID]
+    --
+    title : String(500)
+    url : String(1000) [UNIQUE]
+    source : String(150)
+    published_at : DateTime
+    content : Text
+    sentiment_score : Float
+    sentiment_label : String(20)
+    keywords : JSON
+    entities : JSON
+    topics : JSON
+    collected_at : DateTime
+    ==
+    __tablename__ = "news_articles"
+  }
+}
+
+' ============================================================
+' Relations (Foreign Keys)
+' ============================================================
+
+GlobalMarketSnapshot "1" --> "0..*" GlobalMarketCap       : snapshot_id
+GlobalMarketSnapshot "1" --> "0..*" GlobalMarketVolume    : snapshot_id
+GlobalMarketSnapshot "1" --> "0..*" GlobalMarketDominance : snapshot_id
+
+TopCryptoSnapshot "1" --> "0..*" TopCrypto               : snapshot_id
+
+CryptoDetailSnapshot "1" --> "0..*" CryptoDetail          : snapshot_id
+
+PaperPortfolio "1" --> "0..*" PaperTrade                 : portfolio_id
+
+' ============================================================
+' Note moteur SQLite
+' ============================================================
+
+note as N_engine
+  **SQLite engine** (V2)
+  DATABASE_URL = sqlite:///data/processed/crypto_data.db
+  connect_args = {"check_same_thread": False}
+  4 bases declarative_base() distinctes :
+    OHLCVBase · TickerBase · MarketDataBase · PaperTradeBase
+  + AlertSubscriberBase + NewsBase (isolées)
+  Toutes créées via Base.metadata.create_all(engine)
+end note
+
+@enduml
