@@ -1,0 +1,220 @@
+@startuml CL05-exceptions
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Hiérarchie d'exceptions V2 (code main)
+caption Errors réelles dans api/ + src/
+
+' ============================================================
+' Note: V2 ne possède pas de shared/exceptions.py.
+' Les seules exceptions custom sont dans src/etl/ (7 classes).
+' api/ utilise directement HTTPException (FastAPI built-in).
+' ============================================================
+
+note as N1
+  V2 : pas de base commune CryptoBotError.
+  Chaque pipeline ETL définit ses propres
+  exceptions locales héritant de Exception.
+  api/ utilise HTTPException (FastAPI) directement.
+end note
+
+' ============================================================
+' Racine Python
+' ============================================================
+class Exception <<python-builtins>> #F5F5F5 {
+}
+
+' ============================================================
+' src/etl/ohlcv_pipeline/
+' ============================================================
+package "src/etl/ohlcv_pipeline" #F5F5F5 {
+  class PipelineError <<etl>> #ECFDF5 {
+    ' pipeline_ohlcv.py:106
+  }
+  class ExtractionError <<etl>> #ECFDF5 {
+    ' extractor.py:9
+  }
+  class TransformationError <<etl>> #ECFDF5 {
+    ' transformer.py:13
+  }
+  class LoadingError <<etl>> #ECFDF5 {
+    ' loader.py:12
+  }
+}
+
+' ============================================================
+' src/etl/market_data_pipeline/
+' ============================================================
+package "src/etl/market_data_pipeline" #F5F5F5 {
+  class ExtractionErrorMarketData <<etl>> #ECFDF5 {
+    ' extractor.py:5
+  }
+  class TransformationErrorMarketData <<etl>> #ECFDF5 {
+    ' transformer.py:15
+  }
+  class LoadingErrorMarketData <<etl>> #ECFDF5 {
+    ' loader.py:15
+  }
+}
+
+' ============================================================
+' Hierarchy
+' ============================================================
+Exception <|-- PipelineError
+Exception <|-- ExtractionError
+Exception <|-- TransformationError
+Exception <|-- LoadingError
+
+Exception <|-- ExtractionErrorMarketData
+Exception <|-- TransformationErrorMarketData
+Exception <|-- LoadingErrorMarketData
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom right
+  |= Couleur |= Categorie |
+  | <#F5F5F5> | Python built-in |
+  | <#ECFDF5> | ETL custom (src/etl/) |
+endlegend
+
+@enduml

@@ -1,0 +1,253 @@
+@startuml UC01-personas-usecases
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Personas & Cas d'usage V2 (code main)
+caption 3 personas | 6 pages Streamlit
+
+left to right direction
+
+' ============================================================
+' Personas
+' ============================================================
+actor "Noah\n(Trader independant)" as noah #FEF3E8
+
+' ============================================================
+' Use Cases
+' ============================================================
+rectangle "CryptoBot" #F5F5F5 {
+
+  package "Dashboard <<page>>" #FEF3E8 {
+    usecase "Consulter graphe\nchandelier multi-timeframe" as uc_candle
+    usecase "Voir resume\ndes indicateurs\n(RSI, MACD, Bollinger, SMA)" as uc_indic
+    usecase "Explorer tableau\nde bord des signaux" as uc_dash_signals
+  }
+
+  package "Market Overview <<page>>" #ECFDF5 {
+    usecase "Suivre capitalisation\ndu marche global" as uc_mcap
+    usecase "Visualiser dominance\nBTC/ETH" as uc_dominance
+    usecase "Consulter Fear\n& Greed Index" as uc_fng
+    usecase "Voir gainers\net losers 24h" as uc_movers
+    usecase "Analyser correlations\nde rendements" as uc_corr
+    usecase "Explorer liquidite\nrelative (bubble chart)" as uc_liquidity
+  }
+
+  package "Signaux Techniques <<page>>" #F3EEFF {
+    usecase "Filtrer signaux\nBUY/SELL/HOLD\npar symbole et timeframe" as uc_signals
+    usecase "Consulter score\ncomposite et raisons" as uc_score
+    usecase "Voir repartition\ndes signaux sur periode" as uc_signal_dist
+  }
+
+  package "Veille <<page>>" #FEF3E8 {
+    usecase "Lire actualites\ncrypto en temps reel" as uc_news
+    usecase "Filtrer par source\nRSS / sentiment" as uc_filter
+    usecase "Consulter sentiment\nVADER par source" as uc_sentiment
+  }
+
+  package "ML & Backtesting <<page>>" #F3EEFF {
+    usecase "Lancer backtest\nwalk-forward" as uc_backtest
+    usecase "Comparer modeles\n(XGBoost, RF, LR)" as uc_model_cmp
+    usecase "Consulter metriques\n(Sharpe, Win Rate, PnL)" as uc_metrics
+    usecase "Voir performance\nvs Buy-and-Hold" as uc_vs_bah
+  }
+
+  package "Paper Trading <<page>>" #ECFDF5 {
+    usecase "Creer portefeuille\nfictif" as uc_pt_create
+    usecase "Passer ordre BUY\nsur capital fictif" as uc_pt_order
+    usecase "Suivre positions\nouvertes (P&L latent)" as uc_pt_open
+    usecase "Fermer position\net realiser P&L" as uc_pt_close
+    usecase "Consulter historique\ndes trades" as uc_pt_history
+    usecase "Voir courbe\nde performance" as uc_pt_chart
+  }
+
+}
+
+' Personas placés à droite (déclarés après le rectangle)
+actor "Sarah\n(Journaliste financiere)" as sarah #F3EEFF
+actor "Aleksandar\n(Investisseur debutant)" as aleksandar #ECFDF5
+
+' ============================================================
+' Relations — Noah (Trader independant)
+' ============================================================
+noah --> uc_candle
+noah --> uc_indic
+noah --> uc_signals
+noah --> uc_score
+noah --> uc_signal_dist
+noah --> uc_backtest
+noah --> uc_model_cmp
+noah --> uc_metrics
+noah --> uc_vs_bah
+noah --> uc_pt_order
+noah --> uc_pt_open
+noah --> uc_pt_close
+noah --> uc_pt_history
+noah --> uc_pt_chart
+
+' ============================================================
+' Relations — Sarah (Journaliste financiere)
+' ============================================================
+uc_news <-- sarah
+uc_filter <-- sarah
+uc_sentiment <-- sarah
+uc_mcap <-- sarah
+uc_dominance <-- sarah
+uc_fng <-- sarah
+uc_movers <-- sarah
+
+' ============================================================
+' Relations — Aleksandar (Investisseur debutant)
+' ============================================================
+uc_candle <-- aleksandar
+uc_dash_signals <-- aleksandar
+uc_mcap <-- aleksandar
+uc_dominance <-- aleksandar
+uc_fng <-- aleksandar
+uc_movers <-- aleksandar
+uc_corr <-- aleksandar
+uc_liquidity <-- aleksandar
+uc_pt_create <-- aleksandar
+uc_pt_order <-- aleksandar
+uc_pt_open <-- aleksandar
+uc_pt_history <-- aleksandar
+
+@enduml

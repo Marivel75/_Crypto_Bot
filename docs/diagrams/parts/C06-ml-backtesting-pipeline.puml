@@ -1,0 +1,253 @@
+@startuml C06-ml-backtesting-pipeline
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Pipeline ML Backtesting V2 (code main)
+caption Walk-forward réel | sklearn+XGBoost | MLflow gracieux
+
+' ============================================================
+' Data Input
+' ============================================================
+package "Data Input" #ECFDF5 {
+  [DataFrame OHLCV\ntimestamp, open, high,\nlow, close, volume\n(DatetimeIndex trié)] as ohlcv
+}
+
+' ============================================================
+' Feature Engineering
+' ============================================================
+package "Feature Engineering" #FEF3E8 {
+  [FeatureBuilder\n-- Returns & momentum --\nlog_return_1, return_4/12/24\n-- Volatilité --\nvolatility_5/10/20\n-- Indicateurs techniques --\nRSI(14), MACD, Bollinger\nsma_7/20/50_ratio, ema_9/21_ratio\n-- Structure bougie --\nhl_spread, body_ratio\nupper/lower_wick_ratio\n-- Volume --\nvolume_ma_ratio, volume_change\n-- Temporelles --\nhour, day_of_week, month, is_weekend] as feature_builder <<transformer>>
+
+  [DatasetBuilder\nhorizon=1, mode='direction'\nTarget: close(t+1) > close(t)\nAnti-leakage: shift(-horizon)\nDropna (warm-up + horizon)\nTimeSeriesSplit disponible] as dataset_builder <<transformer>>
+}
+
+' ============================================================
+' Models (sklearn Pipeline: StandardScaler + model)
+' ============================================================
+package "Modèles Baseline" #F3EEFF {
+  [DummyClassifier\nstrategy=most_frequent\nplancher absolu] as dummy <<model>>
+  [LogisticRegression\nC=0.1, balanced\nmax_iter=1000] as lr <<model>>
+  [RandomForestClassifier\nn_estimators=200\nmax_depth=6, min_samples_leaf=10\nclass_weight=balanced] as rf <<model>>
+  [XGBClassifier\nn_estimators=300, max_depth=4\nlr=0.05, subsample=0.8\n(graceful: try/except ImportError)] as xgb <<model>>
+}
+
+' ============================================================
+' Walk-Forward Backtester
+' ============================================================
+package "Walk-Forward Backtesting" #FEF3E8 {
+  [Backtester\ntrain_window=180j, test_window=30j\npurge_days=1, embargo_days=1\n\nPar fold:\n1. Fenetre train\n2. Purge (anti-leakage)\n3. Fenetre test\n4. Embargo post-test\n\nStrategy.fit(X_train, y_train)\nStrategy.predict(X_test)\nEchec fold: log + continue] as backtester
+
+  [_fold_metrics\naccuracy\nwin_rate (BUY signals)\npnl (log-returns BUY)\nsharpe (annualisé, 365j)\nprofit_factor (gains/pertes)\nmax_drawdown (cumprod)] as fold_metrics
+
+  [compute_metrics\nAgrégat tous folds:\nmean accuracy, win_rate\nsharpe global, profit_factor\nmax_drawdown max\ntotal_pnl, n_folds] as agg_metrics
+
+  [compare_baseline\nstrategy_pnl vs buy-and-hold\nexcess_return, sharpe] as baseline_cmp
+}
+
+' ============================================================
+' Evaluator (cross-validation complémentaire)
+' ============================================================
+package "ModelEvaluator" #F5F5F5 {
+  [evaluate_folds\naccuracy, precision, recall, F1\nwin_rate, profit_factor\nsharpe simulé (signal × return)] as evaluator
+  [compare_models\nDataFrame {model x métrique}\narrondi 4 décimales] as model_compare
+}
+
+' ============================================================
+' MLflow (gracieux)
+' ============================================================
+package "MLflow Tracking (gracieux)" #F5F5F5 {
+  [log_experiment\nMLFLOW_TRACKING_URI\nparams, metrics, tags\nartifacts optionnels\nWarning si serveur down\nreturn run_id | None] as mlflow_log
+
+  [log_backtest_metrics\ntags: symbol, model_version\nrun_type=backtest\ndelègue à log_experiment] as mlflow_backtest
+}
+
+' ============================================================
+' Relations
+' ============================================================
+ohlcv --> feature_builder : raw OHLCV
+feature_builder --> dataset_builder : DataFrame enrichi (+features)
+dataset_builder --> backtester : X (features) + label + price_close
+
+dataset_builder --> dummy : X_train, y_train
+dataset_builder --> lr : X_train, y_train
+dataset_builder --> rf : X_train, y_train
+dataset_builder --> xgb : X_train, y_train (si disponible)
+
+dummy --> backtester : Strategy.fit/predict
+lr --> backtester : Strategy.fit/predict
+rf --> backtester : Strategy.fit/predict
+xgb --> backtester : Strategy.fit/predict
+
+backtester --> fold_metrics : preds, y_test, prices
+fold_metrics --> agg_metrics : fold results DataFrame
+agg_metrics --> baseline_cmp : summary dict
+
+backtester --> evaluator : fold_results (cross_validate)
+evaluator --> model_compare : summary per model
+
+agg_metrics --> mlflow_backtest : metrics dict (sharpe, win_rate, pnl...)
+mlflow_backtest --> mlflow_log : délègue
+mlflow_log ..> mlflow_log : skip gracieux\n(warning, return None)
+
+note right of backtester
+  Aucun fold valide → DataFrame vide
+  Fold échoué → log.error + continue
+  Colonnes requises : label, price_close
+  Index : DatetimeIndex obligatoire
+end note
+
+note right of mlflow_log
+  MLFLOW_TRACKING_URI=http://localhost:5000
+  Serveur down : warning non-bloquant
+  Pas de Model Registry production
+  Pas de serving/inference
+end note
+
+legend bottom right
+  |= Couleur |= Couche |
+  | <#FEF3E8> | Feature Engineering + Backtesting |
+  | <#F3EEFF> | Modèles sklearn/XGBoost |
+  | <#ECFDF5> | Data Input |
+  | <#F5F5F5> | Evaluation + MLflow |
+endlegend
+
+@enduml

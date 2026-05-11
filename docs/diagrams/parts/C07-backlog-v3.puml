@@ -1,0 +1,222 @@
+@startuml C07-backlog-v3
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Backlog V3 (cible prod, non câblée)
+caption Documenté dans _v1/infra/ Ansible/Nginx/Prom/Grafana — V3 à décider
+
+' ============================================================
+' C07 — Backlog V3 : cibles prod documentées, non câblées
+' ============================================================
+'
+' PIVOT NOTE:
+' Ce diagramme REMPLACE le phantom "Phase 2 Roadmap" de la V1
+' (LSTM/RL/DriftDetector — OBSOLETE).
+' Sujet V2 = court backlog des cibles prod documentées dans
+' _v1/infra/ (Ansible/Nginx/Prometheus/Grafana) mais NON
+' câblées dans playbooks/deploy.yml ni dans docker-compose.yml
+' racine.
+' ============================================================
+
+note as N_PIVOT
+  **Statut : documenté, NON câblé**
+  Cible prod définie dans `_v1/infra/` (Ansible/Nginx/Prom/Grafana).
+  `playbooks/deploy.yml` ne déploie que le compose racine V2 actuel
+  (mlflow, api, frontend, collector via SQLite).
+  Les services listés ici sont dans `group_vars/vps.yml#app_services`
+  mais absents du playbook réel. Décisions V3 à venir.
+end note
+
+package "Storage <<backlog>>" {
+  component "TimescaleDB\n(PostgreSQL + extension)" <<hypertable>> as TSB
+  note right of TSB
+    Remplace SQLite (CRYPTO_BOT_DB_URL actuel).
+    Défini dans group_vars/vps.yml : timescaledb.
+    Hypertables sur ohlcv / signals.
+  end note
+}
+
+package "Reverse-proxy + TLS <<backlog>>" {
+  component "Nginx host\n(reverse-proxy)" <<backlog>> as NGX
+  component "Let's Encrypt\n(Certbot TLS)" <<backlog>> as LE
+  note right of NGX
+    nginx.conf documenté dans _v1/infra/nginx/nginx.conf.
+    HTTPS server block commenté (ssl_certificate manquant).
+    domain_name: monpetitbet.fr (group_vars/vps.yml).
+    letsencrypt_email: admin@monpetitbet.fr.
+  end note
+  NGX --> LE : "renouvellement cert"
+}
+
+package "Observability <<backlog>>" {
+  component "Prometheus\n(scrape 15s)" <<backlog>> as PROM
+  component "Grafana\n(4 dashboards)" <<backlog>> as GRAF
+  component "Loki\n(logs aggregation)" <<backlog>> as LOKI
+  component "node-exporter\n(:9100)" <<backlog>> as NODE
+  component "postgres-exporter\n(:9187)" <<backlog>> as PGEXP
+  component "cadvisor\n(:8080)" <<backlog>> as CADV
+  note right of PROM
+    prometheus.prod.yml définit 4 jobs :
+    api:8000, node-exporter:9100,
+    postgres-exporter:9187, cadvisor:8080.
+    Grafana : api_overview, business,
+    database, system (4 dashboards JSON).
+    Loki : agrège les logs applicatifs (mlflow,
+    api, frontend, collector) — query via Grafana.
+  end note
+  PROM --> NODE : scrape
+  PROM --> PGEXP : scrape
+  PROM --> CADV : scrape
+  GRAF --> PROM : query metrics
+  GRAF --> LOKI : query logs
+}
+
+
+' Gap V2 -> V3 visible : compose racine n'a pas ces services
+note as N_GAP
+  **Gap V2 actuel** (docker-compose.yml racine) :
+  mlflow | api | frontend | collector (SQLite)
+  — aucun TimescaleDB, Nginx, Prometheus, Grafana,
+  Loki, node-exporter, postgres-exporter, cadvisor.
+end note
+
+@enduml

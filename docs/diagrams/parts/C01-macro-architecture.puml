@@ -1,0 +1,257 @@
+@startuml C01-macro-architecture
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Architecture Macro V2 (code main)
+caption 4 services Docker Compose | SQLite | crypto-net bridge
+
+' ============================================================
+' External APIs
+' ============================================================
+cloud "APIs Externes" as external #F5F5F5 {
+  [Binance\nREST + WebSocket] as binance <<collector>>
+  [CoinGecko\nDemo API] as coingecko <<collector>>
+  [Alternative.me\nFear & Greed Index] as fng <<collector>>
+  [RSS Feeds\ndecrypt.co\ncointelegraph.com\ncryptonews.com] as rss <<collector>>
+}
+
+' ============================================================
+' Docker Compose — crypto-net bridge
+' ============================================================
+package "Docker Compose  |  crypto-net bridge" as compose #FEF3E8 {
+
+  ' --- Collector daemon ---
+  package "collector  (daemon, pas de port externe)" as pkg_collector #ECFDF5 {
+    [OHLCVScheduler\nTickerScheduler\nMarketDataScheduler] as ohlcv_sched <<scheduler>>
+    [WSPriceCollector\nBinance WebSocket] as ws_col <<collector>>
+    [NewsCollector\nRSS feedparser] as news_col <<collector>>
+    [FearGreedCollector\nalternative.me] as fg_col <<collector>>
+    [Notifier\nemail alertes collecte] as notifier
+  }
+
+  ' --- MLflow tracking server ---
+  package "mlflow  :5001->5000" as pkg_mlflow #F3EEFF {
+    [MLflow Tracking\nExperiment registry\nSQLite mlflow.db] as mlflow_svc
+  }
+
+  ' --- FastAPI backend ---
+  package "api  :8000" as pkg_api #FEF3E8 {
+    [FastAPI\n/health /ohlcv /market\n/signals /news /ml\n/alerts /paper-trading] as fastapi <<router>>
+    [WSPriceCollector\n(thread daemon)\nBinance WS temps reel] as ws_api <<collector>>
+    [CORSMiddleware] as cors <<middleware>>
+  }
+
+  ' --- Streamlit frontend ---
+  package "frontend  :8501" as pkg_frontend #F3EEFF {
+    [Streamlit\n6 pages\n(dashboard, market, signals\nveille, ml, paper_trading)] as streamlit <<page>>
+    [APIClient\nHTTP -> api:8000] as apiclient
+    [i18n FR/EN] as i18n <<component>>
+  }
+
+}
+
+' ============================================================
+' Storage volumes
+' ============================================================
+package "Stockage" as storage #ECFDF5 {
+  database "crypto_data.db\n(SQLite)\nbind ./data" as crypto_db
+  database "mlflow.db\n(SQLite)\nvolume mlflow-data" as mlflow_db
+}
+
+' ============================================================
+' Utilisateur
+' ============================================================
+actor "Utilisateur\nNavigateur" as user
+
+' ============================================================
+' depends_on chain (Docker)
+' ============================================================
+pkg_mlflow -[#CCCCCC,dashed]right-> pkg_api : depends_on
+pkg_api -[#CCCCCC,dashed]right-> pkg_frontend : depends_on\n(service_healthy)
+
+' ============================================================
+' Data flow — Collector
+' ============================================================
+binance -down-> ohlcv_sched : REST OHLCV\n+ ccxt
+binance -down-> ws_col : WebSocket\nprix temps reel
+coingecko -down-> ohlcv_sched : market data
+fng -down-> fg_col : Fear & Greed
+rss -down-> news_col : articles RSS
+
+ohlcv_sched -down-> crypto_db : OHLCV, ticker\nmarket_data
+ws_col -down-> crypto_db : prix tick
+news_col -down-> crypto_db : news_articles
+fg_col -down-> crypto_db : fear_greed
+
+' ============================================================
+' Data flow — API
+' ============================================================
+binance -[#4A6FA5]down-> ws_api : WebSocket\n(lifespan thread)
+ws_api -down-> crypto_db : prix live
+fastapi -right-> crypto_db : lecture donnees
+fastapi -right-> mlflow_db : lecture experiments\nvia MLflow client
+cors -[hidden]right-> fastapi
+
+' ============================================================
+' Data flow — Frontend -> API
+' ============================================================
+apiclient -up-> fastapi : HTTP REST\napi:8000
+streamlit -right-> apiclient
+user -down-> streamlit : port 8501
+
+' ============================================================
+' MLflow storage
+' ============================================================
+mlflow_svc -down-> mlflow_db : SQLite tracking
+
+' ============================================================
+' Legend
+' ============================================================
+legend bottom right
+  |= Couleur |= Signification |
+  | <#FEF3E8> | Pipeline ETL / API |
+  | <#ECFDF5> | Collector / Stockage |
+  | <#F3EEFF> | ML / Frontend |
+  | <#F5F5F5> | Externe / Infra |
+endlegend
+
+@enduml
