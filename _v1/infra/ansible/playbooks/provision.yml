@@ -1,5 +1,6 @@
 ---
-# Provision a fresh VPS for crypto-bot
+# Provision a fresh VPS for crypto-bot.
+# Aligned with prod state on 2026-05-11 (W-VPS-DEBUG reconciliation).
 # Usage: ansible-playbook -i inventories/production.ini playbooks/provision.yml
 
 - name: Provision VPS
@@ -30,6 +31,7 @@
           - vim
           - unzip
           - jq
+          - sqlite3
           - apt-transport-https
           - ca-certificates
           - gnupg
@@ -81,8 +83,21 @@
     - name: Add SSH key for deploy user
       authorized_key:
         user: "{{ deploy_user }}"
-        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+        key: "{{ lookup('file', ssh_public_key_path) }}"
         state: present
+        exclusive: false
+
+    # --- SSH hardening ---
+    - name: Deploy sshd_config
+      template:
+        src: ../templates/sshd_config.j2
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: "0644"
+        validate: "/usr/sbin/sshd -t -f %s"
+        backup: true
+      notify: Restart ssh
 
     # --- Firewall (UFW) ---
     - name: Install UFW
@@ -100,12 +115,21 @@
         direction: outgoing
         policy: allow
 
-    - name: Allow UFW ports
+    - name: Allow UFW public ports
       ufw:
         rule: allow
         port: "{{ item.split('/')[0] }}"
         proto: "{{ item.split('/')[1] }}"
       loop: "{{ ufw_allowed_ports }}"
+
+    - name: Allow UFW internal docker-network rules
+      ufw:
+        rule: allow
+        port: "{{ item.port }}"
+        proto: "{{ item.proto }}"
+        src: "{{ item.source }}"
+        comment: "{{ item.comment }}"
+      loop: "{{ ufw_internal_rules }}"
 
     - name: Enable UFW
       ufw:
@@ -121,7 +145,16 @@
       template:
         src: ../templates/jail.local.j2
         dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: "0644"
       notify: Restart fail2ban
+
+    - name: Enable and start Fail2Ban
+      systemd:
+        name: fail2ban
+        state: started
+        enabled: true
 
     # --- Docker ---
     - name: Add Docker GPG key
@@ -156,7 +189,7 @@
         groups: docker
         append: true
 
-    # --- Nginx ---
+    # --- Nginx (host) ---
     - name: Install Nginx
       apt:
         name: nginx
@@ -168,6 +201,57 @@
           - certbot
           - python3-certbot-nginx
         state: present
+
+    - name: Ensure nginx snippets dir exists
+      file:
+        path: /etc/nginx/snippets
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy nginx main config
+      template:
+        src: ../templates/nginx-host.conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: "0644"
+        validate: "/usr/sbin/nginx -t -c %s"
+        backup: true
+      notify: Reload nginx
+
+    - name: Deploy nginx proxy-params snippet
+      template:
+        src: ../templates/nginx-proxy-params.conf.j2
+        dest: /etc/nginx/snippets/proxy-params.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload nginx
+
+    - name: Deploy nginx vhost
+      template:
+        src: ../templates/nginx-vhost.conf.j2
+        dest: "/etc/nginx/sites-available/{{ domain_name }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload nginx
+
+    - name: Enable nginx vhost (symlink)
+      file:
+        src: "/etc/nginx/sites-available/{{ domain_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+        state: link
+        force: true
+      notify: Reload nginx
+
+    - name: Disable default nginx vhost
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Reload nginx
 
     # --- Application Directory ---
     - name: Create app directory
@@ -182,6 +266,9 @@
     - name: Configure log rotation for app
       copy:
         dest: /etc/logrotate.d/crypto-bot
+        owner: root
+        group: root
+        mode: "0644"
         content: |
           {{ docker_compose_dir }}/logs/*.log {
               daily
@@ -194,7 +281,17 @@
           }
 
   handlers:
+    - name: Restart ssh
+      systemd:
+        name: ssh
+        state: restarted
+
     - name: Restart fail2ban
       systemd:
         name: fail2ban
         state: restarted
+
+    - name: Reload nginx
+      systemd:
+        name: nginx
+        state: reloaded
