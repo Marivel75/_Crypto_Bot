@@ -150,7 +150,7 @@ caption Rule engine | Feature builder | Backtester walk-forward | NLP TextMining
 ' API Routers
 ' ============================================================
 package "api/routers/" #F5F5F5 {
-  [GET /signals\nsymbol, timeframe, limit\nretourne SignalResponse[]] as r_signals <<router>>
+  [GET /signals\nsymbol, timeframe, limit\nretourne List(SignalResponse)] as r_signals <<router>>
   [GET /ml/backtest\nsymbol, timeframe, model_type\ntrain_window, test_window\nretourne BacktestResponse] as r_ml <<router>>
 }
 
@@ -160,7 +160,7 @@ package "api/routers/" #F5F5F5 {
 package "src/analytics/ — Rule Engine" as p_analytics #F3EEFF {
 
   package "technical_calculator.py" #white {
-    [TechnicalCalculator\ncalculate_rsi(window=14)\ncalculate_macd(fast=12,slow=26,signal=9)\ncalculate_bollinger_bands(window=20,std=2.0)\ncalculate_sma(window=7|20|50)\ncalculate_ema(window=9|21)\n[pandas_ta_classic]] as tc <<rule>>
+    [TechnicalCalculator\ncalculate_rsi(window=14)\ncalculate_macd(fast=12,slow=26,signal=9)\ncalculate_bollinger_bands(window=20,std=2.0)\ncalculate_sma(window=7|20|50)\ncalculate_ema(window=9|21)\nlib: pandas_ta_classic] as tc <<rule>>
   }
 
   package "technical_signals.py" #white {
@@ -168,7 +168,7 @@ package "src/analytics/ — Rule Engine" as p_analytics #F3EEFF {
   }
 
   package "signal_scorer.py" #white {
-    [score_candle(close, rsi,\nmacd_line, macd_signal,\nbb_upper, bb_lower,\nsma_20, sma_50,\nmacd_cross_up, macd_cross_down)\n→ (signal, score[-1,+1], reasons)\nRules: RSI oversold/overbought\nMACD cross up/down\nBB band breach\nSMA20>SMA50 trend] as sc <<rule>>
+    [score_candle(close, rsi,\nmacd_line, macd_signal,\nbb_upper, bb_lower,\nsma_20, sma_50,\nmacd_cross_up, macd_cross_down)\n→ (signal, score (-1,+1), reasons)\nRules: RSI oversold/overbought\nMACD cross up/down\nBB band breach\nSMA20>SMA50 trend] as sc <<rule>>
   }
 }
 
@@ -187,7 +187,7 @@ package "src/ml/feature_engineering/" as p_feat #F3EEFF {
 ' ============================================================
 package "src/ml/models/" as p_models #F3EEFF {
 
-  [BaselineModel\nfit(X_train, y_train)\npredict(X) → labels\npredict_proba(X) → [p0, p1]\ncross_validate(n_splits=5)\nfeature_importances()\nTypes:\n  dummy (most_frequent)\n  logistic_regression\n    (balanced, C=0.1)\n  random_forest\n    (200 trees, max_depth=6)\n  xgboost (optional,\n    300 trees, lr=0.05)\nPipeline: StandardScaler + model] as bm <<model>>
+  [BaselineModel\nfit(X_train, y_train)\npredict(X) → labels\npredict_proba(X) → (p0, p1)\ncross_validate(n_splits=5)\nfeature_importances()\nTypes:\n  dummy (most_frequent)\n  logistic_regression\n    (balanced, C=0.1)\n  random_forest\n    (200 trees, max_depth=6)\n  xgboost (optional,\n    300 trees, lr=0.05)\nPipeline: StandardScaler + model] as bm <<model>>
 
   [ModelEvaluator\nevaluate_folds(fold_results)\ncompare_models({name: results})\nML: accuracy, precision\n    recall, F1\nFinance: win_rate\n  profit_factor\n  sharpe annualisé\n    (sqrt(8760) factor)] as me
 }
@@ -211,7 +211,7 @@ package "src/ml/backtesting/" as p_bt #F3EEFF {
 ' ============================================================
 package "src/ml/nlp/" as p_nlp #F3EEFF {
 
-  [TextMining\nextract_keywords(text, top_n=8)\n  TF-IDF (ngram 1-2, sublinear_tf)\ncount_term_frequencies(texts, top_n=50)\n  CountVectorizer\nextract_entities(text)\n  → {crypto_symbols, exchanges}\ndetect_topics(text)\n  → regulation|hack|adoption\n    defi|nft|macro|price_action\n    |general\nanalyse_text() pipeline complet\n[sklearn TfidfVectorizer\n  + CountVectorizer]] as tm <<model>>
+  [TextMining\nextract_keywords(text, top_n=8)\n  TF-IDF (ngram 1-2, sublinear_tf)\ncount_term_frequencies(texts, top_n=50)\n  CountVectorizer\nextract_entities(text)\n  → {crypto_symbols, exchanges}\ndetect_topics(text)\n  → regulation|hack|adoption\n    defi|nft|macro|price_action\n    |general\nanalyse_text() pipeline complet\nlib: sklearn TfidfVectorizer\n  + CountVectorizer] as tm <<model>>
 }
 
 ' ============================================================

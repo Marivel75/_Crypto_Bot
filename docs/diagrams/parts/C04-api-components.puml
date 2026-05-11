@@ -158,7 +158,7 @@ package "FastAPI App (api/main.py)" #F5F5F5 {
 
   ' --- Middleware ---
   package "Middleware" #FEF3E8 {
-    [CORSMiddleware\nallow_origins=["*"]\nallow_methods=["*"]\nallow_headers=["*"]] as cors <<middleware>>
+    [CORSMiddleware\nallow_origins=*\nallow_methods=*\nallow_headers=*] as cors <<middleware>>
     ' RequestIdMiddleware absent dans api/main.py — CORS only
   }
 
