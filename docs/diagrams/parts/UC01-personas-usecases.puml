@@ -1,5 +1,4 @@
 @startuml UC01-personas-usecases
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -141,7 +140,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Personas & Cas d'usage V2 (code main)
 caption 3 personas | 6 pages Streamlit

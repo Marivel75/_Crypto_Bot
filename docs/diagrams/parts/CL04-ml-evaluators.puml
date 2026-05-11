@@ -1,5 +1,4 @@
 @startuml CL04-ml-evaluators
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -140,7 +139,6 @@ skinparam legend {
 ' <<component>>   Streamlit/Plotly component
 ' <<hypertable>>  TimescaleDB hypertable
 
-@enduml
 
 title CryptoBot — ML Rule Evaluators V2 (code main)
 caption TechnicalCalculator + TechnicalSignals + FeatureBuilder

@@ -1,5 +1,4 @@
 @startuml SQ03-signal-generation-flow
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -140,7 +139,6 @@ skinparam legend {
 ' <<component>>   Streamlit/Plotly component
 ' <<hypertable>>  TimescaleDB hypertable
 
-@enduml
 
 title CryptoBot — Flow Génération Signal V2 (code main)
 caption /signals → TechnicalCalculator → TechnicalSignals 5 rules → SignalScorer

@@ -1,5 +1,4 @@
 @startuml CL03-fastapi-schemas
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -141,7 +140,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Schemas FastAPI V2 (code main)
 caption ~25 endpoints | 8 routers | Pydantic v2 request/response

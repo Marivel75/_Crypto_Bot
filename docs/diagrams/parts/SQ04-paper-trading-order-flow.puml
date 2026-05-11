@@ -1,5 +1,4 @@
 @startuml SQ04-paper-trading-order-flow
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -141,7 +140,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Flow Paper Trading Order V2 (code main)
 caption Pivot V2 — Streamlit → /paper-trading/orders → PaperTrader → live_price_cache

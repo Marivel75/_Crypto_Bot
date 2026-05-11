@@ -17,11 +17,16 @@ Snapshot figé du code `main` post-merge `dev-j → dev → main`. Référence :
 - **SQ04** : V1 Chatbot LLM Integration → V2 **Paper Trading Order Flow**
 - **C07** : V1 Phase 2 Roadmap → V2 **Backlog V3 (cible Ansible non câblée)**
 
+## Rendus PNG
+
+Les 22 PNGs générés sont dans `docs/diagrams/png/`. Régénération : `plantuml -tpng -o ../png parts/*.puml`.
+
 ## AC01-etl-pipeline
+
+![AC01-etl-pipeline](png/AC01-etl-pipeline.png)
 
 ```plantuml
 @startuml AC01-etl-pipeline
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -163,7 +168,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Pipeline ETL V2 (code main)
 caption 4 flux schedule lib | SQLite SQLAlchemy ORM
@@ -298,9 +302,10 @@ stop
 
 ## AC02-signal-lifecycle
 
+![AC02-signal-lifecycle](png/AC02-signal-lifecycle.png)
+
 ```plantuml
 @startuml AC02-signal-lifecycle
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -442,7 +447,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Cycle de vie d'un signal V2 (code main)
 caption <Rule engine | ML backtest optionnel | Paper trading>
@@ -544,9 +548,10 @@ stop
 
 ## C01-macro-architecture
 
+![C01-macro-architecture](png/C01-macro-architecture.png)
+
 ```plantuml
 @startuml C01-macro-architecture
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -688,7 +693,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Architecture Macro V2 (code main)
 caption 4 services Docker Compose | SQLite | crypto-net bridge
@@ -808,9 +812,10 @@ endlegend
 
 ## C02-etl-components
 
+![C02-etl-components](png/C02-etl-components.png)
+
 ```plantuml
 @startuml C02-etl-components
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -952,7 +957,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Composants ETL V2 (code main)
 caption Binance WS+REST | CoinGecko | Alt.me | RSS+VADER+TFIDF
@@ -1115,9 +1119,10 @@ fg_coll --> db : INSERT fear_greed_index
 
 ## C03-ml-components
 
+![C03-ml-components](png/C03-ml-components.png)
+
 ```plantuml
 @startuml C03-ml-components
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -1259,7 +1264,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Composants ML V2 (code main)
 caption Rule engine | Feature builder | Backtester walk-forward | NLP TextMining (sklearn)
@@ -1395,9 +1399,10 @@ db_pg --> r_ml : rows OHLCV (best exchange)
 
 ## C04-api-components
 
+![C04-api-components](png/C04-api-components.png)
+
 ```plantuml
 @startuml C04-api-components
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -1539,7 +1544,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Composants API V2 (code main)
 caption 8 routers FastAPI | Middleware CORS | Pydantic schemas
@@ -1688,9 +1692,10 @@ svc_ws --> svc_cache
 
 ## C05-frontend-components
 
+![C05-frontend-components](png/C05-frontend-components.png)
+
 ```plantuml
 @startuml C05-frontend-components
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -1832,7 +1837,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Composants Frontend V2 (code main)
 caption 6 pages Streamlit | APIClient | Plotly | i18n FR
@@ -1951,9 +1955,10 @@ api_client --> fastapi : REST HTTP\n(httpx sync, timeout 10s\nML: 120s)
 
 ## C06-ml-backtesting-pipeline
 
+![C06-ml-backtesting-pipeline](png/C06-ml-backtesting-pipeline.png)
+
 ```plantuml
 @startuml C06-ml-backtesting-pipeline
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -2095,7 +2100,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Pipeline ML Backtesting V2 (code main)
 caption Walk-forward réel | sklearn+XGBoost | MLflow gracieux
@@ -2211,9 +2215,10 @@ endlegend
 
 ## C07-backlog-v3
 
+![C07-backlog-v3](png/C07-backlog-v3.png)
+
 ```plantuml
 @startuml C07-backlog-v3
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -2355,7 +2360,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Backlog V3 (cible prod, non câblée)
 caption Documenté dans _v1/infra/ Ansible/Nginx/Prom/Grafana — V3 à décider
@@ -2440,9 +2444,10 @@ end note
 
 ## CL01-pydantic-models
 
+![CL01-pydantic-models](png/CL01-pydantic-models.png)
+
 ```plantuml
 @startuml CL01-pydantic-models
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -2584,7 +2589,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Modeles Pydantic V2 (code main)
 caption Pydantic v2 | API schemas + paper trading + alerts
@@ -2924,9 +2928,10 @@ OHLCVResponse ..> SignalResponse : enrichit
 
 ## CL02-orm-models
 
+![CL02-orm-models](png/CL02-orm-models.png)
+
 ```plantuml
 @startuml CL02-orm-models
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -3068,7 +3073,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Modèles ORM SQLAlchemy V2 (SQLite)
 caption Tables réelles dans src/models/ | SQLite engine
@@ -3441,9 +3445,10 @@ end note
 
 ## CL03-fastapi-schemas
 
+![CL03-fastapi-schemas](png/CL03-fastapi-schemas.png)
+
 ```plantuml
 @startuml CL03-fastapi-schemas
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -3585,7 +3590,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Schemas FastAPI V2 (code main)
 caption ~25 endpoints | 8 routers | Pydantic v2 request/response
@@ -3956,9 +3960,10 @@ package "paper_trading" {
 
 ## CL04-ml-evaluators
 
+![CL04-ml-evaluators](png/CL04-ml-evaluators.png)
+
 ```plantuml
 @startuml CL04-ml-evaluators
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -4099,7 +4104,6 @@ skinparam legend {
 ' <<component>>   Streamlit/Plotly component
 ' <<hypertable>>  TimescaleDB hypertable
 
-@enduml
 
 title CryptoBot — ML Rule Evaluators V2 (code main)
 caption TechnicalCalculator + TechnicalSignals + FeatureBuilder
@@ -4268,9 +4272,10 @@ score_candle .. N_router
 
 ## CL05-exceptions
 
+![CL05-exceptions](png/CL05-exceptions.png)
+
 ```plantuml
 @startuml CL05-exceptions
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -4412,7 +4417,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Hiérarchie d'exceptions V2 (code main)
 caption Errors réelles dans api/ + src/
@@ -4495,9 +4499,10 @@ endlegend
 
 ## DP01-docker-compose
 
+![DP01-docker-compose](png/DP01-docker-compose.png)
+
 ```plantuml
 @startuml DP01-docker-compose
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -4639,7 +4644,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Déploiement Docker Compose V2 (code main)
 caption 4 services | bridge crypto-net | bind ./data + volume mlflow-data
@@ -4733,9 +4737,10 @@ endlegend
 
 ## ER01-database-schema
 
+![ER01-database-schema](png/ER01-database-schema.png)
+
 ```plantuml
 @startuml ER01-database-schema
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -4877,7 +4882,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Schéma BD V2 (SQLite, code main)
 caption Tables réelles src/models/ | crypto_data.db | pas de TimescaleDB
@@ -5227,9 +5231,10 @@ endlegend
 
 ## SQ01-health-and-alerts-flow
 
+![SQ01-health-and-alerts-flow](png/SQ01-health-and-alerts-flow.png)
+
 ```plantuml
 @startuml SQ01-health-and-alerts-flow
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -5371,7 +5376,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Flow Healthcheck + Alerts Subscribe V2 (code main)
 caption Pivot V2 — l'auth JWT V1 n'existe pas; on modélise les flows réels
@@ -5502,9 +5506,10 @@ deactivate router
 
 ## SQ02-dashboard-data-flow
 
+![SQ02-dashboard-data-flow](png/SQ02-dashboard-data-flow.png)
+
 ```plantuml
 @startuml SQ02-dashboard-data-flow
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -5646,7 +5651,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Flow Dashboard Data V2 (code main)
 caption Streamlit 1_dashboard.py -> APIClient -> /ohlcv + /signals
@@ -5736,9 +5740,10 @@ end note
 
 ## SQ03-signal-generation-flow
 
+![SQ03-signal-generation-flow](png/SQ03-signal-generation-flow.png)
+
 ```plantuml
 @startuml SQ03-signal-generation-flow
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -5879,7 +5884,6 @@ skinparam legend {
 ' <<component>>   Streamlit/Plotly component
 ' <<hypertable>>  TimescaleDB hypertable
 
-@enduml
 
 title CryptoBot — Flow Génération Signal V2 (code main)
 caption /signals → TechnicalCalculator → TechnicalSignals 5 rules → SignalScorer
@@ -5982,9 +5986,10 @@ end
 
 ## SQ04-paper-trading-order-flow
 
+![SQ04-paper-trading-order-flow](png/SQ04-paper-trading-order-flow.png)
+
 ```plantuml
 @startuml SQ04-paper-trading-order-flow
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -6126,7 +6131,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Flow Paper Trading Order V2 (code main)
 caption Pivot V2 — Streamlit → /paper-trading/orders → PaperTrader → live_price_cache
@@ -6388,9 +6392,10 @@ deactivate wscol
 
 ## ST01-signal-state
 
+![ST01-signal-state](png/ST01-signal-state.png)
+
 ```plantuml
 @startuml ST01-signal-state
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -6532,7 +6537,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Etat Signal V2 (modele conceptuel) + PaperTrade (formel)
 caption Voir note pour distinction formel/conceptuel
@@ -6632,9 +6636,10 @@ endlegend
 
 ## UC01-personas-usecases
 
+![UC01-personas-usecases](png/UC01-personas-usecases.png)
+
 ```plantuml
 @startuml UC01-personas-usecases
-@startuml _common
 ' ============================================================
 ' CryptoBot — PlantUML Shared Skin & Stereotypes
 ' ============================================================
@@ -6776,7 +6781,6 @@ skinparam legend {
 ' <<hypertable>>  TimescaleDB hypertable
 ' <<phase2>>      Phase 2 planned feature
 
-@enduml
 
 title CryptoBot — Personas & Cas d'usage V2 (code main)
 caption 3 personas | 6 pages Streamlit
