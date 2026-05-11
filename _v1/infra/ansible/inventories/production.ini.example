@@ -1,0 +1,8 @@
+[vps]
+crypto-bot-vps ansible_host=YOUR_VPS_IP ansible_user=deploy ansible_ssh_private_key_file=~/.ssh/id_ed25519
+
+[vps:vars]
+ansible_python_interpreter=/usr/bin/python3
+docker_compose_dir=/opt/crypto-bot
+# domain_name and letsencrypt_email are in group_vars/vps.yml
+# Override at deploy time: ansible-playbook -e "domain_name=crypto.example.com letsencrypt_email=ops@example.com"
