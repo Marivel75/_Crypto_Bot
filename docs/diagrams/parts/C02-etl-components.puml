@@ -1,0 +1,300 @@
+@startuml C02-etl-components
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Composants ETL V2 (code main)
+caption Binance WS+REST | CoinGecko | Alt.me | RSS+VADER+TFIDF
+
+' ============================================================
+' External Data Sources
+' ============================================================
+package "Sources externes" as ext #FEF3E8 {
+  [Binance WS\nwss://stream.binance.com\nminiTicker stream] as bws
+  [Binance REST\nccxt / BinanceClient\nfetch_ohlcv(symbol, tf, limit)] as brest
+  [CoinGecko Demo API\nCoinGeckoClient\nfetch_global_market_data()\nfetch_top_cryptos_by_market_cap()] as cg
+  [Alternative.me\nhttps://api.alternative.me/fng\nFear & Greed Index] as altme
+  [RSS Feeds (3 sources)\ndecrypt.co | cointelegraph.com\ncryptonews.com] as rss
+}
+
+' ============================================================
+' Exchange Factory & Clients
+' ============================================================
+package "ExchangeFactory\nsrc/services/exchange_factory.py" as factory #F5F5F5 {
+  [BinanceClient\nexchanges_api/binance_client.py\nfetch_ohlcv() | fetch_ticker()] as binance_cli <<service>>
+  [CoinGeckoClient\nexchanges_api/coingecko_client.py\nfetch_global_market_data()\nfetch_top_cryptos_by_market_cap()] as cg_cli <<service>>
+  note right of binance_cli
+    KrakenClient + CoinbaseClient
+    existent dans exchanges_api/
+    mais non câblés par aucun
+    appelant actif (V3 future)
+  end note
+}
+
+' ============================================================
+' Live Price Cache (WebSocket)
+' ============================================================
+package "WS Daemon\nsrc/collectors/ws_price_collector.py" as wsdaemon #FEF3E8 {
+  [WsPriceCollector\nstart_ws_collector(symbols)\nasync _watch() + auto-reconnect\nping_interval=20s | delay=5s] as ws_coll <<collector>>
+  [LivePriceCache\nsrc/services/live_price_cache.py\nSingleton thread-safe\nupdate(symbol, price)] as lpc <<service>>
+}
+
+' ============================================================
+' Collectors
+' ============================================================
+package "Collectors" as coll #FEF3E8 {
+  [OHLCVCollector\nsrc/collectors/ohlcv_collector.py\nfetch_and_store()\npairs + timeframes | exchange=binance] as ohlcv_coll <<collector>>
+  [TickerCollector\nsrc/collectors/ticker_collector.py\nstart_collection() / stop_collection()\nsnapshot_interval=5 min\nTickerCache (max 100/symbol)] as ticker_coll <<collector>>
+  [MarketDataCollector\nsrc/collectors/market_data_collector.py\nfetch_and_store() | fetch_top_cryptos()\nfetch_crypto_details()] as md_coll <<collector>>
+  [NewsCollector\nsrc/collectors/news_collector.py\nfetch_articles(sources)\nfetch_and_store(db)\nVADER sentiment + TF-IDF keywords] as news_coll <<collector>>
+  [FearGreedCollector\nsrc/collectors/fear_greed_collector.py\nfetch() → FearGreedResult\nvalue 0–100 + classification] as fg_coll <<collector>>
+  [MarketCache\nsrc/collectors/market_cache.py\nadd_snapshot() | get_latest_snapshot()\nmax 50 snapshots] as mcache <<service>>
+}
+
+' ============================================================
+' NLP Pipeline (News enrichment)
+' ============================================================
+package "NLP\nsrc/ml/nlp/" as nlp #F3EEFF {
+  [text_mining.py\nextract_keywords(TF-IDF)\nextract_entities()\ndetect_topics(CountVectorizer)] as tm <<transformer>>
+  [VADER\nvaderSentiment\nSentimentIntensityAnalyzer\ncompound dans (-1, +1)] as vader <<transformer>>
+}
+
+' ============================================================
+' ETL Pipeline — OHLCV
+' ============================================================
+package "OHLCV Pipeline\nsrc/etl/ohlcv_pipeline/" as ohlcv_etl #F3EEFF {
+  [OHLCVExtractor\nextractor.py\nextract(symbol, tf, limit)\nmax_retries=3 | backoff 2^n] as ohlcv_ext <<collector>>
+  [OHLCVTransformer\ntransformer.py\ntransform(raw_data, symbol, tf)\n→ DataFrame + metadata\n+ DataValidator0HCLV\n+ price_range/change/pct] as ohlcv_tr <<transformer>>
+  [OHLCVLoader\nloader.py\nload(df) | load_batch(df_batch)\ntable=ohlcv | batch_size=1000\nSQLAlchemy / db_context] as ohlcv_lo <<loader>>
+  [ETLPipelineOHLCV\npipeline_ohlcv.py\nrun_batch(pairs, tf)\nget_summary(results)] as ohlcv_pipe <<service>>
+}
+
+' ============================================================
+' ETL Pipeline — MarketData
+' ============================================================
+package "MarketData Pipeline\nsrc/etl/market_data_pipeline/" as md_etl #F3EEFF {
+  [MarketDataExtractor\nextractor.py\nextract(symbol) → global_market\nextract_top_cryptos(limit, currency)\nextract_crypto_details(ids)] as md_ext <<collector>>
+  [MarketDataTransformer\ntransformer.py\ntransform_global_market()\ntransform_top_cryptos()\ntransform_crypto_details()] as md_tr <<transformer>>
+  [MarketDataLoader\nloader.py\nload(snapshot, caps, volumes, dom)\nload_top_cryptos(snapshot, cryptos)\nload_crypto_details(snapshot, details)\nSQLAlchemy ORM bulk_save] as md_lo <<loader>>
+  [ETLPipelineMarketData\npipeline_market_data.py\nrun(symbol) | get_summary()] as md_pipe <<service>>
+}
+
+' ============================================================
+' Data Quality
+' ============================================================
+package "Quality\nsrc/quality/" as quality #ECFDF5 {
+  [DataValidator0HCLV\nvalidator.py\nvalidate_ohlcv_values(df)\nvalidate_dataframe_structure()\ndetect outliers | check timestamps] as validator <<service>>
+  note right of validator
+    Patito absent du codebase V2.
+    Validation via pandas uniquement.
+  end note
+}
+
+' ============================================================
+' Storage
+' ============================================================
+database "SQLite\n(ohlcv, ticker_snapshots\nglobal_market_*, top_crypto_*\ncrypto_detail_*, news_articles)" as db #ECFDF5
+
+' ============================================================
+' Relations — Sources → Clients
+' ============================================================
+bws --> ws_coll : miniTicker JSON
+brest --> binance_cli : CCXT REST
+cg --> cg_cli : HTTP/JSON
+altme --> fg_coll : HTTP/JSON
+rss --> news_coll : feedparser/httpx
+
+' ============================================================
+' Relations — Factory → Collectors
+' ============================================================
+binance_cli --> ohlcv_coll : BinanceClient
+binance_cli --> ticker_coll : BinanceClient
+cg_cli --> md_coll : CoinGeckoClient
+
+' ============================================================
+' Relations — WS Daemon
+' ============================================================
+ws_coll --> lpc : live_price_cache.update()
+
+' ============================================================
+' Relations — Collectors → Pipelines
+' ============================================================
+ohlcv_coll --> ohlcv_pipe : run_batch(pairs, tf)
+md_coll --> md_pipe : run("global_market")
+
+' ============================================================
+' Relations — OHLCV Pipeline internals
+' ============================================================
+ohlcv_pipe --> ohlcv_ext : extract(symbol, tf)
+ohlcv_ext --> ohlcv_tr : raw List[List]
+ohlcv_tr --> validator : validate_ohlcv_values(df)
+ohlcv_tr --> ohlcv_lo : clean DataFrame
+ohlcv_lo --> db : INSERT ohlcv (batch)
+
+' ============================================================
+' Relations — MarketData Pipeline internals
+' ============================================================
+md_pipe --> md_ext : extract(symbol)
+md_ext --> md_tr : raw dict
+md_tr --> md_lo : snapshot + caps/volumes/dom
+md_lo --> db : ORM bulk_save
+
+' ============================================================
+' Relations — News enrichment
+' ============================================================
+news_coll --> vader : full_text
+news_coll --> tm : full_text
+vader --> news_coll : sentiment_score + label
+tm --> news_coll : keywords + entities + topics
+news_coll --> db : INSERT news_articles
+
+' ============================================================
+' Relations — TickerCollector
+' ============================================================
+ticker_coll --> mcache : (TickerCache in-memory)
+ticker_coll --> db : INSERT ticker_snapshots (periodic)
+
+' ============================================================
+' Relations — FearGreed
+' ============================================================
+fg_coll --> db : INSERT fear_greed_index
+
+@enduml

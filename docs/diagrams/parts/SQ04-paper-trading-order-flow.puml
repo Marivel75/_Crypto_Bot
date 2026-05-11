@@ -1,0 +1,399 @@
+@startuml SQ04-paper-trading-order-flow
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Flow Paper Trading Order V2 (code main)
+caption Pivot V2 — Streamlit → /paper-trading/orders → PaperTrader → live_price_cache
+
+' ============================================================
+' Participants
+' ============================================================
+
+box "Frontend (Streamlit)" #FEF3E8
+  actor User as user
+  participant "6_paper_trading.py\n<<page>>" as page
+  participant "APIClient\n<<service>>" as client
+end box
+
+box "API FastAPI" #F3EEFF
+  participant "POST /paper-trading/orders\n<<router>>" as router
+  participant "PaperTrader\n<<service>>" as trader
+end box
+
+box "Prix temps réel" #ECFDF5
+  participant "LivePriceCache\n<<service>>\n(singleton)" as cache
+  participant "ws_price_collector\n<<collector>>\n(thread daemon)" as wscol
+end box
+
+database "SQLite\npaper_portfolios\npaper_trades" as db
+
+' ============================================================
+' Background: WS daemon feeds the cache continuously
+' ============================================================
+
+== Initialisation (au démarrage de l'API) ==
+
+wscol -> wscol : start_ws_collector(symbols)\nascyncio loop dans thread daemon
+activate wscol #ECFDF5
+
+wscol -> wscol : websockets.connect()\n"wss://stream.binance.com/stream\n?streams=btcusdt@miniTicker,..."
+
+loop Chaque tick Binance miniTicker
+  wscol -> cache : live_price_cache.update(symbol, price)
+  note right of cache
+    dict[symbol → float]
+    dict[symbol → timestamp]
+    Thread-safe (threading.Lock)
+  end note
+end
+
+' ============================================================
+' Streamlit page load — portfolio selection
+' ============================================================
+
+== Chargement de la page ==
+
+user -> page : Ouvre "Paper Trading"
+activate page
+
+page -> client : list_portfolios()
+client -> router : GET /paper-trading/portfolios
+router -> db : SELECT * FROM paper_portfolios\nORDER BY created_at DESC
+db --> router : [PaperPortfolio, ...]
+router --> client : 200 [PortfolioResponse, ...]
+client --> page : portfolios list
+page --> user : Affiche sélecteur portefeuille
+
+page -> client : get_portfolio_summary(portfolio_id)
+client -> router : GET /paper-trading/portfolios/{id}
+activate router
+router -> trader : PaperTrader(db).get_portfolio_summary(portfolio_id)
+activate trader
+trader -> db : SELECT PaperPortfolio WHERE id = portfolio_id
+db --> trader : PaperPortfolio
+trader -> db : SELECT PaperTrade WHERE portfolio_id AND status='OPEN'
+db --> trader : [open trades]
+trader -> db : SELECT PaperTrade WHERE portfolio_id AND status='CLOSED'
+db --> trader : [closed trades]
+
+loop Pour chaque position ouverte
+  trader -> cache : live_price_cache.get(symbol)
+  alt Prix WS disponible
+    cache --> trader : float (prix live Binance)
+  else Fallback OHLCV
+    trader -> db : SELECT OHLCV WHERE symbol ORDER BY timestamp DESC LIMIT 1
+    db --> trader : row.close
+  end
+  trader -> trader : Calcul pnl_latent = (current_price - entry_price) * quantity\nCalcul pnl_latent_pct
+end
+
+trader --> router : dict{portfolio, metrics, open_positions, closed_trades}
+deactivate trader
+router --> client : 200 PortfolioSummary
+deactivate router
+client --> page : summary dict
+page --> user : Affiche résumé métriques + positions ouvertes
+
+' ============================================================
+' Live price badge
+' ============================================================
+
+page -> client : fetch_live_prices_status()
+client -> router : GET /paper-trading/live-prices/status
+router -> cache : live_price_cache.is_populated\nlive_price_cache.all_with_ts()
+cache --> router : {connected: bool, prices: {...}}
+router --> client : 200 {connected, prices}
+client --> page : status dict
+page --> user : Badge LIVE / OHLCV
+
+' ============================================================
+' Place order BUY
+' ============================================================
+
+== Passer un ordre BUY ==
+
+user -> page : Choisit symbole + saisit\nquantité OU montant USDT\nClique "Placer l'ordre BUY"
+activate page
+
+page -> client : place_order(portfolio_id, symbol,\n  quantity | amount_usdt,\n  signal_source="manual",\n  signal_score=None)
+activate client
+
+client -> router : POST /paper-trading/orders\nOrderCreate{\n  portfolio_id, symbol,\n  quantity?, amount_usdt?,\n  signal_source, signal_score\n}
+activate router
+
+router -> router : Validation: quantity ou amount_usdt requis\n(HTTP 422 sinon)
+
+router -> trader : PaperTrader(db).open_position(\n  portfolio_id, symbol,\n  quantity, amount_usdt,\n  signal_source, signal_score\n)
+activate trader
+
+' --- Lookup portfolio ---
+trader -> db : SELECT PaperPortfolio WHERE id = portfolio_id
+db --> trader : PaperPortfolio (cash disponible)
+
+alt Portefeuille introuvable
+  trader --> router : raise ValueError
+  router --> client : HTTP 400
+  client --> page : {"error": "..."}
+  page --> user : st.error(message)
+end
+
+' --- Résolution du prix ---
+trader -> cache : live_price_cache.get(symbol)
+
+alt Prix WS disponible (cache peuplé)
+  cache --> trader : price: float (Binance miniTicker)
+  note right of trader
+    Source: ws_price_collector
+    Latence < 1s
+  end note
+else Fallback OHLCV (WS non connecté)
+  trader -> db : SELECT OHLCV WHERE symbol='BTCUSDT'\n  AND timeframe='1d'\n  ORDER BY timestamp DESC\n  LIMIT 1
+  db --> trader : row.close (dernier prix journalier)
+  note right of trader
+    Fallback OHLCV si WS indisponible
+    Latence = dernier close journalier
+  end note
+end
+
+' --- Calcul quantité si amount_usdt fourni ---
+alt amount_usdt fourni (quantity=None)
+  trader -> trader : quantity = amount_usdt / price
+end
+
+trader -> trader : Validation: quantity >= 0.0001\n(ValueError sinon)
+
+' --- Vérification cash ---
+trader -> trader : cost = quantity * price\nSi portfolio.cash < cost → ValueError
+
+alt Cash insuffisant
+  trader --> router : raise ValueError
+  router --> client : HTTP 400 "Cash insuffisant"
+  client --> page : {"error": "..."}
+  page --> user : st.error(message)
+end
+
+' --- Débit cash + création trade ---
+trader -> db : UPDATE paper_portfolios\nSET cash = cash - cost\nWHERE id = portfolio_id
+
+trader -> db : INSERT INTO paper_trades{\n  id=uuid4(),\n  portfolio_id, symbol,\n  side='BUY',\n  quantity, entry_price=price,\n  entry_time=utcnow(),\n  status='OPEN',\n  signal_source, signal_score\n}
+
+db --> trader : PaperTrade (refresh)
+deactivate trader
+
+router --> client : 201 TradeResponse{\n  id, portfolio_id, symbol,\n  side='BUY', quantity,\n  entry_price, entry_time,\n  status='OPEN',\n  signal_source, signal_score\n}
+deactivate router
+
+client --> page : trade dict
+deactivate client
+
+page --> user : st.success("Ordre BUY placé :\n  {qty} {base} @ {entry_price} USDT")
+page -> page : st.rerun()
+deactivate page
+
+' ============================================================
+' Close position
+' ============================================================
+
+== Fermer une position ==
+
+user -> page : Clique "Fermer" sur une position ouverte
+activate page
+
+page -> client : close_order(trade_id)
+client -> router : POST /paper-trading/orders/{trade_id}/close
+activate router
+
+router -> trader : PaperTrader(db).close_position(trade_id)
+activate trader
+
+trader -> db : SELECT PaperTrade WHERE id = trade_id
+db --> trader : PaperTrade (status=OPEN)
+
+alt Trade introuvable ou déjà CLOSED
+  trader --> router : raise ValueError
+  router --> client : HTTP 400
+  client --> page : {"error": "..."}
+  page --> user : st.error(message)
+end
+
+trader -> cache : live_price_cache.get(symbol)
+alt Prix WS disponible
+  cache --> trader : exit_price: float
+else Fallback OHLCV
+  trader -> db : SELECT OHLCV ORDER BY timestamp DESC LIMIT 1
+  db --> trader : row.close
+end
+
+trader -> trader : pnl = (exit_price - entry_price) * quantity\npnl_pct = ((exit_price - entry_price) / entry_price) * 100
+
+trader -> db : UPDATE paper_trades SET\n  exit_price, exit_time=utcnow(),\n  status='CLOSED', pnl, pnl_pct\nWHERE id = trade_id
+
+trader -> db : UPDATE paper_portfolios SET\n  cash = cash + (quantity * exit_price)\nWHERE id = portfolio_id
+
+db --> trader : commit OK
+deactivate trader
+
+router --> client : 200 TradeResponse{\n  status='CLOSED',\n  exit_price, exit_time,\n  pnl, pnl_pct\n}
+deactivate router
+
+client --> page : trade dict
+page --> user : st.success("{symbol} fermé — P&L : {pnl} USDT")
+page -> page : st.rerun()
+deactivate page
+
+' ============================================================
+' Auto-refresh live prices (badge + courbe)
+' ============================================================
+
+== Auto-refresh toutes les 5s (st_autorefresh) ==
+
+page -> client : fetch_live_prices()
+client -> router : GET /paper-trading/live-prices
+router -> cache : live_price_cache.all_prices()
+cache --> router : dict[symbol → float]
+router --> client : 200 dict[symbol → float]
+client --> page : live_prices dict
+page --> user : Mise à jour courbe de performance\n(capital live = cash + Σ qty_i * live_price_i)
+
+deactivate wscol
+
+@enduml

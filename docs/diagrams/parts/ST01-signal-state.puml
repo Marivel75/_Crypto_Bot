@@ -1,0 +1,237 @@
+@startuml ST01-signal-state
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Etat Signal V2 (modele conceptuel) + PaperTrade (formel)
+caption Voir note pour distinction formel/conceptuel
+
+' ============================================================
+' SECTION A — Signal : modele conceptuel (pas de FSM formelle)
+' ============================================================
+
+note as N_conceptual
+  Pas de machine d'etat formelle dans le code main.
+  Les signaux sont calcules a la volee par score_candle()
+  sur requete GET /signals et retournes en memoire (SignalResponse).
+  Aucun champ "status" ni persistance en base pour les signaux.
+  Modele conceptuel base sur le cycle de vie observe via
+  les endpoints /signals + score seuils du signal_scorer.py.
+  Signal field : "buy" | "sell" | "hold" (non garanti en DB).
+end note
+
+state "=== SIGNAL (conceptuel) ===" as SectionSignal {
+
+  [*] --> Computing : GET /signals\ndeclenche score_candle()
+
+  state "Computing" as Computing #FEF3E8 {
+    Computing : RSI, MACD, BB, SMA evalues
+    Computing : votes agreges -> score [-1.0, +1.0]
+  }
+
+  state "Hold" as Hold #F5F5F5 {
+    Hold : signal = "hold"
+    Hold : -0.3 <= score <= 0.3
+  }
+
+  state "Buy" as Buy #ECFDF5 {
+    Buy : signal = "buy"
+    Buy : score > 0.3
+  }
+
+  state "Sell" as Sell #FEF3E8 {
+    Sell : signal = "sell"
+    Sell : score < -0.3
+  }
+
+  Computing --> Hold   : score in [-0.3, 0.3]
+  Computing --> Buy    : score > 0.3
+  Computing --> Sell   : score < -0.3
+
+  Hold --> [*] : retourne au client\n(pas de persistance)
+  Buy  --> [*] : retourne au client\n(peut declencher open_position)
+  Sell --> [*] : retourne au client\n(pas de persistance)
+}
+
+' ============================================================
+' SECTION B — PaperTrade : machine d'etat FORMELLE (2 etats)
+' ============================================================
+
+note as N_formal
+  Machine d'etat formelle dans main :
+  src/models/paper_trade.py (champ status String)
+  src/paper_trading/paper_trader.py
+  Etats : "OPEN" | "CLOSED" (valeurs brutes en DB, pas d'Enum).
+  Transition OPEN->CLOSED via close_position().
+  Transition inverse impossible (garde explicite dans le code).
+end note
+
+state "=== PAPERTRADE (formel) ===" as SectionTrade {
+
+  [*] --> Open : open_position()\nstatus = "OPEN"\ncash -= cost
+
+  state "Open" as Open #ECFDF5 {
+    Open : status = "OPEN" (DB)
+    Open : entry_price, entry_time, quantity
+    Open : side = "BUY"
+    Open : signal_source, signal_score
+  }
+
+  state "Closed" as Closed #F5F5F5 {
+    Closed : status = "CLOSED" (DB)
+    Closed : exit_price, exit_time
+    Closed : pnl, pnl_pct calcules
+    Closed : cash += quantity * exit_price
+  }
+
+  Open --> Closed : close_position()\n[garde: status != "CLOSED"]
+  Closed --> [*]
+
+  Open -[dashed]-> Open : erreur si cash insuffisant\nou quantite < 0.0001
+}
+
+legend bottom right
+  |= Zone              |= Type       |= Source                          |
+  | Signal (buy/sell/hold) | Conceptuel  | signal_scorer.py + /signals      |
+  | PaperTrade OPEN/CLOSED | Formel      | paper_trade.py + paper_trader.py |
+endlegend
+
+@enduml

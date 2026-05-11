@@ -1,0 +1,305 @@
+@startuml CL04-ml-evaluators
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+
+
+title CryptoBot — ML Rule Evaluators V2 (code main)
+caption TechnicalCalculator + TechnicalSignals + FeatureBuilder
+
+' ============================================================
+' Package: src/analytics/technical_calculator.py
+' ============================================================
+package "analytics/technical_calculator.py" #ECFDF5 {
+
+  class TechnicalCalculator <<rule>> {
+    ' --- Private helpers ---
+    - _prepare_data(data, price_column) : pd.Series
+    - _validate_window(window, data_length) : None
+    - _handle_fillna(serie, fillna) : pd.Series
+    - _return_result(serie, original_data) : pd.Series | list
+    - _return_multivariate_result(df, original_data, main_column) : pd.DataFrame | list
+    ==
+    + calculate_sma(data, window=20, price_column, fillna) : pd.Series | list
+    + calculate_ema(data, window=20, price_column, fillna) : pd.Series | list
+    + calculate_rsi(data, window=14, price_column, fillna, max_values) : pd.Series | list
+    + calculate_macd(data, fast=12, slow=26, signal=9, price_column, fillna, return_with_prices) : pd.DataFrame | list
+    + calculate_bollinger_bands(data, window=20, price_column, std=2.0, fillna) : pd.DataFrame | list
+  }
+
+  note right of TechnicalCalculator
+    Delegates all indicator math
+    to pandas_ta_classic.
+    Returns same type as input
+    (DataFrame -> Series/DF,
+     list -> list).
+    MACD outputs: MACD, MACD_signal, MACD_hist
+    BB outputs: BB_middle, BB_upper, BB_lower
+  end note
+}
+
+' ============================================================
+' Package: src/analytics/technical_signals.py
+' ============================================================
+package "analytics/technical_signals.py" #FEF3E8 {
+
+  class TechnicalSignals <<rule>> {
+    {static} + macd_cross(df, macd_col, signal_col, confirm_next_candle=True) : pd.DataFrame
+    {static} + get_macd_signals(df, macd_col, signal_col) : Dict[str, List]
+    {static} + rsi_conditions(df, rsi_col, overbought=70, oversold=30) : pd.DataFrame
+  }
+
+  note right of TechnicalSignals
+    Convergence logic embedded:
+    macd_cross() adds columns
+    MACD_cross_up / MACD_cross_down.
+    confirm_next_candle=True avoids
+    lookahead bias (shifts signal +1).
+  end note
+}
+
+' ============================================================
+' Package: src/analytics/signal_scorer.py
+' ============================================================
+package "analytics/signal_scorer.py" #F3EEFF {
+
+  class score_candle <<rule>> {
+    ' inputs
+    + close : float | None
+    + rsi : float | None
+    + macd_line : float | None
+    + macd_signal_val : float | None
+    + bb_upper : float | None
+    + bb_lower : float | None
+    + sma_20 : float | None
+    + sma_50 : float | None
+    + macd_cross_up : bool = False
+    + macd_cross_down : bool = False
+    ==
+    + __call__() : tuple[str, float, list[str]]
+  }
+
+  note right of score_candle
+    Returns (signal, score, reasons).
+    signal : "buy" | "sell" | "hold"
+    score  : float [-1.0, +1.0]
+    Rules (weighted votes / N):
+    RSI < 30   → +1.0  (survendu)
+    RSI < 45   → +0.5
+    RSI > 70   → -1.0  (surachat)
+    RSI > 55   → -0.5
+    MACD cross up   → +1.0
+    MACD cross down → -1.0
+    MACD > signal   → +0.3
+    BB: close < lower → +1.0
+    BB: close > upper → -1.0
+    SMA trend up    → +0.5
+    SMA trend down  → -0.5
+    score > 0.3  → "buy"
+    score < -0.3 → "sell"
+  end note
+}
+
+' ============================================================
+' Package: src/ml/feature_engineering/feature_builder.py
+' ============================================================
+package "ml/feature_engineering/feature_builder.py" #F5F5F5 {
+
+  class FeatureBuilder <<transformer>> {
+    - _calc : TechnicalCalculator
+    ==
+    + build(df) : pd.DataFrame
+    - _validate(df) : None
+    - _add_return_features(df) : pd.DataFrame
+    - _add_volatility_features(df) : pd.DataFrame
+    - _add_technical_features(df) : pd.DataFrame
+    - _add_candle_structure_features(df) : pd.DataFrame
+    - _add_volume_features(df) : pd.DataFrame
+    - _add_temporal_features(df) : pd.DataFrame
+  }
+
+  note right of FeatureBuilder
+    Input: OHLCV DataFrame
+    (timestamp, open, high, low, close, volume)
+    Output: +29 engineered features
+    --
+    Return features (4):
+      log_return_1, return_4,
+      return_12, return_24
+    Volatility features (3):
+      volatility_5, volatility_10,
+      volatility_20
+    Technical features (11):
+      rsi_14, macd, macd_signal,
+      macd_hist, bb_position, bb_width,
+      sma_7_ratio, sma_20_ratio,
+      sma_50_ratio, ema_9_ratio,
+      ema_21_ratio
+    Candle structure features (4):
+      hl_spread, body_ratio,
+      upper_wick_ratio,
+      lower_wick_ratio
+    Volume features (2):
+      volume_ma_ratio, volume_change
+    Temporal features (5):
+      hour, day_of_week,
+      day_of_month, month, is_weekend
+  end note
+}
+
+' ============================================================
+' Relations
+' ============================================================
+FeatureBuilder --> TechnicalCalculator : uses (_calc)
+TechnicalSignals ..> TechnicalCalculator : reads output of
+score_candle ..> TechnicalSignals : receives cross signals from
+score_candle ..> TechnicalCalculator : receives indicator values from
+
+note as N_router
+  api/routers/signals.py
+  instantiates TechnicalCalculator (_calc),
+  calls TechnicalSignals.macd_cross(),
+  then passes all values to score_candle().
+end note
+
+TechnicalCalculator .. N_router
+TechnicalSignals .. N_router
+score_candle .. N_router
+
+@enduml
