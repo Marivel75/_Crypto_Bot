@@ -1,0 +1,124 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "title": "API Process CPU Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"api\"}[5m]) * 100",
+          "legendFormat": "API CPU %"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0 },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Process Memory Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{job=\"api\"}",
+          "legendFormat": "API RSS"
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"postgres\"}",
+          "legendFormat": "Postgres Exporter RSS"
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"nginx\"}",
+          "legendFormat": "Nginx Exporter RSS"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Database Size",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "targets": [
+        {
+          "expr": "pg_database_size_bytes{datname=\"cryptobot\"}",
+          "legendFormat": "cryptobot"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": 0 },
+              { "color": "yellow", "value": 536870912 },
+              { "color": "red", "value": 1073741824 }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Nginx Connections",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "targets": [
+        {
+          "expr": "nginx_connections_active",
+          "legendFormat": "active"
+        },
+        {
+          "expr": "nginx_connections_reading",
+          "legendFormat": "reading"
+        },
+        {
+          "expr": "nginx_connections_writing",
+          "legendFormat": "writing"
+        },
+        {
+          "expr": "nginx_connections_waiting",
+          "legendFormat": "waiting"
+        }
+      ]
+    },
+    {
+      "title": "Nginx Request Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "targets": [
+        {
+          "expr": "rate(nginx_http_requests_total[5m])",
+          "legendFormat": "req/s"
+        },
+        {
+          "expr": "rate(nginx_connections_accepted[5m])",
+          "legendFormat": "conn/s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps" },
+        "overrides": []
+      }
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["crypto-bot", "system"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "System",
+  "uid": "cryptobot-system"
+}
