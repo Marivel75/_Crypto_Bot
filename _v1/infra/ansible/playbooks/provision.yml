@@ -1,0 +1,200 @@
+---
+# Provision a fresh VPS for crypto-bot
+# Usage: ansible-playbook -i inventories/production.ini playbooks/provision.yml
+
+- name: Provision VPS
+  hosts: vps
+  become: true
+  vars_files:
+    - ../group_vars/vps.yml
+
+  tasks:
+    # --- System Setup ---
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+
+    - name: Set timezone
+      timezone:
+        name: "{{ timezone }}"
+
+    - name: Install essential packages
+      apt:
+        name:
+          - curl
+          - wget
+          - git
+          - htop
+          - vim
+          - unzip
+          - jq
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+          - lsb-release
+          - python3-pip
+          - python3-venv
+          - logrotate
+        state: present
+
+    # --- Swap ---
+    - name: Check if swap exists
+      command: swapon --show
+      register: swap_check
+      changed_when: false
+
+    - name: Create swap file
+      command: "fallocate -l {{ swap_size }} /swapfile"
+      when: swap_check.stdout == ""
+
+    - name: Set swap permissions
+      file:
+        path: /swapfile
+        mode: "0600"
+      when: swap_check.stdout == ""
+
+    - name: Make swap
+      command: mkswap /swapfile
+      when: swap_check.stdout == ""
+
+    - name: Enable swap
+      command: swapon /swapfile
+      when: swap_check.stdout == ""
+
+    - name: Add swap to fstab
+      lineinfile:
+        path: /etc/fstab
+        line: "/swapfile none swap sw 0 0"
+        state: present
+
+    # --- Deploy User ---
+    - name: Create deploy user
+      user:
+        name: "{{ deploy_user }}"
+        shell: /bin/bash
+        groups: sudo,docker
+        append: true
+        create_home: true
+
+    - name: Add SSH key for deploy user
+      authorized_key:
+        user: "{{ deploy_user }}"
+        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+        state: present
+
+    # --- Firewall (UFW) ---
+    - name: Install UFW
+      apt:
+        name: ufw
+        state: present
+
+    - name: Set UFW default deny incoming
+      ufw:
+        direction: incoming
+        policy: deny
+
+    - name: Set UFW default allow outgoing
+      ufw:
+        direction: outgoing
+        policy: allow
+
+    - name: Allow UFW ports
+      ufw:
+        rule: allow
+        port: "{{ item.split('/')[0] }}"
+        proto: "{{ item.split('/')[1] }}"
+      loop: "{{ ufw_allowed_ports }}"
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
+    # --- Fail2Ban ---
+    - name: Install Fail2Ban
+      apt:
+        name: fail2ban
+        state: present
+
+    - name: Configure Fail2Ban
+      template:
+        src: ../templates/jail.local.j2
+        dest: /etc/fail2ban/jail.local
+      notify: Restart fail2ban
+
+    # --- Docker ---
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Install Docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Start and enable Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add deploy user to docker group
+      user:
+        name: "{{ deploy_user }}"
+        groups: docker
+        append: true
+
+    # --- Nginx ---
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Install Certbot
+      apt:
+        name:
+          - certbot
+          - python3-certbot-nginx
+        state: present
+
+    # --- Application Directory ---
+    - name: Create app directory
+      file:
+        path: "{{ docker_compose_dir }}"
+        state: directory
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        mode: "0755"
+
+    # --- Log Rotation ---
+    - name: Configure log rotation for app
+      copy:
+        dest: /etc/logrotate.d/crypto-bot
+        content: |
+          {{ docker_compose_dir }}/logs/*.log {
+              daily
+              missingok
+              rotate 14
+              compress
+              delaycompress
+              notifempty
+              create 0640 {{ deploy_user }} {{ deploy_user }}
+          }
+
+  handlers:
+    - name: Restart fail2ban
+      systemd:
+        name: fail2ban
+        state: restarted

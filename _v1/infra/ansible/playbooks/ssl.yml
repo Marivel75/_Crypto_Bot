@@ -1,0 +1,36 @@
+---
+# Setup SSL certificates with Let's Encrypt
+# Usage: ansible-playbook -i inventories/production.ini playbooks/ssl.yml
+
+- name: Setup SSL Certificates
+  hosts: vps
+  become: true
+  vars_files:
+    - ../group_vars/vps.yml
+
+  tasks:
+    - name: Stop Nginx temporarily
+      systemd:
+        name: nginx
+        state: stopped
+
+    - name: Obtain SSL certificate
+      command: >
+        certbot certonly --standalone
+        -d {{ domain_name }}
+        --email {{ letsencrypt_email }}
+        --agree-tos
+        --non-interactive
+      changed_when: true
+
+    - name: Setup auto-renewal cron
+      cron:
+        name: "Certbot renewal"
+        minute: "0"
+        hour: "2"
+        job: "certbot renew --quiet --post-hook 'systemctl reload nginx'"
+
+    - name: Start Nginx
+      systemd:
+        name: nginx
+        state: started
