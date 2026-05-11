@@ -54,10 +54,11 @@ st.markdown("""
 # ---------------------------------------------------------------------------
 pg = st.navigation([
     st.Page("pages/1_dashboard.py", title=t("nav.dashboard"), icon=":material/candlestick_chart:"),
-    st.Page("pages/2_analytics.py", title=t("nav.analytics"), icon=":material/analytics:"),
+    st.Page("pages/2_market_overview.py", title=t("nav.market_overview"), icon=":material/bar_chart:"),
     st.Page("pages/3_signals.py", title=t("nav.signals"), icon=":material/signal_cellular_alt:"),
     st.Page("pages/4_veille.py", title=t("nav.veille"), icon=":material/newspaper:"),
     st.Page("pages/5_ml.py", title=t("ml.nav"), icon=":material/model_training:"),
+    st.Page("pages/6_paper_trading.py", title=t("nav.paper_trading"), icon=":material/currency_exchange:"),
 ])
 
 # Sidebar branding + abonnement alertes
@@ -99,8 +100,5 @@ with st.sidebar:
                     st.success("Désabonnement effectué.")
             else:
                 st.warning("Saisissez un email.")
-
-    st.divider()
-    st.caption(t("app.disclaimer"))
 
 pg.run()

@@ -12,6 +12,5 @@ COPY main.py .
 COPY logger_settings.py .
 COPY src/ src/
 COPY config/ config/
-COPY scripts/ scripts/
 
 CMD ["python", "main.py", "--schedule"]

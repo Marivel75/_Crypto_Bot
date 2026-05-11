@@ -1,4 +1,6 @@
 import argparse
+import os
+import signal
 import time
 import threading
 import subprocess
@@ -7,6 +9,7 @@ from config.settings import config
 from src.schedulers.scheduler_ohlcv import OHLCVScheduler
 from src.schedulers.scheduler_ticker import TickerScheduler
 from src.schedulers.scheduler_market_data import MarketDataScheduler
+from src.notifications.notifier import notify_collect_start, notify_collect_end, notify_collect_error
 
 
 def run_collection_once():
@@ -79,7 +82,8 @@ def run_collection_once():
         # Exécuter le script de vérification de la base de données
         try:
             logger.info("Exécution du script de vérification de la base de données...")
-            subprocess.run(["python", "scripts/check_db.py"], check=True)
+            if os.path.exists("scripts/check_db.py"):
+                subprocess.run(["python", "scripts/check_db.py"], check=True)
         except subprocess.CalledProcessError as e:
             logger.error(f"❌ Échec de l'exécution du script de vérification: {e}")
         except Exception as e:
@@ -145,14 +149,25 @@ def run_scheduled_collection():
         logger.info("Démarrage du planificateur quotidien...")
         ohlcv_scheduler.start()
 
+        # Maintenir le processus principal en vie — les schedulers tournent en threads daemon
+        # qui seraient tués si le main thread se terminait (et Docker relancerait le container)
+        logger.info("✅ Tous les schedulers démarrés — en attente...")
+        while True:
+            time.sleep(3600)
+
+    except KeyboardInterrupt:
+        logger.info("Arrêt demandé (SIGTERM/CTRL+C)")
+        notify_collect_end(config.get("exchanges"), {}, 0)
     except Exception as e:
         logger.error(f"❌ Erreur fatale dans la collecte planifiée: {e}")
+        notify_collect_error(str(e))
         raise
     finally:
         # Exécuter le script de vérification de la base de données
         try:
             logger.info("Exécution du script de vérification de la base de données...")
-            subprocess.run(["python", "scripts/check_db.py"], check=True)
+            if os.path.exists("scripts/check_db.py"):
+                subprocess.run(["python", "scripts/check_db.py"], check=True)
         except subprocess.CalledProcessError as e:
             logger.error(f"❌ Échec de l'exécution du script de vérification: {e}")
         except Exception as e:
@@ -209,6 +224,13 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def _handle_sigterm(signum, frame):
+    raise KeyboardInterrupt()
+
+# SIGTERM (docker compose down) → arrêt propre avec notification email
+signal.signal(signal.SIGTERM, _handle_sigterm)
+
+
 if __name__ == "__main__":
     args = parse_arguments()
 
@@ -218,6 +240,19 @@ if __name__ == "__main__":
     if args.schedule:
         # Mode planifié
         run_scheduled_collection()
+    elif args.ticker:
+        # Mode ticker seul — 1 email start + 1 email end (pas un par exchange)
+        exchanges = config.get("exchanges")
+        runtime = config.get("ticker.runtime", 60)
+        notify_collect_start(exchanges, trigger=f"ticker temps réel ({runtime} min)")
+        t0 = time.monotonic()
+        try:
+            ticker_scheduler = TickerScheduler()
+            ticker_scheduler.run_once(runtime)
+            notify_collect_end(exchanges, {}, time.monotonic() - t0)
+        except Exception as e:
+            notify_collect_error(str(e))
+            raise
     else:
-        # Mode exécution unique
+        # Mode exécution unique OHLCV
         run_collection_once()

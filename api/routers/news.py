@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from fastapi import APIRouter, Depends, Query
+from sqlalchemy import nullslast
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
@@ -30,7 +31,10 @@ def get_news(
     if sentiment:
         query = query.filter(NewsArticle.sentiment_label == sentiment.lower())
 
-    articles = query.order_by(NewsArticle.collected_at.desc()).limit(limit).all()
+    articles = query.order_by(
+        nullslast(NewsArticle.published_at.desc()),
+        NewsArticle.collected_at.desc(),
+    ).limit(limit).all()
     return articles
 
 

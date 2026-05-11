@@ -131,6 +131,24 @@ class OHLCVScheduler:
             raise
 
     def run_once(self) -> None:
-        """Exécute une collecte immédiate OHLCV avec alertes email."""
+        """Exécute une collecte immédiate OHLCV — 1 email start + 1 email end pour tous les exchanges."""
+        import time as _time
+        notify_collect_start(self.exchanges, trigger="manuel")
+        t0 = _time.monotonic()
+        combined: dict = {"total_raw_rows": 0, "total_loaded_rows": 0,
+                          "total_symbols": 0, "successful": 0, "failed": 0}
+        last_error: str = ""
         for exchange in self.exchanges:
-            self._ohlcv_collection_with_alerts(exchange, trigger="manuel")
+            try:
+                summary = self._ohlcv_collection(exchange)
+                for key in ("total_raw_rows", "total_loaded_rows", "total_symbols"):
+                    combined[key] += summary.get(key, 0)
+                combined["successful"] += 1
+            except Exception as e:
+                logger.error(f"❌ Échec collecte OHLCV {exchange}: {e}")
+                combined["failed"] += 1
+                last_error = str(e)
+        if combined["failed"] == len(self.exchanges) and last_error:
+            notify_collect_error(last_error)
+        else:
+            notify_collect_end(self.exchanges, combined, _time.monotonic() - t0)

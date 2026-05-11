@@ -31,6 +31,10 @@ pydantic[email]>=2.0.0
 # Frontend
 streamlit>=1.40.0
 plotly>=5.18.0
+streamlit-autorefresh>=1.0.1
+
+# WebSocket temps réel
+websockets>=11.0
 
 # News & Sentiment
 feedparser>=6.0.0

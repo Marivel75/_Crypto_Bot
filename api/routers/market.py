@@ -131,3 +131,27 @@ def get_fear_greed():
         }
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Fear & Greed API unavailable: {exc}")
+
+
+@router.get("/history")
+def get_market_history(
+    limit: int = Query(default=90, ge=1, le=365),
+    db: Session = Depends(get_db),
+):
+    """Série temporelle market cap + volume (un point par snapshot global)."""
+    rows = (
+        db.query(
+            GlobalMarketSnapshot.timestamp,
+            GlobalMarketCap.value.label("market_cap_usd"),
+            GlobalMarketVolume.value.label("volume_usd"),
+        )
+        .join(GlobalMarketCap, (GlobalMarketCap.snapshot_id == GlobalMarketSnapshot.id) & (func.lower(GlobalMarketCap.currency) == "usd"))
+        .join(GlobalMarketVolume, (GlobalMarketVolume.snapshot_id == GlobalMarketSnapshot.id) & (func.lower(GlobalMarketVolume.currency) == "usd"))
+        .order_by(GlobalMarketSnapshot.timestamp.desc())
+        .limit(limit)
+        .all()
+    )
+    return [
+        {"timestamp": r.timestamp.isoformat(), "market_cap_usd": r.market_cap_usd, "volume_usd": r.volume_usd}
+        for r in reversed(rows)
+    ]
