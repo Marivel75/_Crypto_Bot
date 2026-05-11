@@ -1,0 +1,477 @@
+@startuml CL01-pydantic-models
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Modeles Pydantic V2 (code main)
+caption Pydantic v2 | API schemas + paper trading + alerts
+
+' ============================================================
+' OHLCV & Market
+' ============================================================
+package "api/schemas/ohlcv.py" #FEF3E8 {
+
+  class OHLCVResponse <<BaseModel>> {
+    + id : str
+    + timestamp : datetime
+    + symbol : str
+    + timeframe : str
+    + open : float
+    + high : float
+    + low : float
+    + close : float
+    + volume : float
+    + price_range : float | None
+    + price_change : float | None
+    + price_change_pct : float | None
+    + date : str | None
+    + exchange : str
+    --
+    model_config: from_attributes=True
+  }
+
+  class SymbolInfo <<BaseModel>> {
+    + symbol : str
+    + exchange : str
+    + timeframe : str
+    + count : int
+    + latest_timestamp : datetime | None
+  }
+}
+
+' ============================================================
+' Market
+' ============================================================
+package "api/schemas/market.py" #FEF3E8 {
+
+  class TopCryptoResponse <<BaseModel>> {
+    + rank : int | None
+    + crypto_id : str
+    + symbol : str
+    + name : str
+    + price : float | None
+    + market_cap : float | None
+    + volume_24h : float | None
+    + price_change_pct_24h : float | None
+    --
+    model_config: from_attributes=True
+  }
+
+  class TopCryptoSnapshotResponse <<BaseModel>> {
+    + snapshot_time : datetime
+    + vs_currency : str
+    + cryptos : List[TopCryptoResponse]
+  }
+
+  class DominanceItem <<BaseModel>> {
+    + asset : str
+    + percentage : float
+  }
+
+  class GlobalMarketResponse <<BaseModel>> {
+    + snapshot_time : datetime
+    + active_cryptocurrencies : int | None
+    + markets : int | None
+    + market_cap_change_24h : float | None
+    + volume_change_24h : float | None
+    + market_cap_usd : float | None
+    + volume_usd : float | None
+    + dominance : List[DominanceItem]
+  }
+
+  class TickerResponse <<BaseModel>> {
+    + symbol : str
+    + exchange : str
+    + price : float | None
+    + volume_24h : float | None
+    + price_change_24h : float | None
+    + price_change_pct_24h : float | None
+    + high_24h : float | None
+    + low_24h : float | None
+    + snapshot_time : datetime
+    --
+    model_config: from_attributes=True
+  }
+}
+
+' ============================================================
+' Signals
+' ============================================================
+package "api/schemas/signals.py" #F3EEFF {
+
+  class SignalResponse <<BaseModel>> {
+    + timestamp : datetime
+    + symbol : str
+    + timeframe : str
+    + exchange : str
+    + open : float
+    + high : float
+    + low : float
+    + close : float
+    + volume : float
+    + sma_20 : float | None
+    + sma_50 : float | None
+    + ema_20 : float | None
+    + rsi_14 : float | None
+    + macd_line : float | None
+    + macd_signal : float | None
+    + macd_histogram : float | None
+    + bb_upper : float | None
+    + bb_middle : float | None
+    + bb_lower : float | None
+    + signal : str | None
+    + signal_score : float | None
+    + signal_reasons : list[str] | None
+  }
+}
+
+' ============================================================
+' News
+' ============================================================
+package "api/schemas/news.py" #ECFDF5 {
+
+  class NewsArticleResponse <<BaseModel>> {
+    + id : str
+    + title : str
+    + url : str
+    + source : str
+    + published_at : datetime | None
+    + content : str | None
+    + sentiment_score : float | None
+    + sentiment_label : str | None
+    + keywords : list[str] | None
+    + entities : dict | None
+    + topics : list[str] | None
+    + collected_at : datetime | None
+    --
+    model_config: from_attributes=True
+  }
+
+  class NewsSentimentResponse <<BaseModel>> {
+    + source : str
+    + total : int
+    + positive : int
+    + negative : int
+    + neutral : int
+    + avg_score : float | None
+  }
+}
+
+' ============================================================
+' Alerts / Subscriptions
+' ============================================================
+package "api/schemas/alerts.py" #FEF3E8 {
+
+  class SubscribeRequest <<BaseModel>> {
+    + email : EmailStr
+  }
+
+  class SubscribeResponse <<BaseModel>> {
+    + email : str
+    + message : str
+  }
+}
+
+' ============================================================
+' ML / Backtesting
+' ============================================================
+package "api/schemas/ml.py" #F3EEFF {
+
+  class BacktestFoldResult <<BaseModel>> {
+    + fold : int
+    + train_start : datetime
+    + train_end : datetime
+    + test_start : datetime
+    + test_end : datetime
+    + n_train : int
+    + n_test : int
+    + accuracy : float
+    + win_rate : float
+    + pnl : float
+    + sharpe : float
+    + profit_factor : float
+    + max_drawdown : float
+  }
+
+  class BacktestSummary <<BaseModel>> {
+    + accuracy : float
+    + win_rate : float
+    + sharpe : float
+    + profit_factor : float
+    + max_drawdown : float
+    + total_pnl : float
+    + n_folds : int
+  }
+
+  class BacktestBaseline <<BaseModel>> {
+    + strategy_pnl : float
+    + baseline_return : float
+    + excess_return : float
+    + sharpe : float
+  }
+
+  class BacktestResponse <<BaseModel>> {
+    + symbol : str
+    + timeframe : str
+    + model_type : str
+    + train_window : int
+    + test_window : int
+    + n_candles : int
+    + folds : list[BacktestFoldResult]
+    + summary : BacktestSummary
+    + baseline : BacktestBaseline
+  }
+}
+
+' ============================================================
+' Paper Trading
+' ============================================================
+package "api/schemas/paper_trading.py" #ECFDF5 {
+
+  class PortfolioCreate <<BaseModel>> {
+    + name : str
+    + initial_capital : float
+    --
+    <<validator>> initial_capital > 0
+  }
+
+  class PortfolioResponse <<BaseModel>> {
+    + id : str
+    + name : str
+    + initial_capital : float
+    + cash : float
+    + created_at : datetime
+    --
+    model_config: from_attributes=True
+  }
+
+  class OrderCreate <<BaseModel>> {
+    + portfolio_id : str
+    + symbol : str
+    + quantity : float | None
+    + amount_usdt : float | None
+    + signal_source : str = "manual"
+    + signal_score : float | None
+    --
+    <<validator>> symbol.upper()
+  }
+
+  class TradeResponse <<BaseModel>> {
+    + id : str
+    + portfolio_id : str
+    + symbol : str
+    + side : str
+    + quantity : float
+    + entry_price : float
+    + entry_time : datetime
+    + exit_price : float | None
+    + exit_time : datetime | None
+    + status : str
+    + pnl : float | None
+    + pnl_pct : float | None
+    + signal_source : str
+    + signal_score : float | None
+    + created_at : datetime
+    --
+    model_config: from_attributes=True
+  }
+
+  class OpenPositionOut <<BaseModel>> {
+    + id : str
+    + symbol : str
+    + quantity : float
+    + entry_price : float
+    + current_price : float
+    + pnl_latent : float
+    + pnl_latent_pct : float
+    + signal_source : str
+    + entry_time : datetime
+  }
+
+  class ClosedTradeOut <<BaseModel>> {
+    + id : str
+    + symbol : str
+    + quantity : float
+    + entry_price : float
+    + exit_price : float | None
+    + pnl : float | None
+    + pnl_pct : float | None
+    + signal_source : str
+    + entry_time : datetime
+    + exit_time : datetime | None
+  }
+
+  class PortfolioMetrics <<BaseModel>> {
+    + total_capital : float
+    + total_realized_pnl : float
+    + latent_pnl : float
+    + win_rate : float
+    + total_closed_trades : int
+    + total_open_trades : int
+    + best_trade_pnl : float | None
+    + worst_trade_pnl : float | None
+  }
+
+  class PortfolioSummary <<BaseModel>> {
+    + portfolio : PortfolioResponse
+    + metrics : PortfolioMetrics
+    + open_positions : List[OpenPositionOut]
+    + closed_trades : List[ClosedTradeOut]
+  }
+}
+
+' ============================================================
+' Relations
+' ============================================================
+TopCryptoSnapshotResponse "1" *-- "many" TopCryptoResponse : cryptos
+GlobalMarketResponse "1" *-- "many" DominanceItem : dominance
+BacktestResponse "1" *-- "many" BacktestFoldResult : folds
+BacktestResponse "1" *-- "1" BacktestSummary : summary
+BacktestResponse "1" *-- "1" BacktestBaseline : baseline
+PortfolioSummary "1" *-- "1" PortfolioResponse : portfolio
+PortfolioSummary "1" *-- "1" PortfolioMetrics : metrics
+PortfolioSummary "1" *-- "many" OpenPositionOut : open_positions
+PortfolioSummary "1" *-- "many" ClosedTradeOut : closed_trades
+OrderCreate ..> TradeResponse : creates
+PortfolioCreate ..> PortfolioResponse : creates
+OHLCVResponse ..> SignalResponse : enrichit
+
+@enduml

@@ -1,0 +1,272 @@
+@startuml AC01-etl-pipeline
+' ============================================================
+' CryptoBot — PlantUML Shared Skin & Stereotypes
+' ============================================================
+
+' --- Theme clair (lisible GitHub) ---
+skinparam backgroundColor white
+skinparam defaultFontName "Segoe UI, Helvetica, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam defaultFontColor #333333
+skinparam shadowing false
+skinparam roundCorner 6
+
+' --- Palette ---
+' Bleu:   #4A6FA5
+' Orange: #FEF3E8 (fond) / #E8943A (bordure)
+' Vert:   #ECFDF5 (fond) / #34A853 (bordure)
+' Violet: #F3EEFF (fond) / #7C5CFC (bordure)
+' Gris:   #F5F5F5 (fond) / #CCCCCC (bordure)
+
+' --- Component ---
+skinparam component {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+}
+
+' --- Package ---
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #4A6FA5
+  FontColor #333333
+}
+
+' --- Class ---
+skinparam class {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+  HeaderBackgroundColor #34A853
+  HeaderFontColor white
+  ArrowColor #4A6FA5
+  StereotypeFontColor #7C5CFC
+  AttributeFontColor #555555
+}
+
+' --- Sequence ---
+skinparam sequence {
+  ArrowColor #4A6FA5
+  ActorBorderColor #7C5CFC
+  LifeLineBorderColor #CCCCCC
+  LifeLineBackgroundColor #F5F5F5
+  ParticipantBorderColor #4A6FA5
+  ParticipantBackgroundColor #F3EEFF
+  ParticipantFontColor #333333
+  BoxBorderColor #CCCCCC
+  BoxBackgroundColor #F5F5F5
+  DividerBackgroundColor #4A6FA5
+  DividerFontColor white
+}
+
+' --- Activity ---
+skinparam activity {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+  DiamondBackgroundColor #F3EEFF
+  DiamondBorderColor #7C5CFC
+}
+
+' --- Node (deployment) ---
+skinparam node {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+}
+
+' --- Database ---
+skinparam database {
+  BackgroundColor #ECFDF5
+  BorderColor #34A853
+  FontColor #333333
+}
+
+' --- Entity (ER) ---
+skinparam entity {
+  BackgroundColor white
+  BorderColor #4A6FA5
+  FontColor #333333
+  HeaderBackgroundColor #4A6FA5
+  HeaderFontColor white
+}
+
+' --- State ---
+skinparam state {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+  ArrowColor #4A6FA5
+}
+
+' --- Usecase ---
+skinparam usecase {
+  BackgroundColor #F3EEFF
+  BorderColor #7C5CFC
+  FontColor #333333
+  ArrowColor #4A6FA5
+  ActorBorderColor #E8943A
+}
+
+' --- Note ---
+skinparam note {
+  BackgroundColor #FEF3E8
+  BorderColor #E8943A
+  FontColor #333333
+}
+
+' --- Legend ---
+skinparam legend {
+  BackgroundColor #F5F5F5
+  BorderColor #CCCCCC
+  FontColor #333333
+}
+
+' --- Stereotypes ---
+' <<collector>>   ETL data collectors
+' <<transformer>> ETL data transformers
+' <<loader>>      ETL data loaders
+' <<scheduler>>   APScheduler jobs
+' <<rule>>        ML rule evaluator
+' <<model>>       ML model
+' <<router>>      FastAPI router
+' <<service>>     FastAPI service
+' <<middleware>>   FastAPI middleware
+' <<page>>        Streamlit page
+' <<component>>   Streamlit/Plotly component
+' <<hypertable>>  TimescaleDB hypertable
+' <<phase2>>      Phase 2 planned feature
+
+
+title CryptoBot — Pipeline ETL V2 (code main)
+caption 4 flux schedule lib | SQLite SQLAlchemy ORM
+
+note
+  Scheduler library: **schedule** (not APScheduler).
+  WS Binance daemon: thread persistant, reconnexion auto.
+  OHLCV dedup: IntegrityError silently skipped (no max-volume dedup in V2 code).
+end note
+
+|#FEF3E8| Startup (main.py) |
+start
+fork
+  |#4A6FA5| WS Binance Daemon |
+  :start_ws_collector(symbols)\\n**thread daemon persistant**\\nwss://stream.binance.com:9443/stream\\nminiTicker multi-stream;
+  :_watch() — boucle asyncio;
+  repeat
+    :receive miniTicker message;
+    :parse JSON payload;
+    if (symbol + price valides?) then (oui)
+      :live_price_cache.update(symbol, price);
+    else (non)
+      :skip message malformé;
+    endif
+  repeat while (running?) is (oui)
+  -[hidden]->
+  :WS arrêté (CancelledError);
+
+fork again
+  |#FEF3E8| OHLCV Scheduler |
+  :OHLCVScheduler.run_once()\\n**initial run au démarrage**;
+  :puis schedule.every().day.at("09:00");
+  repeat
+    |#F3EEFF| OHLCV Collect |
+    :OHLCVCollector(pairs, timeframes, exchange="binance");
+    :ExchangeFactory.create_exchange("binance") → CCXT client;
+    :ETLPipelineOHLCV.run_batch(pairs, timeframe);
+    fork
+      :OHLCVExtractor.extract(symbol, timeframe, limit=100)\\nCCXT fetch_ohlcv → raw List[List];
+    fork again
+      note right: pour chaque paire × timeframe
+    end fork
+    |#ECFDF5| OHLCV Transform |
+    :OHLCVTransformer.transform(raw_data, symbol, timeframe);
+    :_to_dataframe() → colonnes [timestamp, open, high, low, close, volume];
+    :_add_metadata() → id UUID, symbol, timeframe, exchange;
+    :_convert_timestamps() → ms → datetime;
+    :DataValidator0HCLV.validate_ohlcv_values(df);
+    if (validation OK?) then (oui)
+      :_enrich_data()\\nprice_range, price_change, price_change_pct;
+      :_normalize_data() → sort by timestamp;
+    else (non)
+      :raise TransformationError → PipelineResult.fail_transformation();
+      :log erreur, continuer symbole suivant;
+    endif
+    |#ECFDF5| OHLCV Load |
+    :OHLCVLoader.load(df)\\ndf.to_sql("ohlcv", engine, if_exists="append");
+    if (IntegrityError?) then (oui)
+      :log warning doublon, return 0;
+    else (non)
+      :rows_inserted confirmés;
+    endif
+    :PipelineResult.success = True;
+    :OHLCVScheduler log summary\\n(total_symbols, successful, failed, total_raw_rows, total_loaded_rows);
+  repeat while (running?) is (oui)
+
+fork again
+  |#FEF3E8| Ticker Scheduler |
+  :TickerScheduler.start_collection()\\npour chaque exchange configuré;
+  repeat
+    |#F3EEFF| Ticker Collect |
+    :TickerCollector._fetch_and_cache_tickers()\\nCCXT fetch_ticker(pair) pour chaque paire;
+    :_normalize_ticker_data()\\nBinance: "last" → "price", quoteVolume → volume_24h;
+    :TickerCache.add_ticker(symbol, normalized_ticker)\\nmax 100 entrées par symbole;
+    if (datetime >= next_snapshot?) then (oui)
+      :TickerCollector._save_snapshot()\\nINSERT INTO ticker_snapshots\\n(id, snapshot_time, symbol, exchange,\\nprice, volume_24h, high_24h, low_24h);
+      :next_snapshot += snapshot_interval (5 min);
+    endif
+    if (minute % cache_cleanup_interval == 0?) then (oui)
+      :TickerCache.clear_old_data(hours=24);
+    endif
+    :sleep(60s);
+  repeat while (running?) is (oui)
+
+fork again
+  |#FEF3E8| Market Data Scheduler |
+  :MarketDataScheduler.run_once()\\n**initial run au démarrage**;
+  :puis schedule.every().day.at("10:00");
+  repeat
+    |#F3EEFF| Market Data Collect |
+    :MarketDataCollector.fetch_and_store()\\nETLPipelineMarketData.run("global_market");
+    :MarketDataExtractor.extract("global_market")\\nCoinGecko API — rate_limit_delay=2.5s;
+    :MarketDataTransformer.transform()\\n→ snapshot, caps, volumes, dominance;
+    :MarketDataLoader.load(snapshot, caps, volumes, dominance)\\n→ SQLite via SQLAlchemy;
+    :fetch_top_cryptos(limit=50, vs_currency="usd")\\nCoinGecko /coins/markets;
+    :fetch_crypto_details(crypto_ids=["bitcoin","ethereum","solana","cardano","binancecoin"]);
+  repeat while (running?) is (oui)
+
+end fork
+
+|#F5F5F5| On-demand |
+note
+  FearGreedCollector et NewsCollector
+  sont invoqués à la demande (pas de scheduler dédié en V2).
+end note
+fork
+  |#F5F5F5| News (on-demand) |
+  :NewsCollector.fetch_and_store(db, sources)\\n3 RSS feeds:\\n- decrypt.co/feed\\n- cointelegraph.com/rss\\n- cryptonews.com/news/feed/;
+  :httpx.Client.get(url) → feedparser.parse();
+  :pour chaque entry: _parse_entry();
+  :VADER _analyse_sentiment(title+content[:500])\\n→ compound [-1,+1], label (positive/negative/neutral);
+  :extract_keywords(text, top_n=8) — TF-IDF unigrammes+bigrammes;
+  :extract_entities(), detect_topics();
+  if (url déjà en DB?) then (oui)
+    :skip (doublon);
+  else (non)
+    :db.add(NewsArticle(...));
+  endif
+  :db.commit() → table news_articles;
+
+fork again
+  |#F5F5F5| Fear & Greed (on-demand) |
+  :FearGreedCollector.fetch()\\nGET https://api.alternative.me/fng/?limit=1;
+  :_parse(response.json())\\n→ FearGreedResult(value 0-100, classification, timestamp UTC);
+  :retourner résultat à l'appelant;
+end fork
+
+stop
+
+@enduml
