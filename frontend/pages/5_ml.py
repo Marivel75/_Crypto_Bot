@@ -139,18 +139,42 @@ def _color(val: float, good_above: float = 0, bad_below: float | None = None) ->
     return "normal" if val >= good_above else "inverse"
 
 with c1, st.container(border=True):
-    st.metric(t("ml.metric_sharpe"), f"{summary['sharpe']:.2f}")
+    st.metric(
+        t("ml.metric_sharpe"),
+        f"{summary['sharpe']:.2f}",
+        help="Rendement ajusté du risque (annualisé). Au-dessus de 1.0, la stratégie génère plus de rendement que de risque.",
+    )
 with c2, st.container(border=True):
-    st.metric(t("ml.metric_winrate"), f"{summary['win_rate']:.1%}")
+    st.metric(
+        t("ml.metric_winrate"),
+        f"{summary['win_rate']:.1%}",
+        help="Pourcentage de trades gagnants sur l'ensemble des folds. Un bon signal dépasse 50 %.",
+    )
 with c3, st.container(border=True):
-    st.metric(t("ml.metric_pnl"), f"{summary['total_pnl']:+.4f}")
+    st.metric(
+        t("ml.metric_pnl"),
+        f"{summary['total_pnl']:+.4f}",
+        help="Somme des log-returns réalisés sur les positions BUY. Positif = la stratégie a gagné de l'argent.",
+    )
 with c4, st.container(border=True):
-    st.metric(t("ml.metric_drawdown"), f"{summary['max_drawdown']:.1%}")
+    st.metric(
+        t("ml.metric_drawdown"),
+        f"{summary['max_drawdown']:.1%}",
+        help="Perte maximale entre un pic et un creux consécutif. Plus proche de 0 %, moins la stratégie a subi de pertes profondes.",
+    )
 with c5, st.container(border=True):
-    st.metric(t("ml.metric_accuracy"), f"{summary['accuracy']:.1%}")
+    st.metric(
+        t("ml.metric_accuracy"),
+        f"{summary['accuracy']:.1%}",
+        help="Proportion de prédictions de direction correctes (hausse / baisse). Sur des marchés bruités, 55 % est déjà significatif.",
+    )
 with c6, st.container(border=True):
     pf = summary.get("profit_factor") or 0.0
-    st.metric(t("ml.metric_pf"), "∞" if pf >= 999 else f"{pf:.2f}")
+    st.metric(
+        t("ml.metric_pf"),
+        "∞" if pf >= 999 else f"{pf:.2f}",
+        help="Gains bruts divisés par pertes brutes. Au-dessus de 1.0, la stratégie génère plus qu'elle ne perd. ∞ = aucune perte.",
+    )
 
 with st.expander(t("ml.metrics_explain_title"), expanded=False):
     st.markdown(t("ml.metrics_explain_body"))
