@@ -159,13 +159,13 @@ Notre veille réglementaire a identifié les textes et organismes clés encadran
 
 ---
 
-## 4. Équipe et organisation
+## 3. Équipe et organisation
 
-### 4.1 Répartition des rôles
+### 3.1 Répartition des rôles
 
 Notre cadrage estimait **70 jours de travail total** (40 DE + 30 DS) pour un budget théorique de **32 000 €** à 400 €/j TJM, auxquels s'ajoutent 4 000 € de coûts annexes (cloud, APIs, maintenance).
 
-### 4.2 Méthode de travail
+### 3.2 Méthode de travail
 
 Nous avons adopté un workflow Git structuré dès le premier jour :
 
@@ -178,7 +178,7 @@ Nous avons adopté un workflow Git structuré dès le premier jour :
 
 ---
 
-## 5. Roadmap prévue et réalisée
+## 4. Roadmap prévue et réalisée
 
 Le sujet DataScientest définissait une roadmap technique en 10 sprints. Voici notre réalisation effective :
 
@@ -199,9 +199,9 @@ Le sujet DataScientest définissait une roadmap technique en 10 sprints. Voici n
 
 ---
 
-## 6. Architecture technique
+## 5. Architecture technique
 
-### 6.1 Vue d'ensemble
+### 5.1 Vue d'ensemble
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -234,7 +234,7 @@ Le sujet DataScientest définissait une roadmap technique en 10 sprints. Voici n
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 6.2 Stack technique : prévue vs retenue
+### 5.2 Stack technique : prévue vs retenue
 
 | Couche | Stack envisagée (cadrage) | Stack retenue | Justification |
 |---|---|---|---|
@@ -248,7 +248,7 @@ Le sujet DataScientest définissait une roadmap technique en 10 sprints. Voici n
 | Experiment tracking | MLflow | **MLflow** | Conforme |
 | Infra | Docker, GitHub Actions | **Docker + GitHub Actions + Ansible + Nginx + Prometheus + Grafana** | Au-delà du cadrage initial |
 
-### 6.3 APIs retenues
+### 5.3 APIs retenues
 
 Parmi les APIs étudiées en phase de discovery, voici celles effectivement intégrées :
 
@@ -262,7 +262,7 @@ Parmi les APIs étudiées en phase de discovery, voici celles effectivement int�
 
 Les APIs PhoenixNews, Cryptorank et CoinGecko Premium (identifiées comme pertinentes en discovery) n'ont pas été intégrées car payantes. L'axe de diversification des sources news reste un axe d'évolution.
 
-### 6.4 Base de données
+### 5.4 Base de données
 
 Notre schéma comporte **8 domaines de tables** :
 
@@ -279,9 +279,9 @@ Le dual-support SQLite (dev) / PostgreSQL (prod) est géré via `CRYPTO_BOT_DB_U
 
 ---
 
-## 7. Fonctionnalités réalisées
+## 6. Fonctionnalités réalisées
 
-### 7.1 Pipeline de collecte de données
+### 6.1 Pipeline de collecte de données
 
 **Architecture ETL modulaire** (`src/collectors/`, `src/etl/`) :
 
@@ -299,7 +299,7 @@ Le dual-support SQLite (dev) / PostgreSQL (prod) est géré via `CRYPTO_BOT_DB_U
 | CoinGecko | Fear & Greed, market cap global, top movers | À la demande via API |
 | RSS (multi-sources) | Actualités crypto | Une passe ou boucle 60 min |
 
-### 7.2 API REST
+### 6.2 API REST
 
 Notre API FastAPI expose **30+ endpoints** en 7 routeurs :
 
@@ -313,7 +313,7 @@ Notre API FastAPI expose **30+ endpoints** en 7 routeurs :
 | `alerts` | Subscribe/unsubscribe email, liste abonnés |
 | `paper_trading` | Portefeuilles, ordres BUY/SELL, P&L, prix live |
 
-### 7.3 Frontend Streamlit — 6 pages
+### 6.3 Frontend Streamlit — 6 pages
 
 | Page | Persona principal | Contenu |
 |---|---|---|
@@ -324,7 +324,7 @@ Notre API FastAPI expose **30+ endpoints** en 7 routeurs :
 | **ML & Backtesting** | Noah, DS | Walk-forward, Sharpe, PnL, drawdown, vs buy-and-hold |
 | **Paper Trading** | Aleksandar, Noah | Portefeuilles fictifs, ordres live WebSocket, courbe capital |
 
-### 7.4 Machine Learning et Backtesting
+### 6.4 Machine Learning et Backtesting
 
 **Feature engineering** : le `FeatureBuilder` génère automatiquement à partir des bougies OHLCV :
 SMA 7/14/21/50, EMA 7/14/21, RSI 14, MACD signal/histogramme, Bollinger Bands, volume relatif, log-returns sur 1/3/5 jours, label J+1.
@@ -344,7 +344,7 @@ SMA 7/14/21/50, EMA 7/14/21, RSI 14, MACD signal/histogramme, Bollinger Bands, v
 
 Chaque backtest est automatiquement loggé dans MLflow avec paramètres, métriques et artifacts.
 
-### 7.5 NLP & Text Mining
+### 6.5 NLP & Text Mining
 
 | Analyse | Méthode | Exemple |
 |---|---|---|
@@ -355,7 +355,7 @@ Chaque backtest est automatiquement loggé dans MLflow avec paramètres, métriq
 
 8 topics : `regulation`, `hack_security`, `adoption`, `defi`, `nft`, `macro`, `price_action`, `general`.
 
-### 7.6 Système d'alertes email
+### 6.6 Système d'alertes email
 
 Notifications SMTP (Gmail) pour les événements clés :
 - Démarrage et fin de collecte (avec résumé ETL + état de la base)
@@ -363,7 +363,7 @@ Notifications SMTP (Gmail) pour les événements clés :
 - Confirmation de désabonnement
 - Alerte erreur critique pipeline
 
-### 7.7 Paper Trading
+### 6.7 Paper Trading
 
 Composants :
 - `PaperTrader` : moteur métier (portefeuilles, P&L, gestion positions)
@@ -373,9 +373,9 @@ Composants :
 
 ---
 
-## 8. Infrastructure et déploiement
+## 7. Infrastructure et déploiement
 
-### 8.1 Environnement local
+### 7.1 Environnement local
 
 ```bash
 make setup      # Installation multi-OS (setup.sh : macOS / Debian / RedHat / Arch / Alpine)
@@ -384,11 +384,11 @@ make run-all    # API + MLflow + Streamlit
 make docker     # Stack complète Docker
 ```
 
-### 8.2 Docker Compose
+### 7.2 Docker Compose
 
 Stack Docker : API (FastAPI 8000), Frontend (Streamlit 8501), MLflow (5001 avec `--allowed-hosts "*"`).
 
-### 8.3 Infrastructure production
+### 7.3 Infrastructure production
 
 Nous avons conçu et versionné une infrastructure de déploiement production complète (`_v1/infra/`) :
 
@@ -398,13 +398,13 @@ Nous avons conçu et versionné une infrastructure de déploiement production co
 - **Services prod** : TimescaleDB, MinIO (artifacts MLflow), API, Frontend, ETL worker, ML worker, Prometheus, Grafana
 - **Domaine** : `monpetitbet.fr`
 
-### 8.4 CI/CD
+### 7.4 CI/CD
 
 GitHub Actions déclenche les tests sur chaque Pull Request. Nous avons protégé les branches `main` et `dev` contre les pushs directs dès février 2026.
 
 ---
 
-## 9. Qualité et tests
+## 8. Qualité et tests
 
 Notre suite de tests couvre :
 - **Tests API** (`test_api.py`) : endpoints FastAPI via `httpx.AsyncClient`, codes HTTP, schémas Pydantic
@@ -418,9 +418,9 @@ make test-cov   # pytest --cov=src --cov=api --cov-report=term-missing
 
 ---
 
-## 10. Adéquation avec le sujet DataScientest
+## 9. Adéquation avec le sujet DataScientest
 
-### 10.1 Livrables produits
+### 9.1 Livrables produits
 
 | Livrable attendu | Statut | Forme |
 |---|---|---|
@@ -436,7 +436,7 @@ make test-cov   # pytest --cov=src --cov=api --cov-report=term-missing
 | Déploiement & monitoring | ✅ | Ansible, Docker, Nginx, Prometheus, Grafana |
 | Rapport final | ✅ | Ce document |
 
-### 10.2 Fonctionnalités du sujet
+### 9.2 Fonctionnalités du sujet
 
 | Feature cadrage | Statut | Notes |
 |---|---|---|
@@ -459,9 +459,9 @@ make test-cov   # pytest --cov=src --cov=api --cov-report=term-missing
 
 ---
 
-## 11. Analyse rétrospective
+## 10. Analyse rétrospective
 
-### 11.1 Points forts
+### 10.1 Points forts
 
 **Complétude de la chaîne de valeur** : nous livrons une plateforme end-to-end fonctionnelle, de la collecte brute jusqu'au trading simulé. Aucun maillon n'est laissé en suspens.
 
@@ -473,9 +473,11 @@ make test-cov   # pytest --cov=src --cov=api --cov-report=term-missing
 
 **~70 Pull Requests en 5 mois** : collaboration structurée avec répartition claire des responsabilités.
 
-### 11.2 Difficultés rencontrées
+### 10.2 Difficultés rencontrées
 
 **MLflow en Docker** : le middleware de sécurité de MLflow 2.x rejette par défaut les requêtes ne venant pas de `localhost`. L'ajout de `--allowed-hosts "*"` a résolu le problème.
+
+**Installation multi-OS (`setup.sh`)** : la plateforme devait fonctionner sur les machines des deux membres de l'équipe (macOS), les environnements CI Linux et le VPS Debian de production. Un simple `pip install -r requirements.txt` ne suffisait pas : `psycopg2` requiert `libpq-dev` sur Debian, `postgresql-devel` sur RedHat, ou `libpq` via Homebrew sur macOS ; plusieurs packages ML nécessitent en outre des headers de compilation (`python3-dev`, `build-essential`). Nous avons écrit `setup.sh`, un script bash qui détecte l'OS via `uname -s` puis affine la distribution Linux via les marqueurs `/etc/debian_version`, `/etc/redhat-release`, `/etc/arch-release` et `/etc/alpine-release`, avant d'appeler le bon gestionnaire de paquets (`apt`, `yum`, `pacman`, `apk`, `brew`). Le script vérifie également la version Python (3.10+ requis), crée et active le venv (sauf si conda est déjà actif), copie `.env.example` en `.env` et initialise les dossiers nécessaires. Windows est explicitement détecté et orienté vers WSL2 ou `make docker`. Ce script a uniformisé l'onboarding et supprimé les divergences d'environnement entre les membres de l'équipe et le CI.
 
 **Compatibilité Linux** : `make run` présentait un bug sur Linux (absence de timeout sur la boucle d'attente de l'API, erreurs uvicorn masquées). Résolu par un compteur de timeout et `--log-level info`.
 
@@ -483,7 +485,7 @@ make test-cov   # pytest --cov=src --cov=api --cov-report=term-missing
 
 **Volume de données pour le ML** : le walk-forward nécessite ~260 bougies minimum. Le rate limiting de CoinGecko et des exchanges a rendu la collecte initiale laborieuse.
 
-### 11.3 Axes d'amélioration
+### 10.3 Axes d'amélioration
 
 **Apprentissage par renforcement** : objectif initial non atteint. Le paper trading peut servir d'environnement de simulation pour un agent RL (Monte Carlo, Q-learning comme prévu dans la roadmap).
 
