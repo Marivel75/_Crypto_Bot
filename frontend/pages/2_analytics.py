@@ -138,7 +138,17 @@ def _render_kpi_cards(global_data: dict[str, Any], top_data: dict[str, Any] | No
     with col1, st.container(border=True):
         mcap = global_data.get("market_cap_usd")
         if mcap is not None:
-            st.metric(t("analytics.market_cap"), f"${float(mcap) / 1e12:.2f} T")
+            st.metric(
+                t("analytics.market_cap"),
+                f"${float(mcap) / 1e12:.2f} T",
+                help=(
+                    "**Capitalisation totale du marché crypto** (en trillions de dollars).\n\n"
+                    "Somme de la valeur de marché de toutes les cryptomonnaies en circulation "
+                    "(prix × offre circulante). "
+                    "T = trillion = 1 000 milliards. "
+                    "Source : CoinGecko."
+                ),
+            )
         else:
             st.metric(t("analytics.market_cap"), "-")
             st.caption(t("analytics.data_unavailable"))
@@ -147,7 +157,17 @@ def _render_kpi_cards(global_data: dict[str, Any], top_data: dict[str, Any] | No
         dominance = global_data.get("dominance") or []
         btc_dom = next((d["percentage"] for d in dominance if d.get("asset") == "btc"), None)
         if btc_dom is not None:
-            st.metric(t("analytics.btc_dominance"), f"{btc_dom:.1f}%")
+            st.metric(
+                t("analytics.btc_dominance"),
+                f"{btc_dom:.1f}%",
+                help=(
+                    "**Dominance Bitcoin** : part de Bitcoin dans la capitalisation totale "
+                    "du marché crypto.\n\n"
+                    "Une dominance élevée (> 60 %) signale que les investisseurs privilégient "
+                    "BTC par rapport aux altcoins. Une dominance en baisse peut indiquer "
+                    "une rotation vers les altcoins (altseason)."
+                ),
+            )
         else:
             st.metric(t("analytics.btc_dominance"), "-")
             st.caption(t("analytics.data_unavailable"))
@@ -155,7 +175,18 @@ def _render_kpi_cards(global_data: dict[str, Any], top_data: dict[str, Any] | No
     with col3, st.container(border=True):
         vol = global_data.get("volume_usd")
         if vol is not None:
-            st.metric(t("analytics.volume_header"), f"${float(vol) / 1e9:.1f} B")
+            st.metric(
+                t("analytics.volume_header"),
+                f"${float(vol) / 1e9:.1f} B",
+                help=(
+                    "**Volume d'échange sur 24h** (en milliards de dollars).\n\n"
+                    "Somme de toutes les transactions enregistrées sur l'ensemble des exchanges "
+                    "au cours des dernières 24 heures. "
+                    "Un volume élevé confirme la force d'un mouvement de prix ; "
+                    "un volume faible suggère un manque de conviction. "
+                    "B = billion = 1 milliard."
+                ),
+            )
         else:
             st.metric(t("analytics.volume_header"), "-")
             st.caption(t("analytics.data_unavailable"))
@@ -292,15 +323,28 @@ def page() -> None:
 
     if cryptos:
         st.markdown(f"### {t('analytics.heatmap_title')}")
+        st.caption(
+            "Variation de prix sur 24h pour chaque crypto du Top 50. "
+            "Vert = hausse, rouge = baisse. L'intensité de la couleur reflète l'amplitude de la variation."
+        )
         with st.container(border=True):
             _render_heatmap(cryptos)
         st.divider()
 
         st.markdown(f"### {t('analytics.top_movers')}")
+        st.caption(
+            "Les 5 cryptos ayant le plus progressé (gainers) et le plus reculé (losers) "
+            "en 24h parmi le Top 50 par capitalisation."
+        )
         _render_movers(cryptos)
         st.divider()
 
     st.markdown(f"### {t('analytics.correlation_title')}")
+    st.caption(
+        "Corrélation des rendements journaliers (close-to-close) sur les 90 derniers jours. "
+        "1 = parfaitement corrélés (bougent ensemble), -1 = inversement corrélés, 0 = indépendants. "
+        "Une forte corrélation entre altcoins et BTC est normale en période de marché baissier."
+    )
     with st.container(border=True):
         _render_correlation()
 
