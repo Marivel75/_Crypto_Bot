@@ -19,6 +19,13 @@ class FrontendSettings:
     def __post_init__(self) -> None:
         if url := os.getenv("API_URL"):
             self.api_url = url
+        else:
+            try:
+                import streamlit as st
+                if "API_URL" in st.secrets:
+                    self.api_url = st.secrets["API_URL"]
+            except Exception:
+                pass
         if level := os.getenv("LOG_LEVEL"):
             self.log_level = level
 
