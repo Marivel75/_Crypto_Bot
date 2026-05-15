@@ -1,0 +1,59 @@
+name: Crypto Collector
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # tous les jours à 08:00 UTC
+
+  workflow_dispatch:      # déclenchement manuel depuis GitHub
+    inputs:
+      ticker:
+        description: 'Activer le ticker temps réel'
+        type: boolean
+        default: false
+      ticker_runtime:
+        description: 'Durée ticker en minutes'
+        type: number
+        default: 15
+
+jobs:
+  collect:
+    name: Collecte données
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run OHLCV + Market data
+        env:
+          CRYPTO_BOT_DB_URL: ${{ secrets.CRYPTO_BOT_DB_URL }}
+          BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
+          BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
+          COINMARKETCAP_API_KEY: ${{ secrets.COINMARKETCAP_API_KEY }}
+          CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
+          ALERT_EMAIL_PASSWORD: ${{ secrets.ALERT_EMAIL_PASSWORD }}
+          ALERT_SMTP_HOST: smtp.gmail.com
+          ALERT_SMTP_PORT: "587"
+        run: python main.py
+
+      - name: Run ticker temps réel (${{ inputs.ticker_runtime || 15 }} min)
+        if: ${{ inputs.ticker == true }}
+        env:
+          CRYPTO_BOT_DB_URL: ${{ secrets.CRYPTO_BOT_DB_URL }}
+          BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
+          BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
+          COINMARKETCAP_API_KEY: ${{ secrets.COINMARKETCAP_API_KEY }}
+          CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
+        run: python main.py --ticker --runtime ${{ inputs.ticker_runtime || 15 }}
