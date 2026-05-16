@@ -46,7 +46,7 @@ jobs:
           ALERT_EMAIL_PASSWORD: ${{ secrets.ALERT_EMAIL_PASSWORD }}
           ALERT_SMTP_HOST: smtp.gmail.com
           ALERT_SMTP_PORT: "587"
-        run: python main.py
+        run: python main.py --exchanges kraken
 
       - name: Run ticker temps réel (${{ inputs.ticker_runtime || 15 }} min)
         if: ${{ inputs.ticker == true }}
@@ -56,4 +56,4 @@ jobs:
           BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
           COINMARKETCAP_API_KEY: ${{ secrets.COINMARKETCAP_API_KEY }}
           CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
-        run: python main.py --ticker --runtime ${{ inputs.ticker_runtime || 15 }}
+        run: python main.py --ticker --runtime ${{ inputs.ticker_runtime || 15 }} --exchanges kraken
