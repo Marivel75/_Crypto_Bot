@@ -26,7 +26,7 @@ def _get_client() -> APIClient:
 
 @st.cache_data(ttl=300)
 def _fetch_available() -> tuple[list[str], list[str]]:
-    data = _get_client().fetch_symbols()
+    data = _get_client().fetch_symbols(exchange=frontend_settings.default_exchange)
     if data:
         return extract_symbols(data), extract_timeframes(data)
     return frontend_settings.tracked_symbols, frontend_settings.timeframes
@@ -34,7 +34,7 @@ def _fetch_available() -> tuple[list[str], list[str]]:
 
 @st.cache_data(ttl=60)
 def _fetch(symbol: str, timeframe: str, limit: int) -> list[dict[str, Any]] | None:
-    return _get_client().fetch_signals(symbol, timeframe, limit=limit)
+    return _get_client().fetch_signals(symbol, timeframe, limit=limit, exchange=frontend_settings.default_exchange)
 
 
 def _fmt(val: Any, decimals: int) -> float | None:

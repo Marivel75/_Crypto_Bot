@@ -13,6 +13,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from frontend.api_client import APIClient
+from frontend.config import frontend_settings
 from frontend.i18n import t
 
 _client = APIClient()
@@ -44,7 +45,7 @@ with st.sidebar:
 
     @st.cache_data(ttl=300)
     def _fetch_symbols():
-        data = _client.fetch_symbols()
+        data = _client.fetch_symbols(exchange=frontend_settings.default_exchange)
         if not data:
             return [], []
         symbols = sorted({r["symbol"] for r in data})

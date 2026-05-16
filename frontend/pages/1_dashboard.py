@@ -35,7 +35,7 @@ def _fetch_available() -> tuple[list[str], list[str]]:
 
     Falls back to config values if the API is unreachable.
     """
-    data = _get_client().fetch_symbols()
+    data = _get_client().fetch_symbols(exchange=frontend_settings.default_exchange)
     if data:
         return extract_symbols(data), extract_timeframes(data)
     return frontend_settings.tracked_symbols, frontend_settings.timeframes
@@ -43,7 +43,7 @@ def _fetch_available() -> tuple[list[str], list[str]]:
 
 @st.cache_data(ttl=60)
 def _fetch_signals(symbol: str, timeframe: str, limit: int = 200) -> list[dict[str, Any]] | None:
-    return _get_client().fetch_signals(symbol, timeframe, limit=limit)
+    return _get_client().fetch_signals(symbol, timeframe, limit=limit, exchange=frontend_settings.default_exchange)
 
 
 def _check_api() -> bool:
