@@ -14,6 +14,8 @@ class FrontendSettings:
         "XRP/USDT", "DOT/USDT", "AVAX/USDT", "MATIC/USDT", "LINK/USDT",
     ])
     timeframes: list[str] = field(default_factory=lambda: ["1h", "4h", "1d", "1w"])
+    default_exchange: str = "kraken"
+    paper_trading_exchange: str = "binance"
     log_level: str = "INFO"
 
     def __post_init__(self) -> None:

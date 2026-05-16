@@ -18,6 +18,7 @@ import streamlit as st
 
 from frontend.api_client import APIClient
 from frontend.components.candlestick import _DARK_LAYOUT
+from frontend.config import frontend_settings
 from frontend.i18n import t
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,7 @@ def _fetch_history(limit: int = 90) -> list[dict[str, Any]] | None:
 
 @st.cache_data(ttl=300)
 def _fetch_ohlcv_closes(symbol: str) -> list[float] | None:
-    rows = _get_client().fetch_ohlcv(symbol, timeframe="1d", limit=90)
+    rows = _get_client().fetch_ohlcv(symbol, timeframe="1d", limit=90, exchange=frontend_settings.default_exchange)
     if not rows:
         return None
     return [float(r["close"]) for r in reversed(rows) if r.get("close") is not None]
