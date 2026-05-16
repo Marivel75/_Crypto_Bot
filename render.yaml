@@ -38,7 +38,13 @@ services:
         value: "587"
 
       - key: MLFLOW_TRACKING_URI
-        value: sqlite:////tmp/mlflow.db
+        value: https://dagshub.com/Marivel75/_Crypto_Bot.mlflow
+
+      - key: MLFLOW_TRACKING_USERNAME
+        value: Marivel75
+
+      - key: MLFLOW_TRACKING_PASSWORD
+        sync: false
 
       - key: PYTHONUNBUFFERED
         value: "1"

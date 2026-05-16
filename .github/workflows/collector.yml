@@ -46,6 +46,9 @@ jobs:
           ALERT_EMAIL_PASSWORD: ${{ secrets.ALERT_EMAIL_PASSWORD }}
           ALERT_SMTP_HOST: smtp.gmail.com
           ALERT_SMTP_PORT: "587"
+          MLFLOW_TRACKING_URI: https://dagshub.com/Marivel75/_Crypto_Bot.mlflow
+          MLFLOW_TRACKING_USERNAME: Marivel75
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
         run: python main.py --exchanges kraken
 
       - name: Run ticker temps réel (${{ inputs.ticker_runtime || 15 }} min)
